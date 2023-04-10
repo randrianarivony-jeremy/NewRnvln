@@ -10,9 +10,9 @@ const Home = () => {
   const navigate = useNavigate();
   const navRef=useRef();
 
-  useEffect(() => {
-    navRef.current?.scrollIntoView({ behavior: "instant" });
-  }, []);
+  // useEffect(() => {
+  //   navRef.current?.scrollIntoView({ behavior: "instant" });
+  // }, []);
   
   return (
     <Box height="100%" className="home">

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import "../Styles/App.css";
 import "swiper/css";
 import Routes from "./Routes";
@@ -11,18 +11,18 @@ import { publicationContext } from "./Context";
 function App() {
   const [content, setContent] = useState();
   return (
-    <Box
+    <Flex
       width="100%"
       maxW={420}
       className="app"
-      height="100vh"
+      height="100vh" border='1px solid red'
       position="relative"
       margin="auto"
     >
       <publicationContext.Provider value={{ content, setContent }}>
         <Routes />
       </publicationContext.Provider>
-    </Box>
+    </Flex>
   );
 }
 

@@ -7,6 +7,11 @@
     justify-content: center;
 }
 
+.logo{
+  width: 70px;
+  margin: auto;
+}
+
 .nav-icons-active{
     border-top-width: 5px;
     max-width: 20%;

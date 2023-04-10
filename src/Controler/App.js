@@ -5,13 +5,19 @@ import Routes from "./Routes";
 import audio from "../Assets/audio.m4a";
 import video from "../Assets/video.mp4";
 import image from "../Assets/image.jpg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { publicationContext } from "./Context";
 
 function App() {
   const [content, setContent] = useState(2);
+  const allRef=useRef();
+
+  useEffect(()=>{
+    console.log(allRef.current.clientHeight,window.innerHeight)
+  })
   return (
     <Box
+    ref={allRef}
       width="100%"
       maxW={420}
       className="app"

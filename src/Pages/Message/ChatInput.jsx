@@ -41,7 +41,7 @@ const ChatInputs = ({ sendResponse }) => {
 
   return (
     <>
-      <HStack position="relative" alignItems="flex-end" justify="flex-start">
+      <HStack alignItems="flex-end" justify="flex-start">
         {!writing && (
           <>
             <TakePicture sendResponse={sendResponse} />

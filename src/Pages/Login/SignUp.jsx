@@ -1,29 +1,31 @@
-import {Box,Button,Flex,Heading,Image,Stack,Text,} from "@chakra-ui/react";
+import {Box,Button,Flex,Heading,Stack,Text,} from "@chakra-ui/react";
 import React, { useState } from "react";
-import logo from "../../Assets/RANAVALONA.png";
+import logo from "../../Assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import SignUpSliders from "./SignUpSliders";
 import PaginationSignUpSlide from "./PaginationSignUpSlide";
+import { ReactSVG } from "react-svg";
+import { Scroll } from "../../Styles/Theme";
 
 const SignUp = ({ setSignin }) => {
   const navigate = useNavigate();
   const [activeIndex,setActiveIndex]=useState(0);
   
   return (
-    <Stack className="signup" height="100%" width="100%" padding="10px 20px">
-      <Box height="25%">
+    <Stack className="signup" height="100%" width="100%" paddingX={3} paddingBottom={2}>
+      <Box height="20%">
         <Button variant="float" className="bi-arrow-left"
           onClick={() => navigate(-1)}
         ></Button>
-        <Image src={logo} alt="logo" width="100px" margin="auto" />
+        <ReactSVG src={logo} className="logo" />
         <Heading size="md" textAlign="center" height={10}>
           Rejoindre Ranavalona
         </Heading>
       </Box>
-      <Box height="50%">
+      <Scroll height="60%">
         <SignUpSliders setActiveIndex={setActiveIndex}/>
-      </Box>
-      <Flex flexDir='column' justify="flex-end" height="25%">
+      </Scroll>
+      <Flex flexDir='column' justify="flex-end" height="20%">
         <PaginationSignUpSlide activeIndex={activeIndex}/>
         <Text textAlign="center" marginX="auto">
           Vous avez déjà un compte ?{" "}

@@ -1,18 +1,18 @@
 import {Button,Flex,Heading,Stack,Text,} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ClickableFlex } from "../../Styles/Theme";
+import { ClickableFlex, Scroll } from "../../Styles/Theme";
 
 const Parameter = () => {
   const navigate = useNavigate();
   const [subscription, setSubscription] = useState(false);
   return (
-    <>
+    <Stack height='100%'>
       <Flex borderBottom='1px solid' borderBottomColor='whiteAlpha.500'>
         <Button variant='float' className="bi-arrow-left" onClick={() => navigate(-1)}></Button>
         <Button>Paramètres</Button>
       </Flex>
-      <Stack paddingX={3} paddingY={2}>
+      <Scroll paddingX={3} height='100%'>
         <Stack spacing={5}>
           <Stack>
             <Heading size="sm">Compte personnelle</Heading>
@@ -80,8 +80,8 @@ const Parameter = () => {
             </Stack>
           </Stack>
         </Stack>
-      </Stack>
-    </>
+      </Scroll>
+    </Stack>
   );
 };
 

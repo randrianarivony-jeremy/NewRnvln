@@ -9,6 +9,7 @@ const TakePhoto = () => {
     const webcamRef = useRef();
     const {setContent}=useContext(publicationContext);
     const navigate = useNavigate();
+    const [selfie, setSelfie] = useState('environment');
   
     const capture = () => {
       const imgSrc = webcamRef.current.getScreenshot();
@@ -31,6 +32,7 @@ const TakePhoto = () => {
               screenshotFormat="image/jpeg"
               style={{ height: "100%", objectFit: "cover" }}
               audio={false}
+              onUserMediaError={()=>setCamera(false)}
             />
           </Box>
           <Button
@@ -46,14 +48,14 @@ const TakePhoto = () => {
             fontSize={80}
             onClick={capture}
           ></Button>
-          <Button
-            position="absolute"
-            zIndex={3}
-            top="20px"
-            left={"20px"}
-            className="bi-x"
+          <Flex className="camera" top={0} left={0} position="absolute" zIndex={3} justify='space-between' width='100%'>
+          <Button className="bi-x" fontSize='xl'
             onClick={() => setCamera(false)}
           ></Button>
+          <Button className="bi-arrow-repeat" fontSize='xl'
+            onClick={() => selfie==='user' ? setSelfie('environment') : setSelfie('user')}
+          ></Button>
+          </Flex>
         </>
       )}
     </div>

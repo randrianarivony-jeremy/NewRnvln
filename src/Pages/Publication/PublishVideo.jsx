@@ -93,7 +93,7 @@ const PublishVideo = () => {
       {/* CAMERA  */}
       {camera && (
         <Box position="absolute" zIndex={3} top={0} left={0} height='100%'>
-          <WebCam ref={webcamRef} audio="true" style={{height:'100%',objectFit:'cover'}} mirrored="true" />
+          <WebCam ref={webcamRef} audio="true" onUserMediaError={()=>setCamera(false)} style={{height:'100%',objectFit:'cover'}} mirrored="true" />
         </Box>
       )}
 
@@ -103,7 +103,7 @@ const PublishVideo = () => {
 
       {/* CONTROLS BUTTONS */}
       {camera && (
-        <HStack position="absolute" zIndex={3} left={"50%"} right="50%" bottom={'10%'}
+        <HStack position="absolute" zIndex={3} left={"50%"} transform='auto' translateX='-50%' bottom={'10%'}
         >
           {capturing && <HStack>
           {isPaused ? (

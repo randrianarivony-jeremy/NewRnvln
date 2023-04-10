@@ -38,7 +38,7 @@ const Thumbs = ({ data }) => {
             fontSize='5xl'
             transform="auto"
             translateY="-50%"
-            translateX="-50%"
+            translateX="-50%" color='white'
             className="bi-play-fill"
           ></Button>
           <video

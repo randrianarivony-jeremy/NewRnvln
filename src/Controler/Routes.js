@@ -28,7 +28,7 @@ const Routes = () => {
   const bg=useColorModeValue('blackAlpha.100','dark.100');
   return (
     <>
-      <Box bg={bg} className='route' height='100%'>
+      <Box className='route' height='100%'>
           <BrowserRouter>
             <ROUTES>
                 <Route path="/" element={<Suspense fallback={<Loader/>}><Home /></Suspense>} />

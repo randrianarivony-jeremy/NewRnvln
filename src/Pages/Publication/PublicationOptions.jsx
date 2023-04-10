@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";

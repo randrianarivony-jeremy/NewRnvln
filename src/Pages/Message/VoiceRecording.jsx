@@ -35,15 +35,13 @@ const VoiceRecording = ({ sendResponse }) => {
       </Box>
       <Button className="bi-mic" variant='float' onClick={handleRecordingOn}></Button>
       {audioRecordingInterface && (
-          <HStack position="absolute" rounded='md' width='100%' zIndex={3} bottom={0} left={0} bgColor="dark.50" justifyContent="space-between">
+          <HStack position="absolute" rounded='md' width='calc(100% - 24px)' zIndex={3}  bottom={2} left={3} bgColor="dark.50" justifyContent="space-between">
             <HStack>
               <Button
                 className={isPaused ? "bi-play" : "bi-pause"}
                 onClick={togglePauseResume}
               ></Button>
-              {!isPaused && (
-                <Spinner thickness="2px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="md"/>
-              )}
+                <Spinner thickness="2px" speed={isPaused ? "0s" : '0.9s'} emptyColor="gray.200" color="blue.500" size="md"/>
               <Text>{String(Math.floor(recordingTime/60)).padStart(2, 0)}:{String(recordingTime%60).padStart(2, 0)}</Text> {/* min:sec(00:00)  */}
             </HStack>
             <ButtonGroup>

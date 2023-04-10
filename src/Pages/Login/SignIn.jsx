@@ -18,7 +18,7 @@ const SignIn = ({ setSignin }) => {
   // );
 
   return (
-    <Box className="signin" height="100%" width="100%" padding="10px 20px">
+    <Box className="signin" height="100%" width="100%" paddingX={3} paddingBottom={2}>
       <Grid templateRows="repeat(3, 3fr)" height="100%">
         <GridItem>
           <Button variant="float" className="bi-arrow-left"

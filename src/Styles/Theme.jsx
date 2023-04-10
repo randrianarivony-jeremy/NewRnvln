@@ -52,6 +52,7 @@ export  const theme = extendTheme({
             },
             'primary': {
               bg: 'bleu',
+              color:'white',
               _hover:{
                 bg:'whiteAlpha.200'
               },
@@ -92,6 +93,6 @@ export const ClickableFlex = (BoxProps) => (
 
 export const Scroll = (BoxProps) => (
   <Stack
-  overflowY="scroll"border='1px solid red' spacing={0}
+  overflowY="scroll" spacing={0}
   sx={{ "::-webkit-scrollbar": { display: "none" } }} {...BoxProps} />
 )

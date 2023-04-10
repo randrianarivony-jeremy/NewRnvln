@@ -1,4 +1,4 @@
-import { Box, Flex, Spinner, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import React, { lazy, Suspense } from "react";
 import {BrowserRouter,Route,Routes as ROUTES,
 } from "react-router-dom";
@@ -25,7 +25,6 @@ const Loader=()=>{
 }
 
 const Routes = () => {
-  const bg=useColorModeValue('blackAlpha.100','dark.100');
   return (
     <>
       <Box className='route' height='100%'>

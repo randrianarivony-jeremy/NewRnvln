@@ -1,5 +1,5 @@
 import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
 import { publicationContext } from "../../Controler/Context";
@@ -49,7 +49,7 @@ const SendVoice = () => {
               recorderControls={recorderControls}
             />
           </Box>
-          <Button position='absolute' zIndex={4} top='20px' left={'20px'} className="bi-x"
+          <Button position='absolute' zIndex={4} top={3} left={3} className="bi-x-lg"
       onClick={()=>{handleReset();setRecording(false)}}></Button>
           <Flex
             position="absolute"
@@ -77,7 +77,7 @@ const SendVoice = () => {
                   onClick={handleReset}
                 ></Button>
                 <Button
-                    fontSize="4xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
+                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={15}
                   className={
                     !isRecording
                       ? "bi-circle-fill"

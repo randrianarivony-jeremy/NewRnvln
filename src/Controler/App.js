@@ -14,7 +14,7 @@ function App() {
     <Box
       width="100%"
       maxW={420}
-      className="app" minH='100vh' overflowY='hidden'
+      className="app" maxH='100vh' overflowY='hidden'
       height="100vh" border='1px solid red'
       position="relative"
       margin="auto"

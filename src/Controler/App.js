@@ -11,10 +11,10 @@ import { publicationContext } from "./Context";
 function App() {
   const [content, setContent] = useState();
   return (
-    <Flex
+    <Box
       width="100%"
       maxW={420}
-      className="app"
+      className="app" minH='100vh' overflowY='hidden'
       height="100vh" border='1px solid red'
       position="relative"
       margin="auto"
@@ -22,7 +22,7 @@ function App() {
       <publicationContext.Provider value={{ content, setContent }}>
         <Routes />
       </publicationContext.Provider>
-    </Flex>
+    </Box>
   );
 }
 

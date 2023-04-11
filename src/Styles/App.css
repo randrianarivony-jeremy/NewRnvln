@@ -1,3 +1,20 @@
+html{
+  border: 3px solid red;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+body{
+  border: 2px solid blue;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+#root{
+  border:2px solid black;
+  height: 100%;
+}
+
 .nav-icons{
     border-top: solid 5px transparent;
     max-width: 20%;

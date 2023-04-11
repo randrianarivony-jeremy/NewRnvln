@@ -8,7 +8,7 @@ const Navigation = () => {
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   };
-  // const icon
+
   return (
     <Flex width="100%">
       <NavLink
@@ -17,10 +17,10 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        <Button flexDir="column">
-          <Flex className="bi-house" fontSize='xl'></Flex>
+        {({isActive})=>(<Button flexDir="column">
+          <Flex className={isActive ? "bi-house-fill" : 'bi-house'} fontSize='xl'></Flex>
           <Text fontSize={12}>Accueil</Text>
-        </Button>
+        </Button>)}
       </NavLink>
 
       <NavLink
@@ -29,10 +29,10 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        <Button flexDir="column">
-          <Flex className="bi-bell" fontSize='xl'></Flex>
+        {({isActive})=>(<Button flexDir="column">
+          <Flex className={isActive ? "bi-bell-fill" : 'bi-bell'} fontSize='xl'></Flex>
           <Text fontSize={12}>Notification</Text>
-        </Button>
+        </Button>)}
       </NavLink>
 
       <NavLink
@@ -56,10 +56,10 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        <Button flexDir="column">
-          <Flex className="bi-chat-left" fontSize='xl'></Flex>
+        {({isActive})=>(<Button flexDir="column">
+          <Flex className={isActive ? "bi-chat-left-fill" : 'bi-chat-left'} fontSize='xl'></Flex>
           <Text fontSize={12}>Message</Text>
-        </Button>
+        </Button>)}
       </NavLink>
 
       <NavLink
@@ -68,10 +68,10 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        <Button flexDir="column">
-          <Flex className="bi-person" fontSize='xl'></Flex>
+        {({isActive})=>(<Button flexDir="column">
+          <Flex className={isActive ? "bi-person-fill" : 'bi-person'} fontSize='xl'></Flex>
           <Text fontSize={12}>Profil</Text>
-        </Button>
+        </Button>)}
       </NavLink>
     </Flex>
   );

@@ -3,13 +3,13 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef } from "react";
 
-const CommentPost = () => {
+const CommentPost = ({post}) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
   const inputRef=useRef();
 
   return (
     <>
-      <Button flexDir="column" onClick={onOpen}>
+      <Button flexDir="column" onClick={onOpen} color={post.contentType==='string' && 'black'}>
         <FontAwesomeIcon size="lg" icon={faComment}></FontAwesomeIcon>
         <Text fontSize='xs'>26</Text>
       </Button>

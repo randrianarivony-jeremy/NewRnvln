@@ -32,7 +32,7 @@ const Post = ({ post }) => {
 
       <Box
         position="absolute"
-        bottom={3}
+        bottom={3} color={post.contentType==='string' && 'black'}
         textAlign="left"
         maxWidth="75%"
         marginLeft={3}
@@ -57,7 +57,7 @@ const Post = ({ post }) => {
               {descriptionOverflow && (
                 <Button
                   variant="link"
-                  size="sm"
+                  size="sm" color={post.contentType==='string' && 'black'}
                   position="absolute"
                   right={0}
                   bottom={0}
@@ -93,16 +93,16 @@ const Post = ({ post }) => {
                 className="bi-plus"
               ></Flex>
             </Button>
-            <LikePost />
-            <CommentPost />
-            <RespondPost />
-            <Button flexDir='column'>
+            <LikePost post={post}/>
+            <CommentPost post={post} />
+            <RespondPost post={post}/>
+            <Button flexDir='column' color={post.contentType==='string' && 'black'}>
               <FontAwesomeIcon size="lg" icon={faQuestion}></FontAwesomeIcon>
               <Text fontSize='xs'>99</Text>
             </Button>
           </>
         )}
-        <Button boxSize={12} onClick={() => setExpandBtn(!expandBtn)}>
+        <Button boxSize={12} onClick={() => setExpandBtn(!expandBtn)} color={post.contentType==='string' && 'black'}>
           {expandBtn ? (
             <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>
           ) : (

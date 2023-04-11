@@ -3,9 +3,9 @@ import { faComments } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
-const RespondPost = () => {
+const RespondPost = ({post}) => {
     return (
-        <Button boxSize={10}>
+        <Button boxSize={10} color={post.contentType==='string' && 'black'}>
               <FontAwesomeIcon size='lg' icon={faComments}></FontAwesomeIcon>
             </Button>
     );

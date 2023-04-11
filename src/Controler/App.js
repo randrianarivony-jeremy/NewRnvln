@@ -12,10 +12,9 @@ function App() {
   const [content, setContent] = useState();
   return (
     <Box
-      width="100%"
       maxW={420}
-      className="app" maxH='100vh' overflowY='hidden'
-      height="100vh" border='1px solid red'
+      className="app" height='100vh'
+       boxSizing="border-box"
       position="relative"
       margin="auto"
     >

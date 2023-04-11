@@ -26,8 +26,7 @@ const Loader=()=>{
 
 const Routes = () => {
   return (
-    <>
-      <Box className='route' height='100%'>
+      <Box height='100%'>
           <BrowserRouter>
             <ROUTES>
                 <Route path="/" element={<Suspense fallback={<Loader/>}><Home /></Suspense>} />
@@ -47,7 +46,6 @@ const Routes = () => {
             </ROUTES>
           </BrowserRouter>
         </Box>
-    </>
   );
 };
 

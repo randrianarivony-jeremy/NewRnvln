@@ -1,7 +1,7 @@
 import {Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerHeader,DrawerOverlay,Flex,Stack,Text,useColorMode,useDisclosure,} from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import HomeFeed from "./HomeFeed";
+import InfiniteSlider from "./InfiniteSlider";
 import QuestionsOnly from "./QuestionsOnly";
 import SubscriptionOnly from "./SubscriptionOnly";
 
@@ -26,7 +26,7 @@ const Menu = ({setThread}) => {
           <DrawerHeader fontSize='md' fontWeight='bold'>Menu</DrawerHeader>
           <DrawerBody paddingX={3} paddingY={0}>
             <Stack>
-              <Button justifyContent='flex-start' onClick={()=>{setThread(<HomeFeed/>);onClose()}}>
+              <Button justifyContent='flex-start' onClick={()=>{setThread(<InfiniteSlider/>);onClose()}}>
                 <Flex className="bi-house" width={10} fontSize='xl'></Flex>
                 <Text>Accueil</Text>
               </Button>

@@ -5,11 +5,15 @@ import Routes from "./Routes";
 import audio from "../Assets/audio.m4a";
 import video from "../Assets/video.mp4";
 import image from "../Assets/image.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { publicationContext } from "./Context";
 
 function App() {
   const [content, setContent] = useState();
+  useEffect(()=>{
+    window.scrollTo(0,1)
+  },[])
+  
   return (
     <Box
       maxW={420}

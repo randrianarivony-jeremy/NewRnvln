@@ -1,23 +1,20 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import "../Styles/App.css";
 import "swiper/css";
 import Routes from "./Routes";
 import audio from "../Assets/audio.m4a";
 import video from "../Assets/video.mp4";
 import image from "../Assets/image.jpg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { publicationContext } from "./Context";
 
 function App() {
   const [content, setContent] = useState();
-  useEffect(()=>{
-    window.scrollTo(0,1)
-  },[])
-  
+
   return (
     <Box
       maxW={420}
-      className="app" height='100vh'
+      className="app" height='100%'
        boxSizing="border-box"
       position="relative"
       margin="auto"

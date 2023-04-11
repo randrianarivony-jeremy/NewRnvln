@@ -58,7 +58,7 @@ const SubscribeDrawer = ({ onOpen, isOpen, onClose }) => {
         onClose={onClose}
       >
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent maxH='90%'>
           <DrawerCloseButton />
           <DrawerHeader textAlign="center" fontSize='sm'>
             S'abonner à
@@ -73,10 +73,10 @@ const SubscribeDrawer = ({ onOpen, isOpen, onClose }) => {
                 </Stack>
               </Flex>
               <Text>
-                Frais d'abonnement : <span fontSize="xl">12</span> kAr
+                Frais d'abonnement : <span style={{fontSize:"20px",fontWeight:'500'}}>12</span> kAr
               </Text>
               <Text>
-                Votre portefeuille actuelle : <span fontSize="xl">78</span> kAr
+                Votre portefeuille actuelle : <span style={{fontSize:"20px",fontWeight:'500'}}>78</span> kAr
               </Text>
               <Box>
                 <Text
@@ -87,7 +87,7 @@ const SubscribeDrawer = ({ onOpen, isOpen, onClose }) => {
                   paddingX={3}
                   paddingY={2}
                 >
-                  <span fontSize="xl">78</span> kAr sera déduit de votre
+                  <span style={{fontSize:"20px",fontWeight:'500'}}>78</span> kAr sera déduit de votre
                   portefeuille. Cet abonnement vous permettra de voir tous les
                   contenus publiés par Username, pour une période de 30 jours à
                   compter de ce jour, le {handleDateFormat()}

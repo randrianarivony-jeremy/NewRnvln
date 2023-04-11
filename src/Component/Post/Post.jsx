@@ -80,16 +80,14 @@ const Post = ({ post }) => {
       >
         {expandBtn && (
           <>
-            <Button boxSize={12} position="relative">
+            <Button boxSize={12} position="relative" flexDir='column'>
               <Avatar
-                size="sm"
+                size="md"
                 onClick={() => navigate("/profile/649865164651651")}
               />
-              <Flex
-                position="absolute"
-                bottom={0}
+              <Flex position='relative' bottom={3}
                 borderRadius="full"
-                bgColor="red"
+                bgColor="red" fontSize='xl'
                 className="bi-plus"
               ></Flex>
             </Button>

@@ -7,7 +7,7 @@ const AudioDisplay = ({ audio }) => {
   const containerRef = useRef();
   const [duration,setDuration]=useState();
   const waveSurferRef = useRef({
-    isPlaying: () => false,
+    isPlaying: () => true,
   });
   const [isPlaying, toggleIsPlaying] = useState(false);
 
@@ -24,6 +24,7 @@ const AudioDisplay = ({ audio }) => {
     waveSurfer.on("ready", () => {
       waveSurferRef.current = waveSurfer;
       setDuration(waveSurferRef.current.getDuration());
+      // waveSurfer.current.play();
     });
     waveSurfer.on("audioprocess", () => {
       setDuration(waveSurferRef.current.getDuration()-waveSurferRef.current.getCurrentTime());
@@ -39,19 +40,13 @@ const AudioDisplay = ({ audio }) => {
 
   return (
     <Flex width="100%" flexDir="column" alignItems="center">
-      <Flex width='90%' alignItems='center'>
-        <Box width="100%" ref={containerRef} />
-        <Text width="fit-content" marginLeft={1}>
-          {String(Math.floor(duration / 60)).padStart(2, 0)}:
-          {String(Math.floor(duration % 60)).padStart(2, 0)}
-        </Text>
-      </Flex>
+        <Box width="90%" ref={containerRef} />
       <ButtonGroup variant="ghost">
         <Button
           className="bi-rewind"
           onClick={() => waveSurferRef.current.skipBackward()}
         ></Button>
-        <Button
+        <Button fontSize='3xl'
           onClick={() => {
             waveSurferRef.current.playPause();
             toggleIsPlaying(waveSurferRef.current.isPlaying());
@@ -63,6 +58,10 @@ const AudioDisplay = ({ audio }) => {
           onClick={() => waveSurferRef.current.skipForward()}
         ></Button>
       </ButtonGroup>
+        <Text width="fit-content" marginLeft={1}>
+          {String(Math.floor(duration / 60)).padStart(2, 0)}:
+          {String(Math.floor(duration % 60)).padStart(2, 0)}
+        </Text>
     </Flex>
   );
 };

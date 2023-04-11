@@ -33,6 +33,7 @@ const TakePhoto = () => {
               style={{ height: "100%", objectFit: "cover" }}
               audio={false}
               onUserMediaError={()=>setCamera(false)}
+              mirrored={selfie==='selfie' ? true : false} videoConstraints={{facingMode:selfie}}
             />
           </Box>
           <Button

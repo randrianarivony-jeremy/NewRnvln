@@ -32,7 +32,7 @@ const Post = ({ post }) => {
 
       <Box
         position="absolute"
-        bottom={12}
+        bottom={0}
         textAlign="left"
         maxWidth="75%"
         marginLeft={3}
@@ -74,7 +74,7 @@ const Post = ({ post }) => {
       <Stack
         position="absolute"
         right={0}
-        bottom={12}
+        bottom={0}
         align="center"
         marginRight={1}
       >

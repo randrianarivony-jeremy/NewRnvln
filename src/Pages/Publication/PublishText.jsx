@@ -23,7 +23,7 @@ const PublishText = () => {
         ></Button>
         <Button fontSize="md">Créer une publication</Button>
       </Flex>
-      <Stack paddingX={3} height="100%" justify='space-between'>
+      <Stack paddingX={3} height="100%" minH='calc(100vh-50px)' justify='space-between'>
         <Stack>
         <ResizableTextarea textareaBg={textareaBg}/>
         <ButtonGroup

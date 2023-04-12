@@ -39,7 +39,7 @@ const AskQuestion = () => {
         ></Button>
         <Button>Poser une question</Button>
       </Flex>
-      <Stack paddingX={3} justify='space-between' height='100%'>
+      <Stack paddingX={3} justify='space-between' height="100%" minH='calc(100vh-50px)'>
         
         <ButtonGroup
           variant="float"

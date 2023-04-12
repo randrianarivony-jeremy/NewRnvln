@@ -9,7 +9,7 @@ const PublishMedia = () => {
   const { content } = useContext(publicationContext);
 
   return (
-    <Stack height="100%">
+    <Stack height="100%" spacing={0}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button
           variant="float"
@@ -18,7 +18,7 @@ const PublishMedia = () => {
         ></Button>
         <Button>Créer une publication</Button>
       </Flex>
-      <Stack paddingX={3}>
+      <Stack position='relative' paddingX={3} height='100%' paddingY={2}>
         {content.type === "image" ? (
           <Image src={content.content} alt="image" width="100%" objectFit="contain" />
         ) : content.type === "audio" ? (
@@ -33,7 +33,7 @@ const PublishMedia = () => {
             "::-webkit-resizer": { display: "none" },
           }}
         ></Textarea>
-        <HStack>
+        <HStack paddingY={2} paddingX={3} position='absolute' bottom={0} left={0} width='100%'>
           <Button width="100%" onClick={() => navigate(-1)}>
             Annuler
           </Button>

@@ -19,7 +19,7 @@ const TakePicture = ({ sendResponse }) => {
       {camera && (
         <>
           <Box position="absolute" zIndex={3} top={0} left={0} height='100%'>
-            <WebCam ref={webcamRef} mirrored={selfie==='selfie' ? true : false} videoConstraints={{facingMode:selfie}} onUserMediaError={()=>setCamera(false)} screenshotFormat="image/jpeg" style={{height:'100%',objectFit:'cover'}} audio={false}/>
+            <WebCam ref={webcamRef} mirrored={selfie==='selfie' ? false : true} videoConstraints={{facingMode:selfie}} onUserMediaError={()=>setCamera(false)} screenshotFormat="image/jpeg" style={{height:'100%',objectFit:'cover'}} audio={false}/>
           </Box>
           <Button position="absolute" zIndex={3} left={"50%"} width={100} bottom={10} transform='auto' translateX='-50%'
            bgColor="transparent" className="bi-circle" fontSize={60}

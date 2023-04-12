@@ -57,7 +57,7 @@ const PubText = () => {
     </Stack>
       <HStack>
         <Button width="100%" onClick={() => setDisplay(<Options />)}>
-          Annuler
+          Changer
         </Button>
         <Button variant="primary" width="100%" onClick={() => navigate("/")}>
           Publier

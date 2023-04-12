@@ -17,20 +17,22 @@ import {
 import { useCallback, useContext, useRef, useState } from "react";
 import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
-import { publicationContext } from "../../Controler/Context";
-import { useNavigate } from "react-router-dom";
+import PubMedia from "./PubMedia";
+import { optionContext } from "./Interview";
+import Question from "../../Component/Question";
 
-const PublishVideo = () => {
+const TakeVideo = () => {
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [camera, setCamera] = useState(false);
+  const [cameraReady, setCameraReady] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isPaused, setIsPaused] = useState(true);
   const [recordedChunks, setRecordedChunks] = useState([]);
-  const [selfie, setSelfie] = useState("environment");
-  const { setContent } = useContext(publicationContext);
-  const navigate = useNavigate();
+  const [facingMode, setFacingMode] = useState("environment");
+  const { setDisplay,question } = useContext(optionContext);
+
   const { seconds, minutes, start, pause } = useStopwatch({
     autoStart: false,
   });
@@ -82,21 +84,29 @@ const PublishVideo = () => {
       const blob = new Blob(recordedChunks, {
         type: "video/webm",
       });
-      setContent({ content: URL.createObjectURL(blob), type: "video" });
       setCamera(false);
       setRecordedChunks([]);
-      navigate("/publication/media");
+      setDisplay(
+        <PubMedia
+          data={{ content: URL.createObjectURL(blob), type: "video" }}
+        />
+      );
     }
   };
 
   const handleExit = () => {
+    setCamera(false);
+    setCameraReady(false);
+  };
+
+  const handleCancel = () => {
     onOpen();
     handlePause();
   };
 
   const handleConfirmExit = () => {
     handleStopCaptureClick();
-    setCamera(false);
+    handleExit();
     onClose();
   };
 
@@ -120,82 +130,96 @@ const PublishVideo = () => {
           <WebCam
             ref={webcamRef}
             audio="true"
+            onUserMedia={() => setCameraReady(true)}
             onUserMediaError={() => setCamera(false)}
             style={{ height: "100%", objectFit: "cover" }}
-            mirrored={selfie === "selfie" ? true : false}
-            videoConstraints={{ facingMode: selfie }}
+            mirrored={facingMode === "user" ? true : false}
+            videoConstraints={{ facingMode }}
           />
         </Box>
       )}
 
-      {camera && (
+      {cameraReady && (
         <>
-        {/* CLOSE BUTTON  */}
-          <Button position="absolute" fontSize="xl" zIndex={3} top={5} left={5} className="bi-x-lg"
-            onClick={() => (capturing ? handleExit() : setCamera(false))}
+        <Flex position="absolute" zIndex={3} top={0} left={0}>
+          {/* CLOSE BUTTON  */}
+          <Button
+            
+            fontSize="xl"
+            
+            className="bi-x-lg"
+            onClick={() => (capturing ? handleCancel() : handleExit())}
           ></Button>
+
+          <Question question={question}/>
+
           {/* SELFIE BUTTON  */}
-          <Button className="bi-arrow-repeat" fontSize="xl" position="absolute" zIndex={3} top={5} right={5}
+          <Button
+            className="bi-arrow-repeat"
+            fontSize="xl"
             onClick={() =>
-              selfie === "user" ? setSelfie("environment") : setSelfie("user")
+              facingMode === "user"
+                ? setFacingMode("environment")
+                : setFacingMode("user")
             }
           ></Button>
-        </>
-      )}
+          </Flex>
 
-      {/* CONTROLS BUTTONS */}
-      {camera && (
-        <HStack
-          position="absolute"
-          zIndex={3}
-          left={"50%"}
-          transform="auto"
-          translateX="-50%"
-          bottom={"10%"}
-        >
-          {capturing && (
-            <HStack>
-              {isPaused ? (
-                <Button className="bi-play" onClick={handlePlay}></Button>
-              ) : (
-                <Button className="bi-pause" onClick={handlePause}></Button>
-              )}
-              <Box>
-                <span>{String(minutes).padStart(2, 0)}</span>:
-                <span>{String(seconds).padStart(2, 0)}</span>
-              </Box>
-            </HStack>
-          )}
+          {/* CONTROLS BUTTONS */}
+          <HStack
+            position="absolute"
+            zIndex={3}
+            left={"50%"}
+            transform="auto"
+            translateX="-50%"
+            bottom={"10%"}
+          >
+            {capturing && (
+              <HStack>
+                {isPaused ? (
+                  <Button className="bi-play" onClick={handlePlay}></Button>
+                ) : (
+                  <Button className="bi-pause" onClick={handlePause}></Button>
+                )}
+                <Box>
+                  <span>{String(minutes).padStart(2, 0)}</span>:
+                  <span>{String(seconds).padStart(2, 0)}</span>
+                </Box>
+              </HStack>
+            )}
 
-          {/* SAVE & RESET BUTTON  */}
-          {recordedChunks.length > 0 && !capturing && (
+            {/* SAVE & RESET BUTTON  */}
+            {recordedChunks.length > 0 && !capturing && (
               <Button
                 onClick={handleStartCaptureClick}
                 className="bi-arrow-clockwise"
               ></Button>
-          )}
-          {/* start & end capturing button  */}
-          {!capturing ? (
-            <Button boxSize={14} rounded='full'
-              bgColor="transparent"
-              border="2px solid red"
-              className={"bi-circle-fill"}
-              fontSize={40}
-              onClick={handleStartCaptureClick}
-            ></Button>
-          ) : (
-            <Button
-              className="bi-square-fill"
-              color="red"
-              onClick={handleStopCaptureClick}
-            ></Button>
-          )}
+            )}
+            {/* start & end capturing button  */}
+            {!capturing ? (
+              <Button
+                boxSize={14}
+                rounded="full"
+                bgColor="transparent"
+                border="2px solid red"
+                className={"bi-circle-fill"}
+                fontSize={40}
+                onClick={handleStartCaptureClick}
+              ></Button>
+            ) : (
+              <Button
+                className="bi-square-fill"
+                color="red"
+                onClick={handleStopCaptureClick}
+              ></Button>
+            )}
 
-          {/* SAVE & RESET BUTTON  */}
-          {recordedChunks.length > 0 && !capturing && (
+            {/* SAVE & RESET BUTTON  */}
+            {recordedChunks.length > 0 && !capturing && (
               <Button onClick={handleSubmit} className="bi-check-lg"></Button>
-          )}
-        </HStack>
+            )}
+          </HStack>
+        </>
       )}
 
       {/* Exit confirmation modal */}
@@ -222,4 +246,4 @@ const PublishVideo = () => {
   );
 };
 
-export default PublishVideo;
+export default TakeVideo;

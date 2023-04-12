@@ -2,11 +2,11 @@ import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
-import PublishVideo from "./PublishVideo";
 import SendVoice from "./SendVoice";
 import TakePhoto from "./TakePhoto";
 import UploadPhoto from "./UploadPhoto";
 import UploadVideo from "./UploadVideo";
+import VideoRecord from "./VideoRecord";
 
 const Publication = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Publication = () => {
           </HStack>
           <HStack alignItems="center" justify="center">
             <SendVoice/>
-            <PublishVideo/>
+            <VideoRecord/>
           </HStack>
         </Stack>
         <Button variant="cta" onClick={() => navigate("/question")}>

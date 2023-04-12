@@ -2,9 +2,9 @@ import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react';
 import React, { useContext } from 'react';
 import { optionContext } from './Interview';
 import PubText from './PubText';
-import PublishVideo from './PublishVideo';
 import SendVoice from './SendVoice';
 import TakePhoto from './TakePhoto';
+import TakeVideo from './TakeVideo';
 import UploadPhoto from './UploadPhoto';
 import UploadVideo from './UploadVideo';
 
@@ -25,7 +25,7 @@ const Options = () => {
           </HStack>
           <HStack alignItems="center" justify="center">
             <SendVoice/>
-            <PublishVideo/>
+            <TakeVideo/>
           </HStack>
         </Stack>
     );

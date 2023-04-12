@@ -100,17 +100,6 @@ const Post = ({ post }) => {
             </Button>
             <LikePost post={post} />
             <CommentPost post={post} />
-            <Button
-              flexDir="column"
-              color={
-                post.contentType === "string" &&
-                post.bg !== "transparent" &&
-                "black"
-              }
-            >
-              <Flex fontSize="xl" className="bi-question-lg"></Flex>
-              <Text fontSize="xs">99</Text>
-            </Button>
           </>
         )}
         <Button

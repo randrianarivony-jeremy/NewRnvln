@@ -1,7 +1,7 @@
 import { Textarea } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const ResizableTextarea = ({textareaBg}) => {
+const ResizableTextarea = ({textareaBg,placeholder}) => {
   const responseRef = useRef();
   const [value, setValue] = useState("");
 
@@ -16,7 +16,7 @@ const ResizableTextarea = ({textareaBg}) => {
   }, [responseRef, value]);
     return (
         <Textarea ref={responseRef} bg={textareaBg} onChange={(e)=>setValue(e.target.value)}
-          placeholder="Ecrire quelque chose..."
+          placeholder={placeholder ?? "Ecrire quelque chose..."}
           sx={{
             "::-webkit-scrollbar": { display: "none" },
             "::-webkit-resizer": { display: "none" },

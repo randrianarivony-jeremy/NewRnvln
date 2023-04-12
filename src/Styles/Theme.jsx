@@ -67,7 +67,10 @@ export  const theme = extendTheme({
             },
           },
           defaultProps: {
-            variant:'ghost'
+            variant:'ghost',
+            _active:{
+              bgColor:'#fff'
+            }
           },
         },
         Badge:{
@@ -88,7 +91,7 @@ export  const theme = extendTheme({
   }
 
 export const ClickableFlex = (BoxProps) => (
-  <Flex cursor='pointer' fontSize='sm' align='center' _hover={{bg:'whiteAlpha.200'}} rounded='md' paddingX={3} paddingY={2} {...BoxProps} />
+  <Flex cursor='pointer' fontSize='sm' align='center' _hover={{bg:'whiteAlpha.200'}} rounded='lg' paddingX={3} paddingY={2} {...BoxProps} />
 )
 
 export const Scroll = (BoxProps) => (

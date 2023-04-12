@@ -97,7 +97,7 @@ const AskQuestion = () => {
             "::-webkit-scrollbar": { display: "none" },
             "::-webkit-resizer": { display: "none" },
           }}
-          onChange={handleTextChange}
+          onChange={handleTextChange} border='none'
         ></Textarea>
         <HStack>
           <Button width="100%" onClick={() => navigate(-1)}>

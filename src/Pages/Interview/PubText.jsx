@@ -11,50 +11,56 @@ const PubText = () => {
   const navigate = useNavigate();
 
   return (
-    <Stack height='100%' justify='space-between'>
-    <Stack>
-      <ResizableTextarea textareaBg={textareaBg} />
-      <ButtonGroup variant="float" align="center" justifyContent="space-around">
-        <Button
-          border={
-            textareaBg === "transparent" ? "2px solid black" : "1px solid black"
-          }
-          bg="transparent"
-          rounded="full"
-          onClick={() => setTextareaBg("transparent")}
-        ></Button>
-        <Button
-          border={textareaBg === "gradient1" && "2px solid black"}
-          bg="gradient1"
-          rounded="full"
-          onClick={() => setTextareaBg("gradient1")}
-        ></Button>
-        <Button
-          border={textareaBg === "gradient2" && "2px solid black"}
-          bg="gradient2"
-          rounded="full"
-          onClick={() => setTextareaBg("gradient2")}
-        ></Button>
-        <Button
-          border={textareaBg === "gradient3" && "2px solid black"}
-          bg="gradient3"
-          rounded="full"
-          onClick={() => setTextareaBg("gradient3")}
-        ></Button>
-        <Button
-          border={textareaBg === "gradient4" && "2px solid black"}
-          bg="gradient4"
-          rounded="full"
-          onClick={() => setTextareaBg("gradient4")}
-        ></Button>
-        <Button
-          border={textareaBg === "gradient5" && "2px solid black"}
-          bg="gradient5"
-          rounded="full"
-          onClick={() => setTextareaBg("gradient5")}
-        ></Button>
-      </ButtonGroup>
-    </Stack>
+    <Stack height="300px" justify="space-between">
+      <Stack>
+        <ResizableTextarea textareaBg={textareaBg} placeholder='Votre réponse' />
+        <ButtonGroup
+          variant="float"
+          align="center"
+          justifyContent="space-around"
+        >
+          <Button
+            border={
+              textareaBg === "transparent"
+                ? "2px solid black"
+                : "1px solid black"
+            }
+            bg="transparent"
+            rounded="full"
+            onClick={() => setTextareaBg("transparent")}
+          ></Button>
+          <Button
+            border={textareaBg === "gradient1" && "2px solid black"}
+            bg="gradient1"
+            rounded="full"
+            onClick={() => setTextareaBg("gradient1")}
+          ></Button>
+          <Button
+            border={textareaBg === "gradient2" && "2px solid black"}
+            bg="gradient2"
+            rounded="full"
+            onClick={() => setTextareaBg("gradient2")}
+          ></Button>
+          <Button
+            border={textareaBg === "gradient3" && "2px solid black"}
+            bg="gradient3"
+            rounded="full"
+            onClick={() => setTextareaBg("gradient3")}
+          ></Button>
+          <Button
+            border={textareaBg === "gradient4" && "2px solid black"}
+            bg="gradient4"
+            rounded="full"
+            onClick={() => setTextareaBg("gradient4")}
+          ></Button>
+          <Button
+            border={textareaBg === "gradient5" && "2px solid black"}
+            bg="gradient5"
+            rounded="full"
+            onClick={() => setTextareaBg("gradient5")}
+          ></Button>
+        </ButtonGroup>
+      </Stack>
       <HStack>
         <Button width="100%" onClick={() => setDisplay(<Options />)}>
           Changer

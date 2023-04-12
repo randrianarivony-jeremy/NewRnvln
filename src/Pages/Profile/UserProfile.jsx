@@ -23,7 +23,7 @@ const Profile = () => {
         <Button>Profil utilisateur</Button>
       </Flex>
       <Scroll
-        paddingX={3}
+        paddingX={3} paddingY={2}
         spacing={5}
         height='100%'
       >

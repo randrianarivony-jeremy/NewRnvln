@@ -77,7 +77,7 @@ const SendVoice = () => {
                   onClick={handleReset}
                 ></Button>
                 <Button
-                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={15}
+                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
                   className={
                     !isRecording
                       ? "bi-circle-fill"

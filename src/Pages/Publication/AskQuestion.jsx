@@ -30,17 +30,29 @@ const AskQuestion = () => {
   }, [responseRef, value]);
 
   return (
-    <Stack height="100%" paddingBottom={2}>
-      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+    <Stack height="100%" paddingBottom={2} paddingX={3} justify='space-between'>
+      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500" justify='space-between'>
         <Button
           variant="float"
           className="bi-arrow-left"
           onClick={() => navigate(-1)}
         ></Button>
-        <Button>Poser une question</Button>
+        <Button onClick={() => navigate("/")}>
+            Poser
+          </Button>
       </Flex>
-      <Stack paddingX={3} justify='space-between' height="100%" minH='calc(100vh-50px)'>
-        
+      <Textarea
+          bg={textareaBg} rows={1}
+          textAlign="center" borderColor='transparent'
+          ref={responseRef} _placeholder={{fontSize:'2xl'}}
+          placeholder="Appuyez pour écrire"
+          value={value}
+          sx={{
+            "::-webkit-scrollbar": { display: "none" },
+            "::-webkit-resizer": { display: "none" },
+          }}
+          onChange={handleTextChange} border='none'
+        ></Textarea>
         <ButtonGroup
           variant="float"
           align="center"
@@ -87,27 +99,6 @@ const AskQuestion = () => {
             onClick={() => setTextareaBg("gradient5")}
           ></Button>
         </ButtonGroup>
-        <Textarea
-          bg={textareaBg} rows={1}
-          textAlign="center" borderColor='transparent'
-          ref={responseRef} _placeholder={{fontSize:'2xl'}}
-          placeholder="Appuyez pour écrire"
-          value={value}
-          sx={{
-            "::-webkit-scrollbar": { display: "none" },
-            "::-webkit-resizer": { display: "none" },
-          }}
-          onChange={handleTextChange} border='none'
-        ></Textarea>
-        <HStack>
-          <Button width="100%" onClick={() => navigate(-1)}>
-            Annuler
-          </Button>
-          <Button variant="primary" width="100%" onClick={() => navigate("/")}>
-            Poser
-          </Button>
-        </HStack>
-      </Stack>
     </Stack>
   );
 };

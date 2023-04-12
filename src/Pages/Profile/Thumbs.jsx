@@ -9,6 +9,7 @@ const Thumbs = ({ data }) => {
           <Text
             whiteSpace="pre-wrap"
             fontSize="xs"
+            overflowY='hidden'
             maxH="80%"
             maxW="90%"
             textAlign="center"

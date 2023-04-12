@@ -1,17 +1,36 @@
-import { Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerHeader,DrawerOverlay,Flex,Input,Stack,Text,useDisclosure,} from "@chakra-ui/react";
-import { faComment } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Avatar,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Heading,
+  Input,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useRef } from "react";
+import { ClickableFlex, Scroll } from "../../Styles/Theme";
 
-const CommentPost = ({post}) => {
+const CommentPost = ({ post }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const inputRef=useRef();
+  const inputRef = useRef();
 
   return (
     <>
-      <Button flexDir="column" onClick={onOpen} color={post.contentType==='string' && 'black'}>
-        <FontAwesomeIcon size="lg" icon={faComment}></FontAwesomeIcon>
-        <Text fontSize='xs'>26</Text>
+      <Button
+        flexDir="column"
+        onClick={onOpen} className='bi-chat' fontSize='xl'
+        color={
+          post.contentType === "string" && post.bg !== "transparent" && "black"
+        }
+      >
+        <Text fontSize="xs">26</Text>
       </Button>
       <Drawer
         onOpen={onOpen}
@@ -20,51 +39,48 @@ const CommentPost = ({post}) => {
         onClose={onClose}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader textAlign="center" fontWeight='bold' fontSize='xl'>
+        <DrawerContent maxH='75%'>
+          <DrawerCloseButton top={1}/>
+          <DrawerHeader paddingY={2} textAlign="center" fontWeight="bold" fontSize="sm">
             Commentaires
           </DrawerHeader>
           <DrawerBody paddingX={0}>
-            <Stack>
-              <Button justifyContent="flex-start">
-                <Flex className="bi-house" width={10} fontSize="xl"></Flex>
-                <Text>Accueil</Text>
-              </Button>
-              <Button justifyContent="flex-start">
-                <Flex className="bi-people" width={10} fontSize="xl"></Flex>
-                <Text>Abonnements</Text>
-              </Button>
-              <Button justifyContent="flex-start">
-                <Flex
-                  className="bi-question-lg"
-                  width={10}
-                  fontSize="xl"
-                ></Flex>
-                <Text>Questionnaires</Text>
-              </Button>
-              <Button justifyContent="flex-start">
-                <Flex className="bi-gear" width={10} fontSize="xl"></Flex>
-                <Text>Paramètres</Text>
-              </Button>
-              <Button justifyContent="flex-start">
-                <Flex className="bi-sun" width={10} fontSize="xl"></Flex>
-                <Text>Light mode</Text>
-              </Button>
-              <Button justifyContent="flex-start">
-                <Flex
-                  className="bi-box-arrow-right"
-                  width={10}
-                  fontSize="xl"
-                ></Flex>
-                <Text>Se déconnecter</Text>
-              </Button>
-              <Flex paddingX={3}>
-                  <Input ref={inputRef} placeholder="Ajouter un commentaire" />
-                <Button variant="float" className="bi-send"></Button>
-              </Flex>
-            </Stack>
+            <Scroll>
+              <ClickableFlex align="flex-start">
+                <Avatar size="md" />
+                <Stack spacing={1} marginLeft={2}>
+                  <Heading size="sm">Username</Heading>
+                  <Text>
+                    Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem
+                    ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum
+                    dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor
+                    sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit
+                    amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit
+                    amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
+                  </Text>
+                </Stack>
+              </ClickableFlex>
+              <ClickableFlex align="flex-start">
+                <Avatar size="md" />
+                <Stack spacing={1} marginLeft={2}>
+                  <Heading size="sm">Username</Heading>
+                  <Text>
+                    Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem
+                    ipsum dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum
+                    dolor sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor
+                    sit amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit
+                    amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit
+                    amet.Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.
+                  </Text>
+                </Stack>
+              </ClickableFlex>
+            </Scroll>
           </DrawerBody>
+          <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}>
+                <Input ref={inputRef} placeholder="Ajouter un commentaire" />
+                <Button variant="float" className="bi-send"></Button>
+
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>

@@ -1,4 +1,4 @@
-import {Avatar,Box,Button,Flex,Heading,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,useDisclosure,} from "@chakra-ui/react";
+import {Avatar,Box,Button,Flex,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,useDisclosure,} from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -27,10 +27,10 @@ const Profile = () => {
         spacing={5}
         height='100%'
       >
-        <HStack align="center" spacing={3}>
+        <HStack align="flex-start" spacing={3}>
           <Avatar size="md" />
-          <Box fontSize="sm">
-            <Heading size="sm">Username</Heading>
+          <Box overflowX='hidden'>
+            <Text size="sm" fontWeight='bold'>Username</Text>
             <Box marginLeft={5}>
               <Text>Activity </Text>
               <Text>Place </Text>

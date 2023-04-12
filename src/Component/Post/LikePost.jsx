@@ -1,14 +1,11 @@
-import { Button, Text } from '@chakra-ui/react';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faHeart as faHeartFill } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
 const LikePost = ({post}) => {
     const [liked,setLiked]=useState(false);
     return (
-        <Button flexDir='column' onClick={()=>setLiked(!liked)} color={post.contentType==='string' && 'black'}>
-              <FontAwesomeIcon size='lg' color={liked ? 'red' : ''} icon={liked ? faHeartFill : faHeart}></FontAwesomeIcon>
+        <Button flexDir='column' onClick={()=>setLiked(!liked)} color={post.contentType==='string' && post.bg!=='transparent' && 'black'}>
+              <Flex className={liked ? 'bi-heart-fill' : 'bi-heart'} fontSize='xl' color={liked ? 'red' : ''}></Flex>
               <Text fontSize='xs'>101</Text>
             </Button>
     );

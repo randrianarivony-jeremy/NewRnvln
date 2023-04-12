@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import PropTypes from "prop-types";
-import { Box, Button, ButtonGroup, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Flex, HStack, Skeleton, Text } from "@chakra-ui/react";
 
 const AudioDisplay = ({ audio }) => {
   const containerRef = useRef();
   const [duration,setDuration]=useState();
   const waveSurferRef = useRef({
-    isPlaying: () => true,
+    isPlaying: () => false,
   });
   const [isPlaying, toggleIsPlaying] = useState(false);
 
@@ -24,7 +24,6 @@ const AudioDisplay = ({ audio }) => {
     waveSurfer.on("ready", () => {
       waveSurferRef.current = waveSurfer;
       setDuration(waveSurferRef.current.getDuration());
-      // waveSurfer.current.play();
     });
     waveSurfer.on("audioprocess", () => {
       setDuration(waveSurferRef.current.getDuration()-waveSurferRef.current.getCurrentTime());
@@ -58,10 +57,17 @@ const AudioDisplay = ({ audio }) => {
           onClick={() => waveSurferRef.current.skipForward()}
         ></Button>
       </ButtonGroup>
-        <Text width="fit-content" marginLeft={1}>
+        {duration===undefined ? <HStack>
+        <Skeleton height={4} width={2} rounded={2}/>
+        <Skeleton height={4} width={2} rounded={2}/>
+        <Box>:</Box>
+        <Skeleton height={4} width={2} rounded={2}/>
+        <Skeleton height={4} width={2} rounded={2}/>
+        </HStack>
+         : <Text width="fit-content" marginLeft={1}>
           {String(Math.floor(duration / 60)).padStart(2, 0)}:
           {String(Math.floor(duration % 60)).padStart(2, 0)}
-        </Text>
+        </Text>}
     </Flex>
   );
 };

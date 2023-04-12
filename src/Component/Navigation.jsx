@@ -41,13 +41,12 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        <Button flexDir="column">
+        {({isActive})=>(<Button flexDir="column">
         <Flex
-          className="bi-plus-square-fill"
-          sx={ctaBtnColor}
-          fontSize={30}
+          className={isActive ? "bi-plus-square-fill" : 'bi-plus-square'}
+          fontSize='3xl'
         ></Flex>
-      </Button>
+      </Button>)}
       </NavLink>
 
       <NavLink

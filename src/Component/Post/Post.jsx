@@ -21,9 +21,10 @@ const Post = ({ post }) => {
   const descriptionOverflow = useRef();
 
   useEffect(() => {
-    if (descriptionRef.current.clientHeight < descriptionRef.current.scrollHeight) descriptionOverflow.current=true
+    if (descriptionRef.current.scrollHeight > 45)
+      descriptionOverflow.current = true;
     setLoading(false);
-  },[]);
+  }, []);
   return (
     <>
       <Flex height="100%" className="post" alignItems="center" justify="center">
@@ -32,10 +33,14 @@ const Post = ({ post }) => {
 
       <Box
         position="absolute"
-        bottom={3} color={post.contentType==='string' && 'black'}
+        bottom={3}
+        color={
+          post.contentType === "string" && post.bg !== "transparent" && "black"
+        }
         textAlign="left"
         maxWidth="75%"
         marginLeft={3}
+        zIndex={2}
       >
         <Text
           fontWeight="bold"
@@ -51,19 +56,24 @@ const Post = ({ post }) => {
           maxH={!longDescription && 10}
           overflowY="hidden"
         >
-          {post.description}
+          {post?.description}
           {!loading && (
             <>
-              {descriptionOverflow && (
+              {descriptionOverflow.current && (
                 <Button
                   variant="link"
-                  size="sm" color={post.contentType==='string' && 'black'}
+                  size="sm"
+                  color={
+                    post.contentType === "string" &&
+                    post.bg !== "transparent" &&
+                    "black"
+                  }
                   position="absolute"
                   right={0}
                   bottom={0}
                   onClick={() => setLongDescription(!longDescription)}
                 >
-                  {longDescription ? 'Moins' : 'Plus'}
+                  {longDescription ? "Moins" : "Plus"}
                 </Button>
               )}
             </>
@@ -77,36 +87,42 @@ const Post = ({ post }) => {
         bottom={0}
         align="center"
         marginRight={1}
+        zIndex={2}
       >
         {expandBtn && (
           <>
-            <Button boxSize={12} position="relative" flexDir='column'>
+            <RespondPost post={post} />
+            <Button boxSize={10} position="relative" flexDir="column">
               <Avatar
-                size="md"
+                size="sm"
                 onClick={() => navigate("/profile/649865164651651")}
               />
-              <Flex position='relative' bottom={3}
-                borderRadius="full"
-                bgColor="red" fontSize='xl'
-                className="bi-plus"
-              ></Flex>
             </Button>
-            <LikePost post={post}/>
+            <LikePost post={post} />
             <CommentPost post={post} />
-            <RespondPost post={post}/>
-            <Button flexDir='column' color={post.contentType==='string' && 'black'}>
-              <FontAwesomeIcon size="lg" icon={faQuestion}></FontAwesomeIcon>
-              <Text fontSize='xs'>99</Text>
+            <Button
+              flexDir="column"
+              color={
+                post.contentType === "string" &&
+                post.bg !== "transparent" &&
+                "black"
+              }
+            >
+              <Flex fontSize="xl" className="bi-question-lg"></Flex>
+              <Text fontSize="xs">99</Text>
             </Button>
           </>
         )}
-        <Button boxSize={12} onClick={() => setExpandBtn(!expandBtn)} color={post.contentType==='string' && 'black'}>
-          {expandBtn ? (
-            <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>
-          ) : (
-            <FontAwesomeIcon icon={faCaretUp}></FontAwesomeIcon>
-          )}
-        </Button>
+        <Button
+          boxSize={12}
+          className={expandBtn ? "bi-caret-down" : "bi-caret-up"}
+          onClick={() => setExpandBtn(!expandBtn)}
+          color={
+            post.contentType === "string" &&
+            post.bg !== "transparent" &&
+            "black"
+          }
+        ></Button>
       </Stack>
     </>
   );

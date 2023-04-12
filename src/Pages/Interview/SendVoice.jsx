@@ -1,14 +1,13 @@
 import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import { useNavigate } from "react-router-dom";
-import { publicationContext } from "../../Controler/Context";
+import { optionContext } from "./Interview";
+import PubMedia from "./PubMedia";
 
 const SendVoice = () => {
-    const navigate = useNavigate();
-  const { setContent } = useContext(publicationContext);
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
+  const {setDisplay}=useContext(optionContext);
   const {
     startRecording,
     stopRecording,
@@ -26,10 +25,9 @@ const SendVoice = () => {
   };
 
   const handleSubmit = (blob) => {
-    setContent({content:URL.createObjectURL(blob),type:"audio"});
     setRecording(false);
     console.log('ato');
-    navigate('/publication/media');
+    setDisplay(<PubMedia data={{content:URL.createObjectURL(blob),type:"audio"}}/>)
   };
 
   const handleReset = () => {

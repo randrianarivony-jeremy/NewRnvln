@@ -91,7 +91,7 @@ const AskQuestion = () => {
           bg={textareaBg} rows={1}
           textAlign="center" borderColor='transparent'
           ref={responseRef} _placeholder={{fontSize:'2xl'}}
-          placeholder="Que voulez-vous savoir ..."
+          placeholder="Appuyez pour écrire"
           value={value}
           sx={{
             "::-webkit-scrollbar": { display: "none" },

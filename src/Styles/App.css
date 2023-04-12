@@ -65,6 +65,11 @@ html,body,#root{
   align-items: center;
 }
 
+.question-slide{
+  position:absolute;
+  z-index: 5;
+}
+
 .EmojiPickerReact .epr-body::-webkit-scrollbar {
     display: none;
   }

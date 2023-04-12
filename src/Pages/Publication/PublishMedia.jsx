@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AudioDisplay from "../../Component/Post/AudioDisplay";
 import { publicationContext } from "../../Controler/Context";
 
-const PublishImage = () => {
+const PublishMedia = () => {
   const navigate = useNavigate();
   const { content } = useContext(publicationContext);
 
@@ -46,4 +46,4 @@ const PublishImage = () => {
   );
 };
 
-export default PublishImage;
+export default PublishMedia;

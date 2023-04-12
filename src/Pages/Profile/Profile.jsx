@@ -1,4 +1,4 @@
-import {Avatar,Box,Button,Flex,Heading,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,} from "@chakra-ui/react";
+import {Avatar,Box,Button,Flex,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,} from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -12,7 +12,7 @@ import Thumbs from "./Thumbs";
 const Profile = () => {
   const navigate = useNavigate();
   return (
-    <Stack height="100%" spacing={0}>
+    <Stack height="100%" spacing={0} maxWidth='100%'>
       <Flex
         justify="space-between"
         borderBottom="1px solid"
@@ -35,9 +35,9 @@ const Profile = () => {
         height='100%'
       >
         <HStack align="center" spacing={3}>
-          <Avatar size="md" />
-          <Box fontSize="sm">
-            <Heading size="sm">Username</Heading>
+          <Avatar size="md"/>
+          <Box overflowX='hidden'>
+            <Text fontSize="sm" fontWeight='bold'>Username</Text>
             <Box marginLeft={3}>
               <Text>
                 Activity <span className="bi-pencil"></span>
@@ -64,24 +64,30 @@ const Profile = () => {
           <RelationList category="Abonnements" list={subscriptions} />
           <RelationList category="Abonnés" list={subscribers} />
         </HStack>
-        <Tabs size="sm" isFitted height="100%" isLazy={true}>
+        <Tabs size="sm" isFitted height="100%"  isLazy={true}>
           <TabList>
-            <Tab>
+            <Tab width='25%'>
               <Stack spacing={0}>
                   <FontAwesomeIcon size="xl" icon={faComments} />
                 <Text fontSize="xs">Interviews</Text>
               </Stack>
             </Tab>
-            <Tab>
+            <Tab width='25%'>
               <Stack spacing={0}>
                 <Text fontSize='xl' className="bi-grid-3x3-gap"></Text>
                 <Text fontSize="xs">Publications</Text>
               </Stack>
             </Tab>
-            <Tab>
+            <Tab width='25%'>
               <Stack spacing={0}>
                 <Text fontSize='xl' className="bi-bookmark"></Text>
                 <Text fontSize="xs">Enregistrements</Text>
+              </Stack>
+            </Tab>
+            <Tab width='25%'>
+              <Stack spacing={0}>
+                <Text fontSize='xl' className="bi-wallet2"></Text>
+                <Text fontSize="xs">Portefeuille</Text>
               </Stack>
             </Tab>
           </TabList>
@@ -107,6 +113,11 @@ const Profile = () => {
                   <Thumbs data={elt} key={key} />
                 ))}
               </Flex>
+            </TabPanel>
+            <TabPanel paddingY={1} paddingX={0}>
+              <Flex justify='flex-end'><Button variant='outline'>Transfert</Button></Flex>
+              <Flex align='center' justify='center' height='100px'><Text fontWeight='bold' fontSize='3xl' textAlign='center'>78 kAr</Text></Flex>
+              
             </TabPanel>
           </TabPanels>
         </Tabs>

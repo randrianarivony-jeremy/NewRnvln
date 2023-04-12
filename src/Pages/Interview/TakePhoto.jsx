@@ -1,20 +1,18 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
-import { publicationContext } from "../../Controler/Context";
+import { optionContext } from "./Interview";
+import PubMedia from "./PubMedia";
 
 const TakePhoto = () => {
     const [camera, setCamera] = useState(false);
     const webcamRef = useRef();
-    const {setContent}=useContext(publicationContext);
-    const navigate = useNavigate();
+    const {setDisplay}=useContext(optionContext);
     const [selfie, setSelfie] = useState('environment');
   
     const capture = () => {
       const imgSrc = webcamRef.current.getScreenshot();
-      setContent({content:imgSrc,type:'image'});
-      navigate('/publication/media');
+      setDisplay(<PubMedia data={{content:imgSrc,type:'image'}}/>)
       setCamera(false);
     };
 

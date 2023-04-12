@@ -17,8 +17,8 @@ import {
 import { useCallback, useContext, useRef, useState } from "react";
 import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
-import { publicationContext } from "../../Controler/Context";
-import { useNavigate } from "react-router-dom";
+import PubMedia from "./PubMedia";
+import { optionContext } from "./Interview";
 
 const PublishVideo = () => {
   const webcamRef = useRef(null);
@@ -29,8 +29,8 @@ const PublishVideo = () => {
   const [isPaused, setIsPaused] = useState(true);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [selfie, setSelfie] = useState("environment");
-  const { setContent } = useContext(publicationContext);
-  const navigate = useNavigate();
+  const {setDisplay}=useContext(optionContext);
+
   const { seconds, minutes, start, pause } = useStopwatch({
     autoStart: false,
   });
@@ -82,10 +82,9 @@ const PublishVideo = () => {
       const blob = new Blob(recordedChunks, {
         type: "video/webm",
       });
-      setContent({ content: URL.createObjectURL(blob), type: "video" });
       setCamera(false);
       setRecordedChunks([]);
-      navigate("/publication/media");
+      setDisplay(<PubMedia data={{content: URL.createObjectURL(blob), type: "video"}}/>)
     }
   };
 

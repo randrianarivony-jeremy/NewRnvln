@@ -63,7 +63,7 @@ const SubscribeDrawer = ({ onOpen, isOpen, onClose }) => {
           <DrawerHeader textAlign="center" fontSize='sm'>
             S'abonner à
           </DrawerHeader>
-          <DrawerBody paddingX={2}>
+          <DrawerBody paddingX={3}>
             <Stack spacing={5}>
               <Flex>
                 <Avatar size="md" />

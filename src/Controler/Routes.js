@@ -2,8 +2,8 @@ import { Box, Flex, Spinner } from "@chakra-ui/react";
 import React, { lazy, Suspense } from "react";
 import {BrowserRouter,Route,Routes as ROUTES,
 } from "react-router-dom";
+import Home from '../Pages/Home/Home'
 
-const Home = lazy(()=> import("../Pages/Home/Home"));
 const PostContainer = lazy(()=> import("../Component/Post/PostContainer"));
 const Login = lazy(()=>import("../Pages/Login/Login"));
 const Notification = lazy(()=>import("../Pages/Notification/Notification"));
@@ -31,7 +31,7 @@ const Routes = () => {
       <Box height='100%' className="route" width='100%'>
           <BrowserRouter>
             <ROUTES>
-                <Route path="/" element={<Suspense fallback={<Loader/>}><Home /></Suspense>} />
+                <Route path="/" element={<Home />} />
                 <Route path="/post/:id" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
                 <Route path="/login" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
                 <Route path="/message" element={<Suspense fallback={<Loader/>}><Message/></Suspense>} />

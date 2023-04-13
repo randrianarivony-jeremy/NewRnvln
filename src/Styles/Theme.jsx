@@ -41,6 +41,11 @@ export  const theme = extendTheme({
     },
     components: {
         Button: {
+          baseStyle:{
+            // _focus:{
+            //   all:'null'
+            // }
+          },
           variants: {
             'cta': {
               bg: 'gradient',
@@ -69,6 +74,15 @@ export  const theme = extendTheme({
           defaultProps: {
             variant:'ghost',
             _active:{
+              bgColor:'#fff'
+            },
+            _click:{
+              bgColor:'#fff'
+            },
+            _focus:{
+              bgColor:'#fff'
+            },
+            _focusvisible:{
               bgColor:'#fff'
             }
           },

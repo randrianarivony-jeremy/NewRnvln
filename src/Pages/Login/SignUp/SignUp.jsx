@@ -1,11 +1,10 @@
-import {Box,Button,Flex,Heading,Stack,Text,} from "@chakra-ui/react";
+import {Box,Button,Flex,Heading,Image,Stack,Text,} from "@chakra-ui/react";
 import React, { useState } from "react";
-import logo from "../../Assets/logo.svg";
+import logo from "../../../Assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import SignUpSliders from "./SignUpSliders";
 import PaginationSignUpSlide from "./PaginationSignUpSlide";
-import { ReactSVG } from "react-svg";
-import { Scroll } from "../../Styles/Theme";
+import { Scroll } from "../../../Styles/Theme";
 
 const SignUp = ({ setSignin }) => {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ const SignUp = ({ setSignin }) => {
         <Button variant="float" className="bi-arrow-left"
           onClick={() => navigate(-1)}
         ></Button>
-        <ReactSVG src={logo} className="logo" />
+        <Image src={logo} alt="logo" width="80px" margin="auto" />
         <Heading size="md" textAlign="center" height={10}>
           Rejoindre Ranavalona
         </Heading>

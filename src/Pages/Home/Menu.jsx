@@ -1,14 +1,17 @@
 import {Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerHeader,DrawerOverlay,Flex,Stack,Text,useColorMode,useDisclosure,} from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { currentUserContext } from "../../Controler/App";
+import Logout from "../Login/Logout";
 import InfiniteSlider from "./InfiniteSlider";
 import QuestionsOnly from "./QuestionsOnly";
 import SubscriptionOnly from "./SubscriptionOnly";
 
 const Menu = ({setThread}) => {
   const { isOpen, onOpen,onClose } = useDisclosure();
+  const { onOpen:openLogoutModal,onClose:closeLogoutModal,isOpen:openedLogoutModal } = useDisclosure();
+  const {currentUser}=useContext(currentUserContext);
   const navigate = useNavigate();
-//   const [logoutModal, setLogoutModal] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -46,13 +49,16 @@ const Menu = ({setThread}) => {
                 <Flex className={colorMode === "light" ? "bi-moon" : "bi-sun"} width={10} fontSize='xl'></Flex>
                 <Text>{colorMode === "light" ? "Dark mode" : "Light mode"}</Text>
               </Button>
-              <Button justifyContent='flex-start'>
+              {currentUser && <Button justifyContent='flex-start' onClick={openLogoutModal}>
                 <Flex className='bi-box-arrow-right' width={10} fontSize='xl'></Flex>
                 <Text>Se déconnecter</Text>
-              </Button>
-            <Button variant='cta' onClick={()=>navigate('/login')}>Se connecter</Button>
+              </Button>}
+            {currentUser ? 
+            <Button variant='cta' onClick={()=>navigate('/question')}>Poser des questions</Button>
+            : 
+            <Button variant='cta' onClick={()=>navigate('/login')}>Se connecter</Button>}
             </Stack>
-            {/* {logoutModal && <Logout status={logoutModal} />} */}
+            <Logout onOpen={openLogoutModal} onClose={closeLogoutModal} isOpen={openedLogoutModal}/>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

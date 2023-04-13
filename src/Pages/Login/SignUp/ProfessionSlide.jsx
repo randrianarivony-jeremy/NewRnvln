@@ -1,16 +1,18 @@
 import { Button, FormControl, FormLabel, HStack, Input, Stack } from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
+import { signUpContext } from '../Login';
 
 const ProfessionSlide = ({swiper}) => {
+  const {job,address}=useContext(signUpContext);
     return (
         <Stack>
               <FormControl>
                 <FormLabel>Quel travail faites-vous :</FormLabel>
-                <Input placeholder="Profession" />
+                <Input ref={job} placeholder="Profession" />
               </FormControl>
               <FormControl>
                 <FormLabel>Où travaillez-vous :</FormLabel>
-                <Input placeholder="Lieu de travail" />
+                <Input ref={address} placeholder="Lieu de travail" />
               </FormControl>
               <HStack>
               <Button width='100%'

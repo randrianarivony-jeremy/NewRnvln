@@ -1,18 +1,21 @@
-import {Avatar,Box,Button,Flex,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,} from "@chakra-ui/react";
+import {Avatar,Box,Button,Flex,HStack,Image,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,} from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
-import {data,followers,followings,subscribers,subscriptions,} from "../../Controler/App";
+import {currentUserContext, data} from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
 import RelationList from "./RelationList";
 import Thumbs from "./Thumbs";
 
 const Profile = () => {
+  const {currentUser}=useContext(currentUserContext);
   const navigate = useNavigate();
+
   return (
-    <Stack height="100%" spacing={0} maxWidth='100%'>
+    <>
+    {currentUser ? <Stack height="100%" spacing={0} maxWidth='100%'>
       <Flex
         justify="space-between"
         borderBottom="1px solid"
@@ -35,34 +38,38 @@ const Profile = () => {
         height='100%'
       >
         <HStack align="center" spacing={3}>
-          <Avatar size="md"/>
+          {currentUser.picture ? <Image src={currentUser.picture} alt='profile_pic' boxSize={12} rounded='full' objectFit='cover'/>
+          :<Avatar size="md"/>}
           <Box overflowX='hidden'>
-            <Text fontSize="sm" fontWeight='bold'>Username</Text>
-            <Box marginLeft={3}>
+            <Text fontWeight='bold'>{currentUser.name}</Text>
+            <Box marginLeft={3} fontSize="sm">
               <Text>
-                Activity <span className="bi-pencil"></span>
+                {currentUser?.job ?? 'Activité'} <span className="bi-pencil"></span>
               </Text>
               <Text>
-                Place <span className="bi-pencil"></span>
+                {currentUser.address ?? 'Bureau'} <span className="bi-pencil"></span>
               </Text>
               <Text>
-                Projet <span className="bi-pencil"></span>
+                {currentUser.project ?? 'Projet'} <span className="bi-pencil"></span>
               </Text>
             </Box>
           </Box>
         </HStack>
-        <Button
+        {currentUser.philosophy ? 
+        <Text>{currentUser.philosophy}</Text>
+        : <Button
           variant="outline"
           minHeight={10}
           rightIcon={<span className="bi-pencil"></span>}
         >
           Ajouter votre philosophie de l'argent
-        </Button>
+        </Button>}
         <HStack justify="space-around">
-          <RelationList category="Followings" list={followings} />
-          <RelationList category="Followers" list={followers} />
-          <RelationList category="Abonnements" list={subscriptions} />
-          <RelationList category="Abonnés" list={subscribers} />
+          <RelationList category="Followings" list={currentUser.followings} />
+          <RelationList category="Followers" list={currentUser.followers} />
+          {currentUser.subscription ? <><RelationList category="Abonnements" list={currentUser.subscriptions} />
+          <RelationList category="Abonnés" list={currentUser.subscribers} /></> :
+          <Button variant='outline'>Activer l'abonnement</Button>}
         </HStack>
         <Tabs size="sm" isFitted height="100%"  isLazy={true}>
           <TabList>
@@ -116,7 +123,7 @@ const Profile = () => {
             </TabPanel>
             <TabPanel paddingY={1} paddingX={0}>
               <Flex justify='flex-end'><Button variant='outline'>Transfert</Button></Flex>
-              <Flex align='center' justify='center' height='100px'><Text fontWeight='bold' fontSize='3xl' textAlign='center'>78 kAr</Text></Flex>
+              <Flex align='center' justify='center' height='100px'><Text fontWeight='bold' fontSize='3xl' textAlign='center'>{currentUser.wallet} kAr</Text></Flex>
               
             </TabPanel>
           </TabPanels>
@@ -124,7 +131,13 @@ const Profile = () => {
       </Scroll>
 
       <Navigation />
-    </Stack>
+    </Stack> : <Stack height="100%" maxWidth='100%' justify='center' paddingX={3}>
+      <Image paddingX={3} paddingY={2}
+      src='https://firebasestorage.googleapis.com/v0/b/rnvln-611b7.appspot.com/o/tantsaha.jpg?alt=media&token=75326712-8b3e-4d4e-af41-5ca288ee5591' alt='illustration'/>
+      <Button variant='cta'>Se connecter</Button>
+      <Button onClick={() => navigate(-1)}>Retour</Button>
+      </Stack>}
+    </>
   );
 };
 

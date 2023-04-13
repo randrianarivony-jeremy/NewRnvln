@@ -9,7 +9,7 @@ const PublishMedia = () => {
   const { content } = useContext(publicationContext);
 
   return (
-    <Stack position='relative' height="100vh" spacing={0}>
+    <Stack position='relative' minHeight="100vh" spacing={0}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button
           variant="float"

@@ -2,7 +2,6 @@ import {
   Button,
   ButtonGroup,
   Flex,
-  HStack,
   Stack,
   Textarea,
 } from "@chakra-ui/react";
@@ -55,7 +54,7 @@ const AskQuestion = () => {
         ></Textarea>
         <ButtonGroup
           variant="float"
-          align="center"
+          align="center" 
           justifyContent="space-around"
         >
           <Button

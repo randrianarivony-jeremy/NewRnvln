@@ -2,15 +2,10 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
   Grid,
   GridItem,
   Heading,
   Image,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -18,7 +13,6 @@ import logo from "../../../Assets/RANAVALONA.png";
 import { useNavigate } from "react-router-dom";
 import SignUpSliders from "./SignUpSliders";
 import PaginationSignUpSlide from "./PaginationSignUpSlide";
-import { Scroll } from "../../../Styles/Theme";
 
 const SignUp = ({ setSignin }) => {
   const navigate = useNavigate();

@@ -50,3 +50,7 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 [debug] [2023-04-13T10:27:16.029Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rnvln-611b7/adminSdkConfig 200
 [debug] [2023-04-13T10:27:16.032Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rnvln-611b7/adminSdkConfig {"projectId":"rnvln-611b7","storageBucket":"rnvln-611b7.appspot.com","locationId":"europe-west"}
 [info] i  storage: Change detected, updating rules for Cloud Storage... {"metadata":{"emulator":{"name":"storage"},"message":"Change detected, updating rules for Cloud Storage..."}}
+[info] i  storage: Change detected, updating rules for Cloud Storage... {"metadata":{"emulator":{"name":"storage"},"message":"Change detected, updating rules for Cloud Storage..."}}
+[info] i  storage: Change detected, updating rules for Cloud Storage... {"metadata":{"emulator":{"name":"storage"},"message":"Change detected, updating rules for Cloud Storage..."}}
+[info] i  storage: Change detected, updating rules for Cloud Storage... {"metadata":{"emulator":{"name":"storage"},"message":"Change detected, updating rules for Cloud Storage..."}}
+[info] i  storage: Change detected, updating rules for Cloud Storage... {"metadata":{"emulator":{"name":"storage"},"message":"Change detected, updating rules for Cloud Storage..."}}

@@ -11,7 +11,7 @@ const SignUp = ({ setSignin }) => {
   const [activeIndex,setActiveIndex]=useState(0);
   
   return (
-    <Stack className="signup" height="100%" width="100%" paddingX={3} paddingBottom={2}>
+    <Stack className="signup" height="100%" width="100%" minH='80vh' paddingX={3} paddingBottom={2}>
       <Box height="20%">
         <Button variant="float" className="bi-arrow-left"
           onClick={() => navigate(-1)}

@@ -57,7 +57,7 @@ const SignIn = ({ setSignin }) => {
   return (
     <Box
       className="signin"
-      height="100%"
+      height="100%" minH='80vh'
       width="100%"
       paddingX={3}
       paddingBottom={2}

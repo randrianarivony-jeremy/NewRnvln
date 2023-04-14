@@ -11,7 +11,7 @@ const PubText = () => {
   const navigate = useNavigate();
 
   return (
-    <Stack height="100%" minH='500px' justify="space-between">
+    <Stack height="100%" justify="space-between">
       <Stack>
         <ResizableTextarea textareaBg={textareaBg} placeholder='Votre réponse' />
         <ButtonGroup

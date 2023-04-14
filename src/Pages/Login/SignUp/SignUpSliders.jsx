@@ -16,14 +16,14 @@ const SignUpSliders = ({ setActiveIndex }) => {
   }
 
   return (
-    <Stack justify="center" height="100%">
+    <Stack justify="center" height="100%" minW='100%'>
         <Swiper spaceBetween={10} allowTouchMove={true} ref={signUpSwiperRef} autoHeight={true} className='signup-swiper' onSlideChange={({ realIndex }) => setActiveIndex(realIndex)} >
           <SwiperSlide>
             <form onSubmit={handleNext}>
             <Stack>
               <FormControl>
                 <FormLabel>Quel nom voulez-vous utiliser :</FormLabel>
-                <Input ref={name} placeholder="Nom d'utilisateur"isRequired/>
+                <Input type='text' ref={name} placeholder="Nom d'utilisateur"isRequired/>
               </FormControl>
               <Input as='button' type='submit' bgColor='bleu' fontWeight='semibold'>Suivant</Input>
             </Stack>

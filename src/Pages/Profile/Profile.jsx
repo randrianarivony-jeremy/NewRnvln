@@ -33,7 +33,7 @@ const Profile = () => {
           onClick={() => navigate("/parameters")}
         ></Button>
       </Flex>
-      <Scroll paddingX={3}
+      <Scroll paddingX={2}
         spacing={5}
         height='100%'
       >
@@ -85,7 +85,7 @@ const Profile = () => {
                 <Text fontSize="xs">Publications</Text>
               </Stack>
             </Tab>
-            <Tab width='25%'>
+            <Tab width='25%' overflowX='hidden'>
               <Stack spacing={0}>
                 <Text fontSize='xl' className="bi-bookmark"></Text>
                 <Text fontSize="xs">Enregistrements</Text>

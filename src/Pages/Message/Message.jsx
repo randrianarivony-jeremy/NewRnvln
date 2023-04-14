@@ -8,9 +8,9 @@ const Message = () => {
   const navigate = useNavigate();
   return (
     <Stack height='100%' spacing={0}>
-      <Button width="100%">
-        Messages
-      </Button>
+      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+        <Button width='100%'>Message</Button>
+      </Flex>
       <Scroll
           height='100%'>
             <ClickableFlex justify="space-between" onClick={() => navigate("/chat")} >

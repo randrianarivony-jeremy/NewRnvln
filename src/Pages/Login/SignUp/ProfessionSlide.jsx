@@ -8,11 +8,11 @@ const ProfessionSlide = ({swiper}) => {
         <Stack>
               <FormControl>
                 <FormLabel>Quel travail faites-vous :</FormLabel>
-                <Input ref={job} placeholder="Profession" />
+                <Input type='text' ref={job} placeholder="Profession" />
               </FormControl>
               <FormControl>
                 <FormLabel>Où travaillez-vous :</FormLabel>
-                <Input ref={address} placeholder="Lieu de travail" />
+                <Input type='text' ref={address} placeholder="Lieu de travail" />
               </FormControl>
               <HStack>
               <Button width='100%'

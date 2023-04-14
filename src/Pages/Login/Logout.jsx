@@ -22,7 +22,8 @@ const Logout = ({onOpen,onClose,isOpen}) => {
     await axios.get(process.env.REACT_APP_API_URL+"/api/user/logout",
       {withCredentials: true},
     )
-      .then(() => {
+      .then((res) => {
+        console.log(res);
         removeCookie("jwt");
         toast({
           title: "Vous avez déconnecté",

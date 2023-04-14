@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import ChatScroller from "./ChatScroller";
 import ChatInput from "./ChatInput";
+import { Scroll } from "../../Styles/Theme";
 
 const Chat = () => {
   const navigate = useNavigate();
@@ -21,14 +22,14 @@ const Chat = () => {
     "exercitationem",
   ];
   return (
-    <Stack height='100%' padding='0 12px 8px 12px' position='relative'>
+    <Scroll height='100%' className='chat' padding='0 12px 8px 12px' position='relative'>
       <Flex borderBottom='1px solid' borderBottomColor='whiteAlpha.500'>
         <Button variant='float' className="bi-arrow-left" onClick={() => navigate(-1)}></Button>
         <Button>Usename</Button>
       </Flex>
       <ChatScroller data={messages} />
       <ChatInput />
-    </Stack>
+    </Scroll>
   );
 };
 

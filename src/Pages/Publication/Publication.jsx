@@ -12,14 +12,14 @@ const Publication = () => {
   const navigate = useNavigate();
   return (
     <Stack height="100%">
-      <Button width="100%">
-        Publication
-      </Button>
+      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+        <Button width='100%'>Publication</Button>
+      </Flex>
       <Stack height='100%' paddingX={3} justify="space-around">
         <Stack>
           <HStack alignItems="center" justify="center">
             <TakePhoto />
-            <Button variant="outline" flexDir="column" boxSize={120} onClick={()=>navigate('/publication/text')}>
+            <Button variant="outline" flexDir="column" boxSize='30vw' onClick={()=>navigate('/publication/text')}>
               <Flex fontSize={40}>Aa</Flex>
               <Text fontSize='xs'>Texte</Text>
             </Button>

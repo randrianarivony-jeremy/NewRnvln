@@ -10,7 +10,7 @@ import image from "../Assets/image.jpg";
 import { createContext, useEffect, useState } from "react";
 import { publicationContext } from "./Context";
 import axios from "axios";
-import logo from "../Assets/logo.svg";
+import logo from "../Assets/RANAVALONA.png";
 
 function App() {
   const [currentUser, setCurrentUser] = useState();
@@ -21,6 +21,7 @@ function App() {
     await axios
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then((res) => {
+        console.log(res)
         setCurrentUser(res.data);
         setInitializing(false);
       },(err) => {

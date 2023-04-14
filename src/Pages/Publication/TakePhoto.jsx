@@ -24,7 +24,7 @@ const TakePhoto = () => {
       <Button
         variant="outline"
         flexDir="column"
-        boxSize={120}
+        boxSize='30vw'
         onClick={() => setCamera(true)}
       >
         <Flex fontSize={40} className="bi-camera"></Flex>

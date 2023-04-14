@@ -13,19 +13,19 @@ const Options = () => {
     return (
         <Stack>
           <HStack alignItems="center" justify="center">
-            <TakePhoto />
+            <SendVoice/>
             <Button variant="outline" flexDir="column" boxSize={120} onClick={()=>setDisplay(<PubText/>)}>
               <Flex fontSize={40}>Aa</Flex>
               <Text fontSize='xs'>Texte</Text>
             </Button>
           </HStack>
           <HStack alignItems="center" justify="center">
+            <TakePhoto />
             <UploadPhoto/>
-            <UploadVideo/>
           </HStack>
           <HStack alignItems="center" justify="center">
-            <SendVoice/>
             <TakeVideo/>
+            <UploadVideo/>
           </HStack>
         </Stack>
     );

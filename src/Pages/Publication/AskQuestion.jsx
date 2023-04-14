@@ -29,7 +29,7 @@ const AskQuestion = () => {
   }, [responseRef, value]);
 
   return (
-    <Stack height="100%" paddingBottom={2} paddingX={3} justify='space-between'>
+    <Stack height="100%" minH='450px' paddingBottom={2} paddingX={3} justify='space-between'>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500" justify='space-between'>
         <Button
           variant="float"

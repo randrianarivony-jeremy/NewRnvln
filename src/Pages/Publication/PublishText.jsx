@@ -14,7 +14,7 @@ const PublishText = () => {
   const [textareaBg, setTextareaBg] = useState("transparent");
 
   return (
-    <Stack height="100%" paddingBottom={2}>
+    <Stack height="100%" minH='450px' paddingBottom={2}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button
           variant="float"

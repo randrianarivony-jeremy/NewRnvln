@@ -91,7 +91,6 @@ const SignUpSubmit = ({ swiper }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        minHeight:'400px'
       }}
     >
       <AuthSlide />

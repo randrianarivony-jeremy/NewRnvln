@@ -98,9 +98,9 @@ const Notification = () => {
 
   return (
     <Stack height="100%" spacing={0}>
-      <Button width="100%">
-        Notifications
-      </Button>
+      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+        <Button width='100%'>Notifications</Button>
+      </Flex>
       {loading ? (
         <Stack>
           <Skeleton height={5} width="90%" />

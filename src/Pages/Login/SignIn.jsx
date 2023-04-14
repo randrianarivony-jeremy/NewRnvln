@@ -1,6 +1,6 @@
 import {Box,Button,Flex,FormControl,FormErrorMessage,Grid,GridItem,Heading,Image,Input,InputGroup,InputRightElement,Stack,Text, useToast,} from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
-import logo from "../../Assets/logo.svg";
+import logo from "../../Assets/RANAVALONA.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { currentUserContext } from "../../Controler/App";
@@ -57,7 +57,7 @@ const SignIn = ({ setSignin }) => {
   return (
     <Box
       className="signin"
-      height="100%" minH='80vh'
+       h='100%'
       width="100%"
       paddingX={3}
       paddingBottom={2}
@@ -78,7 +78,7 @@ const SignIn = ({ setSignin }) => {
           <Stack justify="center">
             <FormControl isInvalid={mailError}>
               <Input
-                ref={emailRef}
+                ref={emailRef} type='text'
                 isRequired
                 placeholder="Téléphone ou Email"
                 border={mailError && "2px solid red"}

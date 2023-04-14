@@ -111,7 +111,7 @@ const VideoRecord = () => {
       <Button
         variant="outline"
         flexDir="column"
-        boxSize={120}
+        boxSize='30vw'
         onClick={() => {
           setRecordedChunks([]);
           setCamera(!camera);

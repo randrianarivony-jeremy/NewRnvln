@@ -14,7 +14,7 @@ const UploadPhoto = () => {
     }
     return (
         <div>
-            <Button variant="outline" flexDir="column" boxSize={120} onClick={()=>inputRef.current.click()}>
+            <Button variant="outline" flexDir="column" boxSize='30vw' onClick={()=>inputRef.current.click()}>
               <Flex fontSize={40} className="bi-image"></Flex>
               <Text fontSize='xs'>Image</Text>
             </Button>

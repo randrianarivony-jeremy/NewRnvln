@@ -105,7 +105,7 @@ const SendVoice = () => {
         <Button
           variant="outline"
           flexDir="column"
-          boxSize={120}
+          boxSize='30vw'
           onClick={handleRecordingOn}
         >
           <Flex fontSize={40} className="bi-mic"></Flex>

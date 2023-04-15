@@ -8,7 +8,7 @@ const InfiniteSlider = () => {
   const homeSliderRef = useRef();
 
   return (
-    <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical" mousewheel={{forceToAxis:true}} modules={[Mousewheel]}>
+    <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical" mousewheel={true} modules={[Mousewheel]}>
       {data.map((elt, key) => (
         <SwiperSlide key={key}>
           <PostContainer post={elt} homeSlider={homeSliderRef}/>

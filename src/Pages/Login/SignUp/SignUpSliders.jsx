@@ -12,7 +12,7 @@ const SignUpSliders = ({ setActiveIndex }) => {
 
   return (
     <Stack justify="center" height="100%" minW='100%'>
-        <Swiper spaceBetween={10} allowTouchMove={true} ref={signUpSwiperRef} autoHeight={true} className='signup-swiper' onSlideChange={({ realIndex }) => setActiveIndex(realIndex)} >
+        <Swiper spaceBetween={10} allowTouchMove={false} ref={signUpSwiperRef} autoHeight={true} className='signup-swiper' onSlideChange={({ realIndex }) => setActiveIndex(realIndex)} >
           <SwiperSlide>
             <UsernameSlide swiper={signUpSwiperRef}/>
           </SwiperSlide>

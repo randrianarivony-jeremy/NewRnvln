@@ -17,7 +17,7 @@ const PostContainer = ({post,homeSlider}) => {
           ) : (
             <Swiper ref={postSwiper}
               direction="horizontal"
-              mousewheel={{forceToAxis:true}}
+              mousewheel={true}
               modules={[Pagination,Mousewheel]}
               pagination={{
                 type: "progressbar",

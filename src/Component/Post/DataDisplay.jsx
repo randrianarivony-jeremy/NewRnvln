@@ -22,7 +22,7 @@ const DataDisplay = ({ data }) => {
               <InterviewText post={data} />
             </Flex>
           ) : (
-            <Flex align='center' bg={data.bg} height="100%" width="100%">
+            <Flex align='flex-end' bg={data.bg} height="100%" width="100%">
               <PublicationText/>
             </Flex>
           )}

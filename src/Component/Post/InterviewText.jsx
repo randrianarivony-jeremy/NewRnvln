@@ -23,20 +23,18 @@ const InterviewText = ({ post }) => {
       <Text
         position="relative"
         color={post.bg !== "transparent" && "black"}
-        overflowY="auto"
         mixBlendMode="hard-light"
         fontSize="xl"
         ref={textContainer}
-        maxHeight="calc(100% - 200px)"
+        maxHeight="calc(100% - 160px)"
         width="100%"
-        marginBottom={10}
         marginX={3}
         _after={
           textOverflow && {
             position: "absolute",
             top: 0,
             left: 0,
-            bg: "linear-gradient(transparent 50%,gray 100%)",
+            bg: "linear-gradient(transparent 50%,gray 90%)",
             content: "''",
             width: "100%",
             height: "100%",
@@ -50,7 +48,7 @@ const InterviewText = ({ post }) => {
             position="absolute"
             zIndex={1}
             color="black"
-            bottom={0}
+            bottom={2}
             left="50%"
             transform="auto"
             translateX="-50%"

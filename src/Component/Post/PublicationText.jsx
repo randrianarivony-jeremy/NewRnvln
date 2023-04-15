@@ -19,10 +19,9 @@ const PublicationText = () => {
     <>
       <Text
         ref={textContainer}
-        maxHeight="calc(100% - 100px)"
+        height='calc(100% - 40px)'
         fontSize="xl"
         marginX={3} width='100%'
-        marginY={2}
         position="relative"
         color={post.bg !== "transparent" && "black"}
         // overflowY="hidden"
@@ -34,8 +33,8 @@ const PublicationText = () => {
             left: 0,
             bg:
               (colorMode === "dark" && post.bg==='transparent')
-                ? "linear-gradient(transparent 50%,#1a202c 100%)"
-                : "linear-gradient(transparent 50%,white 100%)",
+                ? "linear-gradient(transparent 50%,#1a202c 90%)"
+                : "linear-gradient(transparent 50%,white 90%)",
             content: "''",
             width: "100%",
             height: "100%",
@@ -49,7 +48,7 @@ const PublicationText = () => {
             position="absolute"
             zIndex={1}
             color={post.bg !== "transparent" && "black"}
-            bottom={0}
+            bottom={2}
             left="50%"
             transform="auto"
             translateX="-50%"

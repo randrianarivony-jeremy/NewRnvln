@@ -20,7 +20,7 @@ const TextPost = () => {
         scrollbar={true}
         mousewheel={true}
         modules={[FreeMode, Scrollbar, Mousewheel]}
-        className="mySwiper" height='100%' width='100%'
+        className="mySwiper" height='100%' width='100%' style={{border:'1px solid red'}}
       >
         <SwiperSlide>
           <h4>Scroll Container</h4>

@@ -5,7 +5,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Scroll } from "../../Styles/Theme";
 import Question from "../Question";
 import { postContext } from "./PostContainer";
-import './style.css'
 
 const TextPost = () => {
   const { post } = useContext(postContext);

@@ -31,8 +31,8 @@ const PostContainer = ({post,homeSlider}) => {
                 <Post post={post} />
               </SwiperSlide>
               <SwiperSlide>
-                {/* <Image src={image} alt='try' width='100%' height='100%' objectFit='contain'/> */}
-                <TextPost/>
+                <Image src={image} alt='try' width='100%' height='100%' objectFit='contain'/>
+                {/* <TextPost/> */}
               </SwiperSlide>
             </Swiper>
           {/* )} */}

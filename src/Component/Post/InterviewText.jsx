@@ -23,7 +23,7 @@ const InterviewText = ({ post }) => {
       <Text
         position="relative"
         color={post.bg !== "transparent" && "black"}
-        overflowY="hidden"
+        overflowY="auto"
         mixBlendMode="hard-light"
         fontSize="xl"
         ref={textContainer}

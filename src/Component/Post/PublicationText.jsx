@@ -25,7 +25,7 @@ const PublicationText = () => {
         marginY={2}
         position="relative"
         color={post.bg !== "transparent" && "black"}
-        overflowY="hidden"
+        // overflowY="hidden"
         mixBlendMode="hard-light"
         _after={
           textOverflow && {

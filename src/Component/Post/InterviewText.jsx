@@ -20,7 +20,7 @@ const InterviewText = ({ post }) => {
       <Box position="absolute" zIndex={1} top={10} left={0} marginX={3}>
         <Question question={post.question} />
       </Box>
-      <Box
+      <Text
         position="relative"
         color={post.bg !== "transparent" && "black"}
         overflowY="hidden"
@@ -59,7 +59,7 @@ const InterviewText = ({ post }) => {
             Suite
           </Button>
         )}
-      </Box>
+      </Text>
     </>
   );
 };

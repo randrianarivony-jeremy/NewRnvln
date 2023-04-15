@@ -8,17 +8,6 @@ const PublicationText = () => {
     useContext(postContext);
   const { colorMode } = useColorMode();
 
-  // const handleTextOverflowFading=()=>{
-  //     switch (post.bg) {
-  //         case 'gradient1':
-  //             setColorFade
-  //             break;
-
-  //         default:
-  //             break;
-  //     }
-  // }
-
   useEffect(() => {
     if (
       textContainer.current.clientHeight < textContainer.current.scrollHeight
@@ -32,7 +21,7 @@ const PublicationText = () => {
         ref={textContainer}
         maxHeight="calc(100% - 100px)"
         fontSize="xl"
-        marginX={3} width='50%'
+        marginX={3} width='100%'
         marginY={2}
         position="relative"
         color={post.bg !== "transparent" && "black"}

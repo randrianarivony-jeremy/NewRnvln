@@ -14,7 +14,8 @@ const PostContainer = ({post,homeSlider}) => {
 
     return (
         <postContext.Provider value={{post,textOverflow,setTextOverflow,postSwiper}}>
-            {!textOverflow ? (
+            {post.contentType==='string' ? (
+            // {!textOverflow ? (
             <Post post={post} />
           ) : (
             <Swiper ref={postSwiper}

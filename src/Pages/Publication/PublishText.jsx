@@ -14,7 +14,7 @@ const PublishText = () => {
   const [textareaBg, setTextareaBg] = useState("transparent");
 
   return (
-    <Stack height="100%" minH='450px' paddingBottom={2}>
+    <Stack position='relative' height="100%" minH='450px' paddingBottom={2}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button
           variant="float"
@@ -23,7 +23,7 @@ const PublishText = () => {
         ></Button>
         <Button fontSize="md">Créer une publication</Button>
       </Flex>
-      <Stack paddingX={3} height="100%" minH='calc(100vh-50px)' justify='space-between'>
+      <Stack paddingX={3} height="100%" minH='calc(100vh - 50px)' justify='space-between'>
         <Stack>
         <ResizableTextarea textareaBg={textareaBg}/>
         <ButtonGroup

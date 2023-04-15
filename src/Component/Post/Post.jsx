@@ -1,16 +1,11 @@
 import { Avatar, Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faQuestion,
-  faCaretDown,
-  faCaretUp,
-} from "@fortawesome/free-solid-svg-icons";
 import DataDisplay from "./DataDisplay";
 import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
+import Question from "../Question";
 
 const Post = ({ post }) => {
   const [expandBtn, setExpandBtn] = useState(true);
@@ -30,7 +25,7 @@ const Post = ({ post }) => {
       <Flex height="100%" className="post" alignItems="center" justify="center">
         <DataDisplay data={post} />
       </Flex>
-
+      
       <Box
         position="absolute"
         bottom={3}

@@ -18,6 +18,7 @@ export  const theme = extendTheme({
         50: "#e4e5f1",
         0: "#fafafa",
       },
+      darkModeBg: "#1a202c",
       bleu: "#4D9DFF",
       info:'#3182ce',
       transparent: 'transparent',
@@ -26,17 +27,17 @@ export  const theme = extendTheme({
       rouge: "#FF564D",
 
       gradient:
-        "-webkit-linear-gradient(left, rgba(77, 157, 255, 1)0%, rgba(58, 232, 133, 1)100%)",
+        "-webkit-linear-gradient(left,#4D9DFF, #3AE885)",
         gradient1:
-        "-webkit-linear-gradient(top, rgba(77, 157, 255, 1)0%, rgba(255, 255, 255, 1)100%)",
+        "-webkit-linear-gradient(top, #4D9DFF 0%, white 100%)",
         gradient2:
-        "-webkit-linear-gradient(top, rgba(58, 232, 133, 1)0%, rgba(255, 255, 255, 1)100%)",
+        "-webkit-linear-gradient(top, #3182ce 0%, white 100%)",
         gradient3:
-        "-webkit-linear-gradient(top, rgba(255, 86, 77, 1)0%, rgba(255, 255, 255, 1)100%)",
+        "-webkit-linear-gradient(top, #3AE885 0%, white 100%)",
         gradient4:
-        "-webkit-linear-gradient(top, rgba(175, 77, 255, 1)0%, rgba(255, 255, 255, 1)100%)",
+        "-webkit-linear-gradient(top, #AF4DFF 0%, white 100%)",
         gradient5:
-        "-webkit-linear-gradient(top, rgba(246, 255, 77, 1)0%, rgba(255, 255, 255, 1)100%)",
+        "-webkit-linear-gradient(top, #FF564D 0%, white 100%)",
 
     },
     components: {

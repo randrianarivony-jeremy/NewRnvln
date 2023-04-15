@@ -1,4 +1,4 @@
-import { Box, Flex, Image } from "@chakra-ui/react";
+import { Box, Image, Spinner, Stack } from "@chakra-ui/react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/App.css";
 import "swiper/css";
@@ -20,14 +20,16 @@ function App() {
   const fetchToken = async () => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
-      .then((res) => {
-        console.log(res)
-        setCurrentUser(res.data);
-        setInitializing(false);
-      },(err) => {
-        console.log("tsisy token: " + err);
-        setInitializing(false);
-      });
+      .then(
+        (res) => {
+          setCurrentUser(res.data);
+          setInitializing(false);
+        },
+        (err) => {
+          console.log("tsisy token: " + err);
+          setInitializing(false);
+        }
+      );
   };
 
   useEffect(() => {
@@ -48,9 +50,10 @@ function App() {
       <currentUserContext.Provider value={{ currentUser, setCurrentUser }}>
         <publicationContext.Provider value={{ content, setContent }}>
           {initializing ? (
-            <Flex height='100%'>
-              <Image src={logo} alt="logo" width="100px" margin="auto" />
-            </Flex>
+            <Stack justify="center" height="100%" align="center">
+              <Image src={logo} alt="logo" width="100px" />
+              <Spinner speed="0.7s" />
+            </Stack>
           ) : (
             <Routes />
           )}
@@ -64,10 +67,13 @@ export default App;
 
 export const data = [
   {
-    content: "interview slide1",
+    content:
+      "interview,❤️ slide1 ,Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi est, temporibus quos, libero suscipit vero tempora sint mollitia fugit et. Corrupti ratione ab, nisi illum aut ad laudantium odio qui repellendus eius iure, aliquid necessitatibus numquam blanditiis, harum natus explicabo in? Odit ullam eos voluptatum sunt! Minus soluta saepe tempora inventore. Incidunt dolorem labore reiciendis! Asperiores minima ea sunt, modi reiciendis sapiente ipsum possimus inventore amet similique? Nostrum atque nulla natus dolor minus! Dignissimos laborum praesentium voluptatibus in. Voluptate delectus commodi consequatur error quos cupiditate consequuntur? Reiciendis totam modi voluptatum illum fugit nesciunt?",
     contentType: "string",
     bg: "gradient1",
     type: "interview",
+    question:
+      "question quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitons",
   },
   {
     content: video,
@@ -87,7 +93,8 @@ export const data = [
     content: "interview Slide 3",
     contentType: "string",
     bg: "gradient2",
-    type: "interview",
+    type: "publication",
+    question: "question quesitons",
   },
   {
     content: audio,
@@ -95,6 +102,7 @@ export const data = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, enim!",
     type: "interview",
+    question: "question quesitons",
   },
   {
     content: "Slide 4",
@@ -108,6 +116,7 @@ export const data = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, enim! Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, enim!",
     type: "interview",
+    question: "question quesitons",
   },
   {
     content: "Slide 5",

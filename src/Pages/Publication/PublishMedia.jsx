@@ -18,7 +18,7 @@ const PublishMedia = () => {
         ></Button>
         <Button>Créer une publication</Button>
       </Flex>
-      <Stack paddingX={3} height='100%' minH='calc(100vh-50px)' paddingY={2}>
+      <Stack paddingX={3} height='100%' minH='calc(100vh - 50px)' paddingY={2}>
         {content.type === "image" ? (
           <Image src={content.content} alt="image" width="100%" objectFit="contain" />
         ) : content.type === "audio" ? (

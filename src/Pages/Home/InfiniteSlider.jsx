@@ -8,10 +8,10 @@ const InfiniteSlider = () => {
   const homeSliderRef = useRef();
 
   return (
-    <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical" mousewheel={true} modules={[Mousewheel]}     >
+    <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical">
       {data.map((elt, key) => (
         <SwiperSlide key={key}>
-          <PostContainer post={elt}/>
+          <PostContainer post={elt} homeSlider={homeSliderRef}/>
         </SwiperSlide>
       ))}
     </Swiper>

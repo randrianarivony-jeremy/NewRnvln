@@ -1,12 +1,11 @@
-import { Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import AudioDisplay from "./AudioDisplay";
+import InterviewText from "./InterviewText";
+import PublicationText from "./PublicationText";
 
 const DataDisplay = ({ data }) => {
   const videoRef = useRef();
-  const textRef = useRef();
-  const containerRef = useRef();
-  const [fontSize, setFontSize] = useState("xl");
   const [isPaused, setIsPaused] = useState();
 
   useEffect(() => {
@@ -14,21 +13,20 @@ const DataDisplay = ({ data }) => {
     else videoRef.current?.pause();
   }, [isPaused]);
 
-  useEffect(() => {
-    if (data.contentType==='string') {if (textRef.current.scrollHeight < (containerRef.current.clientHeight * 70) / 100)
-      setFontSize("3xl");
-    else setFontSize("xl");}
-    // console.log(data.bg,textRef.current?.scrollHeight)
-  }, []);
-
   return (
     <>
       {data.contentType === "string" && (
-        <Flex ref={containerRef} height="100%" width="100%" bg={data.bg}>
-          <Text fontSize={fontSize} ref={textRef} whiteSpace="pre-wrap" maxH="80%" maxW="90%" textAlign="center" margin="auto" >
-            {data.content}
-          </Text>
-        </Flex>
+        <>
+          {data.type === "interview" ? (
+            <Flex align="flex-end" bg={data.bg} height="100%" width="100%">
+              <InterviewText post={data} />
+            </Flex>
+          ) : (
+            <Flex align='center' bg={data.bg} height="100%" width="100%">
+              <PublicationText/>
+            </Flex>
+          )}
+        </>
       )}
       {data.contentType === "image_url" && (
         <Image

@@ -1,33 +1,20 @@
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import {FormControl,FormLabel,Input,Stack} from "@chakra-ui/react";
+import {Stack} from "@chakra-ui/react";
 import SignUpSubmit from "./SignUpSubmit";
 import ProfessionSlide from "./ProfessionSlide";
 import ProfilePictureSlide from "./ProfilePictureSlide";
-import { signUpContext } from "../Login";
+import UsernameSlide from "./UsernameSlide";
 
 const SignUpSliders = ({ setActiveIndex }) => {
   const signUpSwiperRef = useRef();
-  const {name}=useContext(signUpContext);
 
-  const handleNext=e=>{
-    e.preventDefault();
-    if (name.current.checkValidity()) signUpSwiperRef.current.swiper.slideNext()
-  }
 
   return (
     <Stack justify="center" height="100%" minW='100%'>
         <Swiper spaceBetween={10} allowTouchMove={true} ref={signUpSwiperRef} autoHeight={true} className='signup-swiper' onSlideChange={({ realIndex }) => setActiveIndex(realIndex)} >
           <SwiperSlide>
-            <form onSubmit={handleNext}>
-            <Stack>
-              <FormControl>
-                <FormLabel>Quel nom voulez-vous utiliser :</FormLabel>
-                <Input type='text' ref={name} placeholder="Nom d'utilisateur"isRequired/>
-              </FormControl>
-              <Input as='button' type='submit' bgColor='bleu' fontWeight='semibold'>Suivant</Input>
-            </Stack>
-            </form>
+            <UsernameSlide swiper={signUpSwiperRef}/>
           </SwiperSlide>
           <SwiperSlide>
             <ProfessionSlide swiper={signUpSwiperRef.current?.swiper}/>

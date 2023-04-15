@@ -1,33 +1,41 @@
-import React from 'react';
+import { Text } from '@chakra-ui/react';
+import React, { createContext, useRef, useState } from 'react';
 import { Mousewheel, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Scroll } from '../../Styles/Theme';
+import Question from '../Question';
 import Post from './Post';
-import QuestionDisplay from './QuestionDisplay';
+import TextPost from './TextPost';
 
-const PostContainer = ({post}) => {
+export const postContext = createContext();
+
+const PostContainer = ({post,homeSlider}) => {
+  const [textOverflow,setTextOverflow]=useState(false);
+  const postSwiper = useRef();
 
     return (
-        <>
-            {post.type === "publication" ? (
+        <postContext.Provider value={{post,textOverflow,setTextOverflow,postSwiper}}>
+            {!textOverflow ? (
             <Post post={post} />
           ) : (
-            <Swiper
+            <Swiper ref={postSwiper}
               direction="horizontal"
-              mousewheel={true}
+              // mousewheel={{forceToAxis:true}}
               modules={[Mousewheel,Pagination]}
               pagination={{
                 type: "progressbar",
-              }} className='post-slides'
+              }}
+              onSlideChange={({realIndex})=>realIndex===1 ? homeSlider.current.swiper.disable() : homeSlider.current.swiper.enable()}
             >
               <SwiperSlide>
                 <Post post={post} />
               </SwiperSlide>
-              <SwiperSlide className="question-slide">
-                <QuestionDisplay post={post} />
+              <SwiperSlide>
+                <TextPost/>
               </SwiperSlide>
             </Swiper>
           )}
-        </>
+        </postContext.Provider>
     );
 };
 

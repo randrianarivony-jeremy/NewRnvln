@@ -31,18 +31,18 @@ const InterviewText = ({ post }) => {
         width="100%"
         marginBottom={10}
         marginX={3}
-        _after={
-          textOverflow && {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bg: "linear-gradient(transparent 50%,gray 100%)",
-            content: "''",
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }
-        }
+        // _after={
+        //   textOverflow && {
+        //     position: "absolute",
+        //     top: 0,
+        //     left: 0,
+        //     bg: "linear-gradient(transparent 50%,gray 100%)",
+        //     content: "''",
+        //     width: "100%",
+        //     height: "100%",
+        //     pointerEvents: "none",
+        //   }
+        // }
       >
         {post.content}
         {textOverflow && (

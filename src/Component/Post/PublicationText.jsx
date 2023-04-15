@@ -32,27 +32,27 @@ const PublicationText = () => {
         ref={textContainer}
         maxHeight="calc(100% - 100px)"
         fontSize="xl"
-        marginX={3}
+        marginX={3} width='100%'
         marginY={2}
         position="relative"
         color={post.bg !== "transparent" && "black"}
         overflowY="hidden"
         mixBlendMode="hard-light"
-        _after={
-          textOverflow && {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bg:"linear-gradient(transparent 50%,#1a202c 100%)",
-            //   (colorMode === "light" && post.bg==='transparent')
-            //     ? "linear-gradient(transparent 50%,white 100%)"
-            //     : "linear-gradient(transparent 50%,gray 100%)",
-            content: "''",
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }
-        }
+        // _after={
+        //   textOverflow && {
+        //     position: "absolute",
+        //     top: 0,
+        //     left: 0,
+        //     bg:
+        //       (colorMode === "dark" && post.bg==='transparent')
+        //         ? "linear-gradient(transparent 50%,#1a202c 100%)"
+        //         : "linear-gradient(transparent 50%,white 100%)",
+        //     content: "''",
+        //     width: "100%",
+        //     height: "100%",
+        //     pointerEvents: "none",
+        //   }
+        // }
       >
         {post.content}
         {textOverflow && (

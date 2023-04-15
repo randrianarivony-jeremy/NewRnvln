@@ -5,7 +5,6 @@ import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
-import Question from "../Question";
 
 const Post = ({ post }) => {
   const [expandBtn, setExpandBtn] = useState(true);

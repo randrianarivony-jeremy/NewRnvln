@@ -1,5 +1,5 @@
 import React, { createContext, useRef, useState } from 'react';
-import { Pagination } from 'swiper';
+import { Mousewheel, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Post from './Post';
 import TextPost from './TextPost';
@@ -17,8 +17,8 @@ const PostContainer = ({post,homeSlider}) => {
           ) : (
             <Swiper ref={postSwiper}
               direction="horizontal"
-              // mousewheel={{forceToAxis:true}}
-              modules={[Pagination]}
+              mousewheel={{forceToAxis:true}}
+              modules={[Pagination,Mousewheel]}
               pagination={{
                 type: "progressbar",
               }}

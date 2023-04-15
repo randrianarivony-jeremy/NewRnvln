@@ -1,8 +1,10 @@
+import { Image } from '@chakra-ui/react';
 import React, { createContext, useRef, useState } from 'react';
 import { Mousewheel, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Post from './Post';
 import TextPost from './TextPost';
+import image from '../../Assets/image.jpg'
 
 export const postContext = createContext();
 
@@ -16,7 +18,7 @@ const PostContainer = ({post,homeSlider}) => {
             <Post post={post} />
           ) : (
             <Swiper ref={postSwiper}
-              direction="horizontal" touchAngle={180}
+              direction="horizontal"
               modules={[Pagination]}
               pagination={{
                 type: "progressbar",
@@ -28,7 +30,7 @@ const PostContainer = ({post,homeSlider}) => {
                 <Post post={post} />
               </SwiperSlide>
               <SwiperSlide>
-                <TextPost/>
+                <Image src={image} alt='try' width='100%' height='100%' objectFit='contain'/>
               </SwiperSlide>
             </Swiper>
           )}

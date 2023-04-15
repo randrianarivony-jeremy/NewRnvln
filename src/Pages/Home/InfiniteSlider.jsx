@@ -7,7 +7,7 @@ const InfiniteSlider = () => {
   const homeSliderRef = useRef();
 
   return (
-    <Swiper ref={homeSliderRef} className="feed-slides" touchAngle={90} direction="vertical">
+    <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical">
       {data.map((elt, key) => (
         <SwiperSlide key={key}>
           <PostContainer post={elt} homeSlider={homeSliderRef}/>

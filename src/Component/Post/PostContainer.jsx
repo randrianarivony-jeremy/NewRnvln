@@ -1,9 +1,6 @@
-import { Text } from '@chakra-ui/react';
 import React, { createContext, useRef, useState } from 'react';
-import { Mousewheel, Pagination } from 'swiper';
+import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Scroll } from '../../Styles/Theme';
-import Question from '../Question';
 import Post from './Post';
 import TextPost from './TextPost';
 
@@ -21,10 +18,11 @@ const PostContainer = ({post,homeSlider}) => {
             <Swiper ref={postSwiper}
               direction="horizontal"
               // mousewheel={{forceToAxis:true}}
-              modules={[Mousewheel,Pagination]}
+              modules={[Pagination]}
               pagination={{
                 type: "progressbar",
               }}
+              // onSlideChange={({realIndex})=>console.log(realIndex)}
               onSlideChange={({realIndex})=>realIndex===1 ? homeSlider.current.swiper.disable() : homeSlider.current.swiper.enable()}
             >
               <SwiperSlide>

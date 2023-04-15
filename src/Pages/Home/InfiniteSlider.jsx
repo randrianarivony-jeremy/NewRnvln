@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import PostContainer from "../../Component/Post/PostContainer";
 import { data } from "../../Controler/App";

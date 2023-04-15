@@ -14,10 +14,10 @@ const PostContainer = ({post,homeSlider}) => {
 
     return (
         <postContext.Provider value={{post,textOverflow,setTextOverflow,postSwiper}}>
-            {post.contentType==='string' ? (
+            {/* {post.contentType==='string' ? (
             // {!textOverflow ? (
             <Post post={post} />
-          ) : (
+          ) : ( */}
             <Swiper ref={postSwiper}
               direction="horizontal"
               modules={[Pagination]}
@@ -34,7 +34,7 @@ const PostContainer = ({post,homeSlider}) => {
                 <Image src={image} alt='try' width='100%' height='100%' objectFit='contain'/>
               </SwiperSlide>
             </Swiper>
-          )}
+          {/* )} */}
         </postContext.Provider>
     );
 };

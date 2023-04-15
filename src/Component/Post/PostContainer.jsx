@@ -25,14 +25,14 @@ const PostContainer = ({post,homeSlider}) => {
                 type: "progressbar",
               }}
               // onSlideChange={({realIndex})=>console.log(realIndex)}
-              // onSlideChange={({realIndex})=>realIndex===1 ? homeSlider.current.swiper.disable() : homeSlider.current.swiper.enable()}
+              onSlideChange={({realIndex})=>realIndex===1 ? homeSlider.current.swiper.disable() : homeSlider.current.swiper.enable()}
             >
               <SwiperSlide>
                 <Post post={post} />
               </SwiperSlide>
               <SwiperSlide>
-                <Image src={image} alt='try' width='100%' height='100%' objectFit='contain'/>
-                {/* <TextPost/> */}
+                {/* <Image src={image} alt='try' width='100%' height='100%' objectFit='contain'/> */}
+                <TextPost/>
               </SwiperSlide>
             </Swiper>
           {/* )} */}

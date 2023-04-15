@@ -48,7 +48,7 @@ const PublicationText = () => {
             position="absolute"
             zIndex={1}
             color={post.bg !== "transparent" && "black"}
-            bottom={2}
+            bottom={8}
             left="50%"
             transform="auto"
             translateX="-50%"

@@ -20,7 +20,7 @@ const Question = ({ question }) => {
       borderTopLeftRadius={0}
     >
       <HStack>
-        <Avatar />
+        <Avatar boxSize={10}/>
         <Box fontSize="sm" fontWeight="bold">
           Username
         </Box>

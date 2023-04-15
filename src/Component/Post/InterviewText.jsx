@@ -26,7 +26,7 @@ const InterviewText = ({ post }) => {
         mixBlendMode="hard-light"
         fontSize="xl"
         ref={textContainer}
-        maxHeight="calc(100% - 160px)"
+        height="calc(100% - 150px)"
         width="100%"
         marginX={3}
         _after={
@@ -48,7 +48,7 @@ const InterviewText = ({ post }) => {
             position="absolute"
             zIndex={1}
             color="black"
-            bottom={2}
+            bottom={8}
             left="50%"
             transform="auto"
             translateX="-50%"

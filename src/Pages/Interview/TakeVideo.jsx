@@ -88,7 +88,7 @@ const TakeVideo = () => {
       setRecordedChunks([]);
       setDisplay(
         <PubMedia
-          data={{ content: URL.createObjectURL(blob), type: "video" }}
+          data={{ content:blob, contentType: "video" }}
         />
       );
     }

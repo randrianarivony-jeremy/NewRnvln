@@ -1,13 +1,12 @@
 import { Textarea } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const ResizableTextarea = ({textareaBg,placeholder}) => {
+const ResizableTextarea = ({value, setValue,textareaBg,placeholder}) => {
   const responseRef = useRef();
-  const [value, setValue] = useState("");
 
   useEffect(() => {
     if (responseRef.current) {
-      responseRef.current.style.height = "38px";
+      responseRef.current.style.height = "40px";
       const scrollHeight = responseRef.current.scrollHeight;
       if (scrollHeight < 300)
         responseRef.current.style.height = scrollHeight + "px";

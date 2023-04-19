@@ -8,7 +8,7 @@ const UploadVideo = () => {
     const {setDisplay}=useContext(optionContext);
 
     const handleChange=({currentTarget})=>{
-        setDisplay(<PubMedia data={{content:URL.createObjectURL(currentTarget.files[0]),type:'video'}}/>);
+        setDisplay(<PubMedia data={{content:currentTarget.files[0],contentType:'video'}}/>);
     }
     return (
         <div>

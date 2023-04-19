@@ -83,7 +83,7 @@ const VideoRecord = () => {
       const blob = new Blob(recordedChunks, {
         type: "video/webm",
       });
-      setContent({ content: URL.createObjectURL(blob), type: "video" });
+      setContent({ content: blob, contentType: "video" });
       setCamera(false);
       setRecordedChunks([]);
       navigate("/publication/media");
@@ -107,11 +107,11 @@ const VideoRecord = () => {
   };
 
   return (
-    <div>
+    <>
       <Button
         variant="outline"
         flexDir="column"
-        boxSize='30vw'
+        height='30vw' maxH={120} width='30vw' maxW={120}
         onClick={() => {
           setRecordedChunks([]);
           setCamera(!camera);
@@ -239,7 +239,7 @@ const VideoRecord = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 };
 

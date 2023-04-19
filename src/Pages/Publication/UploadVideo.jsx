@@ -9,17 +9,17 @@ const UploadVideo = () => {
     const navigate = useNavigate();
 
     const handleChange=({currentTarget})=>{
-        setContent({content:URL.createObjectURL(currentTarget.files[0]),type:'video'});
+        setContent({content:currentTarget.files[0],contentType:'video'});
         navigate('/publication/media');
     }
     return (
-        <div>
-            <Button variant="outline" flexDir="column" boxSize='30vw' onClick={()=>inputRef.current.click()}>
+        <>
+            <Button variant="outline" flexDir="column" height='30vw' maxH={120} width='30vw' maxW={120} onClick={()=>inputRef.current.click()}>
               <Flex fontSize={40} className="bi-film"></Flex>
               <Text fontSize='xs'>Video</Text>
             </Button>
             <Input type='file' ref={inputRef} accept='.mp4,.webm' display='none' onChange={handleChange}/>
-        </div>
+        </>
     );
 };
 

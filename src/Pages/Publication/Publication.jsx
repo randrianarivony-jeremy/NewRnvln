@@ -19,7 +19,7 @@ const Publication = () => {
         <Stack>
           <HStack alignItems="center" justify="center">
             <TakePhoto />
-            <Button variant="outline" flexDir="column" boxSize='30vw' onClick={()=>navigate('/publication/text')}>
+            <Button variant="outline" flexDir="column" height='30vw' maxH={120} width='30vw' maxW={120} onClick={()=>navigate('/publication/text')}>
               <Flex fontSize={40}>Aa</Flex>
               <Text fontSize='xs'>Texte</Text>
             </Button>

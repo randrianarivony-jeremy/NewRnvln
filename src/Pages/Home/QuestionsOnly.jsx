@@ -1,14 +1,39 @@
-import { Heading } from '@chakra-ui/react';
-import React from 'react';
-import InfiniteSlider from './InfiniteSlider';
+import { Heading, Spinner } from "@chakra-ui/react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import PostContainer from "../../Component/Post/PostContainer";
 
 const QuestionsOnly = () => {
-    return (
-        <>
-        <Heading size='sm' position='absolute' top={2} zIndex={2} left='50%' transform='auto' translateX='-50%'>Questions</Heading>
-            <InfiniteSlider/>
-        </>
-    );
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const homeSliderRef = useRef();
+  
+  const fetchQuestions = async () => {
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/api/question")
+      .then((res) => {setData(res.data)
+        setLoading(false);
+      });
+  };
+
+  useEffect(()=>{
+    fetchQuestions();
+  },[])
+  return (
+    <>
+      <Heading size="sm" position="absolute" top={2} zIndex={2} left="50%" transform="auto" translateX="-50%"   >
+        Questions
+      </Heading>
+      {loading ? <Spinner/> : <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical">
+        {data.map((elt, key) => (
+          <SwiperSlide key={key}>
+            <PostContainer post={elt} homeSlider={homeSliderRef} />
+          </SwiperSlide>
+        ))}
+      </Swiper>}
+    </>
+  );
 };
 
 export default QuestionsOnly;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import cookie from "js-cookie";
-import {Modal,ModalOverlay,ModalContent,ModalHeader,ModalFooter,ModalBody,Button,useDisclosure,useToast,useColorModeValue,ButtonGroup,
+import {Modal,ModalOverlay,ModalContent,ModalHeader,ModalFooter,ModalBody,Button,useToast,useColorModeValue,ButtonGroup,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";

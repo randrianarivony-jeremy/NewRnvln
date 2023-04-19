@@ -1,16 +1,20 @@
-import { Avatar, Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import { Avatar, Box, Button, Flex, Image, Stack, Text } from "@chakra-ui/react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import DataDisplay from "./DataDisplay";
 import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
+import Question from "../Question";
+import { postContext } from "./PostContainer";
+import { ClickableFlex } from "../../Styles/Theme";
 
-const Post = ({ post }) => {
+const Post = () => {
   const [expandBtn, setExpandBtn] = useState(true);
   const [loading, setLoading] = useState(true);
   const [longDescription, setLongDescription] = useState(false);
   const navigate = useNavigate();
+  const {post}=useContext(postContext);
   const descriptionRef = useRef();
   const descriptionOverflow = useRef();
 
@@ -24,12 +28,17 @@ const Post = ({ post }) => {
       <Flex height="100%" className="post" alignItems="center" justify="center">
         <DataDisplay data={post} />
       </Flex>
+
+      {post.type==='interview' && <Box position="absolute" textAlign='left' zIndex={1} top={10} left={0} marginX={3}>
+        <Question question={post.content.question} />
+      </Box>}
       
+      {/* I N F O  */}
       <Box
         position="absolute"
-        bottom={3}
+        bottom={2}
         color={
-          post.contentType === "string" && post.bg !== "transparent" && "black"
+          post.content.contentType === "string" && post.content.bg !== "transparent" && "black"
         }
         textAlign="left"
         maxWidth="75%"
@@ -38,9 +47,9 @@ const Post = ({ post }) => {
       >
         <Text
           fontWeight="bold"
-          onClick={() => navigate("/profile/648461664846")}
+          onClick={() => navigate("/profile/"+post.content.id_user._id)}
         >
-          UserName
+          {post.content.id_user.name}
         </Text>
         <Text
           position="relative"
@@ -50,7 +59,7 @@ const Post = ({ post }) => {
           maxH={!longDescription && 10}
           overflowY="hidden"
         >
-          {post?.description}
+          {post.content.description}
           {!loading && (
             <>
               {descriptionOverflow.current && (
@@ -58,8 +67,8 @@ const Post = ({ post }) => {
                   variant="link"
                   size="sm"
                   color={
-                    post.contentType === "string" &&
-                    post.bg !== "transparent" &&
+                    post.content.contentType === "string" &&
+                    post.content.bg !== "transparent" &&
                     "black"
                   }
                   position="absolute"
@@ -75,6 +84,7 @@ const Post = ({ post }) => {
         </Text>
       </Box>
 
+      {/* R E A C T I O N              */}
       <Stack
         position="absolute"
         right={0}
@@ -85,15 +95,15 @@ const Post = ({ post }) => {
       >
         {expandBtn && (
           <>
-            <RespondPost post={post} />
-            <Button boxSize={10} position="relative" flexDir="column">
-              <Avatar
+            {post.type==='interview' && <RespondPost post={post.content} />}
+            <ClickableFlex position="relative" flexDir="column" onClick={() => navigate("/profile/649865164651651")}>
+              {post.content.id_user.picture ? <Image src={post.content.id_user.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar
                 size="sm"
-                onClick={() => navigate("/profile/649865164651651")}
-              />
-            </Button>
+                
+              />}
+            </ClickableFlex>
             <LikePost post={post} />
-            <CommentPost post={post} />
+            <CommentPost post={post.content} />
           </>
         )}
         <Button
@@ -101,8 +111,8 @@ const Post = ({ post }) => {
           className={expandBtn ? "bi-caret-down" : "bi-caret-up"}
           onClick={() => setExpandBtn(!expandBtn)}
           color={
-            post.contentType === "string" &&
-            post.bg !== "transparent" &&
+            post.content.contentType === "string" &&
+            post.content.bg !== "transparent" &&
             "black"
           }
         ></Button>

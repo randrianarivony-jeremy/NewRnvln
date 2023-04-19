@@ -7,36 +7,52 @@ import Routes from "./Routes";
 import audio from "../Assets/audio.m4a";
 import video from "../Assets/video.mp4";
 import image from "../Assets/image.jpg";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { publicationContext } from "./Context";
 import axios from "axios";
 import logo from "../Assets/RANAVALONA.png";
+import { useDispatch } from "react-redux";
+import { addPublication } from "./Redux/publication.reducer";
+import { addInterview } from "./Redux/interview.reducer";
+import { addContentFeeds } from "./Redux/thread.reducer";
 
 function App() {
   const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
+  const useeffect = useRef(true);
   const [initializing, setInitializing] = useState(true);
-
+  const dispatch = useDispatch();
+  
   const fetchToken = async () => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then(
         (res) => {
+          fetchData()
           setCurrentUser(res.data);
-          setInitializing(false);
         },
         (err) => {
+          fetchData()
           console.log("tsisy token: " + err);
-          setInitializing(false);
         }
-      );
+        );
+      };
+      
+      const fetchData = async () => {
+        await axios
+        .get(process.env.REACT_APP_API_URL + "/api/feeds")
+        .then((res) => {
+          dispatch(addContentFeeds(res.data));
+          dispatch(addPublication(res.data));
+          dispatch(addInterview(res.data));
+          setInitializing(false);
+      });
   };
 
-  useEffect(() => {
-    fetchToken();
-    // dispatch(getPosts());
-    // dispatch(getQuestionnaires());
-  }, []);
+  useEffect(()=>{
+    if (useeffect.current) fetchToken();
+    useeffect.current=false;
+  },[])
 
   return (
     <Box
@@ -68,13 +84,24 @@ export default App;
 export const data = [
   {
     content:
-      "interview,❤️ slide1 ,Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi est, temporibus quos, libero suscipit vero tempora sint mollitia fugit et. Corrupti ratione ab, nisi illum aut ad laudantium odio qui repellendus eius iure, aliquid necessitatibus numquam blanditiis, harum natus explicabo in? Odit ullam eos voluptatum sunt! Minus soluta saepe tempora inventore. Incidunt dolorem labore reiciendis! Asperiores minima ea sunt, modi reiciendis sapiente ipsum possimus inventore amet similique? Nostrum atque nulla natus dolor minus! Dignissimos laborum praesentium voluptatibus in. Voluptate delectus commodi consequatur error quos cupiditate consequuntur? Reiciendis totam modi voluptatum illum fugit nesciunt?",
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi est, temporibus quos, libero suscipit vero tempora sint mollitia fugit et. Corrupti ratione ab, nisi illum aut ad laudantium odio qui repellendus eius iure, aliquid necessitatibus numquam blanditiis, harum natus explicabo in? Odit ullam eos voluptatum sunt! Minus soluta saepe tempora inventore. Incidunt dolorem labore reiciendis! Asperiores minima ea sunt, modi reiciendis sapiente ipsum possimus inventore amet similique? Nostrum atque nulla natus dolor minus! Dignissimos laborum praesentium voluptatibus in. Voluptate delectus commodi consequatur error quos cupiditate consequuntur? Reiciendis totam modi voluptatum illum fugit nesciunt?",
     contentType: "string",
     bg: "gradient1",
     type: "interview",
-    question:
-      "question quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitonsquestion quesitons",
-  },
+    question:{
+      "_id": "643994845f6aadfbe77f9bd4",
+      "interviewer": {
+        "_id": "643889777872bd7062e4bf53",
+        "name": "Ranavalona",
+        "picture": "https://firebasestorage.googleapis.com/v0/b/rnvln-611b7.appspot.com/o/profile%2Fpicture%2F1681426804576?alt=media&token=04e991ca-a3d8-41b8-80f9-33e9e18aee27"
+      },
+      "data": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi",
+      "bg": "transparent",
+      "interviewees": [],
+      "createdAt": "2023-04-14T17:59:32.268Z",
+      "updatedAt": "2023-04-14T17:59:32.268Z",
+      "__v": 0
+    }},
   {
     content: video,
     contentType: "video_url",
@@ -102,8 +129,20 @@ export const data = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, enim!",
     type: "interview",
-    question: "question quesitons",
-  },
+    question:{
+      "_id": "643994845f6aadfbe77f9bd4",
+      "interviewer": {
+        "_id": "643889777872bd7062e4bf53",
+        "name": "Ranavalona",
+        "picture": "https://firebasestorage.googleapis.com/v0/b/rnvln-611b7.appspot.com/o/profile%2Fpicture%2F1681426804576?alt=media&token=04e991ca-a3d8-41b8-80f9-33e9e18aee27"
+      },
+      "data": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi",
+      "bg": "transparent",
+      "interviewees": [],
+      "createdAt": "2023-04-14T17:59:32.268Z",
+      "updatedAt": "2023-04-14T17:59:32.268Z",
+      "__v": 0
+    }},
   {
     content: "Slide 4",
     contentType: "string",
@@ -116,8 +155,20 @@ export const data = [
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, enim! Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, enim!",
     type: "interview",
-    question: "question quesitons",
-  },
+    question:{
+      "_id": "643994845f6aadfbe77f9bd4",
+      "interviewer": {
+        "_id": "643889777872bd7062e4bf53",
+        "name": "Ranavalona",
+        "picture": "https://firebasestorage.googleapis.com/v0/b/rnvln-611b7.appspot.com/o/profile%2Fpicture%2F1681426804576?alt=media&token=04e991ca-a3d8-41b8-80f9-33e9e18aee27"
+      },
+      "data": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi",
+      "bg": "transparent",
+      "interviewees": [],
+      "createdAt": "2023-04-14T17:59:32.268Z",
+      "updatedAt": "2023-04-14T17:59:32.268Z",
+      "__v": 0
+    }},
   {
     content: "Slide 5",
     contentType: "string",

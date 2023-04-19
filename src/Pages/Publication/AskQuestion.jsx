@@ -33,7 +33,7 @@ const AskQuestion = () => {
       .post(process.env.REACT_APP_API_URL + "/api/question", {
         data: responseRef.current.value,
         interviewer: currentUser._id,
-        bg: textareaBg,
+        bg:textareaBg==='transparent' ? 'gradient1' : textareaBg,
       })
       .then(
         (res) => {
@@ -115,14 +115,6 @@ const AskQuestion = () => {
         <Input ref={inputRef} type="submit" display="none" />
       </form>
       <ButtonGroup variant="float" align="center" justifyContent="space-around">
-        <Button
-          border={
-            textareaBg === "transparent" ? "2px solid black" : "1px solid black"
-          }
-          bg="transparent"
-          rounded="full"
-          onClick={() => setTextareaBg("transparent")}
-        ></Button>
         <Button
           border={textareaBg === "gradient1" && "2px solid black"}
           bg="gradient1"

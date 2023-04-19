@@ -15,29 +15,29 @@ const DataDisplay = ({ data }) => {
 
   return (
     <>
-      {data.contentType === "string" && (
+      {data.content.contentType === "string" && (
         <>
           {data.type === "interview" ? (
-            <Flex align="flex-end" bg={data.bg} height="100%" width="100%">
-              <InterviewText post={data} />
+            <Flex align="flex-end" bg={data.content.bg} height="100%" width="100%">
+              <InterviewText/>
             </Flex>
           ) : (
-            <Flex align='flex-end' bg={data.bg} height="100%" width="100%">
+            <Flex align='center' bg={data.content.bg} height="100%" width="100%">
               <PublicationText/>
             </Flex>
           )}
         </>
       )}
-      {data.contentType === "image_url" && (
+      {data.content.contentType === "image" && (
         <Image
-          src={data.content}
+          src={data.content.content}
           alt="picture"
           height="100%"
           draggable={false}
           objectFit="cover"
         />
       )}
-      {data.contentType === "video_url" && (
+      {data.content.contentType === "video" && (
         <>
           {!isPaused && (
             <Button
@@ -50,7 +50,7 @@ const DataDisplay = ({ data }) => {
             ></Button>
           )}
           <video
-            src={data.content}
+            src={data.content.content}
             alt="video"
             ref={videoRef}
             loop
@@ -59,8 +59,8 @@ const DataDisplay = ({ data }) => {
           ></video>
         </>
       )}
-      {data.contentType === "audio_url" && (
-        <AudioDisplay audio={data.content} />
+      {data.content.contentType === "audio" && (
+        <AudioDisplay audio={data.content.content} />
       )}
     </>
   );

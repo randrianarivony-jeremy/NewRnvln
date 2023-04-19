@@ -1,7 +1,7 @@
 import { extendTheme, Flex, Stack } from "@chakra-ui/react";
 
 const config = {
-    initialColorMode: 'light',
+    initialColorMode: 'dark',
   }
   
   

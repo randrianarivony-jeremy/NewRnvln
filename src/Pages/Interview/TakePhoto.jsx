@@ -14,7 +14,7 @@ const TakePhoto = () => {
 
   const capture = () => {
     const imgSrc = webcamRef.current.getScreenshot();
-    setDisplay(<PubMedia data={{ content: imgSrc, type: "image" }} />);
+    setDisplay(<PubMedia data={{ content: imgSrc, contentType: "image_url" }} />);
     setCamera(false);
   };
 

@@ -26,7 +26,7 @@ const SendVoice = () => {
   };
 
   const handleSubmit = (blob) => {
-    setContent({content:URL.createObjectURL(blob),type:"audio"});
+    setContent({content:(blob),contentType:"audio"});
     setRecording(false);
     console.log('ato');
     navigate('/publication/media');
@@ -38,7 +38,7 @@ const SendVoice = () => {
   };
 
   return (
-    <div>
+    <>
       {recording ? (
         <>
           <Box display="none">
@@ -105,14 +105,14 @@ const SendVoice = () => {
         <Button
           variant="outline"
           flexDir="column"
-          boxSize='30vw'
+          height='30vw' maxH={120} width='30vw' maxW={120}
           onClick={handleRecordingOn}
         >
           <Flex fontSize={40} className="bi-mic"></Flex>
           <Text fontSize={12}>Micro</Text>
         </Button>
       )}
-    </div>
+    </>
   );
 };
 

@@ -14,17 +14,17 @@ const TakePhoto = () => {
 
   const capture = () => {
     const imgSrc = webcamRef.current.getScreenshot();
-    setContent({ content: imgSrc, type: "image" });
+    setContent({ content: imgSrc, contentType: "image_url" });
     navigate("/publication/media");
     setCamera(false);
   };
 
   return (
-    <div>
+    <>
       <Button
         variant="outline"
         flexDir="column"
-        boxSize='30vw'
+        height='30vw' maxH={120} width='30vw' maxW={120}
         onClick={() => setCamera(true)}
       >
         <Flex fontSize={40} className="bi-camera"></Flex>
@@ -91,7 +91,7 @@ const TakePhoto = () => {
           </Flex>
         </>
       )}
-    </div>
+    </>
   );
 };
 

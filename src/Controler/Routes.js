@@ -32,6 +32,8 @@ const Routes = () => {
           <BrowserRouter>
             <ROUTES>
                 <Route path="/" element={<Home />} />
+                <Route path="/subscriptions_only" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
+                <Route path="/questions_only" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
                 <Route path="/post/:id" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
                 <Route path="/login" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
                 <Route path="/message" element={<Suspense fallback={<Loader/>}><Message/></Suspense>} />

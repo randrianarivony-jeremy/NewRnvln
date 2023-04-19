@@ -1,19 +1,54 @@
-import { Button, ButtonGroup, HStack, Stack } from "@chakra-ui/react";
+import { Button, ButtonGroup, HStack, Stack, useToast } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ResizableTextarea from "../../Component/ResizableTextarea";
+import { currentUserContext } from "../../Controler/App";
 import { optionContext } from "./Interview";
 import Options from "./Options";
 
 const PubText = () => {
   const [textareaBg, setTextareaBg] = useState("transparent");
-  const { setDisplay } = useContext(optionContext);
+  const [value, setValue] = useState("");
+  const { setDisplay,question } = useContext(optionContext);
+  const {currentUser}=useContext(currentUserContext);
   const navigate = useNavigate();
+  const toast = useToast();
+  const [submitting,setSubmitting]=useState(false);
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    await axios
+      .post(process.env.REACT_APP_API_URL + "/api/interview", {
+        content: value,
+        id_user: currentUser._id,
+        question: question._id,
+        contentType:'string'
+      })
+      .then((res) => {
+        setSubmitting(false);
+        toast({
+          title: "Publication réussie",
+          status: "success",
+          duration: 5000,
+          description: "Votre interview a été bien enregistrée !",
+        });
+        navigate("/");
+      },() => {
+        toast({
+          status: "error",
+          duration: 5000,
+          description: "Veuillez réessayer s'il vous plait",
+          title: "Operation failed",
+        });
+        setSubmitting(false);
+      });
+  };
 
   return (
     <Stack height="100%" justify="space-between">
       <Stack>
-        <ResizableTextarea textareaBg={textareaBg} placeholder='Votre réponse' />
+        <ResizableTextarea value={value} setValue={setValue} textareaBg={textareaBg} placeholder='Votre réponse' />
         <ButtonGroup
           variant="float"
           align="center"
@@ -65,7 +100,7 @@ const PubText = () => {
         <Button width="100%" onClick={() => setDisplay(<Options />)}>
           Changer
         </Button>
-        <Button variant="primary" width="100%" onClick={() => navigate("/")}>
+        <Button isLoading={submitting} loadingText='Envoi' variant="primary" width="100%" onClick={handleSubmit}>
           Publier
         </Button>
       </HStack>

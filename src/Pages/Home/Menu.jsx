@@ -3,11 +3,8 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
 import Logout from "../Login/Logout";
-import InfiniteSlider from "./InfiniteSlider";
-import QuestionsOnly from "./QuestionsOnly";
-import SubscriptionOnly from "./SubscriptionOnly";
 
-const Menu = ({setThread}) => {
+const Menu = () => {
   const { isOpen, onOpen,onClose } = useDisclosure();
   const { onOpen:openLogoutModal,onClose:closeLogoutModal,isOpen:openedLogoutModal } = useDisclosure();
   const {currentUser}=useContext(currentUserContext);
@@ -29,15 +26,15 @@ const Menu = ({setThread}) => {
           <DrawerHeader fontSize='md' fontWeight='bold'>Menu</DrawerHeader>
           <DrawerBody paddingX={3} paddingY={0}>
             <Stack>
-              <Button justifyContent='flex-start' onClick={()=>{setThread(<InfiniteSlider/>);onClose()}}>
+              <Button justifyContent='flex-start' onClick={()=>{navigate('/');onClose()}}>
                 <Flex className="bi-house" width={10} fontSize='xl'></Flex>
                 <Text>Accueil</Text>
               </Button>
-              <Button justifyContent='flex-start' onClick={()=>{setThread(<SubscriptionOnly/>);onClose()}}>
+              <Button justifyContent='flex-start' onClick={()=>{navigate('/subscriptions_only');onClose()}}>
                 <Flex className="bi-people" width={10} fontSize='xl'></Flex>
                 <Text>Abonnements</Text>
               </Button>
-              <Button justifyContent='flex-start' onClick={()=>{setThread(<QuestionsOnly/>);onClose()}}>
+              <Button justifyContent='flex-start' onClick={()=>{navigate('/questions_only');onClose()}}>
                 <Flex className="bi-question-lg" width={10} fontSize='xl'></Flex>
                 <Text>Questionnaires</Text>
               </Button>

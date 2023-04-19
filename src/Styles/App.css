@@ -73,3 +73,7 @@ html,body,#root{
 .EmojiPickerReact .epr-body::-webkit-scrollbar {
     display: none;
   }
+
+  .scrollablefeed::-webkit-scrollbar{
+      display: none;
+  }

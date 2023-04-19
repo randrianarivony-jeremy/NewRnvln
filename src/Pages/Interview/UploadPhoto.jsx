@@ -8,7 +8,7 @@ const UploadPhoto = () => {
     const {setDisplay}=useContext(optionContext);
 
     const handleChange=({currentTarget})=>{
-        setDisplay(<PubMedia data={{content:URL.createObjectURL(currentTarget.files[0]),type:'image'}}/>);
+        setDisplay(<PubMedia data={{content:currentTarget.files[0],contentType:'image'}}/>);
     }
     return (
         <div>

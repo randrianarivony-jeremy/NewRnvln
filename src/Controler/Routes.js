@@ -1,8 +1,9 @@
 import { Box, Flex, Spinner } from "@chakra-ui/react";
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useContext } from "react";
 import {BrowserRouter,Route,Routes as ROUTES,
 } from "react-router-dom";
 import Home from '../Pages/Home/Home'
+import { currentUserContext } from "./App";
 
 const PostContainer = lazy(()=> import("../Component/Post/PostContainer"));
 const Login = lazy(()=>import("../Pages/Login/Login"));
@@ -27,11 +28,12 @@ export const Loader=()=>{
 }
 
 const Routes = () => {
+  const {currentUser}=useContext(currentUserContext);
   return (
       <Box height='100%' className="route" width='100%'>
           <BrowserRouter>
             <ROUTES>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={currentUser ? <Home /> : <Login/>} />
                 <Route path="/subscriptions_only" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
                 <Route path="/questions_only" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
                 <Route path="/post/:id" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
@@ -40,7 +42,7 @@ const Routes = () => {
                 <Route path="/chat" element={<Suspense fallback={<Loader/>}><Chat/></Suspense>} />
                 <Route path="/notification" element={<Suspense fallback={<Loader/>}><Notification /></Suspense>} />
                 <Route path="/profile" element={<Suspense fallback={<Loader/>}><Profile /></Suspense>} />
-                <Route path="/profile/:id" element={<Suspense fallback={<Loader/>}><UserProfile /></Suspense>} />
+                <Route path="/profile/:userId" element={<Suspense fallback={<Loader/>}><UserProfile /></Suspense>} />
                 <Route path="/publication" element={<Suspense fallback={<Loader/>}><Publication /></Suspense>} />
                 <Route path="/interview/:questionId" element={<Suspense fallback={<Loader/>}><Interview /></Suspense>} />
                 <Route path="/publication/media" element={<Suspense fallback={<Loader/>}><PublishMedia /></Suspense>} />

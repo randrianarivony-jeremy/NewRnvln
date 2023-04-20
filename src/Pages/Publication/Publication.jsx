@@ -1,36 +1,69 @@
 import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
+import { publicationContext } from "../../Controler/Context";
 import SendVoice from "./SendVoice";
-import TakePhoto from "./TakePhoto";
+import TakePhoto from "../../Component/TakePhoto";
 import UploadPhoto from "./UploadPhoto";
 import UploadVideo from "./UploadVideo";
 import VideoRecord from "./VideoRecord";
 
 const Publication = () => {
   const navigate = useNavigate();
+  const { setContent } = useContext(publicationContext);
+  const [camera, setCamera] = useState(false);
+
+  const handlePhoto = (imgSrc) => {
+    setContent({ content: imgSrc, contentType: "image_url" });
+    navigate("/publication/media");
+  };
   return (
     <Stack height="100%">
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-        <Button width='100%'>Publication</Button>
+        <Button width="100%">Publication</Button>
       </Flex>
-      <Stack height='100%' paddingX={3} justify="space-around">
+      <Stack height="100%" paddingX={3} justify="space-around">
         <Stack>
           <HStack alignItems="center" justify="center">
-            <TakePhoto />
-            <Button variant="outline" flexDir="column" height='30vw' maxH={120} width='30vw' maxW={120} onClick={()=>navigate('/publication/text')}>
+            <Button
+              variant="outline"
+              flexDir="column"
+              height="30vw"
+              maxH={120}
+              mixBlendMode="hard-light"
+              width="30vw"
+              maxW={120}
+              onClick={() => setCamera(true)}
+            >
+              <Flex fontSize={40} className="bi-camera"></Flex>
+              <Text fontSize="xs">Camera</Text>
+              <TakePhoto
+                setCamera={setCamera}
+                camera={camera}
+                output={handlePhoto}
+              />
+            </Button>
+            <Button
+              variant="outline"
+              flexDir="column"
+              height="30vw"
+              maxH={120}
+              width="30vw"
+              maxW={120}
+              onClick={() => navigate("/publication/text")}
+            >
               <Flex fontSize={40}>Aa</Flex>
-              <Text fontSize='xs'>Texte</Text>
+              <Text fontSize="xs">Texte</Text>
             </Button>
           </HStack>
           <HStack alignItems="center" justify="center">
-            <UploadPhoto/>
-            <UploadVideo/>
+            <UploadPhoto />
+            <UploadVideo />
           </HStack>
           <HStack alignItems="center" justify="center">
-            <SendVoice/>
-            <VideoRecord/>
+            <SendVoice />
+            <VideoRecord />
           </HStack>
         </Stack>
         <Button variant="cta" onClick={() => navigate("/question")}>

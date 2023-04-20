@@ -13,6 +13,7 @@ const LikePost = () => {
   const dispatch = useDispatch();
 
   const handleLikeDislike = async () => {
+    setLiked(!liked);
       await axios
       .patch(
           process.env.REACT_APP_API_URL +

@@ -1,4 +1,4 @@
-import { Box, Image, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Image, Spinner, Stack, Text } from "@chakra-ui/react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/App.css";
 import "swiper/css";
@@ -21,17 +21,21 @@ function App() {
   const [content, setContent] = useState();
   const useeffect = useRef(true);
   const [initializing, setInitializing] = useState(true);
+  const [step, setStep] = useState(['initial']);
   const dispatch = useDispatch();
   
   const fetchToken = async () => {
+    setStep([...step,'fetchtoken']);
     await axios
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then(
         (res) => {
+          setStep([...step,'fetchtoken success']);
           fetchData()
           setCurrentUser(res.data);
         },
         (err) => {
+          setStep([...step,'fetchtoken failed']);
           fetchData()
           console.log("tsisy token: " + err);
         }
@@ -39,13 +43,18 @@ function App() {
       };
       
       const fetchData = async () => {
+        setStep([...step,'fetchdata']);
         await axios
         .get(process.env.REACT_APP_API_URL + "/api/feeds")
         .then((res) => {
+          setStep([...step,'fetchdata success']);
           dispatch(addContentFeeds(res.data));
           dispatch(addPublication(res.data));
           dispatch(addInterview(res.data));
           setInitializing(false);
+      },err=>{
+        setStep([...step,'fetchdata failed']);
+        alert(err.message)
       });
   };
 
@@ -69,6 +78,7 @@ function App() {
             <Stack justify="center" height="100%" align="center">
               <Image src={logo} alt="logo" width="100px" />
               <Spinner speed="0.7s" />
+              {step.map((elt,key)=><Text key={key}>{elt}</Text>)}
             </Stack>
           ) : (
             <Routes />

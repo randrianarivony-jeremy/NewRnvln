@@ -24,9 +24,6 @@ const Parameter = () => {
               Adresse email et numéro de téléphone
             </ClickableFlex>
             <ClickableFlex>
-              Activité et lieu
-            </ClickableFlex>
-            <ClickableFlex>
               Mot de passe
             </ClickableFlex>
             <ClickableFlex>

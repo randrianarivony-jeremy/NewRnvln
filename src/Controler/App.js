@@ -52,8 +52,9 @@ function App() {
           dispatch(addPublication(res.data));
           dispatch(addInterview(res.data));
           setInitializing(false);
-      },err=>{
-        setStep([...step,'fetchdata failed']);
+        },err=>{
+          setStep([...step,'fetchdata failed']);
+          setInitializing(false);
         alert(err.message)
       });
   };

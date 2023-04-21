@@ -18,4 +18,4 @@ const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
 
 //for emulator suite
-connectStorageEmulator(storage, "localhost", 9199);
+// connectStorageEmulator(storage, "localhost", 9199);

@@ -15,12 +15,14 @@ import {
 } from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import axios from "axios";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext, data } from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
-import RelationList from "./RelationList";
+import EnableSubscription from "./Relation/EnableSubscription";
+import RelationList from "./Relation/RelationList";
 import Thumbs from "./Thumbs";
 import AddressModal from "./UpdateProfile/AddressModal";
 import JobModal from "./UpdateProfile/JobModal";
@@ -29,7 +31,7 @@ import ProfilePicture from "./UpdateProfile/ProfilePicture";
 import ProjectModal from "./UpdateProfile/ProjectModal";
 
 const Profile = () => {
-  const { currentUser } = useContext(currentUserContext);
+  const { currentUser,setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const {
     onOpen: openAddressModal,
@@ -51,6 +53,19 @@ const Profile = () => {
     isOpen: philosophyModal,
     onClose: closePhilosophyModal,
   } = useDisclosure();
+
+  const fetchUser = async () => {
+    await axios.get(process.env.REACT_APP_API_URL + "/api/user/" + currentUser._id).then(
+      (res) => setCurrentUser(res.data),
+      () => {
+        navigate(-1);
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -80,11 +95,13 @@ const Profile = () => {
             ></Button>
           </Flex>
           <Scroll paddingX={2} spacing={5} height="100%">
+            {/* A B O U T  */}
             <HStack align="center" spacing={3}>
               <ProfilePicture />
               <Box>
                 <Text maxWidth="calc(100vw - 100px)" fontWeight="bold" fontSize='lg'>{currentUser.name}</Text>
                 <Stack spacing={0} marginLeft={3} fontSize="sm">
+                  {/* JOB  */}
                   <HStack align='flex-start'>
                     <span className="bi-briefcase-fill"></span>
                     {currentUser.job === "" ? (
@@ -110,6 +127,7 @@ const Profile = () => {
                     onClose={closeJobModal}
                   />
 
+                  {/* ADDRESS  */}
                   <HStack align='flex-start'>
                     <span className="bi-geo-alt-fill"></span>
                     {currentUser.address === "" ? (
@@ -136,6 +154,7 @@ const Profile = () => {
                     onClose={closeAddressModal}
                   />
 
+                  {/* PROJECT  */}
                   <HStack align='flex-start'>
                     <span className="bi-flag-fill"></span>
                     {currentUser.project === "" ? (
@@ -164,6 +183,8 @@ const Profile = () => {
                 </Stack>
               </Box>
             </HStack>
+
+            {/* P H I L O  */}
             {currentUser.philosophy ? (
               <Text
                 fontSize="sm"
@@ -191,6 +212,7 @@ const Profile = () => {
               onClose={closePhilosophyModal}
             />
 
+            {/* R E L A T I O N  */}
             <HStack justify="space-around">
               <RelationList
                 category="Followings"
@@ -209,9 +231,11 @@ const Profile = () => {
                   />
                 </>
               ) : (
-                <Button variant="outline">Activer l'abonnement</Button>
+                <EnableSubscription/>
               )}
             </HStack>
+
+            {/* P O S T S  T A B  */}
             <Tabs size="sm" isFitted height="100%" isLazy={true}>
               <TabList>
                 <Tab width="25%">

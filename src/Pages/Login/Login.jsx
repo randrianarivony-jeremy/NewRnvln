@@ -17,7 +17,7 @@ const Login = () => {
   const address = useRef();
   const picture = useRef();
   return (
-    <Box height="100%" minH='450px' className="login">
+    <Box height="100%" minH='80vh' className="login">
       {signin ? (
         <SignIn setSignin={setSignin} />
       ) : (

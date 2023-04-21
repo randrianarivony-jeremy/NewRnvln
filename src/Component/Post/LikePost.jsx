@@ -8,8 +8,8 @@ import { postContext } from "./PostContainer";
 
 const LikePost = () => {
   const { post } = useContext(postContext);
-  const [liked, setLiked] = useState(false);
   const { currentUser } = useContext(currentUserContext);
+  const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
 
   const handleLikeDislike = async () => {

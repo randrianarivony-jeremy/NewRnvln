@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Question from "../Question";
 import { postContext } from "./PostContainer";
 import { ClickableFlex } from "../../Styles/Theme";
+import { currentUserContext } from "../../Controler/App";
 
 const Post = () => {
   const [expandBtn, setExpandBtn] = useState(true);
@@ -15,6 +16,7 @@ const Post = () => {
   const [longDescription, setLongDescription] = useState(false);
   const navigate = useNavigate();
   const {post}=useContext(postContext);
+  const {currentUser}=useContext(currentUserContext);
   const descriptionRef = useRef();
   const descriptionOverflow = useRef();
 
@@ -47,7 +49,7 @@ const Post = () => {
       >
         <Text
           fontWeight="bold"
-          onClick={() => navigate("/profile/"+post.content.id_user._id)}
+          onClick={() =>post.content.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.content.id_user._id)}
         >
           {post.content.id_user.name}
         </Text>
@@ -96,7 +98,8 @@ const Post = () => {
         {expandBtn && (
           <>
             {post.type==='interview' && <RespondPost post={post.content} />}
-            <ClickableFlex position="relative" flexDir="column" onClick={() => navigate("/profile/"+post.content.id_user._id)}>
+            <ClickableFlex position="relative" flexDir="column"
+            onClick={() =>post.content.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.content.id_user._id)}>
               {post.content.id_user.picture ? <Image src={post.content.id_user.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar
                 size="sm"
                 

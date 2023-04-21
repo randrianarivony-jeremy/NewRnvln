@@ -9,9 +9,9 @@ import { storage } from "../../../Controler/firebase.config";
 const ProfilePicture = () => {
   const profilePicInputRef = useRef();
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const [submitting, setSubmitting] = useState(false);
   const picture = useRef();
   const [selectedImage, setSelectedImage] = useState();
-  const [submitting, setSubmitting] = useState(false);
   const [camera, setCamera] = useState(false);
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { onOpen:openProfilePicView, onClose:closeProfilePicView, isOpen:profilePicView } = useDisclosure();

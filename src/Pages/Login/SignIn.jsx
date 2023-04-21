@@ -31,7 +31,6 @@ const SignIn = ({ setSignin }) => {
       )
       .then(
         (res) => {
-          console.log(res.data);
           setSubmitting(false);
           setCurrentUser(res.data);
           navigate("/");
@@ -46,7 +45,6 @@ const SignIn = ({ setSignin }) => {
         },
         (err) => {
           let error = err.response.data;
-          console.log(error);
           if (err.response.data.includes("Email")) setMailError(error);
           else setPasswordError(error);
           setSubmitting(false);

@@ -48,9 +48,11 @@ function App() {
         .get(process.env.REACT_APP_API_URL + "/api/feeds")
         .then((res) => {
           setStep([...step,'fetchdata success']);
-          dispatch(addContentFeeds(res.data));
-          dispatch(addPublication(res.data));
-          dispatch(addInterview(res.data));
+          if (res.data.length!==0){
+            dispatch(addContentFeeds(res.data));
+            dispatch(addPublication(res.data));
+            dispatch(addInterview(res.data));
+          }
           setInitializing(false);
         },err=>{
           setStep([...step,'fetchdata failed']);
@@ -104,7 +106,7 @@ export const data = [
       "interviewer": {
         "_id": "643889777872bd7062e4bf53",
         "name": "Ranavalona",
-        "picture": "https://firebasestorage.googleapis.com/v0/b/rnvln-611b7.appspot.com/o/profile%2Fpicture%2F1681426804576?alt=media&token=04e991ca-a3d8-41b8-80f9-33e9e18aee27"
+        "picture": "http://localhost:9199/v0/b/rnvln-611b7.appspot.com/o/profile%2Fpicture%2F168240269886564422e3de720c9c9c685e667?alt=media&token=d70620ce-3c51-4c92-8a89-e7882e3acb8a"
       },
       "data": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolorem officiis illum accusantium. Necessitatibus delectus modi",
       "bg": "transparent",

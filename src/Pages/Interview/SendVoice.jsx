@@ -16,23 +16,21 @@ const SendVoice = () => {
     isRecording,
     recordingTime,
   } = recorderControls;
-  let cancel = useRef(false);
+  let newBlob = useRef(true);
 
   const handleRecordingOn = () => {
     startRecording();
     setRecording(true);
-    cancel.current = false;
   };
 
   const handleSubmit = (blob) => {
     setRecording(false);
-    console.log('ato');
     setDisplay(<PubMedia data={{content:blob,contentType:"audio"}}/>)
   };
 
   const handleReset = () => {
     stopRecording();
-    cancel.current = true;
+    newBlob.current = false;
   };
 
   return (
@@ -42,7 +40,7 @@ const SendVoice = () => {
           <Box display="none">
             <AudioRecorder
               onRecordingComplete={(blob) =>
-                !cancel.current && handleSubmit(blob)
+                newBlob.current && handleSubmit(blob)
               }
               recorderControls={recorderControls}
             />

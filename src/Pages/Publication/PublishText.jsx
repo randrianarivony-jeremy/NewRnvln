@@ -27,6 +27,7 @@ const PublishText = () => {
           title: "Publication réussie",
           status: "success",
           duration: 5000,
+          isClosable:true,
           description: "Votre publication a été bien enregistrée !",
         });
         navigate("/");
@@ -34,6 +35,7 @@ const PublishText = () => {
         toast({
           status: "error",
           duration: 5000,
+          isClosable:true,
           description: "Veuillez réessayer s'il vous plait",
           title: "Operation failed",
         });

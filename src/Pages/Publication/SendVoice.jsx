@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
@@ -17,40 +17,42 @@ const SendVoice = () => {
     isRecording,
     recordingTime,
   } = recorderControls;
-  let cancel = useRef(false);
+  let newBlob = useRef(true);
 
   const handleRecordingOn = () => {
     startRecording();
     setRecording(true);
-    cancel.current = false;
   };
 
   const handleSubmit = (blob) => {
     setContent({content:(blob),contentType:"audio"});
     setRecording(false);
-    console.log('ato');
     navigate('/publication/media');
   };
-
+  
   const handleReset = () => {
     stopRecording();
-    cancel.current = true;
+    newBlob.current=false;
+    console.log('ato',newBlob.current);
   };
 
   return (
     <>
       {recording ? (
-        <>
+        <Portal>
           <Box display="none">
             <AudioRecorder
               onRecordingComplete={(blob) =>
-                !cancel.current && handleSubmit(blob)
+                newBlob.current && handleSubmit(blob)
               }
               recorderControls={recorderControls}
             />
           </Box>
-          <Button position='absolute' zIndex={4} top={3} left={3} className="bi-x-lg"
-      onClick={()=>{handleReset();setRecording(false)}}></Button>
+          <Button position='absolute' zIndex={4} top={0} left={0} className="bi-x-lg"
+      onClick={()=>{
+        handleReset();
+        setRecording(false)
+        }}></Button>
           <Flex
             position="absolute"
             zIndex={3}
@@ -100,7 +102,7 @@ const SendVoice = () => {
               </HStack>
             </Stack>
           </Flex>
-        </>
+        </Portal>
       ) : (
         <Button
           variant="outline"

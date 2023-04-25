@@ -38,7 +38,6 @@ const AskQuestion = () => {
       .then(
         (res) => {
           setSubmitting(false);
-          console.log(res.data);
           toast({
             title: "Publication réussie",
             status: "success",

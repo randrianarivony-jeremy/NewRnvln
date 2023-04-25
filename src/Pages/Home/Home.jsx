@@ -25,7 +25,7 @@ const Home = () => {
           className="feed-slides"
           direction="vertical"
         >
-          {data.map((elt, key) => (
+          {data?.map((elt, key) => (
             <SwiperSlide key={key}>
               <PostContainer post={elt} homeSlider={homeSliderRef} />
             </SwiperSlide>

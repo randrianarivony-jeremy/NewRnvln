@@ -71,6 +71,7 @@ const PublishMedia = () => {
             title: "Publication réussie",
             status: "success",
             duration: 5000,
+            isClosable:true,
             description: "Votre interview a été bien enregistrée !",
           });
           navigate("/");
@@ -78,6 +79,7 @@ const PublishMedia = () => {
         () => {
           toast({
             status: "error",
+            isClosable:true,
             duration: 5000,
             description: "Veuillez réessayer s'il vous plait",
             title: "Operation failed",
@@ -133,9 +135,6 @@ const PublishMedia = () => {
         <HStack
           paddingY={2}
           paddingX={3}
-          position="absolute"
-          bottom={0}
-          left={0}
           width="100%"
         >
           <Button width="100%" onClick={() => navigate(-1)}>

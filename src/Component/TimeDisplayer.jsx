@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'react-moment';
-import 'moment/locale/fr';
+// import 'moment/locale/fr';
 import moment from 'moment/min/moment-with-locales';
 
 const TimeDisplayer = ({dateToFormat}) => {

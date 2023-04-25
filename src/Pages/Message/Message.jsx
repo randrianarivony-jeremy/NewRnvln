@@ -31,7 +31,7 @@ const Message = () => {
       .then(
         (res) => {
           setConversation(res.data);
-          console.log(res.data);
+          // console.log(res.data);
           setLoading(false);
         },
         (err) => {
@@ -53,7 +53,7 @@ const Message = () => {
         <Loader />
       ) : (
         <Scroll height="100%">
-          {conversation.map((convers, key) => (
+          {conversation?.map((convers, key) => (
             <ClickableFlex
               key={key}
               justify="space-between"

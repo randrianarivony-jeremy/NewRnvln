@@ -2,8 +2,8 @@
 
 # dependencies
 /node_modules
-/firebase-data
-/.env
+./firebase-data
+./.env
 /.pnp
 .pnp.js
 

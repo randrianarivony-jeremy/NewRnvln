@@ -51,7 +51,7 @@ const Menu = () => {
                 <Text>Se déconnecter</Text>
               </Button>}
             {currentUser ? 
-            <Button variant='cta' onClick={()=>navigate('/question')}>Poser des questions</Button>
+            <Button variant='cta' onClick={()=>navigate('/question')}>Poser une question</Button>
             : 
             <Button variant='cta' onClick={()=>navigate('/login')}>Se connecter</Button>}
             </Stack>

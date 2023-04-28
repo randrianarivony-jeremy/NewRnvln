@@ -1,34 +1,80 @@
-import { Button, Flex } from "@chakra-ui/react";
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ChatScroller from "./ChatScroller";
 import ChatInput from "./ChatInput";
 import { Scroll } from "../../Styles/Theme";
+import axios from "axios";
+import { Loader } from "../../Controler/Routes";
+import { currentUserContext } from "../../Controler/App";
+import { useSelector } from "react-redux";
+
+export const chatContext = createContext();
 
 const Chat = () => {
   const navigate = useNavigate();
-  let messages = [
-    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora sed",
-    "dolorum velit inventore eius praesentium minima repudiandae atque placeat",
-    "laborum error, doloribus illum vero, libero tempore, esse facilis",
-    "consectetur similique. Inventore pariatur, voluptate dolorem recusandae",
-    "ad, nesciunt minima labore ut modi quia excepturi ducimus, eius porro",
-    "corrupti saepe quod voluptatum iure quisquam non error. Corrupti dolorem",
-    "quaerat impedit nostrum minus inventore eius. Et quae fuga, est architecto",
-    "perferendis, ratione voluptatibus suscipit vero ipsa at, veritatis non!",
-    "Esse corporis velit, officiis atque hic dolore molestias fuga deleniti sit",
-    "temporibus officia provident dignissimos blanditiis saepe alias",
-    "exercitationem odio facilis. Animi, atque blanditiis.",
-    "exercitationem",
-  ];
+  const { currentUser } = useContext(currentUserContext);
+  const { conversationId } = useParams();
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newConversation, setNewConversation] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [userB, setUserB] = useState();
+  let draft=useRef()
+  const chatReducer = useSelector(state=>state.chat);
+
+  const fetchMessages = async () => {
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/api/message/" + conversationId)
+      .then(
+        (res) => {
+          if(res.data==='new conversation'){
+          setNewConversation(true);
+          }else {
+            setMessages(res.data.messages);
+            setUserB(
+              res.data.members.filter((u) => u._id !== currentUser._id)[0]
+            );
+          }
+          setLoading(false);
+        },
+        (err) => {
+          console.log(err);
+          navigate(-1);
+        }
+      );
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
   return (
-    <Scroll height='100%' className='chat' padding='0 12px 8px 12px' position='relative'>
-      <Flex borderBottom='1px solid' borderBottomColor='whiteAlpha.500'>
-        <Button variant='float' className="bi-arrow-left" onClick={() => navigate(-1)}></Button>
-        <Button>Usename</Button>
-      </Flex>
-      <ChatScroller data={messages} />
-      <ChatInput />
+    <Scroll
+      height="100%"
+      className="chat" paddingBottom={2}
+      position="relative"
+    >
+      <chatContext.Provider value={{ messages, setMessages, userB,newConversation,setNewConversation,submitting, setSubmitting,draft }}>
+        <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+          <Button
+            variant="float"
+            className="bi-arrow-left"
+            onClick={() => navigate(-1)}
+          ></Button>
+          <Button>{userB?.name}</Button>
+        </Flex>
+        {loading ? (
+          <Loader />
+        ) : newConversation ? (
+          <Flex justify="center" alignItems="center" height="100%">
+            <Text>Démarrez une nouvelle conversation</Text>
+          </Flex>
+        ) : (
+          <ChatScroller />
+        )}
+        <ChatInput />
+      </chatContext.Provider>
     </Scroll>
   );
 };

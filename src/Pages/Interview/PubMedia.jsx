@@ -42,6 +42,7 @@ const PubMedia = ({ data }) => {
       storage,
       "interview/" + `${data.contentType}` + "/" + fileName
     );
+    console.log('hey');
       uploadBytes(storageRef, data.content).then((snapshot) =>
         getDownloadURL(snapshot.ref).then((url) => {
           urlRef.current = url;

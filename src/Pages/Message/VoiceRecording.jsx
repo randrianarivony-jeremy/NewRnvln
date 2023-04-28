@@ -1,57 +1,153 @@
-import { Box, Button, ButtonGroup, Flex, HStack, Spinner, Text } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
+import axios from "axios";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import { useParams } from "react-router-dom";
+import { currentUserContext } from "../../Controler/App";
+import { storage } from "../../Controler/firebase.config";
+import { chatContext } from "./Chat";
 
-const VoiceRecording = ({ sendResponse }) => {
+const SendVoice = () => {
+  const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
-  const {startRecording,stopRecording,togglePauseResume,isPaused,recordingTime,} = recorderControls;
-  const [audioRecordingInterface, setAudioRecordingInterface] = useState(false);
-  let cancel=useRef(false);
+  const {
+    startRecording,
+    stopRecording,
+    togglePauseResume,
+    isPaused,
+    isRecording,
+    recordingTime,
+  } = recorderControls;
+  let newBlob = useRef(true);
+  const { conversationId } = useParams();
+  const urlRef = useRef();
+  const {messages,setMessages,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
+  const {currentUser}=useContext(currentUserContext);
 
   const handleRecordingOn = () => {
     startRecording();
-    setAudioRecordingInterface(true);
-    cancel.current=false;
+    setRecording(true);
   };
 
-  const handleSubmit = (blob) => {
-    sendResponse(blob, "audio");
-    setAudioRecordingInterface(false);
+  const handleReset = () => {
+    stopRecording();
+    newBlob.current=false;
+    console.log('ato',newBlob.current);
   };
   
-  const handleStop=()=>{
-    stopRecording();
-    cancel.current=true;
-    setAudioRecordingInterface(false);
+  const storeToStorage=(blob)=>{
+    draft.current = {content:URL.createObjectURL(blob),contentType:'audio',sender:currentUser._id}
+    setSubmitting(true);
+    if (newConversation) setNewConversation(false);
+    setRecording(false);
+    const fileName = new Date().getTime() + `${currentUser._id}`;
+    const storageRef = ref(storage, "conversation/audio/" + fileName);
+    uploadBytes(storageRef, blob).then((snapshot) =>
+        getDownloadURL(snapshot.ref).then((url) => {
+          urlRef.current = url;
+          handleSubmit();
+        })
+      );
   }
 
+  const handleSubmit = async() => {
+    await axios
+      .post(process.env.REACT_APP_API_URL + "/api/message",{
+        sender:currentUser._id,
+        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        content:urlRef.current,
+        contentType:'audio',
+        conversationId: newConversation ? null : conversationId
+      })
+      .then(
+        (res) => {
+          setMessages([...messages,res.data]);
+          setSubmitting(false);
+          },
+          (err) => {
+          setSubmitting(false);
+          console.log(err);
+        }
+      );
+  };
+  
   return (
-    <Flex>
-      <Box display="none">
-        <AudioRecorder
-          onRecordingComplete={(blob) => !cancel.current && handleSubmit(blob)}
-          recorderControls={recorderControls}
-        />
-      </Box>
-      <Button className="bi-mic" variant='float' onClick={handleRecordingOn}></Button>
-      {audioRecordingInterface && (
-          <HStack position="absolute" rounded='md' width='calc(100% - 24px)' zIndex={3}  bottom={2} left={3} bgColor="dark.50" justifyContent="space-between">
-            <HStack>
-              <Button
-                className={isPaused ? "bi-play" : "bi-pause"}
-                onClick={togglePauseResume}
-              ></Button>
-                <Spinner thickness="2px" speed={isPaused ? "0s" : '0.9s'} emptyColor="gray.200" color="blue.500" size="md"/>
-              <Text>{String(Math.floor(recordingTime/60)).padStart(2, 0)}:{String(recordingTime%60).padStart(2, 0)}</Text> {/* min:sec(00:00)  */}
-            </HStack>
-            <ButtonGroup>
-                <Button className="bi-trash" onClick={handleStop}></Button>
-            <Button className="bi-send" onClick={stopRecording}></Button>
-            </ButtonGroup>
-          </HStack>
+    <>
+      {recording ? (
+        <Portal>
+          <Box display="none">
+            <AudioRecorder
+              onRecordingComplete={(blob) =>
+                newBlob.current && storeToStorage(blob)
+              }
+              recorderControls={recorderControls}
+            />
+          </Box>
+          <Button position='absolute' zIndex={4} top={0} left={0} className="bi-x-lg"
+      onClick={()=>{
+        handleReset();
+        setRecording(false)
+        }}></Button>
+          <Flex
+            position="absolute"
+            zIndex={3}
+            top={0}
+            left={0}
+            height="100%"
+            width="100%"
+            bgColor="dark.100"
+            justify="center"
+            align="center"
+          >
+            <Stack spacing={0}>
+              <Text textAlign="center" fontSize="2xl">
+                {String(Math.floor(recordingTime / 60)).padStart(2, 0)}:
+                {String(recordingTime % 60).padStart(2, 0)}
+              </Text>
+              <HStack>
+                <Button
+                  className="bi-arrow-counterclockwise"
+                  fontSize="2xl"
+                  border="1px solid"
+                  rounded="full"
+                  variant="float"
+                  onClick={handleReset}
+                ></Button>
+                <Button
+                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
+                  className={
+                    !isRecording
+                      ? "bi-circle-fill"
+                      : isPaused
+                      ? "bi-play"
+                      : "bi-pause"
+                  } 
+                  onClick={() =>
+                    !isRecording ? handleRecordingOn() : togglePauseResume()
+                  }
+                ></Button>
+                <Button
+                  className="bi-check-lg"
+                  fontSize="2xl"
+                  border="1px solid"
+                  rounded="full"
+                  variant="float"
+                  onClick={stopRecording}
+                ></Button>
+              </HStack>
+            </Stack>
+          </Flex>
+        </Portal>
+      ) : (
+        <Button  className="bi-mic"
+          variant="float"
+          onClick={handleRecordingOn}
+        >
+        </Button>
       )}
-    </Flex>
+    </>
   );
 };
 
-export default VoiceRecording;
+export default SendVoice;

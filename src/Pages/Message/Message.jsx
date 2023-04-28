@@ -15,10 +15,12 @@ import Navigation from "../../Component/Navigation";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
 import { currentUserContext } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
-import TimeDisplayer from "../../Component/TimeDisplayer";
+import { useDispatch } from "react-redux";
+import { selectRecipient } from "../../Controler/Redux/chat.reducer";
 
 const Message = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { currentUser } = useContext(currentUserContext);
   const [conversation, setConversation] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,11 @@ const Message = () => {
             <ClickableFlex
               key={key}
               justify="space-between"
-              onClick={() => navigate("/chat")}
+              onClick={() => {dispatch(selectRecipient(convers.members.filter(
+                (member) => member._id !== currentUser._id
+              )[0]));
+              navigate("/chat/"+convers._id)
+            }}
             >
               <Flex>
                 {convers.members.filter((member) => member._id !== currentUser._id)[0].picture ? (
@@ -74,11 +80,14 @@ const Message = () => {
                       )[0].name
                     }
                   </Heading>
-                  <Text>{convers.messages[0].content}</Text>
+                  {convers.messages[0].contentType==='string' && <Text>{convers.messages[0].content}</Text>}
+                  {convers.messages[0].contentType==='video' && <Text>a envoyé un vidéo</Text>}
+                  {convers.messages[0].contentType==='audio' && <Text>a envoyé un message vocal</Text>}
+                  {convers.messages[0].contentType==='image' && <Text>a envoyé une photo</Text>}
                 </Stack>
               </Flex>
               <Stack align="center" spacing={0}>
-                <TimeDisplayer dateToFormat={convers.messages[0].createdAt}/>
+                {/* <TimeDisplayer dateToFormat={convers.messages[0].createdAt}/> */}
                 <Badge>1</Badge>
               </Stack>
             </ClickableFlex>

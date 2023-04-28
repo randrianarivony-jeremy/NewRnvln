@@ -19,7 +19,7 @@ const Thumbs = ({ data }) => {
           </Text>
         </Flex>
       )}
-      {data.contentType === "image_url" && (
+      {data.contentType === "image" && (
         <Image
           src={data.content}
           alt="picture"
@@ -29,7 +29,7 @@ const Thumbs = ({ data }) => {
           objectFit="cover"
         />
       )}
-      {data.contentType === "video_url" && (
+      {data.contentType === "video" && (
         <>
           <Button
             position="absolute"
@@ -49,7 +49,7 @@ const Thumbs = ({ data }) => {
           ></video>
         </>
       )}
-      {data.contentType === "audio_url" && (
+      {data.contentType === "audio" && (
         <Box className="bi-soundwave" margin="auto" fontSize="5xl"></Box>
       )}
     </Flex>

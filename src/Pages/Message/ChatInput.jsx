@@ -1,19 +1,49 @@
 import {Button,HStack,Popover,PopoverArrow,PopoverBody,PopoverContent,PopoverTrigger,Portal,Textarea,useColorModeValue,} from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import SendPicture from "./SendPicture";
 import TakePicture from "./TakePicture";
 import VoiceRecording from "./VoiceRecording";
 import EmojiPicker from "emoji-picker-react";
+import { chatContext } from "./Chat";
+import axios from "axios";
+import { currentUserContext } from "../../Controler/App";
+import { useNavigate, useParams } from "react-router-dom";
 
-const ChatInputs = ({ sendResponse }) => {
+const ChatInputs = ({sendResponse}) => {
   const responseRef = useRef();
+  const { conversationId } = useParams();
+  const {messages,setMessages,userB,newConversation,setNewConversation,submitting,setSubmitting,draft}=useContext(chatContext);
+  const {currentUser}=useContext(currentUserContext);
   const [value, setValue] = useState("");
   const emojibg = useColorModeValue("light", "dark");
   const [writing, setWriting] = useState(false);
+  const navigate = useNavigate();
+  const mediaContent=useRef();
 
-  const sendText = () => {
-    sendResponse(responseRef.current.value, "string");
-    responseRef.current.value = "";
+  const sendText = async() => {
+    setWriting(false);
+    setValue('');
+    draft.current = {content:responseRef.current.value,contentType:'string',sender:currentUser._id}
+    setSubmitting(true);
+    if (newConversation) setNewConversation(false);
+    await axios
+    .post(process.env.REACT_APP_API_URL + "/api/message",{
+        sender:currentUser._id,
+        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        content:responseRef.current.value,
+        conversationId: newConversation ? null : conversationId
+      })
+      .then(
+        (res) => {
+          setMessages([...messages,res.data]);
+          setSubmitting(false);
+          },
+          (err) => {
+          setSubmitting(false);
+          console.log(err);
+          navigate(-1);
+        }
+      );
   };
 
   const handleTextChange = ({ currentTarget }) => {
@@ -44,7 +74,7 @@ const ChatInputs = ({ sendResponse }) => {
       <HStack alignItems="flex-end" justify="flex-start">
         {!writing && (
           <>
-            <TakePicture sendResponse={sendResponse} />
+            <TakePicture output={mediaContent}/>
             <SendPicture sendResponse={sendResponse} />
             <VoiceRecording sendResponse={sendResponse} />
           </>
@@ -57,6 +87,7 @@ const ChatInputs = ({ sendResponse }) => {
               onClick={() => setWriting(false)}
             ></Button>
           )}
+
           {/* <Emojis/> */}
           <Popover isLazy={true} returnFocusOnClose={false}>
             <PopoverTrigger>

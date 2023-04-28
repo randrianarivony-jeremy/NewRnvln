@@ -9,13 +9,13 @@ import { theme } from "./Styles/Theme";
 import App from "./Controler/App";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import publicationReducer from "./Controler/Redux/publication.reducer";
 import interviewReducer from "./Controler/Redux/interview.reducer";
 import threadReducer from "./Controler/Redux/thread.reducer";
+import chatReducer from "./Controler/Redux/chat.reducer";
 
 const { ToastContainer } = createStandaloneToast();
 const store = configureStore({
-  reducer: { thread: threadReducer,publications: publicationReducer,interviews:interviewReducer },
+  reducer: { thread: threadReducer,chat: chatReducer,interviews:interviewReducer },
 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

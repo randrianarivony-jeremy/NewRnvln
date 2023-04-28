@@ -18,6 +18,7 @@ const PublishText = () => {
     await axios
       .post(process.env.REACT_APP_API_URL + "/api/publication", {
         content: value,
+        bg:textareaBg,
         id_user: currentUser._id,
         contentType: "string",
       })

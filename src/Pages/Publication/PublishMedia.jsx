@@ -34,7 +34,7 @@ const PublishMedia = () => {
     setSubmitting(true);
     const fileName = new Date().getTime() + `${currentUser._id}`;
     if (content.contentType === "image_url") {
-      const storageRef = ref(storage, "interview/image/" + fileName);
+      const storageRef = ref(storage, "publication/image/" + fileName);
       uploadString(storageRef, content.content, "data_url").then((snapshot) =>
         getDownloadURL(snapshot.ref).then((url) => {
           urlRef.current = url;
@@ -44,7 +44,7 @@ const PublishMedia = () => {
     } else {
       const storageRef = ref(
         storage,
-        "interview/" + `${content.contentType}` + "/" + fileName
+        "publication/" + `${content.contentType}` + "/" + fileName
       );
       uploadBytes(storageRef, content.content).then((snapshot) =>
         getDownloadURL(snapshot.ref).then((url) => {

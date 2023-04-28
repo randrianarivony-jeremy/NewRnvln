@@ -1,17 +1,65 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import { Box, Button, Flex, HStack, Image, Stack } from "@chakra-ui/react";
+import axios from "axios";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import React, { useContext, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import WebCam from "react-webcam";
+import { currentUserContext } from "../../Controler/App";
+import { storage } from "../../Controler/firebase.config";
+import { chatContext } from "./Chat";
 
-const TakePicture = ({ sendResponse }) => {
+const TakePicture = () => {
   const [camera, setCamera] = useState(false);
+  const { conversationId } = useParams();
+  const {messages,setMessages,userB,newConversation,setNewConversation, setSubmitting,draft}=useContext(chatContext);
+  const {currentUser}=useContext(currentUserContext);
   const [cameraReady, setCameraReady] = useState(false);
+  const [imagePreview, setImagePreview] = useState(false);
   const [facingMode, setFacingMode] = useState("environment");
   const webcamRef = useRef();
-
+  const imageRef = useRef();
+  const urlRef = useRef();
+  
   const capture = () => {
-    const imgSrc = webcamRef.current.getScreenshot();
-    sendResponse(imgSrc, "image_url");
+    imageRef.current = webcamRef.current.getScreenshot();
+    setImagePreview(true);
+  };
+  
+  const storePicture=()=>{
     setCamera(false);
+    setCameraReady(false);
+    if (newConversation) setNewConversation(false);
+    draft.current = {content:imageRef.current,contentType:'image',sender:currentUser._id}
+    setSubmitting(true);
+    const fileName = new Date().getTime() + `${currentUser._id}`;
+    const storageRef = ref(storage, "conversation/image/" + fileName);
+      uploadString(storageRef, imageRef.current, "data_url").then((snapshot) =>
+      getDownloadURL(snapshot.ref).then((url) => {
+          urlRef.current = url;
+          handleSubmit();
+        })
+      );
+  }
+
+  const handleSubmit = async() => {
+    await axios
+      .post(process.env.REACT_APP_API_URL + "/api/message",{
+        sender:currentUser._id,
+        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        content:urlRef.current,
+        contentType:'image',
+        conversationId: newConversation ? null : conversationId
+      })
+      .then(
+        (res) => {
+          setMessages([...messages,res.data]);
+          setSubmitting(false);
+          },
+          (err) => {
+          setSubmitting(false);
+          console.log(err);
+        }
+      );
   };
 
   return (
@@ -21,65 +69,85 @@ const TakePicture = ({ sendResponse }) => {
         variant="float"
         onClick={() => setCamera(!camera)}
       ></Button>
+
       {camera && (
-        <>
-          <Box position="absolute" zIndex={3} top={0} left={0} height="100%">
-            <WebCam
-              ref={webcamRef}
-              onUserMedia={() => setCameraReady(true)}
-              mirrored={facingMode === "user" ? true : false}
-              videoConstraints={{ facingMode }}
-              onUserMediaError={() => setCamera(false)}
-              screenshotFormat="image/jpeg"
-              style={{ height: "100%", objectFit: "cover" }}
-              audio={false}
-            />
-          </Box>
-        </>
-      )}
-      {cameraReady && (
-        <>
-          <Button
-            position="absolute"
-            zIndex={3}
-            left={"50%"}
-            width={100}
-            bottom={"10%"}
-            transform="auto"
-            translateX="-50%"
-            bgColor="transparent"
-            className="bi-circle"
-            fontSize={80}
-            onClick={capture}
-          ></Button>
-          <Flex
-            className="camera"
-            top={0}
-            left={0}
-            position="absolute"
-            zIndex={3}
-            justify="space-between"
-            width="100%"
-          >
-            <Button
-              className="bi-x-lg"
-              fontSize="xl"
-              onClick={() => {
-                setCamera(false);
-                setCameraReady(false);
-              }}
-            ></Button>
-            <Button
-              className="bi-arrow-repeat"
-              fontSize="xl"
-              onClick={() =>
-                facingMode === "user"
-                  ? setFacingMode("environment")
-                  : setFacingMode("user")
-              }
-            ></Button>
-          </Flex>
-        </>
+        <Stack
+          position="absolute"
+          zIndex={3}
+          top={0}
+          left={0}
+          spacing={0}
+          height="100%"
+        >
+          {cameraReady && (
+            <Box minH={10} width="100%" bgColor="white">
+              {!imagePreview && (
+                <Flex justify="space-between" height={10} width="100%">
+                  <Button
+                    className="bi-x-lg"
+                    fontSize="xl"
+                    onClick={() => {
+                      setCamera(false);
+                      setCameraReady(false);
+                    }}
+                  ></Button>
+                  <Button
+                    className="bi-arrow-repeat"
+                    fontSize="xl"
+                    onClick={() =>
+                      facingMode === "user"
+                        ? setFacingMode("environment")
+                        : setFacingMode("user")
+                    }
+                  ></Button>
+                </Flex>
+              )}
+            </Box>
+          )}
+
+          {imagePreview && (
+            <Box position="absolute" top={10} left={0}>
+              <Image src={imageRef.current} alt="image preview" />
+            </Box>
+          )}
+          <WebCam
+            ref={webcamRef}
+            onUserMedia={() => setCameraReady(true)}
+            mirrored={facingMode === "user" ? true : false}
+            videoConstraints={{ facingMode, aspectRatio: 1 / 1 }}
+            onUserMediaError={() => setCamera(false)}
+            screenshotFormat="image/jpeg"
+            style={{
+              width: "100vw",
+              aspectRatio: 1 / 1,
+              objectFit: "contain",
+            }}
+            audio={false}
+          />
+
+          {cameraReady && (
+            <Flex align="center" justify="center" height="100%" bgColor="white">
+              {!imagePreview ? (
+                <Button
+                  width={100}
+                  bgColor="transparent"
+                  className="bi-circle"
+                  fontSize={40}
+                  onClick={capture}
+                ></Button>
+              ) : (
+                <HStack width="100%">
+                  <Button width="100%" onClick={() => setImagePreview(false)}>
+                    Reprendre
+                  </Button>
+                  <Button width="100%" variant="primary" onClick={storePicture}>
+                    Envoyer
+                  </Button>
+                </HStack>
+              )}
+            </Flex>
+          )}
+        </Stack>
       )}
     </Flex>
   );

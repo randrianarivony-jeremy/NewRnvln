@@ -24,7 +24,7 @@ const PublicationText = () => {
         marginX={3} width='100%'
         position="relative"
         color={post.content.bg !== "transparent" && "black"}
-        // overflowY="hidden"
+        overflowY="hidden"
         mixBlendMode="hard-light"
         _after={
           textOverflow && {
@@ -33,8 +33,8 @@ const PublicationText = () => {
             left: 0,
             bg:
               (colorMode === "dark" && post.content.bg==='transparent')
-                ? "linear-gradient(transparent 50%,#1a202c 90%)"
-                : "linear-gradient(transparent 50%,white 90%)",
+                ? "linear-gradient(transparent 50%,#1a202c 100%)"
+                : "linear-gradient(transparent 50%,white 100%)",
             content: "''",
             width: "100%",
             height: "100%",

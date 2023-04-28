@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext, data } from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
+import UserInterviews from "./Contents/UserInterviews";
+import UserPublications from "./Contents/UserPublications";
 import EnableSubscription from "./Relation/EnableSubscription";
 import RelationList from "./Relation/RelationList";
 import Thumbs from "./Thumbs";
@@ -266,18 +268,10 @@ const Profile = () => {
 
               <TabPanels>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <Flex wrap="wrap" justify="center">
-                    {data.map((elt, key) => (
-                      <Thumbs data={elt} key={key} />
-                    ))}
-                  </Flex>
+                  <UserInterviews user={currentUser._id}/>
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <Flex wrap="wrap" justify="center">
-                    {data.map((elt, key) => (
-                      <Thumbs data={elt} key={key} />
-                    ))}
-                  </Flex>
+                  <UserPublications user={currentUser._id}/>
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
                   <Flex wrap="wrap" justify="center">

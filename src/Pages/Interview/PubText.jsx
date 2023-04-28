@@ -23,6 +23,7 @@ const PubText = () => {
         content: value,
         id_user: currentUser._id,
         question: question._id,
+        bg: textareaBg,
         contentType:'string'
       })
       .then((res) => {

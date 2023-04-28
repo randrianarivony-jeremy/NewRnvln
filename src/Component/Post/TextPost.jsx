@@ -25,7 +25,7 @@ const TextPost = () => {
               <Question question={post.question} />
             </Box>
           )}
-          <Text textAlign="left">{post.content}</Text>
+          <Text textAlign="left">{post.content.content}</Text>
           <Text textAlign="left" fontSize="sm" fontStyle="italic">
             15k likes <span className="bi-heart"></span>
           </Text>

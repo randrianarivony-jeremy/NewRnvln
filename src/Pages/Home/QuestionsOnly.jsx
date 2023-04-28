@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import PostContainer from "../../Component/Post/PostContainer";
+import QuestionCard from "../Question/QuestionCard";
 
 const QuestionsOnly = () => {
   const [data, setData] = useState([]);
@@ -12,8 +13,10 @@ const QuestionsOnly = () => {
   const fetchQuestions = async () => {
     await axios
       .get(process.env.REACT_APP_API_URL + "/api/question")
-      .then((res) => {setData(res.data)
-        setLoading(false);
+      .then((res) => {
+        console.log(res.data)
+        // setData(res.data)
+        // setLoading(false);
       });
   };
 
@@ -28,7 +31,8 @@ const QuestionsOnly = () => {
       {loading ? <Spinner/> : <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical">
         {data.map((elt, key) => (
           <SwiperSlide key={key}>
-            <PostContainer post={elt} homeSlider={homeSliderRef} />
+            {/* <PostContainer post={elt} homeSlider={homeSliderRef} /> */}
+            <QuestionCard question={elt}/>
           </SwiperSlide>
         ))}
       </Swiper>}

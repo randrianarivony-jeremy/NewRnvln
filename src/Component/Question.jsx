@@ -14,7 +14,7 @@ const Question = ({ question }) => {
 
   return (
     <Box
-      paddingX={3} bg={question.bg}
+      paddingX={3} bg={question?.bg}
       paddingY={2}
       rounded="lg"
       borderTopLeftRadius={0}

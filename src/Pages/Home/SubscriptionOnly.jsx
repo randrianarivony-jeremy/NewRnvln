@@ -1,25 +1,36 @@
-import { Heading } from '@chakra-ui/react';
-import React, { useRef } from 'react';
-import Swiper from 'swiper';
-import { SwiperSlide } from 'swiper/react';
-import PostContainer from '../../Component/Post/PostContainer';
+import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
+import React, { useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import Navigation from "../../Component/Navigation";
+import InterviewCard from "../InterviewCard/InterviewCard";
 
 const SubscriptionOnly = () => {
-    const homeSliderRef=useRef();
-    let data=[];
+  const homeSliderRef = useRef();
+  let data = [1, 2];
 
-    return (
-        <>
-            <Heading position='absolute' size='sm' zIndex={2} top={2} left='50%' transform='auto' translateX='-50%'>Abonnements</Heading>
-            <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical">
-      {data.map((elt, key) => (
-        <SwiperSlide key={key}>
-          <PostContainer post={elt} homeSlider={homeSliderRef}/>
-        </SwiperSlide>
-      ))}
-    </Swiper>
-        </>
-    );
+  return (
+    <Stack spacing={0} height="100%">
+      <Button
+        position="absolute"
+        width="100%"
+        zIndex={2}
+        top={0}
+        left="50%"
+        transform="auto"
+        translateX="-50%"
+      >
+        Abonnements
+      </Button>
+      <Swiper ref={homeSliderRef} className="feed-slides"direction="vertical">
+        {data.map((elt, key) => (
+          <SwiperSlide key={key}>
+            <InterviewCard />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <Navigation />
+    </Stack>
+  );
 };
 
 export default SubscriptionOnly;

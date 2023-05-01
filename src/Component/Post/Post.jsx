@@ -5,7 +5,7 @@ import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
-import Question from "../Question";
+import Question from "../../Pages/Question/Question";
 import { postContext } from "./PostContainer";
 import { ClickableFlex } from "../../Styles/Theme";
 import { currentUserContext } from "../../Controler/App";
@@ -105,8 +105,8 @@ const Post = () => {
                 
               />}
             </ClickableFlex>
-            <LikePost post={post} />
-            <CommentPost post={post.content} />
+            <LikePost post={post.content} type={post.type}/>
+            <CommentPost post={post.content} type={post.type}/>
           </>
         )}
         <Button

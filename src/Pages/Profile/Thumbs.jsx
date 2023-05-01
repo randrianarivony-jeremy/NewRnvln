@@ -1,9 +1,11 @@
 import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Thumbs = ({ data }) => {
+const Thumbs = ({ data,type }) => {
+  const navigate = useNavigate();
   return (
-    <Flex position="relative" boxSize={100}>
+    <Flex position="relative" boxSize={100} onClick={()=>navigate(`/post/${type}/`+data._id)}>
       {data.contentType === "string" && (
         <Flex height="100%" width="100%" bg={data.bg}>
           <Text

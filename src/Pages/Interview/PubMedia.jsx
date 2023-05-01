@@ -60,7 +60,7 @@ const PubMedia = ({ data }) => {
         question: question._id,
         contentType: data.contentType==='image_url' ? 'image' : data.contentType,
       })
-      .then((res) => {
+      .then(() => {
         setSubmitting(false);
         toast({
           title: "Publication réussie",

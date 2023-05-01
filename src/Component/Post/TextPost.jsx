@@ -2,7 +2,7 @@ import { Box, Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { FreeMode, Mousewheel, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Question from "../Question";
+import Question from "../../Pages/Question/Question";
 import LikePost from "./LikePost";
 import { postContext } from "./PostContainer";
 import "./style.css";

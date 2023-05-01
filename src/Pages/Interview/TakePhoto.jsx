@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import Question from "../../Component/Question";
+import Question from "../Question/Question";
 import { optionContext } from "./Interview";
 import PubMedia from "./PubMedia";
 

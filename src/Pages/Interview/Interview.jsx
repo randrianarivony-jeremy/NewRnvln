@@ -1,7 +1,7 @@
 import { Button, Flex, Stack } from "@chakra-ui/react";
 import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Question from "../../Component/Question";
+import Question from "../Question/Question";
 import { data } from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
 import Options from "./Options";

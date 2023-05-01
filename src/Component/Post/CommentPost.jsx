@@ -5,13 +5,11 @@ import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { currentUserContext } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
-import { postContext } from "./PostContainer";
 import Comment from "./Comment";
 
-const CommentPost = () => {
+const CommentPost = ({post,type}) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
   const inputRef = useRef();
-  const { post } = useContext(postContext);
   const dispatch = useDispatch();
   const { currentUser } = useContext(currentUserContext);
   const [submitting, setSubmitting] = useState(false);
@@ -22,8 +20,8 @@ const CommentPost = () => {
     await axios
       .patch(
         process.env.REACT_APP_API_URL +
-          `/api/${post.type}/comment/` +
-          post.content._id,
+          `/api/${type}/comment/` +
+          post._id,
         {
           commenterId: currentUser._id,
           text: inputRef.current.value,
@@ -31,7 +29,7 @@ const CommentPost = () => {
       )
       .then(
         (res) => {
-          dispatch(updateComment({postId:post.content._id,data:res.data.comments}))
+          dispatch(updateComment({postId:post._id,data:res.data.comments}))
           setSubmitting(false);
           inputRef.current.value=''
         },
@@ -50,12 +48,12 @@ const CommentPost = () => {
         className="bi-chat"
         fontSize="xl"
         color={
-          post.content.contentType === "string" &&
-          post.content.bg !== "transparent" &&
+          post.contentType === "string" &&
+          post.bg !== "transparent" &&
           "black"
         }
       >
-        <Text fontSize="xs">{post.content.comments.length}</Text>
+        <Text fontSize="xs">{post.comments.length}</Text>
       </Button>
       <Drawer
         onOpen={onOpen}
@@ -75,8 +73,8 @@ const CommentPost = () => {
             Commentaires
           </DrawerHeader>
           <ScrollableFeed forceScroll={true} className='scrollablefeed'>
-              {post.content.comments.map((comment, key) => (
-                <Comment comment={comment} key={key} type={post.type} postId={post.content._id}/>
+              {post.comments.map((comment, key) => (
+                <Comment comment={comment} key={key} type={post.type} postId={post._id}/>
               ))}
           </ScrollableFeed>
           <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}>

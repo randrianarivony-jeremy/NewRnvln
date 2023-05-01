@@ -34,7 +34,7 @@ const UserInterviews = ({user}) => {
       ) : (userInterview.current.length===0 ? <Text marginTop={10}>Vous n'avez pas encore participé à des Interviews</Text> :
         <Flex wrap="wrap" justify="center">
           {userInterview.current.map((elt, key) => (
-            <Thumbs data={elt} key={key} />
+            <Thumbs data={elt} type={'interview'} key={key} />
           ))}
         </Flex>
       )}

@@ -114,13 +114,15 @@ const TakePicture = () => {
             ref={webcamRef}
             onUserMedia={() => setCameraReady(true)}
             mirrored={facingMode === "user" ? true : false}
-            videoConstraints={{ facingMode, aspectRatio: 1 / 1 }}
+            videoConstraints={{ facingMode, height:'100vh',width:'100vw' }}
+            // videoConstraints={{ facingMode, aspectRatio: 1 / 1 }} ty ny tena izy
             onUserMediaError={() => setCamera(false)}
             screenshotFormat="image/jpeg"
             style={{
               width: "100vw",
-              aspectRatio: 1 / 1,
-              objectFit: "contain",
+              height:'100vh',
+              // aspectRatio: 1 / 1,
+              objectFit: "cover",
             }}
             audio={false}
           />

@@ -201,9 +201,8 @@ const Profile = () => {
             ) : (
               <Button
                 onClick={openPhilosophyModal}
-                variant="outline"
+                leftIcon={<span className="bi-plus-circle"></span>}
                 minHeight={10}
-                rightIcon={<span className="bi-pencil"></span>}
               >
                 Ajouter votre philosophie de l'argent
               </Button>

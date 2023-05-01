@@ -36,7 +36,7 @@ const UserPublications = ({user}) => {
       userPublication.current.length===0 ? <Text marginTop={10}>Vous n'avez pas encore publié quelque chose</Text> :
         <Flex wrap="wrap" justify="center">
           {userPublication.current.map((elt, key) => (
-            <Thumbs data={elt} key={key} />
+            <Thumbs data={elt} type='publication' key={key} />
           ))}
         </Flex>
       }

@@ -4,10 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { currentUserContext } from "../../Controler/App";
 import { likeDislike } from "../../Controler/Redux/thread.reducer";
-import { postContext } from "./PostContainer";
 
-const LikePost = () => {
-  const { post } = useContext(postContext);
+const LikePost = ({post,type}) => {
   const { currentUser } = useContext(currentUserContext);
   const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
@@ -17,8 +15,8 @@ const LikePost = () => {
       await axios
       .patch(
           process.env.REACT_APP_API_URL +
-          `/api/${post.type}/like/` +
-          post.content._id,
+          `/api/${type}/like/` +
+          post._id,
           {
               id_user: currentUser._id,
               like: !liked,
@@ -29,7 +27,7 @@ const LikePost = () => {
                 dispatch(
                   likeDislike({
                     like: !liked,
-                    postId: post.content._id,
+                    postId: post._id,
                     id_user: currentUser._id,
                   })
                 )},
@@ -38,7 +36,7 @@ const LikePost = () => {
   };
 
   useEffect(() => {
-    if (post.content.likers.includes(currentUser._id)) setLiked(true);
+    if (post.likers.includes(currentUser._id)) setLiked(true);
     else setLiked(false);
   }, [post]);
   return (
@@ -46,8 +44,8 @@ const LikePost = () => {
       flexDir="column"
       onClick={handleLikeDislike}
       color={
-        post.content.contentType === "string" &&
-        post.content.bg !== "transparent" &&
+        post.contentType === "string" &&
+        post.bg !== "transparent" &&
         "black"
       }
     >
@@ -56,7 +54,7 @@ const LikePost = () => {
         fontSize="xl"
         color={liked ? "red" : ""}
       ></Flex>
-      <Text fontSize="xs">{post.content.likers.length}</Text>
+      <Text fontSize="xs">{post.likers.length}</Text>
     </Button>
   );
 };

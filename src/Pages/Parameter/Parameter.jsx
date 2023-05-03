@@ -1,4 +1,4 @@
-import {Button,Flex,Heading,Stack,Text, useDisclosure,} from "@chakra-ui/react";
+import {Button,Flex,Heading,Input,Stack,Text, useDisclosure,} from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
@@ -11,7 +11,7 @@ import EnableSubscription from "../Profile/Relation/EnableSubscription";
 import DisableSubscription from "./DisableSubscription";
 
 const Parameter = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
   const {currentUser}=useContext(currentUserContext);
   const {isOpen:usernameDrawer,onOpen:openUsernameDrawer,onClose:closeUsernameDrawer}=useDisclosure();
   const {isOpen:passwordDrawer,onOpen:openPasswordDrawer,onClose:closePasswordDrawer}=useDisclosure();

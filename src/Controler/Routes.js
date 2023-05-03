@@ -7,6 +7,7 @@ import { currentUserContext } from "./App";
 
 const PostCard = lazy(()=> import("../Pages/StandalonePost/PostCard"));
 const PostContainer = lazy(()=> import("../Component/Post/PostContainer"));
+const ForYouPage = lazy(()=> import("../Pages/Home/ForYouPage"));
 const SubscriptionOnly = lazy(()=> import("../Pages/Home/SubscriptionOnly"));
 const Login = lazy(()=>import("../Pages/Login/Login"));
 const Notification = lazy(()=>import("../Pages/Notification/Notification"));
@@ -35,9 +36,12 @@ const Routes = () => {
       <Box height='100%' className="route" width='100%'>
           <BrowserRouter>
             <ROUTES>
-                <Route path="/" element={currentUser ? <Home /> : <Login/>} />
+                <Route path="/" element={currentUser ? <Home /> : <Login/>} >
+
+                <Route index element={<Suspense fallback={<Loader/>}><ForYouPage /></Suspense>} />
                 <Route path="/subscriptions_only" element={<Suspense fallback={<Loader/>}><SubscriptionOnly /></Suspense>} />
                 <Route path="/questions_only" element={<Suspense fallback={<Loader/>}><PostContainer /></Suspense>} />
+                </Route>
                 <Route path="/post/:type/:id" element={<Suspense fallback={<Loader/>}><PostCard /></Suspense>} />
                 <Route path="/login" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
                 <Route path="/message" element={<Suspense fallback={<Loader/>}><Message/></Suspense>} />

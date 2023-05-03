@@ -1,37 +1,17 @@
 import { Box, Button, Flex, Spinner } from "@chakra-ui/react";
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
+import React from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
-import PostContainer from "../../Component/Post/PostContainer";
+import ForYouPage from "./ForYouPage";
 import Menu from "./Menu";
 
 const Home = () => {
   const navigate = useNavigate();
-  const homeSliderRef = useRef();
-  const data = useSelector(state=>state.thread[0])
 
   return (
     <Flex flexDir="column" spacing={0} className="home" height="100%">
-      {/* {loading ? (
-        <Flex align="center" justify="center" height="100%" width="100%">
-          <Spinner />
-        </Flex>
-      ) : ( */}
-        <Swiper
-          ref={homeSliderRef}
-          className="feed-slides"
-          direction="vertical"
-        >
-          {data?.map((elt, key) => (
-            <SwiperSlide key={key}>
-              <PostContainer post={elt} homeSlider={homeSliderRef} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      {/* )} */}
+        {/* <ForYouPage/> */}
+        <Outlet/>
       <Navigation />
 
       <Menu />

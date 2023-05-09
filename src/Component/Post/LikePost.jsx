@@ -23,7 +23,7 @@ const LikePost = ({post,type}) => {
             }
             )
             .then(
-                (res) => {
+                () => {
                 dispatch(
                   likeDislike({
                     like: !liked,

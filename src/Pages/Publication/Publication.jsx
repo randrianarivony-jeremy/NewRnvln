@@ -31,7 +31,6 @@ const Publication = () => {
               flexDir="column"
               height="30vw"
               maxH={120}
-              mixBlendMode="hard-light"
               width="30vw"
               maxW={120}
               onClick={() => setCamera(true)}

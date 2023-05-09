@@ -11,6 +11,7 @@ import EnableSubscription from "../Profile/Relation/EnableSubscription";
 import DisableSubscription from "./DisableSubscription";
 
 const Parameter = () => {
+    const [data,setData]=useState([1,2,3,4])
     const navigate = useNavigate();
   const {currentUser}=useContext(currentUserContext);
   const {isOpen:usernameDrawer,onOpen:openUsernameDrawer,onClose:closeUsernameDrawer}=useDisclosure();
@@ -26,7 +27,8 @@ const Parameter = () => {
         <Button>Paramètres</Button>
       </Flex>
       <Scroll paddingX={3} height='100%'>
-        <Stack spacing={5}>
+      <Flex>{data.map((i,j)=><><Input id={`input${j}`} name={`input${j}`} key={j} placeholder={i}/><Button className="bi-trash" onClick={()=>setData(data.filter(k=>k!==i))}></Button></>)}</Flex>
+      <Stack spacing={5}>
           <Stack>
             <Heading size="sm">Compte personnelle</Heading>
             <Stack spacing={0}>

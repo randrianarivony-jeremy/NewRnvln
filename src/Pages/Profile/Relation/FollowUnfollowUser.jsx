@@ -43,7 +43,7 @@ const FollowUnfollowUser = () => {
       width="100%"
       variant="outline"
       rounded="full"
-      onClick={handleFollow}
+      onClick={()=>currentUser._id===user._id ? null : handleFollow()}
     >
       {followed ? "Suivi" : "Suivre"}
     </Button>

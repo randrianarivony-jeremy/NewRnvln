@@ -31,7 +31,7 @@ const Comment = ({ comment, type, postId }) => {
       )
       .then(
         (res) => {
-          dispatch(updateComment({ postId, data: res.data.comments }));
+          dispatch(updateComment({ postId, data: res.data }));
           setSubmitting(false);
         },
         (err) => {

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Heading,
   HStack,
   Image,
   Stack,
@@ -33,7 +34,7 @@ import ProfilePicture from "./UpdateProfile/ProfilePicture";
 import ProjectModal from "./UpdateProfile/ProjectModal";
 
 const Profile = () => {
-  const { currentUser,setCurrentUser } = useContext(currentUserContext);
+  const { currentUser, setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const {
     onOpen: openAddressModal,
@@ -57,12 +58,14 @@ const Profile = () => {
   } = useDisclosure();
 
   const fetchUser = async () => {
-    await axios.get(process.env.REACT_APP_API_URL + "/api/user/" + currentUser._id).then(
-      (res) => setCurrentUser(res.data),
-      () => {
-        navigate(-1);
-      }
-    );
+    await axios
+      .get(process.env.REACT_APP_API_URL + "/api/user/" + currentUser._id)
+      .then(
+        (res) => setCurrentUser(res.data),
+        () => {
+          navigate(-1);
+        }
+      );
   };
 
   useEffect(() => {
@@ -101,10 +104,16 @@ const Profile = () => {
             <HStack align="center" spacing={3}>
               <ProfilePicture />
               <Box>
-                <Text maxWidth="calc(100vw - 100px)" fontWeight="bold" fontSize='lg'>{currentUser.name}</Text>
+                <Text
+                  maxWidth="calc(100vw - 100px)"
+                  fontWeight="bold"
+                  fontSize="lg"
+                >
+                  {currentUser.name}
+                </Text>
                 <Stack spacing={0} marginLeft={3} fontSize="sm">
                   {/* JOB  */}
-                  <HStack align='flex-start'>
+                  <HStack align="flex-start">
                     <span className="bi-briefcase-fill"></span>
                     {currentUser.job === "" ? (
                       <Button
@@ -116,9 +125,7 @@ const Profile = () => {
                         Ajouter votre profession
                       </Button>
                     ) : (
-                      <Text
-                        onClick={openJobModal}
-                      >
+                      <Text onClick={openJobModal}>
                         {currentUser.job} <span className="bi-pencil"></span>
                       </Text>
                     )}
@@ -130,7 +137,7 @@ const Profile = () => {
                   />
 
                   {/* ADDRESS  */}
-                  <HStack align='flex-start'>
+                  <HStack align="flex-start">
                     <span className="bi-geo-alt-fill"></span>
                     {currentUser.address === "" ? (
                       <Button
@@ -142,9 +149,7 @@ const Profile = () => {
                         Ajouter votre lieu de travail
                       </Button>
                     ) : (
-                      <Text
-                        onClick={openAddressModal}
-                      >
+                      <Text onClick={openAddressModal}>
                         {currentUser.address}{" "}
                         <span className="bi-pencil"></span>
                       </Text>
@@ -157,7 +162,7 @@ const Profile = () => {
                   />
 
                   {/* PROJECT  */}
-                  <HStack align='flex-start'>
+                  <HStack align="flex-start">
                     <span className="bi-flag-fill"></span>
                     {currentUser.project === "" ? (
                       <Button
@@ -169,9 +174,7 @@ const Profile = () => {
                         Ajouter votre projet
                       </Button>
                     ) : (
-                      <Text
-                        onClick={openProjectModal}
-                      >
+                      <Text onClick={openProjectModal}>
                         {currentUser.project}{" "}
                         <span className="bi-pencil"></span>
                       </Text>
@@ -215,24 +218,17 @@ const Profile = () => {
 
             {/* R E L A T I O N  */}
             <HStack justify="space-around">
-              <RelationList
-                category="Followings"
-                list={currentUser.followings}
-              />
-              <RelationList category="Followers" list={currentUser.followers} />
+              <RelationList category="Followers" userId={currentUser._id} length={currentUser.followers.length}/>
+              <RelationList category="Followings" userId={currentUser._id} length={currentUser.followings.length}/>
               {currentUser.subscription ? (
                 <>
+                  <RelationList category="Abonnés" userId={currentUser._id} length={currentUser.subscribers.length}/>
                   <RelationList
                     category="Abonnements"
-                    list={currentUser.subscriptions}
-                  />
-                  <RelationList
-                    category="Abonnés"
-                    list={currentUser.subscribers}
-                  />
+                    userId={currentUser._id} length={currentUser.subscriptions.length}/>
                 </>
               ) : (
-                <EnableSubscription/>
+                <EnableSubscription />
               )}
             </HStack>
 
@@ -267,10 +263,10 @@ const Profile = () => {
 
               <TabPanels>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <UserInterviews user={currentUser._id}/>
+                  <UserInterviews user={currentUser._id} />
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <UserPublications user={currentUser._id}/>
+                  <UserPublications user={currentUser._id} />
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
                   <Flex wrap="wrap" justify="center">

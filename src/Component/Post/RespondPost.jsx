@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const RespondPost = ({post}) => {
+const RespondPost = ({questionId}) => {
     const navigate=useNavigate();
     return (
-        <Button boxSize={12} color={post.contentType==='string' && post.bg!=='transparent' && 'black'} onClick={()=>navigate('/interview/646156565')}>
+        <Button boxSize={12} onClick={()=>navigate('/interview/'+questionId)}>
               <FontAwesomeIcon size='xl' icon={faComments}></FontAwesomeIcon>
             </Button>
     );

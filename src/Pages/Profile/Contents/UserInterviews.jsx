@@ -1,9 +1,11 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { currentUserContext } from "../../../Controler/App";
 import Thumbs from "../Thumbs";
 
 const UserInterviews = ({user}) => {
+  const {currentUser}=useContext(currentUserContext);
   const userInterview = useRef([]);
   const [loading, setLoading] = useState(true);
   const fetchingError=useRef();
@@ -31,7 +33,7 @@ const UserInterviews = ({user}) => {
     <Flex height='100%' justify='center'>
       {loading ? (
         <Spinner marginTop={10}/>
-      ) : (userInterview.current.length===0 ? <Text marginTop={10}>Vous n'avez pas encore participé à des Interviews</Text> :
+      ) : (userInterview.current.length===0 ? <Text marginTop={10}>{user===currentUser._id ? "Vous n'avez" : "Cette personne n'a"} pas encore participé à des Interviews</Text> :
         <Flex wrap="wrap" justify="center">
           {userInterview.current.map((elt, key) => (
             <Thumbs data={elt} type={'interview'} key={key} />

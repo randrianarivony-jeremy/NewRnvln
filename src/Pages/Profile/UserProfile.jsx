@@ -114,15 +114,15 @@ const UserProfile = () => {
                 )}
               </HStack>
               <HStack justify="space-around" width="100%">
-                <RelationList category="Followings" list={user.followings} />
-                <RelationList category="Followers" list={user.followers} />
+                <RelationList category="Followings" userId={userId} length={user.followings.length}/>
+                <RelationList category="Followers" userId={userId} length={user.followers.length}/>
                 {user.subscription && (
                   <>
                     <RelationList
                       category="Abonnements"
-                      list={user.subscriptions}
+                      userId={userId} length={user.subscriptions.length}
                     />
-                    <RelationList category="Abonnés" list={user.subscribers} />
+                    <RelationList category="Abonnés" userId={userId} length={user.subscribers.length}/>
                   </>
                 )}
               </HStack>

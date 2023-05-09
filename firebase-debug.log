@@ -1,48 +1,49 @@
-[debug] [2023-04-25T05:51:57.308Z] ----------------------------------------------------------------------
-[debug] [2023-04-25T05:51:57.310Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Boss\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --import c:\Users\Boss\Desktop\Drala\client\firebase-data --export-on-exit
-[debug] [2023-04-25T05:51:57.312Z] CLI Version:   11.23.1
-[debug] [2023-04-25T05:51:57.312Z] Platform:      win32
-[debug] [2023-04-25T05:51:57.312Z] Node Version:  v17.9.1
-[debug] [2023-04-25T05:51:57.314Z] Time:          Tue Apr 25 2023 08:51:57 GMT+0300 (East Africa Time)
-[debug] [2023-04-25T05:51:57.314Z] ----------------------------------------------------------------------
+[debug] [2023-05-09T07:38:36.979Z] ----------------------------------------------------------------------
+[debug] [2023-05-09T07:38:36.981Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Boss\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --import c:\Users\Boss\Desktop\Drala\client\firebase-data --export-on-exit
+[debug] [2023-05-09T07:38:36.982Z] CLI Version:   11.23.1
+[debug] [2023-05-09T07:38:36.982Z] Platform:      win32
+[debug] [2023-05-09T07:38:36.982Z] Node Version:  v17.9.1
+[debug] [2023-05-09T07:38:36.984Z] Time:          Tue May 09 2023 10:38:36 GMT+0300 (East Africa Time)
+[debug] [2023-05-09T07:38:36.985Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2023-04-25T05:51:57.319Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
-[debug] [2023-04-25T05:51:57.485Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2023-04-25T05:51:57.486Z] > authorizing via signed-in user (randrianarivonykoloinaj@gmail.com)
-[debug] [2023-04-25T05:51:58.226Z] java version "19.0.2" 2023-01-17
+[debug] [2023-05-09T07:38:36.990Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-05-09T07:38:37.170Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-09T07:38:37.170Z] > authorizing via signed-in user (randrianarivonykoloinaj@gmail.com)
+[warn] !  Unable to fetch the CLI MOTD and remote config. 
+[debug] [2023-05-09T07:38:37.232Z] Failed to fetch MOTD FirebaseError: Failed to make request to https://firebase-public.firebaseio.com/cli.json
+[debug] [2023-05-09T07:38:37.668Z] java version "19.0.2" 2023-01-17
 
-[debug] [2023-04-25T05:51:58.228Z] Java(TM) SE Runtime Environment (build 19.0.2+7-44)
+[debug] [2023-05-09T07:38:37.669Z] Java(TM) SE Runtime Environment (build 19.0.2+7-44)
 Java HotSpot(TM) 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
 
-[debug] [2023-04-25T05:51:58.255Z] Parsed Java major version: 19
+[debug] [2023-05-09T07:38:37.683Z] Parsed Java major version: 19
 [info] i  emulators: Starting emulators: storage {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: storage"}}
-[debug] [2023-04-25T05:51:58.272Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2023-04-25T05:51:58.272Z] [storage] Storage Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2023-04-25T05:51:58.273Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-05-09T07:38:37.698Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-09T07:38:37.699Z] [storage] Storage Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[warn] !  ui: Emulator UI unable to start on port 4000, starting on 4001 instead. {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI unable to start on port 4000, starting on 4001 instead."}}
+[debug] [2023-05-09T07:38:37.703Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4001},{"address":"::1","family":"IPv6","port":4001}]},"metadata":{"message":"assigned listening specs for emulators"}}
 [warn] !  emulators: It seems that you are running multiple instances of the emulator suite for project rnvln-611b7. This may result in unexpected behavior. 
-[debug] [2023-04-25T05:51:58.282Z] [hub] writing locator at C:\Users\Boss\AppData\Local\Temp\hub-rnvln-611b7.json
-[debug] [2023-04-25T05:51:58.294Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"storage"},"message":"Ignoring unsupported arg: port"}}
-[debug] [2023-04-25T05:51:58.411Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
-[debug] [2023-04-25T05:51:58.411Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
-[debug] [2023-04-25T05:51:59.591Z] Temp file directory for storage emulator: C:\Users\Boss\AppData\Local\Temp/firebase/storage/blobs {"metadata":{"emulator":{"name":"storage"},"message":"Temp file directory for storage emulator: C:\\Users\\Boss\\AppData\\Local\\Temp/firebase/storage/blobs"}}
-[debug] [2023-04-25T05:51:59.607Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
-[debug] [2023-04-25T05:51:59.607Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
-[debug] [2023-04-25T05:51:59.607Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Boss\\.cache\\firebase\\emulators\\ui-v1.11.4\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Boss\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.4\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[debug] [2023-05-09T07:38:37.711Z] [hub] writing locator at C:\Users\Boss\AppData\Local\Temp\hub-rnvln-611b7.json
+[debug] [2023-05-09T07:38:37.726Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"storage"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-09T07:38:39.056Z] Temp file directory for storage emulator: C:\Users\Boss\AppData\Local\Temp/firebase/storage/blobs {"metadata":{"emulator":{"name":"storage"},"message":"Temp file directory for storage emulator: C:\\Users\\Boss\\AppData\\Local\\Temp/firebase/storage/blobs"}}
+[debug] [2023-05-09T07:38:39.074Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-09T07:38:39.074Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-09T07:38:39.075Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Boss\\.cache\\firebase\\emulators\\ui-v1.11.4\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Boss\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.4\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
 [info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
-[debug] [2023-04-25T05:51:59.858Z] Web / API server started at 127.0.0.1:4000
- {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
-[debug] [2023-04-25T05:51:59.858Z] Web / API server started at ::1:4000
- {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[debug] [2023-05-09T07:38:39.320Z] Web / API server started at 127.0.0.1:4001
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4001\n"}}
+[debug] [2023-05-09T07:38:39.321Z] Web / API server started at ::1:4001
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4001\n"}}
 [info] 
 ┌─────────────────────────────────────────────────────────────┐
 │ ✔  All emulators ready! It is now safe to connect your app. │
-│ i  View Emulator UI at http://127.0.0.1:4000/               │
+│ i  View Emulator UI at http://127.0.0.1:4001/               │
 └─────────────────────────────────────────────────────────────┘
 
 ┌──────────┬────────────────┬───────────────────────────────┐
 │ Emulator │ Host:Port      │ View in Emulator UI           │
 ├──────────┼────────────────┼───────────────────────────────┤
-│ Storage  │ 127.0.0.1:9199 │ http://127.0.0.1:4000/storage │
+│ Storage  │ 127.0.0.1:9199 │ http://127.0.0.1:4001/storage │
 └──────────┴────────────────┴───────────────────────────────┘
   Emulator Hub running at 127.0.0.1:4400
   Other reserved ports: 4500

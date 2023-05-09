@@ -29,7 +29,7 @@ const CommentPost = ({post,type}) => {
       )
       .then(
         (res) => {
-          dispatch(updateComment({postId:post._id,data:res.data.comments}))
+          dispatch(updateComment({postId:post._id,data:res.data}))
           setSubmitting(false);
           inputRef.current.value=''
         },
@@ -74,7 +74,7 @@ const CommentPost = ({post,type}) => {
           </DrawerHeader>
           <ScrollableFeed forceScroll={true} className='scrollablefeed'>
               {post.comments.map((comment, key) => (
-                <Comment comment={comment} key={key} type={post.type} postId={post._id}/>
+                <Comment comment={comment} key={key} type={type} postId={post._id}/>
               ))}
           </ScrollableFeed>
           <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}>

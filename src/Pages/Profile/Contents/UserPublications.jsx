@@ -1,12 +1,14 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { currentUserContext } from "../../../Controler/App";
 import Thumbs from "../Thumbs";
 
 const UserPublications = ({user}) => {
   const userPublication = useRef([]);
   const [loading, setLoading] = useState(true);
   const fetchingError=useRef();
+  const {currentUser}=useContext(currentUserContext);
 
   const fetchUserPublications = async () => {
     await axios
@@ -33,7 +35,7 @@ const UserPublications = ({user}) => {
       {loading ? (
         <Spinner marginTop={10}/>
       ) : fetchingError.current ? <Text>{fetchingError.current}</Text> : 
-      userPublication.current.length===0 ? <Text marginTop={10}>Vous n'avez pas encore publié quelque chose</Text> :
+      userPublication.current.length===0 ? <Text marginTop={10}>{user===currentUser._id ? "Vous n'avez" : "Cette personne n'a"} pas encore publié quelque chose</Text> :
         <Flex wrap="wrap" justify="center">
           {userPublication.current.map((elt, key) => (
             <Thumbs data={elt} type='publication' key={key} />

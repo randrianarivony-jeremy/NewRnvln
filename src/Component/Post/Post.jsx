@@ -97,7 +97,7 @@ const Post = () => {
       >
         {expandBtn && (
           <>
-            {post.type==='interview' && <RespondPost post={post.content} />}
+            {post.type==='interview' && <RespondPost questionId={post.content.question._id} />}
             <ClickableFlex position="relative" flexDir="column"
             onClick={() =>post.content.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.content.id_user._id)}>
               {post.content.id_user.picture ? <Image src={post.content.id_user.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar

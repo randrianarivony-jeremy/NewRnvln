@@ -1,27 +1,44 @@
-import {Button,Drawer,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,DrawerOverlay,Input,Text,useDisclosure,} from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Drawer,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Input,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import axios from "axios";
-import ScrollableFeed from 'react-scrollable-feed'
-import React, { useContext, useRef, useState } from "react";
+import ScrollableFeed from "react-scrollable-feed";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { currentUserContext } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import Comment from "./Comment";
+import UserLoader from "../Loaders/UserLoader";
 
-const CommentPost = ({post,type}) => {
+const CommentPost = ({ post, type }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const { currentUser } = useContext(currentUserContext);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  const openComments = () => {
+    fetchComments();
+    onOpen();
+  };
 
   const submitComment = async () => {
     setSubmitting(true);
     await axios
       .patch(
-        process.env.REACT_APP_API_URL +
-          `/api/${type}/comment/` +
-          post._id,
+        process.env.REACT_APP_API_URL + `/api/${type}/comment/` + post._id,
         {
           commenterId: currentUser._id,
           text: inputRef.current.value,
@@ -29,9 +46,9 @@ const CommentPost = ({post,type}) => {
       )
       .then(
         (res) => {
-          dispatch(updateComment({postId:post._id,data:res.data}))
+          dispatch(updateComment({ postId: post._id, data: res.data }));
           setSubmitting(false);
-          inputRef.current.value=''
+          inputRef.current.value = "";
         },
         (err) => {
           console.log(err);
@@ -40,17 +57,31 @@ const CommentPost = ({post,type}) => {
       );
   };
 
+  const fetchComments = async () => {
+    await axios
+      .get(
+        process.env.REACT_APP_API_URL + "/api/" + type + "/comments/" + post._id
+      )
+      .then(
+        (res) => {
+          dispatch(updateComment({ postId: post._id, data: res.data }));
+          setLoading(false);
+        },
+        () => {
+          onClose();
+        }
+      );
+  };
+
   return (
     <>
       <Button
         flexDir="column"
-        onClick={onOpen}
+        onClick={() => (post.comments.length > 0 ? openComments() : null)}
         className="bi-chat"
         fontSize="xl"
         color={
-          post.contentType === "string" &&
-          post.bg !== "transparent" &&
-          "black"
+          post.contentType === "string" && post.bg !== "transparent" && "black"
         }
       >
         <Text fontSize="xs">{post.comments.length}</Text>
@@ -72,10 +103,18 @@ const CommentPost = ({post,type}) => {
           >
             Commentaires
           </DrawerHeader>
-          <ScrollableFeed forceScroll={true} className='scrollablefeed'>
-              {post.comments.map((comment, key) => (
-                <Comment comment={comment} key={key} type={type} postId={post._id}/>
-              ))}
+          <ScrollableFeed forceScroll={true} className="scrollablefeed">
+            {post.comments.map((comment, key) => (
+              <Box key={key}>
+                {loading ? (
+                  <Stack marginLeft={3} marginBottom={2}>
+                    <UserLoader length={post.comments.length} />
+                  </Stack>
+                ) : (
+                  <Comment comment={comment} type={type} postId={post._id} />
+                )}
+              </Box>
+            ))}
           </ScrollableFeed>
           <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}>
             <Input ref={inputRef} placeholder="Ajouter un commentaire" />

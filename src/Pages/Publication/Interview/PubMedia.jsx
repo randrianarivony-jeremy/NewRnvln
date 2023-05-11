@@ -1,4 +1,4 @@
-import { Button, HStack, Image, Stack, Textarea, useToast } from "@chakra-ui/react";
+import { Button, HStack, Image, Select, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -8,9 +8,9 @@ import {
 } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AudioDisplay from "../../Component/Post/AudioDisplay";
-import { currentUserContext } from "../../Controler/App";
-import { storage } from "../../Controler/firebase.config";
+import AudioDisplay from "../../../Component/Post/AudioDisplay";
+import { currentUserContext } from "../../../Controler/App";
+import { storage } from "../../../Controler/firebase.config";
 import { optionContext } from "./Interview";
 import Options from "./Options";
 
@@ -20,6 +20,7 @@ const PubMedia = ({ data }) => {
   const { currentUser } = useContext(currentUserContext);
   const descriptionRef = useRef();
   const urlRef = useRef();
+  const publicConfidentiality = useRef(false);
   const toast=useToast();
   const [submitting, setSubmitting] = useState(false);
 
@@ -52,11 +53,11 @@ const PubMedia = ({ data }) => {
 
   const handleSubmit = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL + "/api/interview", {
+      .post(process.env.REACT_APP_API_URL + "/api/publication", {
         content: urlRef.current,
         id_user: currentUser._id,
-        description: descriptionRef.current.value,
-        question: question._id,
+        description: descriptionRef.current.value,type:'interview',
+        question: question._id,public:publicConfidentiality.current,
         contentType: data.contentType==='image_url' ? 'image' : data.contentType,
       })
       .then(() => {
@@ -86,7 +87,8 @@ const PubMedia = ({ data }) => {
           <Image
             src={URL.createObjectURL(data.content)}
             alt="image"
-            width="100%"
+            height="50vh"
+            border='1px solid' rounded='md' borderColor='blackAlpha.200'
             objectFit="contain"
           />
         ) :
@@ -94,8 +96,9 @@ const PubMedia = ({ data }) => {
           <Image
             src={data.content}
             alt="image"
-            width="100%"
+            height="50vh" rounded='md' borderColor='blackAlpha.200'
             objectFit="contain"
+            border='1px solid red'
           />
         ) : data.contentType === "audio" ? (
           <AudioDisplay audio={URL.createObjectURL(data.content)} />
@@ -116,6 +119,13 @@ const PubMedia = ({ data }) => {
             "::-webkit-resizer": { display: "none" },
           }}
         ></Textarea>
+        <HStack>
+          <Text whiteSpace="nowrap">Confidentialité :</Text>
+          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
+            <option value={false}>Entre amis</option>
+            <option value={true}>Public</option>
+          </Select>
+        </HStack>
         <HStack>
           <Button width="100%" onClick={() => setDisplay(<Options />)}>
             Changer

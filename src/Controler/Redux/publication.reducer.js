@@ -4,7 +4,7 @@ export const publicationSlice = createSlice({
     name:'publication',initialState:[],
     reducers: {
         addPublication:(state,action)=>{
-            return [...state,action.payload.filter(post=>post.type==='publication')];
+            return [...state,action.payload.filter(post=>post.type==='article')];
         },
             likePublication:(state,action)=>{
                 return state;

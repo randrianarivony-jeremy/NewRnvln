@@ -19,7 +19,7 @@ import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
 import PubMedia from "./PubMedia";
 import { optionContext } from "./Interview";
-import Question from "../Question/Question";
+import Question from "../../Question/Question";
 
 const TakeVideo = () => {
   const webcamRef = useRef(null);

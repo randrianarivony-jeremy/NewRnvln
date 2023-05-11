@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { currentUserContext } from "../../../Controler/App";
 import Thumbs from "../Thumbs";
 
-const UserPublications = ({user}) => {
+const UserArticles = ({user}) => {
   const userPublication = useRef([]);
   const [loading, setLoading] = useState(true);
   const fetchingError=useRef();
@@ -12,7 +12,7 @@ const UserPublications = ({user}) => {
 
   const fetchUserPublications = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/api/publication/user/" + user)
+      .get(process.env.REACT_APP_API_URL + "/api/publication/article/user/" + user)
       .then(
         (res) => {
             if (res.data===null) userPublication.current=[];
@@ -46,4 +46,4 @@ const UserPublications = ({user}) => {
   );
 };
 
-export default UserPublications;
+export default UserArticles;

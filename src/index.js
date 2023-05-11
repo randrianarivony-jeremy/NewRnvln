@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import {
   ChakraProvider,
@@ -19,7 +19,7 @@ const store = configureStore({
 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
@@ -27,5 +27,5 @@ root.render(
         <ToastContainer />
       </ChakraProvider>
     </Provider>
-  </React.StrictMode>
+  </StrictMode>
 );

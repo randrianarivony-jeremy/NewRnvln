@@ -16,15 +16,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { data } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
 import { Scroll } from "../../Styles/Theme";
 import UserInterviews from "./Contents/UserInterviews";
-import UserPublications from "./Contents/UserPublications";
+import UserArticles from "./Contents/UserArticles";
 import FollowUnfollowUser from "./Relation/FollowUnfollowUser";
 import RelationList from "./Relation/RelationList";
 import Subscribe from "./Relation/Subscribe";
-import Thumbs from "./Thumbs";
 import UserProfilepic from "./UserProfilepic";
 
 export const userContext = createContext();
@@ -114,8 +112,8 @@ const UserProfile = () => {
                 )}
               </HStack>
               <HStack justify="space-around" width="100%">
-                <RelationList category="Followings" userId={userId} length={user.followings.length}/>
-                <RelationList category="Followers" userId={userId} length={user.followers.length}/>
+                {/* <RelationList category="Followings" userId={userId} length={user.followings.length}/>
+                <RelationList category="Followers" userId={userId} length={user.followers.length}/> */}
                 {user.subscription && (
                   <>
                     <RelationList
@@ -150,7 +148,7 @@ const UserProfile = () => {
                   <UserInterviews user={user._id}/>
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <UserPublications user={user._id}/>
+                  <UserArticles user={user._id}/>
                 </TabPanel>
               </TabPanels>
             </Tabs>

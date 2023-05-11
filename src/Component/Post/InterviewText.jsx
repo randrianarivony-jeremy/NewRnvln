@@ -18,12 +18,9 @@ const InterviewText = () => {
 
   return (
     <Flex height="calc(100% - 150px)" width='100%' align='center' justify='center'>
-      {/* <Box position="absolute" textAlign='left' zIndex={1} top={10} left={0} marginX={3}>
-        <Question question={post.content.question} />
-      </Box> */}
       <Text
         position="relative"
-        color={post.content.bg !== "transparent" && "black"}
+        color={post.bg !== "transparent" && "black"}
         fontSize="xl"
         ref={textContainer} height='fit-content'
         maxH='100%'
@@ -36,7 +33,7 @@ const InterviewText = () => {
             top: 0,
             left: 0,
             bg:
-              (colorMode === "dark" && post.content.bg==='transparent')
+              (colorMode === "dark" && post.bg==='transparent')
                 ? "linear-gradient(transparent 40%,#1a202c 80%)"
                 : "linear-gradient(transparent 40%,white 80%)",
             content: "''",
@@ -46,7 +43,7 @@ const InterviewText = () => {
           }
         }
       >
-        {post.content.content}
+        {post.content}
         {textOverflow && (
           <Button
             position="absolute"

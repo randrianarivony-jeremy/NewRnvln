@@ -14,19 +14,22 @@ const FollowUnfollowUser = () => {
     setSubmitting(true);
     await axios
       .patch(
-        process.env.REACT_APP_API_URL + "/api/user/follow/" + currentUser._id,
-        { id_user:user._id, follow: !followed }
+        process.env.REACT_APP_API_URL + "/api/user/accept_friend/",
+        { from:user._id, to: currentUser._id }
+        // process.env.REACT_APP_API_URL + "/api/user/follow/" + currentUser._id,
+        // { id_user:user._id, follow: !followed }
       )
       .then(
-        () => {
-            if (followed){ 
-                setCurrentUser({...currentUser,followings:currentUser.followings.filter(elt=>elt!==user._id)});
-                setUser({...user,followers:user.followers.filter(elt=>elt!==currentUser._id)})
-            }
-            else {
-                setCurrentUser({...currentUser,followings:[...currentUser.followings,user._id]})
-                setUser({...user,followers:[...user.followers,currentUser._id]})
-            }
+        (res) => {
+          console.log(res.data)
+            // if (followed){ 
+            //     setCurrentUser({...currentUser,followings:currentUser.followings.filter(elt=>elt!==user._id)});
+            //     setUser({...user,followers:user.followers.filter(elt=>elt!==currentUser._id)})
+            // }
+            // else {
+            //     setCurrentUser({...currentUser,followings:[...currentUser.followings,user._id]})
+            //     setUser({...user,followers:[...user.followers,currentUser._id]})
+            // }
             setSubmitting(false)
         },
         (err) => {console.log(err);setSubmitting(false)}

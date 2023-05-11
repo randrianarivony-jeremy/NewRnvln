@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { currentUserContext } from "../../Controler/App";
 import { likeDislike } from "../../Controler/Redux/thread.reducer";
 
-const LikePost = ({post,type}) => {
+const LikePost = ({post}) => {
   const { currentUser } = useContext(currentUserContext);
   const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
@@ -15,12 +15,12 @@ const LikePost = ({post,type}) => {
       await axios
       .patch(
           process.env.REACT_APP_API_URL +
-          `/api/${type}/like/` +
+          `/api/publication/like/` +
           post._id,
           {
               id_user: currentUser._id,
               like: !liked,
-            }
+            },{ withCredentials: true }
             )
             .then(
                 () => {

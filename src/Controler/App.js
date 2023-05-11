@@ -7,7 +7,7 @@ import Routes from "./Routes";
 import audio from "../Assets/audio.m4a";
 import video from "../Assets/video.mp4";
 import image from "../Assets/image.jpg";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { publicationContext } from "./Context";
 import axios from "axios";
 import logo from "../Assets/RANAVALONA.png";
@@ -19,7 +19,6 @@ import { addContentFeeds } from "./Redux/thread.reducer";
 function App() {
   const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
-  const useeffect = useRef(true);
   const [initializing, setInitializing] = useState(true);
   const [step, setStep] = useState(['initial']);
   const dispatch = useDispatch();
@@ -45,7 +44,7 @@ function App() {
       const fetchData = async () => {
         setStep([...step,'fetchdata']);
         await axios
-        .get(process.env.REACT_APP_API_URL + "/api/feeds")
+        .get(process.env.REACT_APP_API_URL + "/api/publication",{ withCredentials: true })
         .then((res) => {
           setStep([...step,'fetchdata success']);
           if (res.data.length!==0){
@@ -53,17 +52,17 @@ function App() {
             dispatch(addPublication(res.data));
             dispatch(addInterview(res.data));
           }
+          console.log(res.data);
           setInitializing(false);
         },err=>{
           setStep([...step,'fetchdata failed']);
           setInitializing(false);
-        alert(err.message)
+        console.log(err)
       });
   };
 
   useEffect(()=>{
-    if (useeffect.current) fetchToken();
-    useeffect.current=false;
+    fetchToken();
   },[])
 
   return (

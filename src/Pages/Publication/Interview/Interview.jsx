@@ -1,11 +1,11 @@
 import { Button, Flex, Stack, useToast } from "@chakra-ui/react";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Question from "../Question/Question";
-import { Scroll } from "../../Styles/Theme";
+import Question from "../../Question/Question";
+import { Scroll } from "../../../Styles/Theme";
 import Options from "./Options";
 import axios from "axios";
-import { Loader } from "../../Controler/Routes";
+import { Loader } from "../../../Controler/Routes";
 
 export const optionContext = createContext();
 

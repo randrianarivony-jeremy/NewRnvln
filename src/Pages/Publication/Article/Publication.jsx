@@ -1,10 +1,10 @@
 import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "../../Component/Navigation";
-import { publicationContext } from "../../Controler/Context";
+import Navigation from "../../../Component/Navigation";
+import { publicationContext } from "../../../Controler/Context";
 import SendVoice from "./SendVoice";
-import TakePhoto from "../../Component/TakePhoto";
+import TakePhoto from "../../../Component/TakePhoto";
 import UploadPhoto from "./UploadPhoto";
 import UploadVideo from "./UploadVideo";
 import VideoRecord from "./VideoRecord";

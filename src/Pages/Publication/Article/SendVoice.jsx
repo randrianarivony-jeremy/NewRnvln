@@ -2,7 +2,7 @@ import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
-import { publicationContext } from "../../Controler/Context";
+import { publicationContext } from "../../../Controler/Context";
 
 const SendVoice = () => {
     const navigate = useNavigate();

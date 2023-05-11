@@ -3,7 +3,9 @@ import {
   Flex,
   HStack,
   Image,
+  Select,
   Stack,
+  Text,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
@@ -16,10 +18,10 @@ import {
 } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AudioDisplay from "../../Component/Post/AudioDisplay";
-import { currentUserContext } from "../../Controler/App";
-import { publicationContext } from "../../Controler/Context";
-import { storage } from "../../Controler/firebase.config";
+import AudioDisplay from "../../../Component/Post/AudioDisplay";
+import { currentUserContext } from "../../../Controler/App";
+import { publicationContext } from "../../../Controler/Context";
+import { storage } from "../../../Controler/firebase.config";
 
 const PublishMedia = () => {
   const navigate = useNavigate();
@@ -27,6 +29,7 @@ const PublishMedia = () => {
   const { currentUser } = useContext(currentUserContext);
   const descriptionRef = useRef();
   const urlRef = useRef();
+  const publicConfidentiality = useRef(false);
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
 
@@ -58,7 +61,7 @@ const PublishMedia = () => {
   const handleSubmit = async () => {
     await axios
       .post(process.env.REACT_APP_API_URL + "/api/publication", {
-        content: urlRef.current,
+        content: urlRef.current,public:publicConfidentiality.current,
         id_user: currentUser._id,
         description: descriptionRef.current.value,
         contentType:
@@ -132,6 +135,13 @@ const PublishMedia = () => {
             "::-webkit-resizer": { display: "none" },
           }}
         ></Textarea>
+        <HStack>
+          <Text whiteSpace="nowrap">Confidentialité :</Text>
+          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
+            <option value={false}>Entre amis</option>
+            <option value={true}>Public</option>
+          </Select>
+        </HStack>
         <HStack
           paddingY={2}
           paddingX={3}

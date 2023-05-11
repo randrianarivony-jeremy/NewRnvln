@@ -1,9 +1,9 @@
-import { Button, ButtonGroup, Flex, HStack, Stack, useToast } from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+import { Button, ButtonGroup, Flex, HStack, Select, Stack, Text, useToast } from "@chakra-ui/react";
+import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ResizableTextarea from "../../Component/ResizableTextarea";
+import ResizableTextarea from "../../../Component/ResizableTextarea";
 import axios from "axios";
-import { currentUserContext } from "../../Controler/App";
+import { currentUserContext } from "../../../Controler/App";
 
 const PublishText = () => {
   const navigate = useNavigate();
@@ -12,17 +12,18 @@ const PublishText = () => {
   const [submitting, setSubmitting] = useState(false);
   const [value, setValue] = useState("");
   const toast = useToast();
+  const publicConfidentiality=useRef(false);
 
   const handleSubmit = async () => {
     setSubmitting(true);
     await axios
       .post(process.env.REACT_APP_API_URL + "/api/publication", {
         content: value,
-        bg:textareaBg,
+        bg:textareaBg,public:publicConfidentiality.current,
         id_user: currentUser._id,
         contentType: "string",
       })
-      .then((res) => {
+      .then(() => {
         setSubmitting(false);
         toast({
           title: "Publication réussie",
@@ -112,6 +113,13 @@ const PublishText = () => {
               onClick={() => setTextareaBg("gradient5")}
             ></Button>
           </ButtonGroup>
+          <HStack>
+          <Text whiteSpace="nowrap">Confidentialité :</Text>
+          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
+            <option value={false}>Entre amis</option>
+            <option value={true}>Public</option>
+          </Select>
+        </HStack>
         </Stack>
 
         <HStack>

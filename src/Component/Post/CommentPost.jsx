@@ -14,14 +14,14 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import ScrollableFeed from "react-scrollable-feed";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { currentUserContext } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import Comment from "./Comment";
 import UserLoader from "../Loaders/UserLoader";
 
-const CommentPost = ({ post, type }) => {
+const CommentPost = ({ post }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
   const inputRef = useRef();
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const CommentPost = ({ post, type }) => {
     setSubmitting(true);
     await axios
       .patch(
-        process.env.REACT_APP_API_URL + `/api/${type}/comment/` + post._id,
+        process.env.REACT_APP_API_URL + `/api/publication/comment/` + post._id,
         {
           commenterId: currentUser._id,
           text: inputRef.current.value,
@@ -60,7 +60,7 @@ const CommentPost = ({ post, type }) => {
   const fetchComments = async () => {
     await axios
       .get(
-        process.env.REACT_APP_API_URL + "/api/" + type + "/comments/" + post._id
+        process.env.REACT_APP_API_URL + "/api/publication/comments/" + post._id
       )
       .then(
         (res) => {
@@ -111,7 +111,7 @@ const CommentPost = ({ post, type }) => {
                     <UserLoader length={post.comments.length} />
                   </Stack>
                 ) : (
-                  <Comment comment={comment} type={type} postId={post._id} />
+                  <Comment comment={comment} postId={post._id} />
                 )}
               </Box>
             ))}

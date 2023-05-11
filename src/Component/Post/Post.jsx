@@ -32,7 +32,7 @@ const Post = () => {
       </Flex>
 
       {post.type==='interview' && <Box position="absolute" textAlign='left' zIndex={1} top={10} left={0} marginX={3}>
-        <Question question={post.content.question} />
+        <Question question={post.question} />
       </Box>}
       
       {/* I N F O  */}
@@ -40,7 +40,7 @@ const Post = () => {
         position="absolute"
         bottom={2}
         color={
-          post.content.contentType === "string" && post.content.bg !== "transparent" && "black"
+          post.contentType === "string" && post.bg !== "transparent" && "black"
         }
         textAlign="left"
         maxWidth="75%"
@@ -49,9 +49,9 @@ const Post = () => {
       >
         <Text
           fontWeight="bold"
-          onClick={() =>post.content.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.content.id_user._id)}
+          onClick={() =>post.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.id_user._id)}
         >
-          {post.content.id_user.name}
+          {post.id_user.name}
         </Text>
         <Text
           position="relative"
@@ -61,7 +61,7 @@ const Post = () => {
           maxH={!longDescription && 10}
           overflowY="hidden"
         >
-          {post.content.description}
+          {post.description}
           {!loading && (
             <>
               {descriptionOverflow.current && (
@@ -69,8 +69,8 @@ const Post = () => {
                   variant="link"
                   size="sm"
                   color={
-                    post.content.contentType === "string" &&
-                    post.content.bg !== "transparent" &&
+                    post.contentType === "string" &&
+                    post.bg !== "transparent" &&
                     "black"
                   }
                   position="absolute"
@@ -97,16 +97,16 @@ const Post = () => {
       >
         {expandBtn && (
           <>
-            {post.type==='interview' && <RespondPost questionId={post.content.question._id} />}
+            {post.type==='interview' && <RespondPost questionId={post.question._id} />}
             <ClickableFlex position="relative" flexDir="column"
-            onClick={() =>post.content.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.content.id_user._id)}>
-              {post.content.id_user.picture ? <Image src={post.content.id_user.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar
+            onClick={() =>post.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.id_user._id)}>
+              {post.id_user.picture ? <Image src={post.id_user.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar
                 size="sm"
                 
               />}
             </ClickableFlex>
-            <LikePost post={post.content} type={post.type}/>
-            <CommentPost post={post.content} type={post.type}/>
+            <LikePost post={post}/>
+            <CommentPost post={post}/>
           </>
         )}
         <Button
@@ -114,8 +114,8 @@ const Post = () => {
           className={expandBtn ? "bi-caret-down" : "bi-caret-up"}
           onClick={() => setExpandBtn(!expandBtn)}
           color={
-            post.content.contentType === "string" &&
-            post.content.bg !== "transparent" &&
+            post.contentType === "string" &&
+            post.bg !== "transparent" &&
             "black"
           }
         ></Button>

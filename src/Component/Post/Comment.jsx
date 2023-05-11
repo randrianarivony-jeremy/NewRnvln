@@ -7,7 +7,7 @@ import { currentUserContext } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import { ClickableFlex } from "../../Styles/Theme";
 
-const Comment = ({ comment, type, postId }) => {
+const Comment = ({ comment, postId }) => {
   const [deleteFooter, setDeleteFooter] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useContext(currentUserContext);
@@ -24,7 +24,7 @@ const Comment = ({ comment, type, postId }) => {
     await axios
       .delete(
         process.env.REACT_APP_API_URL +
-          `/api/${type}/` +
+          `/api/publication/` +
           postId +
           "/" +
           comment._id

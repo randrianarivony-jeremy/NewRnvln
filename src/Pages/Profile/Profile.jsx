@@ -23,7 +23,7 @@ import Navigation from "../../Component/Navigation";
 import { currentUserContext, data } from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
 import UserInterviews from "./Contents/UserInterviews";
-import UserPublications from "./Contents/UserPublications";
+import UserArticles from "./Contents/UserArticles";
 import EnableSubscription from "./Relation/EnableSubscription";
 import RelationList from "./Relation/RelationList";
 import Thumbs from "./Thumbs";
@@ -218,8 +218,8 @@ const Profile = () => {
 
             {/* R E L A T I O N  */}
             <HStack justify="space-around">
-              <RelationList category="Followers" userId={currentUser._id} length={currentUser.followers.length}/>
-              <RelationList category="Followings" userId={currentUser._id} length={currentUser.followings.length}/>
+              {/* <RelationList category="Followers" userId={currentUser._id} length={currentUser.followers.length}/>
+              <RelationList category="Followings" userId={currentUser._id} length={currentUser.followings.length}/> */}
               {currentUser.subscription ? (
                 <>
                   <RelationList category="Abonnés" userId={currentUser._id} length={currentUser.subscribers.length}/>
@@ -266,7 +266,7 @@ const Profile = () => {
                   <UserInterviews user={currentUser._id} />
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <UserPublications user={currentUser._id} />
+                  <UserArticles user={currentUser._id} />
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
                   <Flex wrap="wrap" justify="center">

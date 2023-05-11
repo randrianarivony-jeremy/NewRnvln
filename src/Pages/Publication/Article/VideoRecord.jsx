@@ -17,7 +17,7 @@ import {
 import { useCallback, useContext, useRef, useState } from "react";
 import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
-import { publicationContext } from "../../Controler/Context";
+import { publicationContext } from "../../../Controler/Context";
 import { useNavigate } from "react-router-dom";
 
 const VideoRecord = () => {

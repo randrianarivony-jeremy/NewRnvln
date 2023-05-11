@@ -12,7 +12,7 @@ const UserInterviews = ({user}) => {
 
   const fetchUserInterviews = async () => {
     await axios
-      .get(process.env.REACT_APP_API_URL + "/api/interview/user/" + user)
+      .get(process.env.REACT_APP_API_URL + "/api/publication/interview/user/" + user)
       .then(
         (res) => {
             if (res.data===null) userInterview.current=[];

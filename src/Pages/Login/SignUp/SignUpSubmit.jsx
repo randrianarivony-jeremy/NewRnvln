@@ -53,7 +53,7 @@ const SignUpSubmit = ({ swiper }) => {
     else email.current = email.current.value;
     await axios
       .post(
-        process.env.REACT_APP_API_URL + "/api/user/register",
+        process.env.REACT_APP_API_URL + "/api/auth/register",
         {
           name: name.current.value,
           email: email.current,

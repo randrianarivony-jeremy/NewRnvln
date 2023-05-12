@@ -22,7 +22,7 @@ const SignIn = ({ setSignin }) => {
     setSubmitting(true);
     await axios
       .post(
-        process.env.REACT_APP_API_URL + "/api/user/login",
+        process.env.REACT_APP_API_URL + "/api/auth/login",
         {
           email: emailRef.current.value,
           password: passwordRef.current.value,

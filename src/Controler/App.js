@@ -29,14 +29,12 @@ function App() {
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then(
         (res) => {
-          console.log(res.data);
           setStep([...step,'fetchtoken success']);
           fetchData()
           setCurrentUser(res.data);
         },
         (err) => {
           setStep([...step,'fetchtoken failed']);
-          fetchData()
           console.log("tsisy token: " + err);
         }
         );
@@ -53,7 +51,6 @@ function App() {
             dispatch(addPublication(res.data));
             dispatch(addInterview(res.data));
           }
-          console.log(res.data);
           setInitializing(false);
         },err=>{
           setStep([...step,'fetchdata failed']);
@@ -63,6 +60,7 @@ function App() {
   };
 
   useEffect(()=>{
+    console.log('fetch')
     fetchToken();
   },[])
 

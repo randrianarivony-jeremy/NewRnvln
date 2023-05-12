@@ -19,7 +19,7 @@ const Logout = ({onOpen,onClose,isOpen}) => {
   };
 
   const handleLogout = async () => {
-    await axios.get(process.env.REACT_APP_API_URL+"/api/user/logout",
+    await axios.get(process.env.REACT_APP_API_URL+"/api/auth/logout",
       {withCredentials: true},
     )
       .then((res) => {

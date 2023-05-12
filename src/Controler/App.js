@@ -29,6 +29,7 @@ function App() {
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then(
         (res) => {
+          console.log(res.data);
           setStep([...step,'fetchtoken success']);
           fetchData()
           setCurrentUser(res.data);

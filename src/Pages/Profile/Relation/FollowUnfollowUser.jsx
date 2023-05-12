@@ -1,7 +1,6 @@
 import { Button } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import { userContext } from "../UserProfile";
 
 const FollowUnfollowUser = () => {
@@ -12,11 +11,11 @@ const FollowUnfollowUser = () => {
 
   const handleFollow = async () => {
     setSubmitting(true);
-    await axios
+    await apiCall
       .patch(
-        process.env.REACT_APP_API_URL + "/api/user/accept_friend/",
-        { from:user._id, to: currentUser._id }
-        // process.env.REACT_APP_API_URL + "/api/user/follow/" + currentUser._id,
+         "user/friend_invitation/",
+        { to:user._id, from: currentUser._id }
+        //  "user/follow/" + currentUser._id,
         // { id_user:user._id, follow: !followed }
       )
       .then(

@@ -1,9 +1,8 @@
 import { Avatar, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLongPress } from "use-long-press";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import { ClickableFlex } from "../../Styles/Theme";
 
@@ -21,10 +20,10 @@ const Comment = ({ comment, postId }) => {
 
   const deleteComment = async () => {
     setSubmitting(true);
-    await axios
+    await apiCall
       .delete(
-        process.env.REACT_APP_API_URL +
-          `/api/publication/` +
+        
+          `publication/` +
           postId +
           "/" +
           comment._id

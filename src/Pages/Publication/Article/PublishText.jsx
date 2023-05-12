@@ -2,8 +2,7 @@ import { Button, ButtonGroup, Flex, HStack, Select, Stack, Text, useToast } from
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
-import axios from "axios";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 
 const PublishText = () => {
   const navigate = useNavigate();
@@ -16,8 +15,8 @@ const PublishText = () => {
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/api/publication", {
+    await apiCall
+      .post( "publication", {
         content: value,
         bg:textareaBg,public:publicConfidentiality.current,
         id_user: currentUser._id,

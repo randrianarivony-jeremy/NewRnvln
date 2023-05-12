@@ -1,9 +1,8 @@
 import {Avatar,Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,Image,Input,Menu,MenuButton,MenuItem,MenuList,useDisclosure,} from "@chakra-ui/react";
-import axios from "axios";
 import {getDownloadURL,ref,uploadBytes,uploadString,} from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import TakePhoto from "../../../Component/TakePhoto";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
 
 const ProfilePicture = () => {
@@ -57,10 +56,9 @@ const ProfilePicture = () => {
   };
 
   const changeProfilePicture = async () => {
-    await axios
+    await apiCall
       .put(
-        process.env.REACT_APP_API_URL +
-          "/api/user/profilepicture/" +
+          "user/profilepicture/" +
           currentUser._id,
         {
           picture: picture.current,

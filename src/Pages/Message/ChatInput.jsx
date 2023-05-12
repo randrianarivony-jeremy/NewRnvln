@@ -26,8 +26,8 @@ const ChatInputs = ({sendResponse}) => {
     draft.current = {content:responseRef.current.value,contentType:'string',sender:currentUser._id}
     setSubmitting(true);
     if (newConversation) setNewConversation(false);
-    await axios
-    .post(process.env.REACT_APP_API_URL + "/api/message",{
+    await apiCall
+    .post( "message",{
         sender:currentUser._id,
         recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
         content:responseRef.current.value,

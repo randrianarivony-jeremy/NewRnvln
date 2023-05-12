@@ -1,10 +1,9 @@
 import { Box, Button, Flex, HStack, Image, Stack } from "@chakra-ui/react";
-import axios from "axios";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import WebCam from "react-webcam";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
 
@@ -42,8 +41,8 @@ const TakePicture = () => {
   }
 
   const handleSubmit = async() => {
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/api/message",{
+    await apiCall
+      .post( "message",{
         sender:currentUser._id,
         recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
         content:urlRef.current,

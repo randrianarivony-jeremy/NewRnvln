@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../Controler/Routes";
@@ -24,6 +23,7 @@ import FollowUnfollowUser from "./Relation/FollowUnfollowUser";
 import RelationList from "./Relation/RelationList";
 import Subscribe from "./Relation/Subscribe";
 import UserProfilepic from "./UserProfilepic";
+import { apiCall } from "../../Controler/App";
 
 export const userContext = createContext();
 
@@ -33,7 +33,7 @@ const UserProfile = () => {
   const [user, setUser] = useState();
 
   const fetchUser = async () => {
-    await axios.get(process.env.REACT_APP_API_URL + "/api/user/user/" + userId).then(
+    await apiCall.get( "user/user/" + userId).then(
       (res) => setUser(res.data),
       () => {
         navigate(-1);

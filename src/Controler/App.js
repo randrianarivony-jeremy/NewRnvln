@@ -16,6 +16,11 @@ import { addPublication } from "./Redux/publication.reducer";
 import { addInterview } from "./Redux/interview.reducer";
 import { addContentFeeds } from "./Redux/thread.reducer";
 
+export const apiCall = axios.create({
+  baseURL: process.env.REACT_APP_API_URL+'/api/',
+  withCredentials:true
+})
+
 function App() {
   const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
@@ -25,7 +30,7 @@ function App() {
   
   const fetchToken = async () => {
     setStep([...step,'fetchtoken']);
-    await axios
+    await apiCall
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then(
         (res) => {
@@ -36,14 +41,14 @@ function App() {
         (err) => {
           setStep([...step,'fetchtoken failed']);
           console.log("tsisy token: " + err);
+          setInitializing(false);
         }
         );
       };
       
       const fetchData = async () => {
         setStep([...step,'fetchdata']);
-        await axios
-        .get(process.env.REACT_APP_API_URL + "/api/publication",{ withCredentials: true })
+        await apiCall.get("publication")
         .then((res) => {
           setStep([...step,'fetchdata success']);
           if (res.data.length!==0){

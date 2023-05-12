@@ -1,8 +1,7 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { likeDislike } from "../../Controler/Redux/thread.reducer";
 
 const LikePost = ({post}) => {
@@ -12,10 +11,10 @@ const LikePost = ({post}) => {
 
   const handleLikeDislike = async () => {
     setLiked(!liked);
-      await axios
+      await apiCall
       .patch(
-          process.env.REACT_APP_API_URL +
-          `/api/publication/like/` +
+          
+          `publication/like/` +
           post._id,
           {
               id_user: currentUser._id,

@@ -13,10 +13,9 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 
 const DisableSubscription = ({ onOpen, onClose, isOpen }) => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -30,10 +29,10 @@ const DisableSubscription = ({ onOpen, onClose, isOpen }) => {
 
   const changeFees = async (e) => {
     e.preventDefault();
-    await axios
+    await apiCall
       .put(
-        process.env.REACT_APP_API_URL +
-          "/api/user/subscription/" +
+        
+          "user/subscription/" +
           currentUser._id,
         {
           enabled: false,

@@ -1,7 +1,6 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import Thumbs from "../Thumbs";
 
 const UserInterviews = ({user}) => {
@@ -11,8 +10,8 @@ const UserInterviews = ({user}) => {
   const fetchingError=useRef();
 
   const fetchUserInterviews = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/publication/interview/user/" + user)
+    await apiCall
+      .get( "publication/interview/user/" + user)
       .then(
         (res) => {
             if (res.data===null) userInterview.current=[];

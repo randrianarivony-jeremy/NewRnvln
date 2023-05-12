@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Question from "../../Question/Question";
 import { Scroll } from "../../../Styles/Theme";
 import Options from "./Options";
-import axios from "axios";
 import { Loader } from "../../../Controler/Routes";
+import { apiCall } from "../../../Controler/App";
 
 export const optionContext = createContext();
 
@@ -18,8 +18,8 @@ const Interview = () => {
   const toast = useToast();
 
   const fetchQuestion = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/question/" + questionId)
+    await apiCall
+      .get( "question/" + questionId)
       .then(
         (res) => {
           question.current = res.data;

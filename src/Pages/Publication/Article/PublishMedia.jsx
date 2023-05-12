@@ -9,7 +9,6 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import {
   getDownloadURL,
   ref,
@@ -19,7 +18,7 @@ import {
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AudioDisplay from "../../../Component/Post/AudioDisplay";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import { publicationContext } from "../../../Controler/Context";
 import { storage } from "../../../Controler/firebase.config";
 
@@ -59,8 +58,8 @@ const PublishMedia = () => {
   };
 
   const handleSubmit = async () => {
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/api/publication", {
+    await apiCall
+      .post( "publication", {
         content: urlRef.current,public:publicConfidentiality.current,
         id_user: currentUser._id,
         description: descriptionRef.current.value,

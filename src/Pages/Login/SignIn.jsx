@@ -2,8 +2,7 @@ import {Box,Button,Flex,FormControl,FormErrorMessage,Grid,GridItem,Heading,Image
 import React, { useContext, useRef, useState } from "react";
 import logo from "../../Assets/RANAVALONA.png";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 
 const SignIn = ({ setSignin }) => {
   const { setCurrentUser } = useContext(currentUserContext);
@@ -20,14 +19,13 @@ const SignIn = ({ setSignin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await axios
+    await apiCall
       .post(
-        process.env.REACT_APP_API_URL + "/api/auth/login",
+         "auth/login",
         {
           email: emailRef.current.value,
           password: passwordRef.current.value,
         },
-        { withCredentials: true } //tsy mahazo cookie rah tsisy anio
       )
       .then(
         (res) => {

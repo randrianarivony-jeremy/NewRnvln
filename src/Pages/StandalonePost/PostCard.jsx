@@ -7,14 +7,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CommentPost from "../../Component/Post/CommentPost";
 import DataDisplay from "../../Component/Post/DataDisplay";
 import LikePost from "../../Component/Post/LikePost";
 import RespondPost from "../../Component/Post/RespondPost";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
 import { ClickableFlex } from "../../Styles/Theme";
 import QuestionBubble from "./QuestionBubble";
@@ -31,7 +30,7 @@ const PostCard = () => {
   const descriptionOverflow = useRef();
 
   const fetchPost = async () => {
-    await axios.get(process.env.REACT_APP_API_URL + `/api/${type}/` + id).then(
+    await apiCall.get( `${type}/` + id).then(
       (res) => {
         console.log(res.data);
         setPost(res.data)

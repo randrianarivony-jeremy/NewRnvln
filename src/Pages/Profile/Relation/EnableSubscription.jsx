@@ -16,9 +16,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 
 const EnableSubscription = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -34,10 +33,10 @@ const EnableSubscription = () => {
   const enableSubscription = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await axios
+    await apiCall
       .put(
-        process.env.REACT_APP_API_URL +
-          "/api/user/subscription/" +
+        
+          "user/subscription/" +
           currentUser._id,
         {
           enabled: true,

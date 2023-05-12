@@ -14,9 +14,8 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import { userContext } from "../UserProfile";
 
 const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
@@ -31,10 +30,9 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
   const stopSubscription = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await axios
+    await apiCall
       .patch(
-        process.env.REACT_APP_API_URL +
-          "/api/user/unsubscribe/" +
+          "user/unsubscribe/" +
           currentUser._id,
         { id_user: user._id, password: passwordRef.current.value }
       )

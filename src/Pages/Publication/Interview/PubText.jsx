@@ -7,11 +7,10 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import { optionContext } from "./Interview";
 import Options from "./Options";
 
@@ -27,8 +26,8 @@ const PubText = () => {
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/api/publication", {
+    await apiCall
+      .post( "publication", {
         content: value,
         id_user: currentUser._id,
         question: question._id,

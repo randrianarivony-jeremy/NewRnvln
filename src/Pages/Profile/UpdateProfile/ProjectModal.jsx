@@ -9,9 +9,8 @@ import {
     ModalHeader,
     ModalOverlay,
   } from "@chakra-ui/react";
-  import axios from "axios";
   import React, { useContext, useRef, useState } from "react";
-  import { currentUserContext } from "../../../Controler/App";
+  import { apiCall, currentUserContext } from "../../../Controler/App";
   
   const ProjectModal = ({ onOpen, isOpen, onClose }) => {
     const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -20,9 +19,9 @@ import {
     const [deleteSubmitting, setDeleteSubmitting] = useState(false);
   
     const changeProject = async (project) => {
-      await axios
+      await apiCall
         .put(
-          process.env.REACT_APP_API_URL + "/api/user/project/" + currentUser._id,
+           "user/project/" + currentUser._id,
           {
             project,
           }

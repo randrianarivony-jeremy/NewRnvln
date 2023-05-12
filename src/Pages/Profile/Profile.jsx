@@ -16,11 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
-import { currentUserContext, data } from "../../Controler/App";
+import { apiCall, currentUserContext, data } from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
 import UserInterviews from "./Contents/UserInterviews";
 import UserArticles from "./Contents/UserArticles";
@@ -58,8 +57,8 @@ const Profile = () => {
   } = useDisclosure();
 
   const fetchUser = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/user/" + currentUser._id)
+    await apiCall
+      .get( "user/" + currentUser._id)
       .then(
         (res) => setCurrentUser(res.data),
         () => {

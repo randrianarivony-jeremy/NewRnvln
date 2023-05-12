@@ -2,12 +2,11 @@ import { Button, HStack, Input } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUpContext } from "../Login";
-import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../Controler/firebase.config";
 import AuthSlide from "./AuthSlide";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 
 const SignUpSubmit = ({ swiper }) => {
   let {name,email,setInvalidEmail,phoneNumber,password,confirmPassword,setPasswordError,picture,job,address,} = useContext(signUpContext);
@@ -51,9 +50,9 @@ const SignUpSubmit = ({ swiper }) => {
   const handleSubmit = async () => {
     if (phoneNumber.current !== null) email.current = phoneNumber.current.value;
     else email.current = email.current.value;
-    await axios
+    await apiCall
       .post(
-        process.env.REACT_APP_API_URL + "/api/auth/register",
+         "auth/register",
         {
           name: name.current.value,
           email: email.current,

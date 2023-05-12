@@ -17,12 +17,11 @@ import {
   faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
 import Navigation from "../../Component/Navigation";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
 
 const Notification = () => {
@@ -35,9 +34,9 @@ const Notification = () => {
   const toast = useToast();
 
   const fetchNotification = async () => {
-    await axios
+    await apiCall
       .get(
-        process.env.REACT_APP_API_URL + "/api/notification/" + currentUser._id
+         "notification/" + currentUser._id
       )
       .then(
         (res) => {

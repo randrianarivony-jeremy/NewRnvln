@@ -12,11 +12,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import axios from "axios";
 import ScrollableFeed from "react-scrollable-feed";
 import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import Comment from "./Comment";
 import UserLoader from "../Loaders/UserLoader";
@@ -36,9 +35,9 @@ const CommentPost = ({ post }) => {
 
   const submitComment = async () => {
     setSubmitting(true);
-    await axios
+    await apiCall
       .patch(
-        process.env.REACT_APP_API_URL + `/api/publication/comment/` + post._id,
+         `publication/comment/` + post._id,
         {
           commenterId: currentUser._id,
           text: inputRef.current.value,
@@ -58,9 +57,9 @@ const CommentPost = ({ post }) => {
   };
 
   const fetchComments = async () => {
-    await axios
+    await apiCall
       .get(
-        process.env.REACT_APP_API_URL + "/api/publication/comments/" + post._id
+         "publication/comments/" + post._id
       )
       .then(
         (res) => {

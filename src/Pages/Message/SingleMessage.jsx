@@ -1,8 +1,7 @@
 import { Button, ButtonGroup, Flex } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useLongPress } from "use-long-press";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { chatContext } from "./Chat";
 import DataDisplay from "./DataDisplay";
 
@@ -20,8 +19,8 @@ const SingleMessage = ({ message }) => {
 
   const deleteMessage = async () => {
     setSubmitting(true);
-    await axios
-      .delete(process.env.REACT_APP_API_URL + `/api/message/` + message._id +'/'+ message.conversationId)
+    await apiCall
+      .delete( `message/` + message._id +'/'+ message.conversationId)
       .then(
         (res) => {
           setMessages(messages.filter(msg=>msg._id!==res.data))

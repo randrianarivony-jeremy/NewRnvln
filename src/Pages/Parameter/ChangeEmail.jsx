@@ -12,10 +12,9 @@ import {
     Stack,
     useToast,
   } from "@chakra-ui/react";
-  import axios from "axios";
   import React, { useContext, useRef, useState } from "react";
   import { useNavigate } from "react-router-dom";
-  import { currentUserContext } from "../../Controler/App";
+  import { apiCall, currentUserContext } from "../../Controler/App";
   
   const ChangeEmail = ({ onOpen, onClose, isOpen }) => {
     const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -29,9 +28,9 @@ import {
   
     const changeEmail = async (e) => {
       e.preventDefault();
-      await axios
+      await apiCall
         .put(
-          process.env.REACT_APP_API_URL + "/api/user/email/" + currentUser._id,
+           "user/email/" + currentUser._id,
           {
             email: inputRef.current.value,
             password: passwordRef.current.value,

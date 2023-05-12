@@ -12,10 +12,9 @@ import {
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 
 const ChangePassword = ({ onOpen, onClose, isOpen }) => {
   const { currentUser } = useContext(currentUserContext);
@@ -34,10 +33,10 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
     if (password.current.value !== confirmPassword.current.value) {
       setSamePasswordErr(true);
     } else {
-      await axios
+      await apiCall
         .put(
-          process.env.REACT_APP_API_URL +
-            "/api/user/password/" +
+          
+            "user/password/" +
             currentUser._id,
           {
             password: oldPassword.current.value,

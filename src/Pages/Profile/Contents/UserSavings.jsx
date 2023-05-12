@@ -1,6 +1,6 @@
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
+import { apiCall } from "../../../Controler/App";
 import Thumbs from "../Thumbs";
 
 const UserSavings = ({user}) => {
@@ -9,8 +9,8 @@ const UserSavings = ({user}) => {
   const fetchingError=useRef();
 
   const fetchUserSavings = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/publication/user/" + user)
+    await apiCall
+      .get( "publication/user/" + user)
       .then(
         (res) => {
             if (res.data===null) userSaving.current=[];

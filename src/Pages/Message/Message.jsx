@@ -10,10 +10,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Navigation from "../../Component/Navigation";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
 import { useDispatch } from "react-redux";
 import { selectRecipient } from "../../Controler/Redux/chat.reducer";
@@ -26,9 +25,9 @@ const Message = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchConversation = async () => {
-    await axios
+    await apiCall
       .get(
-        process.env.REACT_APP_API_URL + "/api/conversation/" + currentUser._id
+         "conversation/" + currentUser._id
       )
       .then(
         (res) => {

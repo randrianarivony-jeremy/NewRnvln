@@ -9,9 +9,8 @@ import {
     ModalHeader,
     ModalOverlay,
   } from "@chakra-ui/react";
-  import axios from "axios";
   import React, { useContext, useRef, useState } from "react";
-  import { currentUserContext } from "../../../Controler/App";
+  import { apiCall, currentUserContext } from "../../../Controler/App";
   
   const JobModal = ({ onOpen, isOpen, onClose }) => {
     const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -20,9 +19,9 @@ import {
     const [deleteSubmitting, setDeleteSubmitting] = useState(false);
   
     const changeJob = async (job) => {
-      await axios
+      await apiCall
         .put(
-          process.env.REACT_APP_API_URL + "/api/user/job/" + currentUser._id,
+           "user/job/" + currentUser._id,
           {
             job,
           }

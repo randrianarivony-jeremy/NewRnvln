@@ -9,8 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 
 const AskQuestion = () => {
   const { currentUser } = useContext(currentUserContext);
@@ -29,8 +28,8 @@ const AskQuestion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/api/question", {
+    await apiCall
+      .post( "question", {
         data: responseRef.current.value,
         interviewer: currentUser._id,
         bg:textareaBg==='transparent' ? 'gradient1' : textareaBg,

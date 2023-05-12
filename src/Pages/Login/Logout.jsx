@@ -1,10 +1,9 @@
-import axios from "axios";
 import React, { useContext } from "react";
 import cookie from "js-cookie";
 import {Modal,ModalOverlay,ModalContent,ModalHeader,ModalFooter,ModalBody,Button,useToast,useColorModeValue,ButtonGroup,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 
 const Logout = ({onOpen,onClose,isOpen}) => {
   const toast = useToast();
@@ -19,7 +18,7 @@ const Logout = ({onOpen,onClose,isOpen}) => {
   };
 
   const handleLogout = async () => {
-    await axios.get(process.env.REACT_APP_API_URL+"/api/auth/logout",
+    await apiCall.get("auth/logout",
       {withCredentials: true},
     )
       .then((res) => {

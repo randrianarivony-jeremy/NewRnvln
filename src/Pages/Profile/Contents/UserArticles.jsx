@@ -1,7 +1,6 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import Thumbs from "../Thumbs";
 
 const UserArticles = ({user}) => {
@@ -11,8 +10,8 @@ const UserArticles = ({user}) => {
   const {currentUser}=useContext(currentUserContext);
 
   const fetchUserPublications = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/publication/article/user/" + user)
+    await apiCall
+      .get( "publication/article/user/" + user)
       .then(
         (res) => {
             if (res.data===null) userPublication.current=[];

@@ -18,9 +18,9 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiCall } from "../../../Controler/App";
 import { ClickableFlex } from "../../../Styles/Theme";
 
 const RelationList = ({ category, userId,length }) => {
@@ -30,10 +30,10 @@ const RelationList = ({ category, userId,length }) => {
   const list = useRef([1, 2, 3]);
 
   const fetchList = async () => {
-    await axios
+    await apiCall
       .get(
-        process.env.REACT_APP_API_URL +
-          "/api/user/" +
+        
+          "user/" +
           (category === "Abonnés"
             ? "subscribers"
             : category === "Followings"

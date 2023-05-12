@@ -1,5 +1,4 @@
 import { Button, HStack, Image, Select, Stack, Text, Textarea, useToast } from "@chakra-ui/react";
-import axios from "axios";
 import {
   getDownloadURL,
   ref,
@@ -9,7 +8,7 @@ import {
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AudioDisplay from "../../../Component/Post/AudioDisplay";
-import { currentUserContext } from "../../../Controler/App";
+import { apiCall, currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
 import { optionContext } from "./Interview";
 import Options from "./Options";
@@ -52,8 +51,8 @@ const PubMedia = ({ data }) => {
   };
 
   const handleSubmit = async () => {
-    await axios
-      .post(process.env.REACT_APP_API_URL + "/api/publication", {
+    await apiCall
+      .post( "publication", {
         content: urlRef.current,
         id_user: currentUser._id,
         description: descriptionRef.current.value,type:'interview',

@@ -4,9 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import ChatScroller from "./ChatScroller";
 import ChatInput from "./ChatInput";
 import { Scroll } from "../../Styles/Theme";
-import axios from "axios";
 import { Loader } from "../../Controler/Routes";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { useSelector } from "react-redux";
 
 export const chatContext = createContext();
@@ -24,8 +23,8 @@ const Chat = () => {
   const chatReducer = useSelector(state=>state.chat);
 
   const fetchMessages = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/message/" + conversationId)
+    await apiCall
+      .get( "message/" + conversationId)
       .then(
         (res) => {
           if(res.data==='new conversation'){

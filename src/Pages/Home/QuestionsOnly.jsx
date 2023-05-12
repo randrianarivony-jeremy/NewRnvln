@@ -11,8 +11,8 @@ const QuestionsOnly = () => {
   const homeSliderRef = useRef();
   
   const fetchQuestions = async () => {
-    await axios
-      .get(process.env.REACT_APP_API_URL + "/api/question")
+    await apiCall
+      .get( "question")
       .then((res) => {
         console.log(res.data)
         // setData(res.data)

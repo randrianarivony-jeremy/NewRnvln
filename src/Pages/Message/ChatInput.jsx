@@ -5,8 +5,7 @@ import TakePicture from "./TakePicture";
 import VoiceRecording from "./VoiceRecording";
 import EmojiPicker from "emoji-picker-react";
 import { chatContext } from "./Chat";
-import axios from "axios";
-import { currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ChatInputs = ({sendResponse}) => {

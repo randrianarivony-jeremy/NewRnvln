@@ -13,7 +13,7 @@ export const chatContext = createContext();
 const Chat = () => {
   const navigate = useNavigate();
   const { currentUser } = useContext(currentUserContext);
-  const { conversationId } = useParams();
+  const { userId } = useParams();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newConversation, setNewConversation] = useState(false);
@@ -24,10 +24,11 @@ const Chat = () => {
 
   const fetchMessages = async () => {
     await apiCall
-      .get( "message/" + conversationId)
+      .get( "message/"+userId)
       .then(
         (res) => {
-          if(res.data==='new conversation'){
+          console.log(res.data);
+          if(res.data==null){
           setNewConversation(true);
           }else {
             setMessages(res.data.messages);
@@ -35,12 +36,13 @@ const Chat = () => {
               res.data.members.filter((u) => u._id !== currentUser._id)[0]
             );
           }
-          setLoading(false);
         },
         (err) => {
           console.log(err);
           navigate(-1);
         }
+        ).finally(()=>
+        setLoading(false)
       );
   };
 

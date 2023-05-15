@@ -13,7 +13,7 @@ const Login = lazy(()=>import("../Pages/Login/Login"));
 const Notification = lazy(()=>import("../Pages/Notification/Notification"));
 const Profile = lazy(()=>import("../Pages/Profile/Profile"));
 const UserProfile = lazy(()=>import("../Pages/Profile/UserProfile"));
-const Message = lazy(()=>import("../Pages/Message/Message"));
+const Message = lazy(()=>import("../Pages/Conversation/Message"));
 const Chat = lazy(()=>import("../Pages/Message/Chat"));
 const Publication = lazy(()=>import("../Pages/Publication/Article/Publication"));
 const Interview = lazy(()=>import("../Pages/Publication/Interview/Interview"));
@@ -45,7 +45,7 @@ const Routes = () => {
                 <Route path="/post/:type/:id" element={<Suspense fallback={<Loader/>}><PostCard /></Suspense>} />
                 <Route path="/login" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
                 <Route path="/message" element={<Suspense fallback={<Loader/>}><Message/></Suspense>} />
-                <Route path="/chat/:conversationId" element={<Suspense fallback={<Loader/>}><Chat/></Suspense>} />
+                <Route path="/chat/:userId" element={<Suspense fallback={<Loader/>}><Chat/></Suspense>} />
                 <Route path="/notification" element={<Suspense fallback={<Loader/>}><Notification /></Suspense>} />
                 <Route path="/profile" element={<Suspense fallback={<Loader/>}><Profile /></Suspense>} />
                 <Route path="/profile/:userId" element={<Suspense fallback={<Loader/>}><UserProfile /></Suspense>} />

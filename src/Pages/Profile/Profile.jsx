@@ -249,7 +249,7 @@ const Profile = () => {
                 <Tab width="25%" overflowX="hidden">
                   <Stack spacing={0}>
                     <Text fontSize="xl" className="bi-bookmark"></Text>
-                    <Text fontSize="xs">Enregistrements</Text>
+                    <Text fontSize="xs">Partenaires</Text>
                   </Stack>
                 </Tab>
                 <Tab width="25%">

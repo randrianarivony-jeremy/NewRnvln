@@ -19,7 +19,7 @@ import { Loader } from "../../Controler/Routes";
 import { Scroll } from "../../Styles/Theme";
 import UserInterviews from "./Contents/UserInterviews";
 import UserArticles from "./Contents/UserArticles";
-import FollowUnfollowUser from "./Relation/FollowUnfollowUser";
+import FriendHandler from "./Relation/FriendHandler";
 import RelationList from "./Relation/RelationList";
 import Subscribe from "./Relation/Subscribe";
 import UserProfilepic from "./UserProfilepic";
@@ -103,17 +103,17 @@ const UserProfile = () => {
             )}
 
             {/* R E L A T I O N  */}
-            <Stack direction={user.subscription ? "column" : "row"}>
+            <Stack>
               <HStack justify="space-around" width="100%">
-                <FollowUnfollowUser/>
-                {user.subscription && (
+                <FriendHandler/>
+                {user.subscription ? (
                   <Subscribe
                   />
-                )}
+                ) : 
+                <Button variant='outline' width='100%' leftIcon={<Flex className='bi-chat-left'></Flex>} onClick={()=>navigate("/chat/"+user._id)}>Message</Button>
+                }
               </HStack>
               <HStack justify="space-around" width="100%">
-                {/* <RelationList category="Followings" userId={userId} length={user.followings.length}/>
-                <RelationList category="Followers" userId={userId} length={user.followers.length}/> */}
                 {user.subscription && (
                   <>
                     <RelationList

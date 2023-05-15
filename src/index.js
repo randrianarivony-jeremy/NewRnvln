@@ -11,11 +11,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import interviewReducer from "./Controler/Redux/interview.reducer";
 import threadReducer from "./Controler/Redux/thread.reducer";
-import chatReducer from "./Controler/Redux/chat.reducer";
 
 const { ToastContainer } = createStandaloneToast();
 const store = configureStore({
-  reducer: { thread: threadReducer,chat: chatReducer,interviews:interviewReducer },
+  reducer: { thread: threadReducer,interviews:interviewReducer },
 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

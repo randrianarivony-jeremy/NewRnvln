@@ -10,6 +10,7 @@ import image from "../Assets/image.jpg";
 import { createContext, useEffect, useState } from "react";
 import { publicationContext } from "./Context";
 import axios from "axios";
+import io from "socket.io-client";
 import logo from "../Assets/RANAVALONA.png";
 import { useDispatch } from "react-redux";
 import { addPublication } from "./Redux/publication.reducer";
@@ -20,6 +21,8 @@ export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL+'/api/',
   withCredentials:true
 })
+
+export const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 function App() {
   const [currentUser, setCurrentUser] = useState();
@@ -35,7 +38,8 @@ function App() {
       .then(
         (res) => {
           setStep([...step,'fetchtoken success']);
-          fetchData()
+          fetchData();
+          socket.emit("start", res.data._id);
           setCurrentUser(res.data);
         },
         (err) => {

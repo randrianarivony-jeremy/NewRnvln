@@ -36,20 +36,19 @@ const RelationList = ({ category, userId,length }) => {
           "user/" +
           (category === "Abonnés"
             ? "subscribers"
-            : category === "Followings"
-            ? "followings"
-            : category === "Followers"
-            ? "followers"
-            : "subscriptions") +
-          "/" +
-          userId
+            : category === "Partenaires"
+            ? "friends"
+            : category === "Demandes"
+            ? "requests"
+            : "subscriptions") + "/" + userId
       )
       .then(
         (res) => {
           list.current = res.data;
           setLoading(false);
         },
-        () => {
+        (err) => {
+          console.log(err)
           onClose();
         }
       );
@@ -111,11 +110,11 @@ const RelationList = ({ category, userId,length }) => {
                           {elt.job && <Text fontStyle="italic">{elt.job}</Text>}
                         </Stack>
                       </Flex>
-                      {/* {category==='Followers' && <Button variant='primary'>Suivre</Button>}
-                {category==='Followings' && <Button variant='outline'>Suivi</Button>}
-                {category==='Abonnés' && <Button variant='cta' onClick={onOpenSubscription}>S'abonner</Button>}
-                {category==='Abonnements' && <Button variant='outline'>Abonné</Button>}
-      <SubscribeDrawer isOpen={isOpenSubscription} onClose={onCloseSubscription} onOpen={onOpenSubscription}/> */}
+                      {category==='Demandes' && <Button variant='primary'>Confirmer</Button>}
+                {category==='Partenaires' && <Button variant='outline'>Retirer</Button>}
+                {/* {category==='Abonnés' && <Button variant='cta' onClick={onOpenSubscription}>S'abonner</Button>}
+                {category==='Abonnements' && <Button variant='outline'>Abonné</Button>} */}
+      {/* <SubscribeDrawer isOpen={isOpenSubscription} onClose={onCloseSubscription} onOpen={onOpenSubscription}/> */}
                     </ClickableFlex>
                   )}
                 </Box>

@@ -24,6 +24,7 @@ import RelationList from "./Relation/RelationList";
 import Subscribe from "./Relation/Subscribe";
 import UserProfilepic from "./UserProfilepic";
 import { apiCall } from "../../Controler/App";
+import RelationBoard from "./Relation/RelationBoard";
 
 export const userContext = createContext();
 
@@ -32,16 +33,15 @@ const UserProfile = () => {
   const { userId } = useParams();
   const [user, setUser] = useState();
 
-  const fetchUser = async () => {
-    await apiCall.get( "user/user/" + userId).then(
-      (res) => setUser(res.data),
-      () => {
-        navigate(-1);
-      }
-    );
-  };
-
   useEffect(() => {
+    const fetchUser = async () => {
+      await apiCall.get( "user/user/" + userId).then(
+        (res) => setUser(res.data),
+        () => {
+          navigate(-1);
+        }
+      );
+    };
     fetchUser();
   }, []);
 
@@ -104,6 +104,7 @@ const UserProfile = () => {
 
             {/* R E L A T I O N  */}
             <Stack>
+              <Button variant='outline' leftIcon={<Flex className='bi-chat-left'></Flex>}>Envoyer un message</Button>
               <HStack justify="space-around" width="100%">
                 <FriendHandler/>
                 {user.subscription ? (
@@ -113,17 +114,7 @@ const UserProfile = () => {
                 <Button variant='outline' width='100%' leftIcon={<Flex className='bi-chat-left'></Flex>} onClick={()=>navigate("/chat/"+user._id)}>Message</Button>
                 }
               </HStack>
-              <HStack justify="space-around" width="100%">
-                {user.subscription && (
-                  <>
-                    <RelationList
-                      category="Abonnements"
-                      userId={userId} length={user.subscriptions.length}
-                    />
-                    <RelationList category="Abonnés" userId={userId} length={user.subscribers.length}/>
-                  </>
-                )}
-              </HStack>
+              <RelationBoard user={user}/>
             </Stack>
 
             {/* P O S T S  */}

@@ -31,6 +31,7 @@ import JobModal from "./UpdateProfile/JobModal";
 import PhilosophyModal from "./UpdateProfile/PhilosophyModal";
 import ProfilePicture from "./UpdateProfile/ProfilePicture";
 import ProjectModal from "./UpdateProfile/ProjectModal";
+import RelationBoard from "./Relation/RelationBoard";
 
 const Profile = () => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -56,18 +57,18 @@ const Profile = () => {
     onClose: closePhilosophyModal,
   } = useDisclosure();
 
-  const fetchUser = async () => {
-    await apiCall
-      .get( "user/" + currentUser._id)
-      .then(
-        (res) => setCurrentUser(res.data),
-        () => {
-          navigate(-1);
-        }
-      );
-  };
-
+  
   useEffect(() => {
+    const fetchUser = async () => {
+      await apiCall
+        .get( "user/" + currentUser._id)
+        .then(
+          (res) => setCurrentUser(res.data),
+          () => {
+            navigate(-1);
+          }
+        );
+    };
     fetchUser();
   }, []);
 
@@ -128,12 +129,12 @@ const Profile = () => {
                         {currentUser.job} <span className="bi-pencil"></span>
                       </Text>
                     )}
-                  </HStack>
                   <JobModal
                     isOpen={jobModal}
                     onOpen={openJobModal}
                     onClose={closeJobModal}
-                  />
+                    />
+                    </HStack>
 
                   {/* ADDRESS  */}
                   <HStack align="flex-start">
@@ -153,12 +154,12 @@ const Profile = () => {
                         <span className="bi-pencil"></span>
                       </Text>
                     )}
-                  </HStack>
                   <AddressModal
                     isOpen={addressModal}
                     onOpen={openAddressModal}
                     onClose={closeAddressModal}
-                  />
+                    />
+                    </HStack>
 
                   {/* PROJECT  */}
                   <HStack align="flex-start">
@@ -178,12 +179,12 @@ const Profile = () => {
                         <span className="bi-pencil"></span>
                       </Text>
                     )}
-                  </HStack>
                   <ProjectModal
                     isOpen={projectModal}
                     onOpen={openProjectModal}
                     onClose={closeProjectModal}
-                  />
+                    />
+                    </HStack>
                 </Stack>
               </Box>
             </HStack>
@@ -216,20 +217,7 @@ const Profile = () => {
             />
 
             {/* R E L A T I O N  */}
-            <HStack justify="space-around">
-              {/* <RelationList category="Followers" userId={currentUser._id} length={currentUser.followers.length}/>
-              <RelationList category="Followings" userId={currentUser._id} length={currentUser.followings.length}/> */}
-              {currentUser.subscription ? (
-                <>
-                  <RelationList category="Abonnés" userId={currentUser._id} length={currentUser.subscribers.length}/>
-                  <RelationList
-                    category="Abonnements"
-                    userId={currentUser._id} length={currentUser.subscriptions.length}/>
-                </>
-              ) : (
-                <EnableSubscription />
-              )}
-            </HStack>
+            <RelationBoard user={currentUser}/>
 
             {/* P O S T S  T A B  */}
             <Tabs size="sm" isFitted height="100%" isLazy={true}>
@@ -249,7 +237,7 @@ const Profile = () => {
                 <Tab width="25%" overflowX="hidden">
                   <Stack spacing={0}>
                     <Text fontSize="xl" className="bi-bookmark"></Text>
-                    <Text fontSize="xs">Partenaires</Text>
+                    <Text fontSize="xs">Enregistrements</Text>
                   </Stack>
                 </Tab>
                 <Tab width="25%">

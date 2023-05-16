@@ -25,8 +25,8 @@ const MainConversation = () => {
     };
   
     useEffect(() => {
-      setNewMainMessage(0);
       fetchConversation();
+      setNewMainMessage(0);
     }, []);
 
     useEffect(()=>{

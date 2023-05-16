@@ -34,31 +34,6 @@ const Notification = () => {
   const toast = useToast();
   const {setNewNotification}=useContext(socketContext);
 
-  const fetchNotification = async () => {
-    await apiCall
-      .get(
-         "notification"
-      )
-      .then(
-        (res) => {
-          notificationList.current = res.data;
-          if (res.data.length === 0) {
-            emptyNotification.current = true;
-            setLoading(false);
-          } else formatNotifData();
-        },
-        (err) => {
-          toast({
-              status: "error",
-              duration: 5000,
-            description: err.message + "Veuillez réessayer s'il vous plait",
-            title: "Operation failed",
-          });
-          navigate(-1)
-          console.error(err);
-        }
-      );
-    };
     
     const formatNotifData = () => {
     let notifArray = [];
@@ -103,6 +78,32 @@ const Notification = () => {
             },
           ];
           break;
+        case "friendRequest":
+          notifArray = [
+            ...notifArray,
+            {
+              text: "vous a envoyé une invitation.",
+              name: elt.from.name,
+              picture: elt.from.picture,
+              length: currentUser.friendRequest.length,
+              url: "/profile/"+elt.from._id,
+              icon: <Flex className="bi-person-fill-add"></Flex>,
+            },
+          ];
+          break;
+        case "friendAccepted":
+          notifArray = [
+            ...notifArray,
+            {
+              text: "a accepté votre invitation.",
+              name: elt.from.name,
+              picture: elt.from.picture,
+              length: currentUser.friends.length,
+              url: "/profile/"+elt.from._id,
+              icon: <Flex className="bi-person-fill-check"></Flex>,
+            },
+          ];
+          break;
         case "interview":
           notifArray = [
             ...notifArray,
@@ -127,8 +128,30 @@ const Notification = () => {
   };
 
   useEffect(() => {
-    setNewNotification(0);
+    const fetchNotification = async () => {
+      await apiCall
+        .get("notification").then(
+          (res) => {
+            notificationList.current = res.data;
+            if (res.data.length === 0) {
+              emptyNotification.current = true;
+              setLoading(false);
+            } else formatNotifData();
+          },
+          (err) => {
+            toast({
+                status: "error",
+                duration: 5000,
+              description: err.message + "Veuillez réessayer s'il vous plait",
+              title: "Operation failed",
+            });
+            navigate(-1)
+            console.error(err);
+          }
+        );
+      };
     fetchNotification();
+    setNewNotification(0);
   }, []);
 
   return (

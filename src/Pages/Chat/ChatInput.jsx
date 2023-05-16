@@ -5,13 +5,12 @@ import TakePicture from "./TakePicture";
 import VoiceRecording from "./VoiceRecording";
 import EmojiPicker from "emoji-picker-react";
 import { chatContext } from "./Chat";
-import { apiCall, currentUserContext } from "../../Controler/App";
-import { useNavigate, useParams } from "react-router-dom";
+import { apiCall, currentUserContext, socket } from "../../Controler/App";
+import { useNavigate } from "react-router-dom";
 
 const ChatInputs = ({sendResponse}) => {
   const responseRef = useRef();
-  const { conversationId } = useParams();
-  const {messages,setMessages,userB,newConversation,setNewConversation,submitting,setSubmitting,draft}=useContext(chatContext);
+  const {messages,setMessages,userB,newConversation,setNewConversation,conversationId,submitting,setSubmitting,draft}=useContext(chatContext);
   const {currentUser}=useContext(currentUserContext);
   const [value, setValue] = useState("");
   const emojibg = useColorModeValue("light", "dark");
@@ -24,25 +23,25 @@ const ChatInputs = ({sendResponse}) => {
     setValue('');
     draft.current = {content:responseRef.current.value,contentType:'string',sender:currentUser._id}
     setSubmitting(true);
-    if (newConversation) setNewConversation(false);
     await apiCall
     .post( "message",{
         sender:currentUser._id,
-        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        recipient:userB._id, //this conversationId from params would be the userId
         content:responseRef.current.value,
-        conversationId: newConversation ? null : conversationId
+        conversationId: newConversation ? null : conversationId.current
       })
       .then(
         (res) => {
           setMessages([...messages,res.data]);
-          setSubmitting(false);
+          setNewConversation(false);
+          conversationId.current = res.data.conversationId;
+          socket.emit('message sent',res.data,userB._id)
           },
           (err) => {
-          setSubmitting(false);
           console.log(err);
           navigate(-1);
         }
-      );
+      ).finally(()=>setSubmitting(false));
   };
 
   const handleTextChange = ({ currentTarget }) => {
@@ -127,7 +126,7 @@ const ChatInputs = ({sendResponse}) => {
             }}
             onChange={handleTextChange}
           ></Textarea>
-          <Button
+          <Button isLoading={submitting}
             className="bi-send"
             variant="float"
             onClick={() =>

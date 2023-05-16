@@ -1,16 +1,14 @@
 import { Button, Input } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
 
 const SendPicture = () => {
   const fileInputRef = useRef();
-  const { conversationId } = useParams();
   const urlRef = useRef();
-  const {messages,setMessages,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
+  const {messages,setMessages,conversationId,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
   const {currentUser}=useContext(currentUserContext);
 
   const storePicture=({currentTarget})=>{
@@ -31,7 +29,7 @@ const SendPicture = () => {
     await apiCall
       .post( "message",{
         sender:currentUser._id,
-        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        recipient:userB._id,
         content:urlRef.current,
         contentType:'image',
         conversationId: newConversation ? null : conversationId
@@ -39,13 +37,12 @@ const SendPicture = () => {
       .then(
         (res) => {
           setMessages([...messages,res.data]);
-          setSubmitting(false);
+          socket.emit('message sent',res.data,userB._id)
           },
           (err) => {
-          setSubmitting(false);
           console.log(err);
         }
-      );
+      ).finally(()=>setSubmitting(false));
   };
   return (
     <>

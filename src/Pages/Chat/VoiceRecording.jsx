@@ -2,8 +2,7 @@ import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import { useParams } from "react-router-dom";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
 
@@ -19,9 +18,8 @@ const SendVoice = () => {
     recordingTime,
   } = recorderControls;
   let newBlob = useRef(true);
-  const { conversationId } = useParams();
   const urlRef = useRef();
-  const {messages,setMessages,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
+  const {messages,conversationId,setMessages,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
   const {currentUser}=useContext(currentUserContext);
 
   const handleRecordingOn = () => {
@@ -53,7 +51,7 @@ const SendVoice = () => {
     await apiCall
       .post( "message",{
         sender:currentUser._id,
-        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        recipient:userB._id, 
         content:urlRef.current,
         contentType:'audio',
         conversationId: newConversation ? null : conversationId
@@ -61,13 +59,12 @@ const SendVoice = () => {
       .then(
         (res) => {
           setMessages([...messages,res.data]);
-          setSubmitting(false);
+          socket.emit('message sent',res.data,userB._id)
           },
           (err) => {
-          setSubmitting(false);
           console.log(err);
         }
-      );
+      ).finally(()=>setSubmitting(false));
   };
   
   return (

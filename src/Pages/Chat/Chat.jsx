@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, useToast } from "@chakra-ui/react";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ChatScroller from "./ChatScroller";
@@ -6,7 +6,6 @@ import ChatInput from "./ChatInput";
 import { Scroll } from "../../Styles/Theme";
 import { Loader } from "../../Controler/Routes";
 import { apiCall, currentUserContext } from "../../Controler/App";
-import { useSelector } from "react-redux";
 
 export const chatContext = createContext();
 
@@ -19,27 +18,36 @@ const Chat = () => {
   const [newConversation, setNewConversation] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [userB, setUserB] = useState();
-  let draft=useRef()
-  const chatReducer = useSelector(state=>state.chat);
+  const toast = useToast();
+  let draft=useRef();
+  const conversationId=useRef();
 
   const fetchMessages = async () => {
     await apiCall
       .get( "message/"+userId)
       .then(
         (res) => {
-          console.log(res.data);
-          if(res.data==null){
+          console.log(res.data)
+          if(res.data.messages==undefined){
           setNewConversation(true);
+          setUserB(res.data.user)
           }else {
-            setMessages(res.data.messages);
+            conversationId.current = res.data.messages._id
+            setMessages(res.data.messages.messages);
             setUserB(
-              res.data.members.filter((u) => u._id !== currentUser._id)[0]
+              res.data.messages.members.filter((u) => u._id !== currentUser._id)[0]
             );
           }
         },
         (err) => {
           console.log(err);
-          navigate(-1);
+          toast({
+            status:'error',
+            duration:5000,
+            isClosable:true,
+            title:'Error',
+            description:'Une erreur est survenue'
+          })
         }
         ).finally(()=>
         setLoading(false)
@@ -56,14 +64,15 @@ const Chat = () => {
       className="chat" paddingBottom={2}
       position="relative"
     >
-      <chatContext.Provider value={{ messages, setMessages, userB,newConversation,setNewConversation,submitting, setSubmitting,draft }}>
+      <chatContext.Provider value={{ messages, setMessages, userB,conversationId
+        ,newConversation,setNewConversation,submitting, setSubmitting,draft }}>
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
           <Button
             variant="float"
             className="bi-arrow-left"
             onClick={() => navigate(-1)}
           ></Button>
-          <Button>{userB?.name}</Button>
+          <Button>{userB?.name} &nbsp; <Flex fontStyle='italic' fontWeight='normal'>{userB?.job}</Flex></Button>
         </Flex>
         {loading ? (
           <Loader />

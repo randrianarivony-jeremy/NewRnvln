@@ -1,16 +1,14 @@
 import { Box, Button, Flex, HStack, Image, Stack } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import WebCam from "react-webcam";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
 
 const TakePicture = () => {
   const [camera, setCamera] = useState(false);
-  const { conversationId } = useParams();
-  const {messages,setMessages,userB,newConversation,setNewConversation, setSubmitting,draft}=useContext(chatContext);
+  const {messages,conversationId,setMessages,userB,newConversation,setNewConversation, setSubmitting,draft}=useContext(chatContext);
   const {currentUser}=useContext(currentUserContext);
   const [cameraReady, setCameraReady] = useState(false);
   const [imagePreview, setImagePreview] = useState(false);
@@ -44,7 +42,7 @@ const TakePicture = () => {
     await apiCall
       .post( "message",{
         sender:currentUser._id,
-        recipient:newConversation ? conversationId : userB._id, //this conversationId from params would be the userId
+        recipient:userB._id,
         content:urlRef.current,
         contentType:'image',
         conversationId: newConversation ? null : conversationId
@@ -52,13 +50,12 @@ const TakePicture = () => {
       .then(
         (res) => {
           setMessages([...messages,res.data]);
-          setSubmitting(false);
+          socket.emit('message sent',res.data,userB._id)
           },
           (err) => {
-          setSubmitting(false);
           console.log(err);
         }
-      );
+      ).finally(()=>setSubmitting(false));
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Badge, Button, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -30,7 +30,9 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-          <Flex className={isActive ? "bi-bell-fill" : 'bi-bell'} fontSize='xl'></Flex>
+          <Flex position='relative' className={isActive ? "bi-bell-fill" : 'bi-bell'} fontSize='xl'>    
+          <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>5</Badge>
+          </Flex>
           <Text fontSize={12}>Notification</Text>
         </Button>)}
       </NavLink>
@@ -56,7 +58,9 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-          <Flex className={isActive ? "bi-chat-left-fill" : 'bi-chat-left'} fontSize='xl'></Flex>
+          <Flex position='relative' className={isActive ? "bi-chat-left-fill" : 'bi-chat-left'} fontSize='xl'>
+          <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>5</Badge>
+          </Flex>
           <Text fontSize={12}>Message</Text>
         </Button>)}
       </NavLink>

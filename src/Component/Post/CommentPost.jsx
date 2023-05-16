@@ -76,7 +76,7 @@ const CommentPost = ({ post }) => {
     <>
       <Button
         flexDir="column"
-        onClick={() => (post.comments.length > 0 ? openComments() : null)}
+        onClick={openComments}
         className="bi-chat"
         fontSize="xl"
         color={

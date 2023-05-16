@@ -13,7 +13,6 @@ import {
 import {
   faHeart,
   faComment,
-  faUsers,
   faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
 import Navigation from "../../Component/Navigation";
 import { apiCall, currentUserContext } from "../../Controler/App";
+import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
 
 const Notification = () => {
@@ -32,11 +32,12 @@ const Notification = () => {
   const notificationList = useRef();
   const emptyNotification = useRef(false);
   const toast = useToast();
+  const {setNewNotification}=useContext(socketContext);
 
   const fetchNotification = async () => {
     await apiCall
       .get(
-         "notification/" + currentUser._id
+         "notification"
       )
       .then(
         (res) => {
@@ -89,19 +90,6 @@ const Notification = () => {
             },
           ];
           break;
-        case "follow":
-          notifArray = [
-            ...notifArray,
-            {
-              text: "a commencé à vous suivre.",
-              name: elt.from.name,
-              picture: elt.from.picture,
-              length: currentUser.followers.length,
-              url: "/profile/"+elt.from._id,
-              icon: <FontAwesomeIcon icon={faUsers}></FontAwesomeIcon>,
-            },
-          ];
-          break;
         case "subscribe":
           notifArray = [
             ...notifArray,
@@ -139,6 +127,7 @@ const Notification = () => {
   };
 
   useEffect(() => {
+    setNewNotification(0);
     fetchNotification();
   }, []);
 

@@ -1,7 +1,7 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { likeDislike } from "../../Controler/Redux/thread.reducer";
 
 const LikePost = ({post}) => {
@@ -23,6 +23,7 @@ const LikePost = ({post}) => {
             )
             .then(
                 () => {
+                if (!liked){socket.emit('notification',post.id_user._id)}
                 dispatch(
                   likeDislike({
                     like: !liked,

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { apiCall, socket } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
+import { socketContext } from '../../Controler/Socketio/RealtimeSocketContext';
 import { Scroll } from '../../Styles/Theme';
 import ConversationCard from './ConversationCard';
 
 const MainConversation = () => {
     const navigate = useNavigate();
+    const {setNewMainMessage}=useContext(socketContext);
     const [conversation, setConversation] = useState([]);
     const [loading, setLoading] = useState(true);
   
@@ -23,6 +25,7 @@ const MainConversation = () => {
     };
   
     useEffect(() => {
+      setNewMainMessage(0);
       fetchConversation();
     }, []);
 
@@ -31,6 +34,7 @@ const MainConversation = () => {
           fetchConversation()
       })
     })
+
     return (
         <div>
             {loading ? (

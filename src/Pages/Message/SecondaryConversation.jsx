@@ -1,43 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react';
 import { Scroll } from "../../Styles/Theme";
 import { apiCall, socket } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
 import ConversationCard from './ConversationCard';
+import { socketContext } from '../../Controler/Socketio/RealtimeSocketContext';
 
 const SecondaryConversation = () => {
-    const navigate = useNavigate();
-    const [conversation, setConversation] = useState([]);
+    const {setNewSecondMessage}=useContext(socketContext);
+    const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(true);
   
-    const fetchConversation = async () => {
+    const fetchConversations = async () => {
       await apiCall.get("conversation/second").then(
         (res) => {
-          setConversation(res.data);
+          setConversations(res.data);
         },
         (err) => {
           console.log(err);
-          navigate(-1);
         }
       ).finally(()=>setLoading(false));
     };
   
     useEffect(() => {
-      fetchConversation();
+      setNewSecondMessage(0)
+      fetchConversations();
     }, []);
 
     useEffect(()=>{
       socket.on('new message',()=>{
-          fetchConversation()
+          fetchConversations()
       })
     })
+
     return (
         <>
             {loading ? (
           <Loader />
         ) : (
           <Scroll height="100%">
-            {conversation?.map((convers, key) => (
+            {conversations?.map((convers, key) => (
               <ConversationCard conversation={convers} key={key}/>
             ))}
           </Scroll>

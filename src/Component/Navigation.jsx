@@ -1,6 +1,7 @@
 import { Badge, Button, Flex, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { socketContext } from "../Controler/Socketio/RealtimeSocketContext";
 
 const Navigation = () => {
   const ctaBtnColor = {
@@ -8,6 +9,7 @@ const Navigation = () => {
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   };
+  const {newMainMessage,newNotification}=useContext(socketContext);
 
   return (
     <Flex width="100%">
@@ -31,7 +33,7 @@ const Navigation = () => {
       >
         {({isActive})=>(<Button flexDir="column">
           <Flex position='relative' className={isActive ? "bi-bell-fill" : 'bi-bell'} fontSize='xl'>    
-          <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>5</Badge>
+          {newNotification>0 && <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>{newNotification}</Badge>}
           </Flex>
           <Text fontSize={12}>Notification</Text>
         </Button>)}
@@ -59,7 +61,10 @@ const Navigation = () => {
       >
         {({isActive})=>(<Button flexDir="column">
           <Flex position='relative' className={isActive ? "bi-chat-left-fill" : 'bi-chat-left'} fontSize='xl'>
-          <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>5</Badge>
+          {newMainMessage>0 && 
+          <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>
+            {newMainMessage}
+            </Badge>}
           </Flex>
           <Text fontSize={12}>Message</Text>
         </Button>)}

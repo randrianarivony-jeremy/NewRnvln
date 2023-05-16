@@ -2,6 +2,7 @@ import { Box, Button, Flex, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
+import RealtimeSocketContext from "../../Controler/Socketio/RealtimeSocketContext";
 import ForYouPage from "./ForYouPage";
 import Menu from "./Menu";
 
@@ -12,7 +13,9 @@ const Home = () => {
     <Flex flexDir="column" spacing={0} className="home" height="100%">
         {/* <ForYouPage/> */}
         <Outlet/>
-      <Navigation />
+      <RealtimeSocketContext>
+        <Navigation />
+        </RealtimeSocketContext>
 
       <Menu />
       <Button

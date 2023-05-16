@@ -32,9 +32,9 @@ const ChatInputs = ({sendResponse}) => {
       })
       .then(
         (res) => {
-          setMessages([...messages,res.data]);
+          setMessages([...messages,res.data.newMessage]);
           setNewConversation(false);
-          conversationId.current = res.data.conversationId;
+          conversationId.current = res.data.newMessage.conversationId;
           socket.emit('message sent',res.data,userB._id)
           },
           (err) => {

@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Flex,
   Stack,
@@ -8,12 +9,15 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import Navigation from "../../Component/Navigation";
+import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import MainConversation from "./MainConversation";
 import SecondaryConversation from "./SecondaryConversation";
 
 const Message = () => {
+  const {newMainMessage,newSecondMessage}=useContext(socketContext);
+
   return (
     <Stack height="100%" spacing={0}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
@@ -21,8 +25,12 @@ const Message = () => {
       </Flex>
       <Tabs isFitted height='100%' isLazy={true}>
         <TabList>
-          <Tab>Principal</Tab>
-          <Tab>Autres</Tab>
+          <Tab>Principal &nbsp;
+          {newMainMessage > 0 && <Badge bgColor='red'>{newMainMessage}</Badge>}
+          </Tab>
+          <Tab>Autres &nbsp;
+          {newSecondMessage>0 && <Badge bgColor='red'>{newSecondMessage}</Badge>}
+          </Tab>
         </TabList>
         <TabPanels>
           <TabPanel padding={0}><MainConversation/></TabPanel>

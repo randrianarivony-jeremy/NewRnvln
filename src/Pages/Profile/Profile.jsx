@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
-import { apiCall, currentUserContext, data } from "../../Controler/App";
+import { apiCall, currentUserContext } from "../../Controler/App";
 import { Scroll } from "../../Styles/Theme";
 import UserInterviews from "./Contents/UserInterviews";
 import UserArticles from "./Contents/UserArticles";
@@ -269,9 +269,7 @@ const Profile = () => {
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
                   <Flex wrap="wrap" justify="center">
-                    {data.map((elt, key) => (
-                      <Thumbs data={elt} key={key} />
-                    ))}
+                    EMPTY STATE
                   </Flex>
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>

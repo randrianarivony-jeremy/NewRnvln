@@ -57,8 +57,8 @@ const ConversationCard = ({conversation}) => {
                   </Stack>
                 </Flex>
                 <Stack align="center" spacing={0}>
-                  {conversation.newMessage.filter(elt=>elt.user==currentUser._id)[0].new>0 && 
-                  <Badge>{conversation.newMessage.filter(elt=>elt.user==currentUser._id)[0].new}</Badge>}
+                  {conversation.unseenMessage.filter(elt=>elt.user==currentUser._id)[0].new>0 && 
+                  <Badge>{conversation.unseenMessage.filter(elt=>elt.user==currentUser._id)[0].new}</Badge>}
                 </Stack>
               </ClickableFlex>
     );

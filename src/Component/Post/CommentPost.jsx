@@ -15,7 +15,7 @@ import {
 import ScrollableFeed from "react-scrollable-feed";
 import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import Comment from "./Comment";
 import UserLoader from "../Loaders/UserLoader";
@@ -45,6 +45,7 @@ const CommentPost = ({ post }) => {
       )
       .then(
         (res) => {
+          socket.emit('notification',post.id_user._id)
           dispatch(updateComment({ postId: post._id, data: res.data }));
           setSubmitting(false);
           inputRef.current.value = "";

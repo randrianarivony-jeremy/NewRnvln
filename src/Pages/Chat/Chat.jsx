@@ -27,7 +27,6 @@ const Chat = () => {
       .get( "message/"+userId)
       .then(
         (res) => {
-          console.log(res.data)
           if(res.data.messages==undefined){
           setNewConversation(true);
           setUserB(res.data.user)

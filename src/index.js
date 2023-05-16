@@ -26,5 +26,5 @@ root.render(
         <ToastContainer />
       </ChakraProvider>
     </Provider>
-   </StrictMode>
+  </StrictMode>
 );

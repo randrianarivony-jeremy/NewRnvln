@@ -35,8 +35,8 @@ const Article = () => {
         <Image src={post.content} alt="picture" height="100%" draggable={false} objectFit="cover" />
       ) : (
         <Flex align="center" justify="center" height="100%" width="100%">
-          {/* <ArticleText /> */}
-          <TextPost/>
+          <ArticleText />
+          {/* <TextPost/> */}
         </Flex>
       )}
     </>

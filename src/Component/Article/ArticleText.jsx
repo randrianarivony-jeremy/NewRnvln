@@ -1,4 +1,4 @@
-import { Box, Button, Flex, useColorMode } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, useColorMode } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { postContext } from "../Post/PostContainer";
@@ -53,6 +53,7 @@ const ArticleText = () => {
             {post.content}
           </Flex>
         ) : (
+          <Stack>
           <Flex
             ref={textContainer}
             justify="center"
@@ -99,6 +100,7 @@ const ArticleText = () => {
               </Button>
             )}
           </Flex>
+          </Stack>
         )}
       </SwiperSlide>
     </Swiper>

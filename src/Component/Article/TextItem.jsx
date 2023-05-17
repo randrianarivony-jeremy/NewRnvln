@@ -8,6 +8,7 @@ const TextItem = () => {
   const { post } = useContext(postContext);
   const {colorMode}=useColorMode();
   const textContainer = useRef();
+  const articleSlideRef = useRef();
   const [textOverflow, setTextOverflow] = useState(false);
 
   useEffect(() => {
@@ -21,15 +22,15 @@ const TextItem = () => {
       direction={"vertical"}
       slidesPerView={"auto"}
       freeMode={{enabled:true,momentum:false}}
-      mousewheel={true}
+      mousewheel={{enabled:true,forceToAxis:true}}
       modules={[FreeMode, Mousewheel]}
       className='article-swiper'
     >
-      <SwiperSlide className="article-slide">
-        <Stack marginX={3}>
+      <SwiperSlide className="article-slide" ref={articleSlideRef}>
+        <Stack>
           <Text textAlign="left"
-            ref={textContainer}
-            height={!textOverflow ? "100%" : "calc(100vh - 120px)"}
+            ref={textContainer} overflowY='hidden'
+            height={"calc(100vh - 120px)"}
           mixBlendMode="hard-light"
           _after={textOverflow && {
               position: "absolute",
@@ -43,8 +44,6 @@ const TextItem = () => {
               pointerEvents: "none",
             }
           }>
-            {post.content}
-            {post.content}
             {post.content}
             {post.content}
             {post.content}

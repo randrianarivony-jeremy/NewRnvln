@@ -96,7 +96,7 @@ const AskQuestion = () => {
       <form onSubmit={handleSubmit}>
         <Textarea
           bg={textareaBg}
-          rows={1}
+          rows={1} maxLength={320}
           textAlign="center"
           borderColor="transparent"
           ref={responseRef}

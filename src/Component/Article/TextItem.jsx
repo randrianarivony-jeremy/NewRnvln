@@ -53,7 +53,7 @@ const TextItem = () => {
             justify="center"
             align={"center"}
             className="tex"
-            height="70vh"
+            height="60vh"
             marginX={3}
           >
             {post.content}
@@ -84,12 +84,7 @@ const TextItem = () => {
                 }
               }
             >
-              h{post.content}
-              {/* {post.content}
               {post.content}
-              {post.content}
-              {post.content}
-              {post.content} */}
             </Text>
             {textOverflow && (
               <Button

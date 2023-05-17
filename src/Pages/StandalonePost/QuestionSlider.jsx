@@ -1,4 +1,4 @@
-import { Avatar, HStack, Image } from "@chakra-ui/react";
+import { Avatar, HStack, Image, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { Autoplay, FreeMode } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,9 +8,10 @@ const QuestionSlider = ({ question }) => {
   // slider transition speed 
   //counting word number inside the question, divide by two supposed user reads 2 words per second
   const speed = question.data.split(' ').length/2*1000;
+  const {colorMode}=useColorMode();
 
   return (
-    <HStack width="100%" bgColor={'blackAlpha.500'} height={12} paddingX={2}>
+    <HStack width="100%" bgColor={colorMode==='light' ? 'whiteAlpha.500' : 'blackAlpha.500'} height={12} paddingX={2}>
       {question.interviewer.picture ? (
             <Image
               src={question.interviewer.picture}

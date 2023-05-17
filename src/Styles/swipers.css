@@ -6,6 +6,8 @@
 .question-slide{
       width: fit-content;
       white-space: nowrap;
+      font-weight: 700;
+      font-size: large;
   }
 
 .question-swiper .swiper-wrapper{

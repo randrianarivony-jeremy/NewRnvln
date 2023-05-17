@@ -8,23 +8,25 @@ const TextItem = () => {
   const { post } = useContext(postContext);
   const { colorMode } = useColorMode();
   const textContainer = useRef();
-  const articleSlideRef = useRef();
+  const articleSwiperRef = useRef();
   const [textOverflow, setTextOverflow] = useState(false);
+  const [expand, setExpand] = useState(false);
 
   useEffect(() => {
-    if (
-      textContainer.current.clientHeight < textContainer.current.scrollHeight
-    ) {
+    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
       setTextOverflow(true);
     } else setTextOverflow(false);
-  }, []);
+    articleSwiperRef.current.swiper.update();
+  }, [expand]);
 
   return (
     <Swiper
+    ref={articleSwiperRef}
       direction={"vertical"}
       slidesPerView={"auto"}
       freeMode={{ enabled: true, momentum: false }}
       mousewheel={true}
+      grabCursor={true}
       modules={[FreeMode, Mousewheel]}
       className="article-swiper"
     >
@@ -32,16 +34,16 @@ const TextItem = () => {
         <Stack>
           <Text
             textAlign="left"
-            height={"calc(100vh - 120px)"}
-            ref={textContainer}
+            height={expand ? '100%' : "calc(100vh - 120px)"}
+            ref={textContainer} overflowY='hidden'
             mixBlendMode="hard-light"
             _after={{
               position: "absolute",
               bottom: 0,
               left: 0,
               bg:colorMode === "dark"
-                  ? "linear-gradient(transparent 50%,#1a202c 90%)"
-                  : "linear-gradient(transparent 50%,white 90%)",
+                  ? "linear-gradient(transparent 50%,#1a202c 100%)"
+                  : "linear-gradient(transparent 50%,white 100%)",
               content: "''",
               width: "100%",
               height: "100%",
@@ -64,6 +66,7 @@ const TextItem = () => {
                 left="50%"
                 transform="auto"
                 translateX="-50%"
+                onClick={()=>setExpand(true)}
               >
                 Suite
               </Button>

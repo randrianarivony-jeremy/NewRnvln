@@ -12,12 +12,12 @@ const TextItem = () => {
   const [textOverflow, setTextOverflow] = useState(false);
   const [expand, setExpand] = useState(false);
 
-  useEffect(() => {
-    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
-      setTextOverflow(true);
-    } else setTextOverflow(false);
-    articleSwiperRef.current.swiper.update();
-  }, [expand]);
+//   useEffect(() => {
+//     if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
+//       setTextOverflow(true);
+//     } else setTextOverflow(false);
+//     articleSwiperRef.current.swiper.update();
+//   }, [expand]);
 
   return (
     <Swiper
@@ -34,7 +34,7 @@ const TextItem = () => {
         <Stack>
           <Text
             textAlign="left"
-            height={expand ? '100%' : "calc(100vh - 120px)"}
+            height={textOverflow ? '100%' : "calc(100vh - 120px)"}
             ref={textContainer} overflowY='hidden'
             mixBlendMode="hard-light"
             _after={{
@@ -58,7 +58,7 @@ const TextItem = () => {
             {post.content}
             {post.content} */}
           </Text>
-          {textOverflow && (
+          {/* {textOverflow && ( */}
               <Button
                 position="absolute"
                 zIndex={1}
@@ -66,11 +66,11 @@ const TextItem = () => {
                 left="50%"
                 transform="auto"
                 translateX="-50%"
-                onClick={()=>setExpand(true)}
+                onClick={()=>setTextOverflow(!textOverflow)}
               >
                 Suite
               </Button>
-            )}
+            {/* )} */}
         </Stack>
       </SwiperSlide>
     </Swiper>

@@ -30,7 +30,7 @@ const TextItem = () => {
         <Stack>
           <Text textAlign="left"
             ref={textContainer} overflowY='hidden'
-            height={"calc(100vh - 120px)"}
+            // height={"calc(100vh - 120px)"}
           mixBlendMode="hard-light"
           _after={{
               position: "absolute",
@@ -46,11 +46,15 @@ const TextItem = () => {
           }>
             {post.content}
             {post.content}
+            {/* {post.content}
             {post.content}
             {post.content}
             {post.content}
+            {post.content}
+            {post.content}
+            {post.content} */}
             </Text>
-            {/* {textOverflow && ( */}
+            {textOverflow && (
               <Button
                 position="absolute"
                 zIndex={1}
@@ -62,7 +66,7 @@ const TextItem = () => {
               >
                 Suite
               </Button>
-            {/* )} */}
+            )}
         </Stack>
       </SwiperSlide>
     </Swiper>

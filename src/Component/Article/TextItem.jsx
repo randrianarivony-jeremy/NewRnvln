@@ -23,6 +23,7 @@ const TextItem = () => {
     <Swiper
     ref={articleSwiperRef}
       direction={"vertical"}
+      touchReleaseOnEdges={true}
       slidesPerView={"auto"}
       freeMode={{ enabled: true, momentum: false }}
       mousewheel={true}
@@ -51,7 +52,7 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >g
+          >h
             {post.content}
             {/* {post.content}
             {post.content}

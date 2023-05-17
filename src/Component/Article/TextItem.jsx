@@ -29,9 +29,10 @@ const TextItem = () => {
       className="article-swiper"
     >
       <SwiperSlide className="article-slide">
-        <Stack marginX={3}>
+        <Stack>
           <Text
             textAlign="left"
+            height={"calc(100vh - 120px)"}
             ref={textContainer}
             mixBlendMode="hard-light"
             _after={{
@@ -55,6 +56,18 @@ const TextItem = () => {
             {post.content}
             {post.content} */}
           </Text>
+          {textOverflow && (
+              <Button
+                position="absolute"
+                zIndex={1}
+                bottom={0}
+                left="50%"
+                transform="auto"
+                translateX="-50%"
+              >
+                Suite
+              </Button>
+            )}
         </Stack>
       </SwiperSlide>
     </Swiper>

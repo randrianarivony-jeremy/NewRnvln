@@ -18,6 +18,10 @@
     width: 100%;
 }
 .article-slide{
+    height: 100%;
     max-width: 100%;
     padding: 0px 8px;
+  }
+.short-slide{
+    margin: auto;
   }

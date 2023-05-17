@@ -1,27 +1,42 @@
-import { Button, Stack, Text, useColorMode } from "@chakra-ui/react";
+import { Button, Flex, Stack, Text, useColorMode } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FreeMode, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { postContext } from "../Post/PostContainer";
+import textFit from "textfit";
 
 const TextItem = () => {
   const { post } = useContext(postContext);
   const { colorMode } = useColorMode();
   const textContainer = useRef();
+  const shortContainer = useRef();
   const articleSwiperRef = useRef();
   const [expand, setExpand] = useState(false);
   const [textOverflow, setTextOverflow] = useState(false);
 
   useEffect(() => {
-    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
-      setTextOverflow(true);
-    } else setTextOverflow(false);
-    articleSwiperRef.current.swiper.update();
+    if (post.contentType === "short")
+      textFit(shortContainer.current, {
+        minFontSize: 16,
+        maxFontSize: 25,
+        reProcess: false,
+      });
+  }, []);
+
+  useEffect(() => {
+    if (post.contentType !== "short") {
+      if (
+        textContainer.current.clientHeight < textContainer.current.scrollHeight
+      ) {
+        setTextOverflow(true);
+      } else setTextOverflow(false);
+      articleSwiperRef.current.swiper.update();
+    }
   }, [expand]);
 
   return (
     <Swiper
-    ref={articleSwiperRef}
+      ref={articleSwiperRef}
       direction={"vertical"}
       touchReleaseOnEdges={true}
       slidesPerView={"auto"}
@@ -31,37 +46,52 @@ const TextItem = () => {
       modules={[FreeMode, Mousewheel]}
       className="article-swiper"
     >
-      <SwiperSlide className="article-slide">
-        <Stack>
-          <Text
-            textAlign="left"
-            onClick={()=>setExpand(false)}
-            height={expand ? '100%' : "calc(100vh - 120px)"}
-            ref={textContainer}
-            mixBlendMode="hard-light"
-            _after={
+      {post.contentType === "short" ? (
+        <SwiperSlide className="short-slide">
+          <Flex
+            ref={shortContainer}
+            justify="center"
+            align={"center"}
+            className="tex"
+            height="70vh"
+            marginX={3}
+          >
+            {post.content}
+          </Flex>
+        </SwiperSlide>
+      ) : (
+        <SwiperSlide className="article-slide">
+          <Stack>
+            <Text
+              textAlign="left"
+              onClick={() => setExpand(false)}
+              height={expand ? "100%" : "calc(100vh - 120px)"}
+              ref={textContainer}
+              mixBlendMode="hard-light"
+              _after={
                 textOverflow && {
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              bg:colorMode === "dark"
-                  ? "linear-gradient(transparent 50%,#1a202c 100%)"
-                  : "linear-gradient(transparent 50%,white 100%)",
-              content: "''",
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
-            }}
-          >h
-            {post.content}
-            {/* {post.content}
-            {post.content}
-            {post.content}
-            {post.content}
-            {post.content}
-            {post.content} */}
-          </Text>
-          {textOverflow && (
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  bg:
+                    colorMode === "dark"
+                      ? "linear-gradient(transparent 50%,#1a202c 100%)"
+                      : "linear-gradient(transparent 50%,white 100%)",
+                  content: "''",
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "none",
+                }
+              }
+            >
+              h{post.content}
+              {/* {post.content}
+              {post.content}
+              {post.content}
+              {post.content}
+              {post.content} */}
+            </Text>
+            {textOverflow && (
               <Button
                 position="absolute"
                 zIndex={1}
@@ -69,13 +99,14 @@ const TextItem = () => {
                 left="50%"
                 transform="auto"
                 translateX="-50%"
-                onClick={()=>setExpand(true)}
+                onClick={() => setExpand(true)}
               >
                 Suite
               </Button>
             )}
-        </Stack>
-      </SwiperSlide>
+          </Stack>
+        </SwiperSlide>
+      )}
     </Swiper>
   );
 };

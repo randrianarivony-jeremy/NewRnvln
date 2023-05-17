@@ -20,7 +20,7 @@ const PublishText = () => {
         content: value,
         bg:textareaBg,public:publicConfidentiality.current,
         id_user: currentUser._id,
-        contentType: "string",
+        contentType: value.length<320 ? "short" : "text",
       })
       .then(() => {
         setSubmitting(false);
@@ -66,7 +66,7 @@ const PublishText = () => {
             setValue={setValue}
             textareaBg={textareaBg}
           />
-          <ButtonGroup
+          {value.length<320 && <ButtonGroup
             variant="float"
             align="center"
             justifyContent="space-around"
@@ -111,7 +111,7 @@ const PublishText = () => {
               rounded="full"
               onClick={() => setTextareaBg("gradient5")}
             ></Button>
-          </ButtonGroup>
+          </ButtonGroup>}
           <HStack>
           <Text whiteSpace="nowrap">Confidentialité :</Text>
           <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
@@ -120,7 +120,6 @@ const PublishText = () => {
           </Select>
         </HStack>
         </Stack>
-
         <HStack>
           <Button width="100%" onClick={() => navigate(-1)}>
             Annuler

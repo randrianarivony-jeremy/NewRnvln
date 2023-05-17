@@ -66,7 +66,7 @@ const ArticleText = () => {
             _after={
               textOverflow && {
                 position: "absolute",
-                top: 0,
+                bottom: 0,
                 left: 0,
                 bg: colorMode==='dark' ? "linear-gradient(transparent 50%,#1a202c 90%)" :
                 "linear-gradient(transparent 50%,white 90%)",

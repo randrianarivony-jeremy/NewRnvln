@@ -20,11 +20,11 @@ const TextPost = () => {
     >
       <SwiperSlide>
         <Stack marginX={3} marginTop={150}>
-          {post.docModel === "interview" && (
+          {/* {post.docModel === "interview" && (
             <Box position="absolute" zIndex={1} top={10} left={0} marginX={3}>
               <Question question={post.question} />
             </Box>
-          )}
+          )} */}
           <Text textAlign="left">{post.content}</Text>
           <Text textAlign="left" fontSize="sm" fontStyle="italic">
             15k likes <span className="bi-heart"></span>

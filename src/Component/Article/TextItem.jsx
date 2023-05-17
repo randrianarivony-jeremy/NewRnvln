@@ -11,11 +11,11 @@ const TextItem = () => {
   const articleSlideRef = useRef();
   const [textOverflow, setTextOverflow] = useState(false);
 
-//   useEffect(() => {
-//     if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
-//       setTextOverflow(true);
-//     } else setTextOverflow(false);
-//   }, []);
+  useEffect(() => {
+    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
+      setTextOverflow(true);
+    } else setTextOverflow(false);
+  }, []);
 
   return (
     <Swiper
@@ -24,9 +24,11 @@ const TextItem = () => {
       freeMode={{enabled:true,momentum:false}}
       mousewheel={{enabled:true,forceToAxis:true}}
       modules={[FreeMode, Mousewheel]}
-      className='article-swiper'
+    //   className='article-swiper'
     >
-      <SwiperSlide className="article-slide" ref={articleSlideRef}>
+      <SwiperSlide
+        // className="article-slide" 
+      ref={articleSlideRef}>
         <Stack>
           <Text textAlign="left"
             ref={textContainer} overflowY='hidden'
@@ -45,14 +47,14 @@ const TextItem = () => {
             }
           }>
             {post.content}
-            {/* {post.content}
             {post.content}
             {post.content}
             {post.content}
             {post.content}
             {post.content}
             {post.content}
-            {post.content} */}
+            {post.content}
+            {post.content}
             </Text>
             {textOverflow && (
               <Button

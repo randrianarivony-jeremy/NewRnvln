@@ -54,19 +54,19 @@ const TextItem = () => {
             {post.content}
             {post.content} */}
             </Text>
-            {/* {textOverflow && ( */}
+            {/* {textOverflow && (
               <Button
-                // position="absolute"
-                // zIndex={1}
-                // bottom={0}
-                // left="50%"
-                // transform="auto"
-                // translateX="-50%"
+                position="absolute"
+                zIndex={1}
+                bottom={0}
+                left="50%"
+                transform="auto"
+                translateX="-50%"
                 onClick={() => setTextOverflow(false)}
               >
                 Suite
               </Button>
-            {/* )} */}
+            )} */}
         </Stack>
       </SwiperSlide>
     </Swiper>

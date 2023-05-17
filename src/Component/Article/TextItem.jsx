@@ -34,7 +34,7 @@ const TextItem = () => {
           <Text
             textAlign="left"
             height={"calc(100vh - 120px)"}
-            ref={textContainer} overflowY='hidden'
+            ref={textContainer}
             mixBlendMode="hard-light"
             _after={{
               position: "absolute",
@@ -48,7 +48,7 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >d
+          >e
             {post.content}
             {post.content}
             {/* {post.content}

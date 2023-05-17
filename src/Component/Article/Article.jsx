@@ -4,6 +4,7 @@ import AudioDisplay from "../AudioDisplay";
 import { postContext } from "../Post/PostContainer";
 import TextPost from "../Post/TextPost";
 import ArticleText from "./ArticleText";
+import TextItem from "./TextItem";
 
 const Article = () => {
   const videoRef = useRef();
@@ -36,7 +37,8 @@ const Article = () => {
       ) : (
         <Flex align="center" justify="center" height="100%" width="100%">
           {/* <ArticleText /> */}
-          <TextPost/>
+          {/* <TextPost/> */}
+          <TextItem/>
         </Flex>
       )}
     </>

@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Input, Stack, Text, useColorMode } from "@chakra-ui/react";
+import { Box, Button, HStack, Input, Stack, Text } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { FreeMode, Mousewheel, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,7 +9,6 @@ import "./style.css";
 
 const TextPost = () => {
   const { post } = useContext(postContext);
-  const {colorMode}=useColorMode();
   return (
     <Swiper
       direction={"vertical"}
@@ -21,23 +20,7 @@ const TextPost = () => {
     >
       <SwiperSlide>
         <Stack marginX={3}>
-          <Text textAlign="left"
-          mixBlendMode="hard-light"
-          _after={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              bg: colorMode==='dark' ? "linear-gradient(transparent 50%,#1a202c 90%)" :
-              "linear-gradient(transparent 50%,white 90%)",
-              content: "''",
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
-            }
-          }>
-            {post.content}
-            {post.content}
-          </Text>
+          <Text textAlign="left">{post.content}</Text>
           <Text textAlign="left" fontSize="sm" fontStyle="italic">
             15k likes <span className="bi-heart"></span>
           </Text>

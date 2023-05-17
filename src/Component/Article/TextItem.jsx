@@ -16,7 +16,7 @@ const TextItem = () => {
     if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
       setTextOverflow(true);
     } else setTextOverflow(false);
-    if (expand) articleSwiperRef.current.swiper.update();
+    // if (expand) articleSwiperRef.current.swiper.update();
   }, [expand]);
 
   return (
@@ -49,7 +49,7 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >a
+          >b
             {post.content}
             {post.content}
             {/* {post.content}
@@ -66,7 +66,7 @@ const TextItem = () => {
                 left="50%"
                 transform="auto"
                 translateX="-50%"
-                onClick={()=>setTextOverflow(!textOverflow)}
+                // onClick={()=>setTextOverflow(!textOverflow)}
               >
                 Suite
               </Button>

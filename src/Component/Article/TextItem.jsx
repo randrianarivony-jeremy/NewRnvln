@@ -9,6 +9,7 @@ const TextItem = () => {
   const { colorMode } = useColorMode();
   const textContainer = useRef();
   const articleSwiperRef = useRef();
+  const [expand, setExpand] = useState(false);
   const [textOverflow, setTextOverflow] = useState(false);
 
   useEffect(() => {

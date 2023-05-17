@@ -17,11 +17,11 @@ const TextItem = () => {
       setTextOverflow(true);
     } else setTextOverflow(false);
     // if (expand) articleSwiperRef.current.swiper.update();
-  }, [expand]);
+  }, []);
 
   return (
     <Swiper
-    ref={articleSwiperRef}
+    // ref={articleSwiperRef}
       direction={"vertical"}
       slidesPerView={"auto"}
       freeMode={{ enabled: true, momentum: false }}
@@ -49,7 +49,7 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >b
+          >c
             {post.content}
             {post.content}
             {/* {post.content}

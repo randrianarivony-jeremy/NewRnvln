@@ -12,12 +12,12 @@ const TextItem = () => {
   const [textOverflow, setTextOverflow] = useState(false);
   const [expand, setExpand] = useState(false);
 
-//   useEffect(() => {
-//     if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
-//       setTextOverflow(true);
-//     } else setTextOverflow(false);
-//     articleSwiperRef.current.swiper.update();
-//   }, [expand]);
+  useEffect(() => {
+    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
+      setTextOverflow(true);
+    } else setTextOverflow(false);
+    if (expand) articleSwiperRef.current.swiper.update();
+  }, [expand]);
 
   return (
     <Swiper
@@ -34,7 +34,7 @@ const TextItem = () => {
         <Stack>
           <Text
             textAlign="left"
-            height={textOverflow ? '100%' : "calc(100vh - 120px)"}
+            height={"calc(100vh - 120px)"}
             ref={textContainer} overflowY='hidden'
             mixBlendMode="hard-light"
             _after={{
@@ -49,7 +49,7 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >
+          >a
             {post.content}
             {post.content}
             {/* {post.content}

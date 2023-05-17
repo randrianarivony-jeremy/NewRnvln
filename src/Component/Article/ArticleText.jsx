@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { postContext } from "../Post/PostContainer";
 import textFit from "textfit";
-import { FreeMode } from "swiper";
+import { FreeMode, Mousewheel } from "swiper";
 
 const ArticleText = () => {
   const { post } = useContext(postContext);
@@ -31,8 +31,9 @@ const ArticleText = () => {
   return (
     <Swiper
       ref={articleSwiperRef}
-      modules={[FreeMode]}
+      modules={[FreeMode,Mousewheel]}
       freeMode={{ enabled: true, momentum: false }}
+      mousewheel={true}
       className="article-swiper"
       slidesPerView="auto"
       direction="vertical"
@@ -58,7 +59,7 @@ const ArticleText = () => {
             textAlign="left"
             align={textOverflow ? "flex-start" : "center"}
             className="tex"
-             onClick={()=>expand && setExpand(false)}
+            //  onClick={()=>expand && setExpand(false)}
             height={expand ? "100%" : "calc(100vh - 120px)"}
             overflowY="hidden"
             mixBlendMode="hard-light"

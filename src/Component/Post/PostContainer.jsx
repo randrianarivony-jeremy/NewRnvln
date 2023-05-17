@@ -12,9 +12,9 @@ const PostContainer = ({post}) => {
 
     return (
         <postContext.Provider value={{post,textOverflow,setTextOverflow,postSwiper}}>
-            {!textOverflow ? (
+            {/* {!textOverflow ? ( */}
             <Post/>
-          ) : (
+          {/* ) : (
             <Swiper ref={postSwiper}
               direction="horizontal" mousewheel={true}
               modules={[Pagination,Mousewheel]}
@@ -29,7 +29,7 @@ const PostContainer = ({post}) => {
                 <TextPost/>
               </SwiperSlide>
             </Swiper>
-          )}
+          )} */}
         </postContext.Provider>
     );
 };

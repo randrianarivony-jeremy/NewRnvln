@@ -5,10 +5,11 @@ import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
-import Question from "../../Pages/Question/Question";
 import { postContext } from "./PostContainer";
 import { ClickableFlex } from "../../Styles/Theme";
 import { currentUserContext } from "../../Controler/App";
+import QuestionSlider from "../../Pages/StandalonePost/QuestionSlider";
+import Article from "../Article/Article";
 
 const Post = () => {
   const [expandBtn, setExpandBtn] = useState(true);
@@ -28,11 +29,11 @@ const Post = () => {
   return (
     <>
       <Flex height="100%" className="post" alignItems="center" justify="center">
-        <DataDisplay data={post} />
+        {post.type==='article' ? <Article/> : <DataDisplay data={post} />}
       </Flex>
 
-      {post.type==='interview' && <Box position="absolute" textAlign='left' zIndex={1} top={10} left={0} marginX={3}>
-        <Question question={post.question} />
+      {post.type==='interview' && <Box position="absolute" textAlign='left' zIndex={1} top={10} left={0}>
+        <QuestionSlider question={post.question}/>
       </Box>}
       
       {/* I N F O  */}

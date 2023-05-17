@@ -1,6 +1,5 @@
 import { Box, Button, Flex, Text, useColorMode } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef } from "react";
-import Question from "../../Pages/Question/Question";
 import { postContext } from "./PostContainer";
 
 const InterviewText = () => {
@@ -17,7 +16,7 @@ const InterviewText = () => {
   }, []);
 
   return (
-    <Flex height="calc(100% - 150px)" width='100%' align='center' justify='center'>
+    <Flex height="calc(100% - 100px)" width='100%' align='center' justify='center'>
       <Text
         position="relative"
         color={post.bg !== "transparent" && "black"}

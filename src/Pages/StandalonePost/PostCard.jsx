@@ -16,7 +16,7 @@ import RespondPost from "../../Component/Post/RespondPost";
 import { apiCall, currentUserContext } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
 import { ClickableFlex } from "../../Styles/Theme";
-import QuestionBubble from "./QuestionBubble";
+import QuestionSlider from "./QuestionSlider";
 
 const PostCard = () => {
   const { type, id } = useParams();
@@ -54,7 +54,7 @@ const PostCard = () => {
       {loading ? <Loader/> : <><Stack position="absolute" left={0} top={0}>
         <Button variant="float" className="bi-arrow-left" onClick={() => navigate(-1)} ></Button>
         {type === "interview" && (
-          <QuestionBubble question={post.question} />
+          <QuestionSlider question={post.question} />
         )}
       <Flex height="100%" className="post" alignItems="center" justify="center">
         <DataDisplay data={post} />

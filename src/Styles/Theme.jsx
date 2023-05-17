@@ -35,7 +35,8 @@ export  const theme = extendTheme({
         gradient3:
         "-webkit-linear-gradient(top, #3AE885 0%, white 100%)",
         gradient4:
-        "-webkit-linear-gradient(top, #AF4DFF 0%, white 100%)",
+        "-webkit-linear-gradient(top, #FFAE00 0%, #F9E866 100%)",
+        // "-webkit-linear-gradient(top, #AF4DFF 0%, white 100%)",
         gradient5:
         "-webkit-linear-gradient(top, #FF564D 0%, white 100%)",
 

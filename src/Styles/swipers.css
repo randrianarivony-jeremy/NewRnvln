@@ -1,0 +1,23 @@
+.question-swiper{
+    height: fit-content;
+    width: calc(100vw - 64px);
+    max-width: 356px; /*420px maxwidth - profilepic 40px - marginx 12px*2 - spacing 8px hstack */
+}
+.question-slide{
+      width: fit-content;
+      white-space: nowrap;
+  }
+
+.question-swiper .swiper-wrapper{
+    transition-timing-function: linear;
+  }
+
+
+.article-swiper{
+    height: calc(100% - 80px);
+    width: 100%;
+}
+.article-slide{
+    max-width: 100%;
+    padding: 0px 8px;
+  }

@@ -36,6 +36,7 @@
     "redux-devtools-extension": "^2.13.9",
     "socket.io-client": "^4.6.1",
     "swiper": "^9.2.0",
+    "textfit": "^2.4.0",
     "use-long-press": "^2.0.3",
     "validator": "^13.9.0",
     "wavesurfer.js": "^6.6.3",

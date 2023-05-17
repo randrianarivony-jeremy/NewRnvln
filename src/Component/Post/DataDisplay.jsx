@@ -22,7 +22,7 @@ const DataDisplay = ({ data }) => {
               <InterviewText/>
             </Flex>
           ) : (
-            <Flex align='center' bg={data.bg} height="100%" width="100%">
+            <Flex align='center' justify='center' height="100%" width="100%">
               <PublicationText/>
             </Flex>
           )}

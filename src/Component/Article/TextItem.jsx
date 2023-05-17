@@ -11,11 +11,11 @@ const TextItem = () => {
   const articleSlideRef = useRef();
   const [textOverflow, setTextOverflow] = useState(false);
 
-  useEffect(() => {
-    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
-      setTextOverflow(true);
-    } else setTextOverflow(false);
-  }, []);
+//   useEffect(() => {
+//     if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
+//       setTextOverflow(true);
+//     } else setTextOverflow(false);
+//   }, []);
 
   return (
     <Swiper
@@ -45,8 +45,8 @@ const TextItem = () => {
             }
           }>
             {post.content}
-            {post.content}
             {/* {post.content}
+            {post.content}
             {post.content}
             {post.content}
             {post.content}
@@ -54,7 +54,7 @@ const TextItem = () => {
             {post.content}
             {post.content} */}
             </Text>
-            {/* {textOverflow && (
+            {textOverflow && (
               <Button
                 position="absolute"
                 zIndex={1}
@@ -66,7 +66,7 @@ const TextItem = () => {
               >
                 Suite
               </Button>
-            )} */}
+            )}
         </Stack>
       </SwiperSlide>
     </Swiper>

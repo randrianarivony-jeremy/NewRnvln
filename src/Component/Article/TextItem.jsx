@@ -8,20 +8,19 @@ const TextItem = () => {
   const { post } = useContext(postContext);
   const { colorMode } = useColorMode();
   const textContainer = useRef();
-  const articleSwiperRef = useRef();
+  const articleSlideRef = useRef();
   const [textOverflow, setTextOverflow] = useState(false);
-  const [expand, setExpand] = useState(false);
 
   useEffect(() => {
-    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
+    if (
+      textContainer.current.clientHeight < textContainer.current.scrollHeight
+    ) {
       setTextOverflow(true);
     } else setTextOverflow(false);
-    // if (expand) articleSwiperRef.current.swiper.update();
   }, []);
 
   return (
     <Swiper
-    // ref={articleSwiperRef}
       direction={"vertical"}
       slidesPerView={"auto"}
       freeMode={{ enabled: true, momentum: false }}
@@ -49,7 +48,7 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >c
+          >d
             {post.content}
             {post.content}
             {/* {post.content}
@@ -58,7 +57,7 @@ const TextItem = () => {
             {post.content}
             {post.content} */}
           </Text>
-          {/* {textOverflow && ( */}
+          {textOverflow && (
               <Button
                 position="absolute"
                 zIndex={1}
@@ -66,11 +65,10 @@ const TextItem = () => {
                 left="50%"
                 transform="auto"
                 translateX="-50%"
-                // onClick={()=>setTextOverflow(!textOverflow)}
               >
                 Suite
               </Button>
-            {/* )} */}
+            )}
         </Stack>
       </SwiperSlide>
     </Swiper>

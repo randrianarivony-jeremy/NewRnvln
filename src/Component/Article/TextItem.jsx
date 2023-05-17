@@ -34,10 +34,12 @@ const TextItem = () => {
         <Stack>
           <Text
             textAlign="left"
+            onClick={()=>setExpand(false)}
             height={expand ? '100%' : "calc(100vh - 120px)"}
             ref={textContainer}
             mixBlendMode="hard-light"
-            _after={{
+            _after={
+                textOverflow && {
               position: "absolute",
               bottom: 0,
               left: 0,
@@ -49,10 +51,10 @@ const TextItem = () => {
               height: "100%",
               pointerEvents: "none",
             }}
-          >f
-            {post.content}
+          >g
             {post.content}
             {/* {post.content}
+            {post.content}
             {post.content}
             {post.content}
             {post.content}

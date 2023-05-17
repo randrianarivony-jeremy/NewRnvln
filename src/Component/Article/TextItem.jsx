@@ -8,19 +8,19 @@ const TextItem = () => {
   const { post } = useContext(postContext);
   const { colorMode } = useColorMode();
   const textContainer = useRef();
-  const articleSlideRef = useRef();
+  const articleSwiperRef = useRef();
   const [textOverflow, setTextOverflow] = useState(false);
 
   useEffect(() => {
-    if (
-      textContainer.current.clientHeight < textContainer.current.scrollHeight
-    ) {
+    if (textContainer.current.clientHeight < textContainer.current.scrollHeight) {
       setTextOverflow(true);
     } else setTextOverflow(false);
-  }, []);
+    articleSwiperRef.current.swiper.update();
+  }, [expand]);
 
   return (
     <Swiper
+    ref={articleSwiperRef}
       direction={"vertical"}
       slidesPerView={"auto"}
       freeMode={{ enabled: true, momentum: false }}
@@ -33,7 +33,7 @@ const TextItem = () => {
         <Stack>
           <Text
             textAlign="left"
-            height={"calc(100vh - 120px)"}
+            height={expand ? '100%' : "calc(100vh - 120px)"}
             ref={textContainer}
             mixBlendMode="hard-light"
             _after={{
@@ -65,6 +65,7 @@ const TextItem = () => {
                 left="50%"
                 transform="auto"
                 translateX="-50%"
+                onClick={()=>setExpand(true)}
               >
                 Suite
               </Button>

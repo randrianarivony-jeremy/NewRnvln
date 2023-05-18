@@ -41,7 +41,7 @@ const Routes = () => {
                 <Route path="/subscriptions_only" element={<Suspense fallback={<Loader/>}>{currentUser ? <SubscriptionOnly /> : <Login/>}</Suspense>} />
                 <Route path="/questions_only" element={<Suspense fallback={<Loader/>}>{currentUser ? <PostContainer /> : <Login/>}</Suspense>} />
                 </Route>
-                <Route path="/post/:type/:id" element={<Suspense fallback={<Loader/>}>{currentUser ? <PostCard /> : <Login/>}</Suspense>} />
+                <Route path="/post/:id" element={<Suspense fallback={<Loader/>}>{currentUser ? <PostCard /> : <Login/>}</Suspense>} />
                 <Route path="/login" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
                 <Route path="/message" element={<Suspense fallback={<Loader/>}>{currentUser ? <Message /> : <Login/>}</Suspense>} />
                 <Route path="/chat/:userId" element={<Suspense fallback={<Loader/>}>{currentUser ? <Chat /> : <Login/>}</Suspense>} />

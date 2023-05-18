@@ -7,7 +7,7 @@ import {
 } from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AudioDisplay from "../../../Component/Post/AudioDisplay";
+import AudioDisplay from "../../../Component/AudioDisplay";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
 import { optionContext } from "./Interview";

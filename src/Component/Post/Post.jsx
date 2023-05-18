@@ -9,7 +9,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
-import DataDisplay from "./DataDisplay";
 import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
@@ -27,23 +26,20 @@ import {
 import { IonIcon } from "@ionic/react";
 
 const Post = () => {
-  const [expandBtn, setExpandBtn] = useState(true);
   const [longDescription, setLongDescription] = useState(false);
   const navigate = useNavigate();
-  const { post } = useContext(postContext);
+  const { post,showReaction,setShowReaction,textOverflow } = useContext(postContext);
   const { currentUser } = useContext(currentUserContext);
   const { colorMode } = useColorMode();
 
   return (
     <>
       <Flex height="100%" className="post" alignItems="center" justify="center">
-        {post.type === "article" ? <Article /> : <DataDisplay data={post} />}
+        <Article/>
       </Flex>
-
+      
       {post.type === "interview" && (
-        <Stack position="absolute" bottom={2} left={0} zIndex={2}>
-          <QuestionSlider question={post.question} />
-          <Flex justify='center'>
+          <Flex position="absolute" bottom={2} left={0} zIndex={2} justify={textOverflow ? 'flex-start' : 'center'}>
           <Button
             marginLeft={3}
             variant="cta"
@@ -56,11 +52,10 @@ const Post = () => {
             Répondre
           </Button>
             </Flex>
-        </Stack>
       )}
 
-      {/* I N F O  */}
-      <Flex
+      {/* I N F O  F O R  M E D I A  T Y P E */}
+      {(post.contentType!=='short' && post.contentType!=='text') && <Flex
         position="absolute"
         left={0}
         top={10}
@@ -113,21 +108,35 @@ const Post = () => {
             {post.description}
           </Text>
         </Stack>
-      </Flex>
+      </Flex>}
+
+      {/* Q U E S T I O N  F O R  M E D I A  T Y P E */}
+      {(post.contentType!=='short' && post.contentType!=='text' && post.type==='interview') && <Box
+        position="absolute"
+        left={0}
+        bottom={14}
+        zIndex={2}
+      ><QuestionSlider/>
+      </Box>}
 
       {/* R E A C T I O N              */}
       <Stack position="absolute" right={0} bottom={0} align="center" zIndex={2}>
-        {expandBtn && (
+        {showReaction && (
           <>
-            {post.type === "interview" && (
-              <RespondPost questionId={post.question._id} />
-            )}
             <LikePost post={post} />
             <CommentPost post={post} />
+            {post.type === "interview" && (
+              <Button
+              flexDir="column"
+            >
+              <IonIcon icon={chatbubblesOutline} style={{fontSize:iconMd}}/>
+              <Text fontSize="xs">{post.question.interviews.length}</Text>
+            </Button>
+            )}
           </>
         )}
         <Button
-          onClick={() => setExpandBtn(!expandBtn)}
+          onClick={() => setShowReaction(!showReaction)}
           color={
             post.contentType === "string" &&
             post.bg !== "transparent" &&
@@ -135,7 +144,7 @@ const Post = () => {
           }
         >
           <IonIcon
-            icon={expandBtn ? chevronDown : caretUpOutline}
+            icon={showReaction ? chevronDown : caretUpOutline}
             style={{ fontSize: iconMd }}
           />
         </Button>

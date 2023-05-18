@@ -1,64 +1,119 @@
-import { Box, Button, Flex, Text, useColorMode } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef } from "react";
+import { Button, Flex, Stack, Text, useColorMode } from "@chakra-ui/react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { FreeMode, Mousewheel } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import textFit from "textfit";
 import { postContext } from "./PostContainer";
 
 const InterviewText = () => {
+  const { post, containerRef } = useContext(postContext);
+  const { colorMode } = useColorMode();
   const textContainer = useRef();
-  const {colorMode}=useColorMode();
-  const { textOverflow, setTextOverflow,postSwiper,post } = useContext(postContext);
+  const [height, setHeight] = useState("100%");
+  const shortContainer = useRef();
+  const articleSwiperRef = useRef();
+  const [expand, setExpand] = useState(false);
+  const [textOverflow, setTextOverflow] = useState(false);
 
   useEffect(() => {
-    if (
-      textContainer.current.clientHeight < textContainer.current.scrollHeight
-    ) {
-      setTextOverflow(true);
-    }
+    if (post.contentType === "short")
+      textFit(shortContainer.current, {
+        minFontSize: 16,
+        maxFontSize: 25,
+        reProcess: false,
+      });
+    else setHeight(containerRef.current.clientHeight - 160);
   }, []);
 
+  // useEffect(() => {
+  //   if (post.contentType !== "short")
+  //     textFit(textContainer.current, {
+  //       minFontSize: 16,
+  //       maxFontSize: 20,
+  //     });
+  // }, [height]);
+
+  useEffect(() => {
+    if (post.contentType !== "short") {
+      if (
+        textContainer.current.clientHeight < textContainer.current.scrollHeight
+      ) {
+        setTextOverflow(true);
+      } else setTextOverflow(false);
+      articleSwiperRef.current.swiper.update();
+    }
+  }, [expand,height]);
+
   return (
-    <Flex height="calc(100% - 100px)" width='100%' align='center' justify='center'>
-      <Text
-        position="relative"
-        color={post.bg !== "transparent" && "black"}
-        fontSize="xl"
-        ref={textContainer} height='fit-content'
-        maxH='100%'
-        width="100%"
-        marginX={3}
-        mixBlendMode="hard-light"
-        _after={
-          textOverflow && {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bg:
-              (colorMode === "dark" && post.bg==='transparent')
-                ? "linear-gradient(transparent 40%,#1a202c 80%)"
-                : "linear-gradient(transparent 40%,white 80%)",
-            content: "''",
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }
-        }
-      >
-        {post.content}
-        {textOverflow && (
-          <Button
-            position="absolute"
-            zIndex={1}
-            color="black"
-            bottom={8}
-            left="50%"
-            transform="auto"
-            translateX="-50%"
-            onClick={()=>postSwiper.current.swiper.slideNext()}
+    <Swiper
+      ref={articleSwiperRef}
+      direction={"vertical"}
+      touchReleaseOnEdges={true}
+      slidesPerView={"auto"}
+      freeMode={{ enabled: true, momentum: false }}
+      mousewheel={true}
+      grabCursor={true}
+      modules={[FreeMode, Mousewheel]}
+      className="article-swiper"
+    >
+      {post.contentType === "short" ? (
+        <SwiperSlide className="short-slide">
+          <Flex
+            ref={shortContainer}
+            justify="center"
+            // className="item"
+            height="100%" fontSize={'19px'}
+            marginX={3}
+            textAlign='center'
           >
-            Suite
-          </Button>
-        )}
-      </Text>
-    </Flex>
+            {post.content}
+          </Flex>
+        </SwiperSlide>
+      ) : (
+        <SwiperSlide className="text-slide">
+          <Stack 
+        marginX={3}>
+            <Text
+              textAlign="left"
+              onClick={() => setExpand(false)}
+              height={expand ? "100%" : height}
+              ref={textContainer}
+              mixBlendMode="hard-light"
+              _after={
+                textOverflow && {
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  bg:
+                    colorMode === "dark"
+                      ? "linear-gradient(transparent 50%,#1a202c 100%)"
+                      : "linear-gradient(transparent 50%,white 100%)",
+                  content: "''",
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "none",
+                }
+              }
+            >
+              {post.content}
+            </Text>
+            {textOverflow && (
+              <Button
+                position="absolute"
+                zIndex={1}
+                bottom={0}
+                left="50%"
+                transform="auto"
+                translateX="-50%"
+                onClick={() => setExpand(true)}
+              >
+                Suite
+              </Button>
+            )}
+          </Stack>
+        </SwiperSlide>
+      )}
+    </Swiper>
   );
 };
 

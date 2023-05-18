@@ -61,16 +61,18 @@ const TextItem = () => {
           <Flex
             ref={shortContainer}
             justify="center"
-            className="tex"
+            // className="item"
             height="100%"
             marginX={3}
+            textAlign='center'
           >
             {post.content}
           </Flex>
         </SwiperSlide>
       ) : (
         <SwiperSlide className="text-slide">
-          <Stack>
+          <Stack 
+        marginX={3}>
             <Text
               textAlign="left"
               onClick={() => setExpand(false)}

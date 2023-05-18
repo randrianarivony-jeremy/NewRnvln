@@ -1,7 +1,10 @@
-import { Button, Image } from "@chakra-ui/react";
+import { Button, Flex, Image } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AudioDisplay from "../AudioDisplay";
+import InterviewText from "../Post/InterviewText";
 import { postContext } from "../Post/PostContainer";
+import TextItem from "./TextItem";
+import TextPost from "./TextPost";
 
 const Article = () => {
   const videoRef = useRef();
@@ -22,16 +25,15 @@ const Article = () => {
               onClick={() => setIsPaused(!isPaused)}
             ></Button>
           )}
-          <video src={post.content} alt="video" ref={videoRef} loop
-            style={{ objectFit: "cover", height: "100%" }}
+          <video src={post.content} alt="video" ref={videoRef} loop style={{ objectFit: "cover", height: "100%" }}
             onClick={() => setIsPaused(!isPaused)}
           ></video>
         </>
       ) : post.contentType === "audio" ? (
         <AudioDisplay audio={post.content} />
-      ) : 
+      ) : post.contentType === "image" ? (
         <Image src={post.content} alt="picture" height="100%" draggable={false} objectFit="cover" />
-      }
+      ) : (<TextPost/>)}
     </>
   );
 };

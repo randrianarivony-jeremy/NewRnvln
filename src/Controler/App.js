@@ -51,9 +51,7 @@ function App() {
       const fetchData = async () => {
         setStep([...step,'fetchdata']);
         await apiCall.get("feeds")
-        // await apiCall.get("publication")
         .then((res) => {
-          console.log(res.data);
           setStep([...step,'fetchdata success']);
           if (res.data.length!==0){
             const payload = res.data.map(elt=>{

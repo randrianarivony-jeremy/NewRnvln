@@ -18,7 +18,7 @@ const store = configureStore({
 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
@@ -26,5 +26,5 @@ root.render(
         <ToastContainer />
       </ChakraProvider>
     </Provider>
-  </StrictMode>
+  // </StrictMode>
 );

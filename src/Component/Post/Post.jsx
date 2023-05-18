@@ -19,7 +19,11 @@ import { iconMd } from "../../Styles/Theme";
 import { currentUserContext } from "../../Controler/App";
 import QuestionSlider from "../../Pages/StandalonePost/QuestionSlider";
 import Article from "../Article/Article";
-import { caretUpOutline, chevronDown } from "ionicons/icons";
+import {
+  caretUpOutline,
+  chatbubblesOutline,
+  chevronDown,
+} from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
 
 const Post = () => {
@@ -37,9 +41,22 @@ const Post = () => {
       </Flex>
 
       {post.type === "interview" && (
-        <Box position="absolute" textAlign="left" zIndex={1} top={10} left={0}>
+        <Stack position="absolute" bottom={2} left={0} zIndex={2}>
           <QuestionSlider question={post.question} />
-        </Box>
+          <Flex justify='center'>
+          <Button
+            marginLeft={3}
+            variant="cta"
+            width="min-content"
+            leftIcon={
+              <IonIcon style={{ fontSize: "20px" }} icon={chatbubblesOutline} />
+            }
+            onClick={() => navigate("/interview/" + post.question._id)}
+            >
+            Répondre
+          </Button>
+            </Flex>
+        </Stack>
       )}
 
       {/* I N F O  */}
@@ -99,14 +116,7 @@ const Post = () => {
       </Flex>
 
       {/* R E A C T I O N              */}
-      <Stack
-        position="absolute"
-        right={0}
-        bottom={0}
-        align="center"
-        marginRight={1}
-        zIndex={2}
-      >
+      <Stack position="absolute" right={0} bottom={0} align="center" zIndex={2}>
         {expandBtn && (
           <>
             {post.type === "interview" && (

@@ -1,7 +1,10 @@
 import { Badge, Button, Flex, Text } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { addCircle, addCircleOutline, chatbox, chatboxOutline, home, homeOutline, notifications, notificationsOutline, person, personOutline } from "ionicons/icons";
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { socketContext } from "../Controler/Socketio/RealtimeSocketContext";
+import { iconMd, iconXl } from "../Styles/Theme";
 
 const Navigation = () => {
   const ctaBtnColor = {
@@ -20,7 +23,7 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-          <Flex className={isActive ? "bi-house-fill" : 'bi-house'} fontSize='xl'></Flex>
+          <IonIcon icon={isActive ? home : homeOutline} style={{fontSize:iconMd}}/>
           <Text fontSize={12}>Accueil</Text>
         </Button>)}
       </NavLink>
@@ -32,7 +35,8 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-          <Flex position='relative' className={isActive ? "bi-bell-fill" : 'bi-bell'} fontSize='xl'>    
+          <Flex position='relative'>  
+          <IonIcon icon={isActive ? notifications : notificationsOutline} style={{fontSize:iconMd}}/>  
           {newNotification>0 && <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>{newNotification}</Badge>}
           </Flex>
           <Text fontSize={12}>Notification</Text>
@@ -46,10 +50,7 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-        <Flex
-          className={isActive ? "bi-plus-square-fill" : 'bi-plus-square'}
-          fontSize='3xl'
-        ></Flex>
+          <IonIcon icon={isActive ? addCircle : addCircleOutline} style={{fontSize:iconXl}}/>
       </Button>)}
       </NavLink>
 
@@ -60,7 +61,8 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-          <Flex position='relative' className={isActive ? "bi-chat-left-fill" : 'bi-chat-left'} fontSize='xl'>
+          <Flex position='relative'>
+          <IonIcon icon={isActive ? chatbox : chatboxOutline} style={{fontSize:iconMd}}/>
           {newMainMessage>0 && 
           <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>
             {newMainMessage}
@@ -77,7 +79,7 @@ const Navigation = () => {
         }
       >
         {({isActive})=>(<Button flexDir="column">
-          <Flex className={isActive ? "bi-person-fill" : 'bi-person'} fontSize='xl'></Flex>
+        <IonIcon icon={isActive ? person : personOutline} style={{fontSize:iconMd}}/>
           <Text fontSize={12}>Profil</Text>
         </Button>)}
       </NavLink>

@@ -1,8 +1,7 @@
-import { Button, Flex, Image } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AudioDisplay from "../AudioDisplay";
 import { postContext } from "../Post/PostContainer";
-import TextItem from "./TextItem";
 
 const Article = () => {
   const videoRef = useRef();
@@ -30,13 +29,9 @@ const Article = () => {
         </>
       ) : post.contentType === "audio" ? (
         <AudioDisplay audio={post.content} />
-      ) : post.contentType === "image" ? (
+      ) : 
         <Image src={post.content} alt="picture" height="100%" draggable={false} objectFit="cover" />
-      ) : (
-        <Flex align="center" justify="center" height="100%" width="100%" bg={post.contentType==='short' && post.bg}>
-          <TextItem/>
-        </Flex>
-      )}
+      }
     </>
   );
 };

@@ -1,9 +1,11 @@
-import { Box, Button, Flex, Spinner } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { searchOutline } from "ionicons/icons";
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
 import RealtimeSocketContext from "../../Controler/Socketio/RealtimeSocketContext";
-import ForYouPage from "./ForYouPage";
+import { iconMd } from "../../Styles/Theme";
 import Menu from "./Menu";
 
 const Home = () => {
@@ -11,22 +13,22 @@ const Home = () => {
 
   return (
     <Flex flexDir="column" spacing={0} className="home" height="100%">
-        {/* <ForYouPage/> */}
-        <Outlet/>
+      <Outlet />
       <RealtimeSocketContext>
         <Navigation />
-        </RealtimeSocketContext>
+      </RealtimeSocketContext>
 
       <Menu />
       <Button
-        position="absolute"
-        className="bi-search"
         fontSize="xl"
         onClick={() => navigate("/search")}
+        position="absolute"
         right={0}
         top={0}
         zIndex={2}
-      ></Button>
+      >
+        <IonIcon icon={searchOutline} style={{fontSize:iconMd}}/>
+      </Button>
     </Flex>
   );
 };

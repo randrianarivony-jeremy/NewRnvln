@@ -1,7 +1,10 @@
 import {Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerHeader,DrawerOverlay,Flex,Stack,Text,useColorMode,useDisclosure,} from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { menuOutline } from "ionicons/icons";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
+import { iconMd } from "../../Styles/Theme";
 import Logout from "../Login/Logout";
 
 const Menu = () => {
@@ -13,7 +16,9 @@ const Menu = () => {
 
   return (
     <>
-      <Button className="bi-list" fontSize='xl' position='absolute' zIndex={2} onClick={onOpen}></Button>
+      <Button fontSize='xl' position='absolute' zIndex={2} onClick={onOpen}>
+      <IonIcon icon={menuOutline} style={{fontSize:iconMd}}/>
+      </Button>
       <Drawer onOpen={onOpen} isOpen={isOpen} placement="left"
         onClose={() => {
           onClose();

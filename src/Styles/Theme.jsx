@@ -115,3 +115,8 @@ export const Scroll = (BoxProps) => (
   overflowY="scroll" spacing={0}
   sx={{ "::-webkit-scrollbar": { display: "none" } }} {...BoxProps} />
 )
+
+export const iconSm='16px';
+export const iconMd='24px';
+export const iconLg='32px';
+export const iconXl='36px';

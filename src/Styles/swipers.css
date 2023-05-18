@@ -16,13 +16,12 @@
 
 
 .article-swiper{
-    height: calc(100% - 80px);
+    height: 100%;
     width: 100%;
 }
-.article-slide{
-    height: 100%;
+.text-slide{
+    height: fit-content;
     max-width: 100%;
-    padding: 0px 8px;
   }
 .short-slide{
     margin: auto;

@@ -6,9 +6,10 @@ import { postContext } from "../Post/PostContainer";
 import textFit from "textfit";
 
 const TextItem = () => {
-  const { post } = useContext(postContext);
+  const { post, containerRef } = useContext(postContext);
   const { colorMode } = useColorMode();
   const textContainer = useRef();
+  const [height, setHeight] = useState("100%");
   const shortContainer = useRef();
   const articleSwiperRef = useRef();
   const [expand, setExpand] = useState(false);
@@ -21,7 +22,16 @@ const TextItem = () => {
         maxFontSize: 25,
         reProcess: false,
       });
+    else setHeight(containerRef.current.clientHeight - 60);
   }, []);
+
+  useEffect(() => {
+    if (post.contentType !== "short")
+      textFit(textContainer.current, {
+        minFontSize: 16,
+        maxFontSize: 20,
+      });
+  }, [height]);
 
   useEffect(() => {
     if (post.contentType !== "short") {
@@ -32,7 +42,7 @@ const TextItem = () => {
       } else setTextOverflow(false);
       articleSwiperRef.current.swiper.update();
     }
-  }, [expand]);
+  }, [expand,height]);
 
   return (
     <Swiper
@@ -51,21 +61,20 @@ const TextItem = () => {
           <Flex
             ref={shortContainer}
             justify="center"
-            align={"center"}
             className="tex"
-            height="60vh"
+            height="100%"
             marginX={3}
           >
             {post.content}
           </Flex>
         </SwiperSlide>
       ) : (
-        <SwiperSlide className="article-slide">
+        <SwiperSlide className="text-slide">
           <Stack>
             <Text
               textAlign="left"
               onClick={() => setExpand(false)}
-              height={expand ? "100%" : "calc(100vh - 120px)"}
+              height={expand ? "100%" : height}
               ref={textContainer}
               mixBlendMode="hard-light"
               _after={

@@ -44,6 +44,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "firebase": "firebase emulators:start --import ./firebase-data --export-on-exit",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -67,7 +68,9 @@
     ]
   },
   "devDependencies": {
+    "@ionic/react": "^7.0.7",
     "bootstrap-icons": "^1.10.4",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "ionicons": "^7.1.0"
   }
 }

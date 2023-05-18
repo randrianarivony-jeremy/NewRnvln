@@ -1,8 +1,11 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { heart, heartOutline } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { likeDislike } from "../../Controler/Redux/thread.reducer";
+import { iconMd } from "../../Styles/Theme";
 
 const LikePost = ({post}) => {
   const { currentUser } = useContext(currentUserContext);
@@ -49,11 +52,12 @@ const LikePost = ({post}) => {
         "black"
       }
     >
-      <Flex
+      {/* <Flex
         className={liked ? "bi-heart-fill" : "bi-heart"}
         fontSize="xl"
         color={liked ? "red" : ""}
-      ></Flex>
+      ></Flex> */}
+      <IonIcon icon={liked ? heart : heartOutline} style={{fontSize:iconMd,color:liked && 'red'}}/>
       <Text fontSize="xs">{post.likers.length}</Text>
     </Button>
   );

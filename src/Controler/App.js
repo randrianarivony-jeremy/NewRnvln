@@ -50,11 +50,20 @@ function App() {
       
       const fetchData = async () => {
         setStep([...step,'fetchdata']);
-        await apiCall.get("publication")
+        await apiCall.get("feeds")
+        // await apiCall.get("publication")
         .then((res) => {
+          console.log(res.data);
           setStep([...step,'fetchdata success']);
           if (res.data.length!==0){
-            dispatch(addContentFeeds(res.data));
+            const payload = res.data.map(elt=>{
+              if (elt.type==='interview' || elt.type==='article') return elt;
+              else {
+                elt = {...elt,type:'question'}
+                return elt
+              }
+            })
+            dispatch(addContentFeeds(payload));
             dispatch(addPublication(res.data));
             dispatch(addInterview(res.data));
           }

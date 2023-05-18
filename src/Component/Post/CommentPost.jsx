@@ -19,6 +19,9 @@ import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { updateComment } from "../../Controler/Redux/thread.reducer";
 import Comment from "./Comment";
 import UserLoader from "../Loaders/UserLoader";
+import { IonIcon } from "@ionic/react";
+import { chatbubbleOutline } from "ionicons/icons";
+import { iconMd } from "../../Styles/Theme";
 
 const CommentPost = ({ post }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
@@ -78,12 +81,12 @@ const CommentPost = ({ post }) => {
       <Button
         flexDir="column"
         onClick={openComments}
-        className="bi-chat"
         fontSize="xl"
         color={
           post.contentType === "string" && post.bg !== "transparent" && "black"
         }
       >
+      <IonIcon icon={chatbubbleOutline} style={{fontSize:iconMd}}/>
         <Text fontSize="xs">{post.comments.length}</Text>
       </Button>
       <Drawer

@@ -1,91 +1,102 @@
-import { Avatar, Box, Button, Flex, Image, Stack, Text } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Image,
+  Stack,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
+import React, { useContext, useState } from "react";
 import DataDisplay from "./DataDisplay";
 import LikePost from "./LikePost";
 import CommentPost from "./CommentPost";
 import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
 import { postContext } from "./PostContainer";
-import { ClickableFlex } from "../../Styles/Theme";
+import { iconMd } from "../../Styles/Theme";
 import { currentUserContext } from "../../Controler/App";
 import QuestionSlider from "../../Pages/StandalonePost/QuestionSlider";
 import Article from "../Article/Article";
+import { caretUpOutline, chevronDown } from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
 
 const Post = () => {
   const [expandBtn, setExpandBtn] = useState(true);
-  const [loading, setLoading] = useState(true);
   const [longDescription, setLongDescription] = useState(false);
   const navigate = useNavigate();
-  const {post}=useContext(postContext);
-  const {currentUser}=useContext(currentUserContext);
-  const descriptionRef = useRef();
-  const descriptionOverflow = useRef();
+  const { post } = useContext(postContext);
+  const { currentUser } = useContext(currentUserContext);
+  const { colorMode } = useColorMode();
 
-  useEffect(() => {
-    if (descriptionRef.current.scrollHeight > 45)
-      descriptionOverflow.current = true;
-    setLoading(false);
-  }, []);
   return (
     <>
       <Flex height="100%" className="post" alignItems="center" justify="center">
-        {post.type==='article' ? <Article/> : <DataDisplay data={post} />}
+        {post.type === "article" ? <Article /> : <DataDisplay data={post} />}
       </Flex>
 
-      {post.type==='interview' && <Box position="absolute" textAlign='left' zIndex={1} top={10} left={0}>
-        <QuestionSlider question={post.question}/>
-      </Box>}
-      
+      {post.type === "interview" && (
+        <Box position="absolute" textAlign="left" zIndex={1} top={10} left={0}>
+          <QuestionSlider question={post.question} />
+        </Box>
+      )}
+
       {/* I N F O  */}
-      <Box
+      <Flex
         position="absolute"
-        bottom={2}
-        color={
-          post.contentType === "string" && post.bg !== "transparent" && "black"
-        }
+        left={0}
+        top={10}
+        marginX={3}
         textAlign="left"
-        maxWidth="75%"
-        marginLeft={3}
         zIndex={2}
       >
-        <Text
-          fontWeight="bold"
-          onClick={() =>post.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.id_user._id)}
-        >
-          {post.id_user.name}
-        </Text>
-        <Text
-          position="relative"
-          ref={descriptionRef}
-          fontSize="sm"
-          onClick={() => setLongDescription(!longDescription)}
-          maxH={!longDescription && 10}
-          overflowY="hidden"
-        >
-          {post.description}
-          {!loading && (
-            <>
-              {descriptionOverflow.current && (
-                <Button
-                  variant="link"
-                  size="sm"
-                  color={
-                    post.contentType === "string" &&
-                    post.bg !== "transparent" &&
-                    "black"
-                  }
-                  position="absolute"
-                  right={0}
-                  bottom={0}
-                  onClick={() => setLongDescription(!longDescription)}
-                >
-                  {longDescription ? "Moins" : "Plus"}
-                </Button>
-              )}
-            </>
-          )}
-        </Text>
-      </Box>
+        {post.id_user.picture ? (
+          <Image
+            src={post.id_user.picture}
+            alt="profilepic"
+            boxSize={12}
+            minW={12}
+            rounded="full"
+            objectFit="cover"
+          />
+        ) : (
+          <Avatar size="md" />
+        )}
+        <Stack spacing={0} marginLeft={2} justify="center">
+          <Text
+            cursor="pointer"
+            noOfLines={1}
+            onClick={() =>
+              post.id_user._id === currentUser._id
+                ? navigate("/profile")
+                : navigate("/profile/" + post.id_user._id)
+            }
+          >
+            <span style={{ fontWeight: "bold" }}>{post.id_user.name}</span>{" "}
+            &nbsp;
+            {post.id_user.job && (
+              <span style={{ fontStyle: "italic" }}>{post.id_user.job}</span>
+            )}
+          </Text>
+          <Text
+            fontSize="sm"
+            onClick={() => setLongDescription(!longDescription)}
+            noOfLines={!longDescription && 2}
+            bgColor={
+              longDescription &&
+              (colorMode === "light" ? "whiteAlpha.800" : "blackAlpha.800")
+            }
+            paddingX={2}
+            paddingY={1}
+            rounded="md"
+            maxH={"50vh"}
+            overflowY={longDescription && "auto"}
+          >
+            {post.description}
+          </Text>
+        </Stack>
+      </Flex>
 
       {/* R E A C T I O N              */}
       <Stack
@@ -98,28 +109,26 @@ const Post = () => {
       >
         {expandBtn && (
           <>
-            {post.type==='interview' && <RespondPost questionId={post.question._id} />}
-            <ClickableFlex position="relative" flexDir="column"
-            onClick={() =>post.id_user._id===currentUser._id ? navigate('/profile') : navigate("/profile/"+post.id_user._id)}>
-              {post.id_user.picture ? <Image src={post.id_user.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar
-                size="sm"
-                
-              />}
-            </ClickableFlex>
-            <LikePost post={post}/>
-            <CommentPost post={post}/>
+            {post.type === "interview" && (
+              <RespondPost questionId={post.question._id} />
+            )}
+            <LikePost post={post} />
+            <CommentPost post={post} />
           </>
         )}
         <Button
-          boxSize={12}
-          className={expandBtn ? "bi-caret-down" : "bi-caret-up"}
           onClick={() => setExpandBtn(!expandBtn)}
           color={
             post.contentType === "string" &&
             post.bg !== "transparent" &&
             "black"
           }
-        ></Button>
+        >
+          <IonIcon
+            icon={expandBtn ? chevronDown : caretUpOutline}
+            style={{ fontSize: iconMd }}
+          />
+        </Button>
       </Stack>
     </>
   );

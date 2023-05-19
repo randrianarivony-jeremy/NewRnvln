@@ -9,7 +9,7 @@ const QuestionSlider = () => {
   // slider transition speed
   //counting word number inside the question, divide by two supposed user reads 2 words per second
   const { post, showReaction } = useContext(postContext);
-  const speed = (post.question.data.split(" ").length / 1.5) * 1000;
+  const speed = (post.question.data[0].split(" ").length / 1.5) * 1000;
   const { colorMode } = useColorMode();
   const swiperRef = useRef();
   const slideRef = useRef();
@@ -67,14 +67,14 @@ const QuestionSlider = () => {
       >
         {/* yes both swiperslides are the same but loop won't work with just one */}
         <SwiperSlide className="question-slide" ref={slideRef}>
-          {post.question.data} &nbsp;
+          {post.question.data[0]} &nbsp;
           <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{post.question.interviewer.name}_
           {post.question.interviewer.job && post.question.interviewer.job}
           </span>
         </SwiperSlide>
         {autoplay && (
           <SwiperSlide className="question-slide">
-          {post.question.data} &nbsp;
+          {post.question.data[0]} &nbsp;
           <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{post.question.interviewer.name}_
           {post.question.interviewer.job && post.question.interviewer.job}
           </span>

@@ -1,5 +1,5 @@
-import {Button,Flex,Heading,Input,Stack,Text, useDisclosure,} from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+import {Button,Flex,Heading,Stack,Text, useDisclosure,} from "@chakra-ui/react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
 import ChangeUsername from "./ChangeUsername";
@@ -11,7 +11,6 @@ import EnableSubscription from "../Profile/Relation/EnableSubscription";
 import DisableSubscription from "./DisableSubscription";
 
 const Parameter = () => {
-    const [data,setData]=useState([1,2,3,4])
     const navigate = useNavigate();
   const {currentUser}=useContext(currentUserContext);
   const {isOpen:usernameDrawer,onOpen:openUsernameDrawer,onClose:closeUsernameDrawer}=useDisclosure();
@@ -24,10 +23,9 @@ const Parameter = () => {
     <Stack height='100%'>
       <Flex borderBottom='1px solid' borderBottomColor='whiteAlpha.500'>
         <Button variant='float' className="bi-arrow-left" onClick={() => navigate(-1)}></Button>
-        <Button>Paramètres</Button>
+        <Button paddingX={0}>Paramètres</Button>
       </Flex>
       <Scroll paddingX={3} height='100%'>
-      <Flex>{data.map((i,j)=><><Input id={`input${j}`} name={`input${j}`} key={j} placeholder={i}/><Button className="bi-trash" onClick={()=>setData(data.filter(k=>k!==i))}></Button></>)}</Flex>
       <Stack spacing={5}>
           <Stack>
             <Heading size="sm">Compte personnelle</Heading>

@@ -1,4 +1,6 @@
 import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { micOutline } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
@@ -110,7 +112,7 @@ const SendVoice = () => {
           height='30vw' maxH={120} width='30vw' maxW={120}
           onClick={handleRecordingOn}
         >
-          <Flex fontSize={40} className="bi-mic"></Flex>
+        <IonIcon icon={micOutline} style={{fontSize:'40px'}}/>
           <Text fontSize={12}>Micro</Text>
         </Button>
       )}

@@ -1,4 +1,4 @@
-import { Button, Stack } from "@chakra-ui/react";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef } from "react";
 import { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,7 +8,7 @@ import { questionContext } from "./Question";
 import InputCard from "./InputCard";
 
 const SwiperQuestion = () => {
-  const {swiperRef,questionsArray,setQuestionsArray,colorIndex,setColorIndex,colors}=useContext(questionContext)
+  const {swiperRef,questionsArray,setQuestionsArray,colorIndex,setColorIndex,colors,textareaRef,writing,setWriting}=useContext(questionContext)
     const slideEvent=useRef();
 
   const appendQuestion = () => {
@@ -31,32 +31,31 @@ useEffect(()=>{
   },[questionsArray])
 
   return (
-    <>
+    <Flex paddingX={3} height='100%'>
       <Swiper
         ref={swiperRef}
-        navigation={true}
         modules={[Pagination]}
         pagination={{ type: "progressbar" }}
       >
         {questionsArray.map((question, index) => (
           <SwiperSlide
-            key={index}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+          key={index}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           >
             <InputCard question={question} index={index}/>
           </SwiperSlide>
         ))}
       </Swiper>
 
-      <Stack position={"absolute"} top={14} right={0} align="center" zIndex={1}>
-        <Button onClick={appendQuestion}>
+      <Stack position={"absolute"} top={14} right={0} align="center" zIndex={1} spacing={3}>
+        <Button onClick={appendQuestion} paddingX={0}>
           <IonIcon icon={add} style={{ fontSize: "40px" }} />
         </Button>
-        <Button onClick={removeQuestion} isDisabled={questionsArray.length<2}>
+        <Button onClick={removeQuestion} isDisabled={questionsArray.length<2} paddingX={0}>
           <IonIcon icon={remove} style={{ fontSize: "30px" }} />
         </Button>
         <Button
@@ -70,7 +69,8 @@ useEffect(()=>{
           boxSize={10}
         ></Button>
       </Stack>
-    </>
+
+    </Flex>
   );
 };
 

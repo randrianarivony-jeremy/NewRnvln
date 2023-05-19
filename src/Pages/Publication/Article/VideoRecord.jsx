@@ -19,6 +19,8 @@ import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
 import { publicationContext } from "../../../Controler/Context";
 import { useNavigate } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { videocamOutline } from "ionicons/icons";
 
 const VideoRecord = () => {
   const webcamRef = useRef(null);
@@ -117,7 +119,7 @@ const VideoRecord = () => {
           setCamera(!camera);
         }}
       >
-        <Flex fontSize={40} className="bi-camera-video"></Flex>
+      <IonIcon icon={videocamOutline} style={{fontSize:'40px'}}/>
         <Text fontSize="xs">Film</Text>
       </Button>
       {/* CAMERA  */}

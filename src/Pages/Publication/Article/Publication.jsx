@@ -8,6 +8,8 @@ import TakePhoto from "../../../Component/TakePhoto";
 import UploadPhoto from "./UploadPhoto";
 import UploadVideo from "./UploadVideo";
 import VideoRecord from "./VideoRecord";
+import { IonIcon } from "@ionic/react";
+import { cameraOutline } from "ionicons/icons";
 
 const Publication = () => {
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const Publication = () => {
               maxW={120}
               onClick={() => setCamera(true)}
             >
-              <Flex fontSize={40} className="bi-camera"></Flex>
+              <IonIcon icon={cameraOutline} style={{fontSize:'40px'}}/>
               <Text fontSize="xs">Camera</Text>
               <TakePhoto
                 setCamera={setCamera}

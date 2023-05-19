@@ -1,18 +1,5 @@
-import {
-  Button,
-  ButtonGroup,
-  Flex,
-  Input,
-  Stack,
-  useToast,
-} from "@chakra-ui/react";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Button, ButtonGroup, Flex, Stack, useToast } from "@chakra-ui/react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiCall, currentUserContext } from "../../Controler/App";
 import SwiperQuestion from "./SwiperQuestion";
@@ -26,6 +13,7 @@ const Question = () => {
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const [writing, setWriting] = useState(false);
   const colors = useRef([
     "transparent",
     "gradient1",
@@ -38,13 +26,24 @@ const Question = () => {
     "Ecrire quelque chose",
   ]);
 
+  const handleChange = (index) => {
+    setQuestionsArray((current) => {
+      current[index] =
+        textareaRef.current.value === ""
+          ? "Ecrire quelque chose"
+          : textareaRef.current.value;
+      return current;
+    });
+    setWriting(false);
+  };
+
   const checkEmptyValue = () => {
     let empty = questionsArray.indexOf("Ecrire quelque chose");
     if (empty === -1) handleSubmit();
     else {
       swiperRef.current.swiper.slideTo(empty);
       toast({
-        status: 'error',
+        status: "error",
         title: "Champs vide",
         duration: 5000,
         isClosable: true,
@@ -55,35 +54,33 @@ const Question = () => {
   };
 
   const handleSubmit = async (e) => {
-    // setSubmitting(true);
-    console.log("mety");
-    // await apiCall
-    //   .post("question", {
-    //     data: responseRef.current.value,
-    //     interviewer: currentUser._id,
-    //     bg: colorIndex === "transparent" ? "gradient1" : colorIndex,
-    //   })
-    //   .then(
-    //     (res) => {
-    //       setSubmitting(false);
-    //       toast({
-    //         title: "Publication réussie",
-    //         status: "success",
-    //         duration: 5000,
-    //         description: "Votre question a été bien enregistrée !",
-    //       });
-    //       navigate("/");
-    //     },
-    //     () => {
-    //       toast({
-    //         status: "error",
-    //         duration: 5000,
-    //         description: "Veuillez réessayer s'il vous plait",
-    //         title: "Operation failed",
-    //       });
-    //       setSubmitting(false);
-    //     }
-    //   );
+    setSubmitting(true);
+    await apiCall
+      .post("question", {
+        data: questionsArray,
+        interviewer: currentUser._id,
+        bg: colorIndex === 0 ? "gradient1" : colors.current[colorIndex],
+      })
+      .then(
+        (res) => {
+          toast({
+            title: "Publication réussie",
+            status: "success",
+            duration: 5000,
+            description: "Votre question a été bien enregistrée !",
+          });
+          navigate("/");
+        },
+        () => {
+          toast({
+            status: "error",
+            duration: 5000,
+            description: "Veuillez réessayer s'il vous plait",
+            title: "Operation failed",
+          });
+        }
+      )
+      .finally(() => setSubmitting(false));
   };
 
   return (
@@ -92,17 +89,25 @@ const Question = () => {
       height="100%"
       minH="450px"
       paddingBottom={2}
-      paddingX={3}
       justify="space-between"
       bg={colors.current[colorIndex]}
-    >
-      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-        <Button
-          variant="float"
-          className="bi-arrow-left"
-          onClick={() => navigate(-1)}
-        ></Button>
-        <Button>Poser une question</Button>
+      >
+      <Flex justify={"space-between"}>
+        <ButtonGroup spacing={0}>
+          <Button
+            variant="float"
+            className="bi-arrow-left"
+            onClick={() => navigate(-1)}
+          ></Button>
+          <Button paddingX={0}>Poser une question</Button>
+        </ButtonGroup>
+        {writing && (
+          <Button
+          onClick={() => handleChange(swiperRef.current.swiper.activeIndex)}
+          >
+            Terminer
+          </Button>
+        )}
       </Flex>
 
       <questionContext.Provider
@@ -114,12 +119,16 @@ const Question = () => {
           colors,
           textareaRef,
           swiperRef,
+          writing,
+          setWriting,
         }}
       >
         <SwiperQuestion />
       </questionContext.Provider>
 
-      <ButtonGroup>
+      <ButtonGroup
+        paddingX={3}
+      >
         <Button width={"50%"} onClick={() => navigate(-1)}>
           Retour
         </Button>

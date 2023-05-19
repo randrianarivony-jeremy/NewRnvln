@@ -9,26 +9,21 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
-import LikePost from "./LikePost";
-import CommentPost from "./CommentPost";
-import RespondPost from "./RespondPost";
 import { useNavigate } from "react-router-dom";
 import { postContext } from "./PostContainer";
-import { iconMd } from "../../Styles/Theme";
-import { currentUserContext } from "../../Controler/App";
-import QuestionSlider from "../../Pages/StandalonePost/QuestionSlider";
-import Article from "../Article/Article";
+import QuestionSlider from "./QuestionSlider";
+import Article from "./Article";
 import {
-  caretUpOutline,
   chatbubblesOutline,
-  chevronDown,
 } from "ionicons/icons";
 import { IonIcon } from "@ionic/react";
+import { currentUserContext } from "../../Controler/App";
+import Reaction from "./Reaction/Reaction";
 
 const Post = () => {
   const [longDescription, setLongDescription] = useState(false);
   const navigate = useNavigate();
-  const { post,showReaction,setShowReaction,textOverflow } = useContext(postContext);
+  const { post,textOverflow } = useContext(postContext);
   const { currentUser } = useContext(currentUserContext);
   const { colorMode } = useColorMode();
 
@@ -120,35 +115,7 @@ const Post = () => {
       </Box>}
 
       {/* R E A C T I O N              */}
-      <Stack position="absolute" right={0} bottom={0} align="center" zIndex={2}>
-        {showReaction && (
-          <>
-            <LikePost post={post} />
-            <CommentPost post={post} />
-            {post.type === "interview" && (
-              <Button
-              flexDir="column"
-            >
-              <IonIcon icon={chatbubblesOutline} style={{fontSize:iconMd}}/>
-              <Text fontSize="xs">{post.question.interviews.length}</Text>
-            </Button>
-            )}
-          </>
-        )}
-        <Button
-          onClick={() => setShowReaction(!showReaction)}
-          color={
-            post.contentType === "string" &&
-            post.bg !== "transparent" &&
-            "black"
-          }
-        >
-          <IonIcon
-            icon={showReaction ? chevronDown : caretUpOutline}
-            style={{ fontSize: iconMd }}
-          />
-        </Button>
-      </Stack>
+      <Reaction/>
     </>
   );
 };

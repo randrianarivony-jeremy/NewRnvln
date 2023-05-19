@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { FreeMode, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import textFit from "textfit";
-import { postContext } from "../Post/PostContainer";
+import { postContext } from "./PostContainer";
 
 const ShortPost = () => {
   const { post } = useContext(postContext);

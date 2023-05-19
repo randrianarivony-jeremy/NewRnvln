@@ -2,9 +2,9 @@ import { Avatar, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLongPress } from "use-long-press";
-import { apiCall, currentUserContext } from "../../Controler/App";
-import { updateComment } from "../../Controler/Redux/thread.reducer";
-import { ClickableFlex } from "../../Styles/Theme";
+import { apiCall, currentUserContext } from "../../../Controler/App";
+import { updateComment } from "../../../Controler/Redux/thread.reducer";
+import { ClickableFlex } from "../../../Styles/Theme";
 
 const Comment = ({ comment, postId }) => {
   const [deleteFooter, setDeleteFooter] = useState(false);

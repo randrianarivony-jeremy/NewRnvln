@@ -3,9 +3,9 @@ import { IonIcon } from "@ionic/react";
 import { heart, heartOutline } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { apiCall, currentUserContext, socket } from "../../Controler/App";
-import { likeDislike } from "../../Controler/Redux/thread.reducer";
-import { iconMd } from "../../Styles/Theme";
+import { apiCall, currentUserContext, socket } from "../../../Controler/App";
+import { likeDislike } from "../../../Controler/Redux/thread.reducer";
+import { iconMd } from "../../../Styles/Theme";
 
 const LikePost = ({post}) => {
   const { currentUser } = useContext(currentUserContext);

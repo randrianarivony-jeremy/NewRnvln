@@ -1,9 +1,9 @@
 import { Button, Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import PostContainer from "../../Component/Post/PostContainer";
 import { apiCall } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
+import PostContainer from "./PostContainer";
 
 const PostCard = () => {
   const { id } = useParams();

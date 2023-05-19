@@ -15,13 +15,13 @@ import {
 import ScrollableFeed from "react-scrollable-feed";
 import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { apiCall, currentUserContext, socket } from "../../Controler/App";
-import { updateComment } from "../../Controler/Redux/thread.reducer";
 import Comment from "./Comment";
-import UserLoader from "../Loaders/UserLoader";
+import UserLoader from "../../../Component/Loaders/UserLoader";
 import { IonIcon } from "@ionic/react";
 import { chatbubbleOutline } from "ionicons/icons";
-import { iconMd } from "../../Styles/Theme";
+import { apiCall, currentUserContext, socket } from "../../../Controler/App";
+import { updateComment } from "../../../Controler/Redux/thread.reducer";
+import { iconMd } from "../../../Styles/Theme";
 
 const CommentPost = ({ post }) => {
   const { onOpen, isOpen, onClose } = useDisclosure();

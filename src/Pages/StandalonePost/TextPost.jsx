@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Flex,
   Heading,
   Image,
@@ -10,9 +9,9 @@ import {
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
-import QuestionSlider from "../../Pages/StandalonePost/QuestionSlider";
-import InterviewText from "../Post/InterviewText";
-import { postContext } from "../Post/PostContainer";
+import QuestionSlider from "./QuestionSlider";
+import InterviewText from "./InterviewText";
+import { postContext } from "./PostContainer";
 import ShortPost from "./ShortPost";
 import TextItem from "./TextItem";
 

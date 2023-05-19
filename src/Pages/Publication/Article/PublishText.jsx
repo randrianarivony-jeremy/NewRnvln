@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, Flex, HStack, Select, Stack, Text, useToast } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackgroundOptions from "../../../Component/BackgroundOptions";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 
@@ -66,52 +67,7 @@ const PublishText = () => {
             setValue={setValue}
             textareaBg={textareaBg}
           />
-          {value.length<320 && <ButtonGroup
-            variant="float"
-            align="center"
-            justifyContent="space-around"
-          >
-            <Button
-              border={
-                textareaBg === "transparent"
-                  ? "2px solid black"
-                  : "1px solid black"
-              }
-              bg="transparent"
-              rounded="full"
-              onClick={() => setTextareaBg("transparent")}
-            ></Button>
-            <Button
-              border={textareaBg === "gradient1" && "2px solid black"}
-              bg="gradient1"
-              rounded="full"
-              onClick={() => setTextareaBg("gradient1")}
-            ></Button>
-            <Button
-              border={textareaBg === "gradient2" && "2px solid black"}
-              bg="gradient2"
-              rounded="full"
-              onClick={() => setTextareaBg("gradient2")}
-            ></Button>
-            <Button
-              border={textareaBg === "gradient3" && "2px solid black"}
-              bg="gradient3"
-              rounded="full"
-              onClick={() => setTextareaBg("gradient3")}
-            ></Button>
-            <Button
-              border={textareaBg === "gradient4" && "2px solid black"}
-              bg="gradient4"
-              rounded="full"
-              onClick={() => setTextareaBg("gradient4")}
-            ></Button>
-            <Button
-              border={textareaBg === "gradient5" && "2px solid black"}
-              bg="gradient5"
-              rounded="full"
-              onClick={() => setTextareaBg("gradient5")}
-            ></Button>
-          </ButtonGroup>}
+        {value<320 && <BackgroundOptions textareaBg={textareaBg} setTextareaBg={setTextareaBg}/>}
           <HStack>
           <Text whiteSpace="nowrap">Confidentialité :</Text>
           <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>

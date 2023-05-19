@@ -1,9 +1,8 @@
-import { Box } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
-import PostContainer from "../../Component/Post/PostContainer";
 import QuestionCard from "../Question/QuestionCard";
+import PostContainer from "../StandalonePost/PostContainer";
 
 const ForYouPage = () => {
   const homeSliderRef = useRef();

@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonGroup,
   HStack,
   Select,
   Stack,
@@ -9,20 +8,21 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackgroundOptions from "../../../Component/BackgroundOptions";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { optionContext } from "./Interview";
 import Options from "./Options";
 
 const PubText = () => {
-  const [textareaBg, setTextareaBg] = useState("transparent");
-  const [value, setValue] = useState("");
   const { setDisplay, question } = useContext(optionContext);
   const { currentUser } = useContext(currentUserContext);
-  const navigate = useNavigate();
-  const toast = useToast();
+  const [textareaBg, setTextareaBg] = useState("transparent");
+  const [value, setValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const publicConfidentiality=useRef(false);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -33,7 +33,7 @@ const PubText = () => {
         question: question._id,
         bg: textareaBg,
         type: "interview",public:publicConfidentiality.current,
-        contentType: "string",
+        contentType: value.length>320 ? 'text' : 'short',
       })
       .then(
         (res) => {
@@ -67,52 +67,7 @@ const PubText = () => {
           textareaBg={textareaBg}
           placeholder="Votre réponse"
         />
-        <ButtonGroup
-          variant="float"
-          align="center"
-          justifyContent="space-around"
-        >
-          <Button
-            border={
-              textareaBg === "transparent"
-                ? "2px solid black"
-                : "1px solid black"
-            }
-            bg="transparent"
-            rounded="full"
-            onClick={() => setTextareaBg("transparent")}
-          ></Button>
-          <Button
-            border={textareaBg === "gradient1" && "2px solid black"}
-            bg="gradient1"
-            rounded="full"
-            onClick={() => setTextareaBg("gradient1")}
-          ></Button>
-          <Button
-            border={textareaBg === "gradient2" && "2px solid black"}
-            bg="gradient2"
-            rounded="full"
-            onClick={() => setTextareaBg("gradient2")}
-          ></Button>
-          <Button
-            border={textareaBg === "gradient3" && "2px solid black"}
-            bg="gradient3"
-            rounded="full"
-            onClick={() => setTextareaBg("gradient3")}
-          ></Button>
-          <Button
-            border={textareaBg === "gradient4" && "2px solid black"}
-            bg="gradient4"
-            rounded="full"
-            onClick={() => setTextareaBg("gradient4")}
-          ></Button>
-          <Button
-            border={textareaBg === "gradient5" && "2px solid black"}
-            bg="gradient5"
-            rounded="full"
-            onClick={() => setTextareaBg("gradient5")}
-          ></Button>
-        </ButtonGroup>
+        {value<320 && <BackgroundOptions textareaBg={textareaBg} setTextareaBg={setTextareaBg}/>}
         <HStack>
           <Text whiteSpace="nowrap">Confidentialité :</Text>
           <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>

@@ -1,15 +1,13 @@
-import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FreeMode, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import textFit from "textfit";
-import { postContext } from "../Post/PostContainer";
+import { postContext } from "./PostContainer";
 
 const TextItem = () => {
   const { post, containerRef } = useContext(postContext);
   const textContainer = useRef();
   const [height, setHeight] = useState("100%");
-  const shortContainer = useRef();
   const articleSwiperRef = useRef();
   const [expand, setExpand] = useState(false);
   const [textOverflow, setTextOverflow] = useState(false);
@@ -50,8 +48,6 @@ const TextItem = () => {
               overflowY="clip"
               height={"100%"}
             >
-              {post.content}
-              {post.content}
               {post.content}
             </Text>
             {textOverflow && (

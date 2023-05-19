@@ -6,7 +6,6 @@ import {
   Image,
   Stack,
   Text,
-  useColorMode,
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,13 +18,12 @@ import {
 import { IonIcon } from "@ionic/react";
 import { currentUserContext } from "../../Controler/App";
 import Reaction from "./Reaction/Reaction";
+import Description from "./Description";
 
 const Post = () => {
-  const [longDescription, setLongDescription] = useState(false);
   const navigate = useNavigate();
   const { post,textOverflow } = useContext(postContext);
   const { currentUser } = useContext(currentUserContext);
-  const { colorMode } = useColorMode();
 
   return (
     <>
@@ -86,22 +84,7 @@ const Post = () => {
               <span style={{ fontStyle: "italic" }}>{post.id_user.job}</span>
             )}
           </Text>
-          <Text
-            fontSize="sm"
-            onClick={() => setLongDescription(!longDescription)}
-            noOfLines={!longDescription && 2}
-            bgColor={
-              longDescription &&
-              (colorMode === "light" ? "whiteAlpha.800" : "blackAlpha.800")
-            }
-            paddingX={2}
-            paddingY={1}
-            rounded="md"
-            maxH={"50vh"}
-            overflowY={longDescription && "auto"}
-          >
-            {post.description}
-          </Text>
+              <Description/>
         </Stack>
       </Flex>}
 

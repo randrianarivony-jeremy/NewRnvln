@@ -18,11 +18,8 @@
 .article-swiper{
     height: 100%;
     width: 100%;
-}
-.text-slide{
+  }
+  .text-slide{
     height: fit-content;
     max-width: 100%;
-  }
-.short-slide{
-    margin: auto;
   }

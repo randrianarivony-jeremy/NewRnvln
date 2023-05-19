@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import Question from "../../Question/Question";
+import QuestionSlider from "../../StandalonePost/QuestionSlider";
 import { optionContext } from "./Interview";
 import PubMedia from "./PubMedia";
 
@@ -71,7 +71,7 @@ const TakePhoto = () => {
             fontSize="xl"
             onClick={() => {setCamera(false);setCameraReady(false)}}
           ></Button>
-          <Question question={question}/>
+          <QuestionSlider question={question}/>
           <Button
             className="bi-arrow-repeat"
             fontSize="xl"

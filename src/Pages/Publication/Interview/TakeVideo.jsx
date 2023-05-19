@@ -19,7 +19,7 @@ import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
 import PubMedia from "./PubMedia";
 import { optionContext } from "./Interview";
-import Question from "../../Question/Question";
+import QuestionSlider from "../../StandalonePost/QuestionSlider";
 
 const TakeVideo = () => {
   const webcamRef = useRef(null);
@@ -151,7 +151,7 @@ const TakeVideo = () => {
             onClick={() => (capturing ? handleCancel() : handleExit())}
           ></Button>
 
-          <Question question={question}/>
+          <QuestionSlider question={question}/>
 
           {/* SELFIE BUTTON  */}
           <Button

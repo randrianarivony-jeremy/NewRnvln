@@ -1,62 +1,139 @@
-import { Avatar, Box, Button, Flex, HStack, Image, Text } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Input,
+  Stack,
+  useToast,
+} from "@chakra-ui/react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { apiCall, currentUserContext } from "../../Controler/App";
+import SwiperQuestion from "./SwiperQuestion";
 
-const Question = ({ question }) => {
-  const textRef = useRef();
-  const isOverflowed = useRef();
-  const [expandBtn, setExpandBtn] = useState(false);
-  const [loading, setLoading] = useState(true);
+export const questionContext = createContext();
+const Question = () => {
+  const { currentUser } = useContext(currentUserContext);
+  const navigate = useNavigate();
+  const textareaRef = useRef();
+  const swiperRef = useRef();
+  const toast = useToast();
+  const [submitting, setSubmitting] = useState(false);
+  const [colorIndex, setColorIndex] = useState(0);
+  const colors = useRef([
+    "transparent",
+    "gradient1",
+    "gradient2",
+    "gradient3",
+    "gradient4",
+    "gradient5",
+  ]);
+  const [questionsArray, setQuestionsArray] = useState([
+    "Ecrire quelque chose",
+  ]);
 
-  useEffect(() => {
-    if (textRef.current.scrollHeight > 45) isOverflowed.current = true;
-    setLoading(false);
-  }, []);
+  const checkEmptyValue = () => {
+    let empty = questionsArray.indexOf("Ecrire quelque chose");
+    if (empty === -1) handleSubmit();
+    else {
+      swiperRef.current.swiper.slideTo(empty);
+      toast({
+        status: 'error',
+        title: "Champs vide",
+        duration: 5000,
+        isClosable: true,
+        description:
+          "Vous n'avez rien écrit. Ajoutez quelque chose ou supprimez",
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    // setSubmitting(true);
+    console.log("mety");
+    // await apiCall
+    //   .post("question", {
+    //     data: responseRef.current.value,
+    //     interviewer: currentUser._id,
+    //     bg: colorIndex === "transparent" ? "gradient1" : colorIndex,
+    //   })
+    //   .then(
+    //     (res) => {
+    //       setSubmitting(false);
+    //       toast({
+    //         title: "Publication réussie",
+    //         status: "success",
+    //         duration: 5000,
+    //         description: "Votre question a été bien enregistrée !",
+    //       });
+    //       navigate("/");
+    //     },
+    //     () => {
+    //       toast({
+    //         status: "error",
+    //         duration: 5000,
+    //         description: "Veuillez réessayer s'il vous plait",
+    //         title: "Operation failed",
+    //       });
+    //       setSubmitting(false);
+    //     }
+    //   );
+  };
 
   return (
-    <Box
-      paddingX={3} bg={question?.bg}
-      paddingY={2}
-      rounded="lg"
-      borderTopLeftRadius={0}
+    <Stack
+      spacing={0}
+      height="100%"
+      minH="450px"
+      paddingBottom={2}
+      paddingX={3}
+      justify="space-between"
+      bg={colors.current[colorIndex]}
     >
-      <HStack>
-        {question.interviewer.picture ? <Image src={question.interviewer.picture} boxSize={10} rounded='full' objectFit='cover' alt='profile pic'/> : <Avatar boxSize={10}/>}
-        <Box fontSize="sm" fontWeight="bold">
-          {question.interviewer.name}
-        </Box>
-        <Box fontSize="sm" fontStyle="italic">
-          a demandé
-        </Box>
-      </HStack>
-      <Text
-        position="relative"
-        ref={textRef}
-        onClick={() => setExpandBtn(!expandBtn)}
-        maxH={!expandBtn && 12}
-        overflowY="hidden"
+      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+        <Button
+          variant="float"
+          className="bi-arrow-left"
+          onClick={() => navigate(-1)}
+        ></Button>
+        <Button>Poser une question</Button>
+      </Flex>
+
+      <questionContext.Provider
+        value={{
+          questionsArray,
+          setQuestionsArray,
+          colorIndex,
+          setColorIndex,
+          colors,
+          textareaRef,
+          swiperRef,
+        }}
       >
-        {question.data}
-        {!loading && (
-          <>
-            {isOverflowed.current && (
-              <Button
-                variant="link"
-                bgColor="#1a202c"
-                size="md"
-                position="absolute"
-                right={0}
-                fontWeight="bold"
-                fontStyle="italic"
-                bottom={0}
-                onClick={() => setExpandBtn(!expandBtn)}
-              >
-                {expandBtn ? "Moins" : "Plus"}
-              </Button>
-            )}
-          </>
-        )}
-      </Text>
-    </Box>
+        <SwiperQuestion />
+      </questionContext.Provider>
+
+      <ButtonGroup>
+        <Button width={"50%"} onClick={() => navigate(-1)}>
+          Retour
+        </Button>
+        <Button
+          isLoading={submitting}
+          loadingText="Envoi"
+          variant="primary"
+          width={"50%"}
+          onClick={checkEmptyValue}
+        >
+          Poser
+        </Button>
+      </ButtonGroup>
+    </Stack>
   );
 };
 

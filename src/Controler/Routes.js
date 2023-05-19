@@ -19,6 +19,7 @@ const Interview = lazy(()=>import("../Pages/Publication/Interview/Interview"));
 const PublishMedia = lazy(()=>import("../Pages/Publication/Article/PublishMedia"));
 const PublishText = lazy(()=>import("../Pages/Publication/Article/PublishText"));
 const AskQuestion = lazy(()=>import("../Pages/Question/AskQuestion"));
+const Question = lazy(()=>import("../Pages/Question/Question"));
 const Parameter = lazy(()=>import("../Pages/Parameter/Parameter"));
 const Search = lazy(()=>import("../Pages/Search/Search"));
 const SearchResult = lazy(()=>import("../Pages/Search/SearchResult"));
@@ -51,7 +52,8 @@ const Routes = () => {
                 <Route path="/interview/:questionId" element={<Suspense fallback={<Loader/>}>{currentUser ? <Interview /> : <Login/>}</Suspense>} />
                 <Route path="/publication/media" element={<Suspense fallback={<Loader/>}>{currentUser ? <PublishMedia /> : <Login/>}</Suspense>} />
                 <Route path="/publication/text" element={<Suspense fallback={<Loader/>}>{currentUser ? <PublishText /> : <Login/>}</Suspense>} />
-                <Route path="/question" element={<Suspense fallback={<Loader/>}>{currentUser ? <AskQuestion /> : <Login/>}</Suspense>} />
+                <Route path="/question" element={<Suspense fallback={<Loader/>}>{currentUser ? <Question /> : <Login/>}</Suspense>} />
+                <Route path="/single_question" element={<Suspense fallback={<Loader/>}>{currentUser ? <AskQuestion /> : <Login/>}</Suspense>} />
                 <Route path="/parameters" element={<Suspense fallback={<Loader/>}>{currentUser ? <Parameter /> : <Login/>}</Suspense>} />
                 <Route path="/search" element={<Suspense fallback={<Loader/>}>{currentUser ? <Search /> : <Login/>}</Suspense>} />
                 <Route path="/search/:keyword" element={<Suspense fallback={<Loader/>}>{currentUser ? <SearchResult /> : <Login/>}</Suspense>} />

@@ -1,11 +1,11 @@
 import { Button, Flex, Stack, useToast } from "@chakra-ui/react";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Question from "../../Question/Question";
 import { Scroll } from "../../../Styles/Theme";
 import Options from "./Options";
 import { Loader } from "../../../Controler/Routes";
 import { apiCall } from "../../../Controler/App";
+import QuestionSlider from "../../StandalonePost/QuestionSlider";
 
 export const optionContext = createContext();
 
@@ -58,7 +58,7 @@ const Interview = () => {
           <Loader />
         ) : (
           <Scroll height="100%" spacing={2} paddingX={3} paddingY={2}>
-            <Question question={question.current} />
+            <QuestionSlider question={question.current} />
             {display}
           </Scroll>
         )}

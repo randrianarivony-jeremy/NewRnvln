@@ -1,4 +1,4 @@
-import { Button, Input, Text } from '@chakra-ui/react';
+import { Button, Input, Text, useToast } from '@chakra-ui/react';
 import { IonIcon } from '@ionic/react';
 import { imageOutline } from 'ionicons/icons';
 import React, { useContext, useRef } from 'react';
@@ -9,10 +9,20 @@ const UploadPhoto = () => {
     const inputRef=useRef();
     const {setContent}=useContext(publicationContext);
     const navigate = useNavigate();
+    const toast = useToast();
 
     const handleChange=({currentTarget})=>{
-        setContent({content:currentTarget.files[0],contentType:'image'});
-        navigate('/publication/media');
+        if(currentTarget.files[0].size<4096000){
+            setContent({content:currentTarget.files[0],contentType:'image'});
+            navigate('/publication/media');
+        }
+        else toast({
+            title:'Limite excédée',
+            description:'Votre fichier est trop lourd. Veuillez ne pas dépasser les 4 mo',
+            status:'info',
+            duration:5000,
+            isClosable:true
+        })
     }
     return (
         <>

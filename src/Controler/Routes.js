@@ -14,7 +14,7 @@ const Profile = lazy(()=>import("../Pages/Profile/Profile"));
 const UserProfile = lazy(()=>import("../Pages/Profile/UserProfile"));
 const Message = lazy(()=>import("../Pages/Message/Message"));
 const Chat = lazy(()=>import("../Pages/Chat/Chat"));
-const Publication = lazy(()=>import("../Pages/Publication/Article/Publication"));
+const Publication = lazy(()=>import("../Pages/Publication/Publication"));
 const Interview = lazy(()=>import("../Pages/Publication/Interview/Interview"));
 const PublishMedia = lazy(()=>import("../Pages/Publication/Article/PublishMedia"));
 const PublishText = lazy(()=>import("../Pages/Publication/Article/PublishText"));

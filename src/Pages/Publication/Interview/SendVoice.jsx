@@ -1,13 +1,16 @@
 import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import { optionContext } from "./Interview";
+import QuestionSlider from "../../StandalonePost/QuestionSlider";
+import { interviewContext } from "./Interview";
+import { displayContext } from "./InterviewSlide";
 import PubMedia from "./PubMedia";
 
 const SendVoice = () => {
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
-  const {setDisplay}=useContext(optionContext);
+  const { question,setShowOptions,swiperRef } = useContext(interviewContext);
+  const { setDisplay } = useContext(displayContext);
   const {
     startRecording,
     stopRecording,
@@ -25,7 +28,12 @@ const SendVoice = () => {
 
   const handleSubmit = (blob) => {
     setRecording(false);
-    setDisplay(<PubMedia data={{content:blob,contentType:"audio"}}/>)
+    setShowOptions((current) => {
+      let mirror = [...current];
+      mirror[swiperRef.current.swiper.activeIndex]=false;
+      return mirror;
+    })
+    setDisplay(<PubMedia data={{ content: blob, contentType: "audio" }} />);
   };
 
   const handleReset = () => {
@@ -45,8 +53,17 @@ const SendVoice = () => {
               recorderControls={recorderControls}
             />
           </Box>
-          <Button position='absolute' zIndex={4} top={3} left={3} className="bi-x-lg"
-      onClick={()=>{handleReset();setRecording(false)}}></Button>
+          <Button
+            position="absolute"
+            zIndex={4}
+            top={0}
+            left={0}
+            className="bi-x-lg"
+            onClick={() => {
+              handleReset();
+              setRecording(false);
+            }}
+          ></Button>
           <Flex
             position="absolute"
             zIndex={3}
@@ -73,14 +90,19 @@ const SendVoice = () => {
                   onClick={handleReset}
                 ></Button>
                 <Button
-                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
+                  fontSize="5xl"
+                  border="1px solid white"
+                  rounded="full"
+                  variant="float"
+                  color="red"
+                  boxSize={14}
                   className={
                     !isRecording
                       ? "bi-circle-fill"
                       : isPaused
                       ? "bi-play"
                       : "bi-pause"
-                  } 
+                  }
                   onClick={() =>
                     !isRecording ? handleRecordingOn() : togglePauseResume()
                   }
@@ -96,12 +118,18 @@ const SendVoice = () => {
               </HStack>
             </Stack>
           </Flex>
+          <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
+            <QuestionSlider question={question} />
+          </Flex>
         </>
       ) : (
         <Button
           variant="outline"
           flexDir="column"
-          boxSize={120}
+          height="30vw"
+              maxH={120}
+              width="30vw"
+              maxW={120}
           onClick={handleRecordingOn}
         >
           <Flex fontSize={40} className="bi-mic"></Flex>

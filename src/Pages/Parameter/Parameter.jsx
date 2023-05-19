@@ -23,7 +23,7 @@ const Parameter = () => {
     <Stack height='100%'>
       <Flex borderBottom='1px solid' borderBottomColor='whiteAlpha.500'>
         <Button variant='float' className="bi-arrow-left" onClick={() => navigate(-1)}></Button>
-        <Button paddingX={0}>Paramètres</Button>
+        <Button>Paramètres</Button>
       </Flex>
       <Scroll paddingX={3} height='100%'>
       <Stack spacing={5}>

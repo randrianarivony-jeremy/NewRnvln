@@ -19,7 +19,8 @@ const ResizableTextarea = ({value, setValue,textareaBg,placeholder}) => {
           sx={{
             "::-webkit-scrollbar": { display: "none" },
             "::-webkit-resizer": { display: "none" },
-          }}
+          }} 
+          // maxH='50vh'
         ></Textarea>
     );
 };

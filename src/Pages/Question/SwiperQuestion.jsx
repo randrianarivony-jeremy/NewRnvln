@@ -8,7 +8,7 @@ import { questionContext } from "./Question";
 import InputCard from "./InputCard";
 
 const SwiperQuestion = () => {
-  const {swiperRef,questionsArray,setQuestionsArray,colorIndex,setColorIndex,colors,textareaRef,writing,setWriting}=useContext(questionContext)
+  const {swiperRef,questionsArray,setQuestionsArray,colorIndex,setColorIndex,colors}=useContext(questionContext)
     const slideEvent=useRef();
 
   const appendQuestion = () => {
@@ -51,7 +51,7 @@ useEffect(()=>{
         ))}
       </Swiper>
 
-      <Stack position={"absolute"} top={14} right={0} align="center" zIndex={1} spacing={3}>
+      <Stack position={"absolute"} top={12} right={3} align="center" zIndex={1} spacing={3}>
         <Button onClick={appendQuestion} paddingX={0}>
           <IonIcon icon={add} style={{ fontSize: "40px" }} />
         </Button>
@@ -66,7 +66,7 @@ useEffect(()=>{
               ? setColorIndex(0)
               : setColorIndex((current) => current + 1)
           }
-          boxSize={10}
+          boxSize={14}
         ></Button>
       </Stack>
 

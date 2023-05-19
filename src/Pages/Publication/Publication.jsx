@@ -1,13 +1,13 @@
 import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "../../../Component/Navigation";
-import { publicationContext } from "../../../Controler/Context";
-import SendVoice from "./SendVoice";
-import TakePhoto from "../../../Component/TakePhoto";
-import UploadPhoto from "./UploadPhoto";
-import UploadVideo from "./UploadVideo";
-import VideoRecord from "./VideoRecord";
+import Navigation from "../../Component/Navigation";
+import { publicationContext } from "../../Controler/Context";
+import SendVoice from "./Article/SendVoice";
+import TakePhoto from "../../Component/TakePhoto";
+import UploadPhoto from "./Article/UploadPhoto";
+import UploadVideo from "./Article/UploadVideo";
+import VideoRecord from "./Article/VideoRecord";
 import { IonIcon } from "@ionic/react";
 import { cameraOutline } from "ionicons/icons";
 

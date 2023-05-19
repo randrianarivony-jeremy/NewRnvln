@@ -11,11 +11,11 @@ import { useNavigate } from "react-router-dom";
 import BackgroundOptions from "../../../Component/BackgroundOptions";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
 import { apiCall, currentUserContext } from "../../../Controler/App";
-import { optionContext } from "./Interview";
+import { interviewContext } from "./Interview";
 import Options from "./Options";
 
 const PubText = () => {
-  const { setDisplay, question } = useContext(optionContext);
+  const { setDisplay, question } = useContext(interviewContext);
   const { currentUser } = useContext(currentUserContext);
   const [textareaBg, setTextareaBg] = useState("transparent");
   const [value, setValue] = useState("");
@@ -59,8 +59,7 @@ const PubText = () => {
   };
 
   return (
-    <Stack height="100%" justify="space-between">
-      <Stack>
+    <Stack height="100%" justify="space-between" paddingX={3}>
         <ResizableTextarea
           value={value}
           setValue={setValue}
@@ -68,28 +67,6 @@ const PubText = () => {
           placeholder="Votre réponse"
         />
         {value<320 && <BackgroundOptions textareaBg={textareaBg} setTextareaBg={setTextareaBg}/>}
-        <HStack>
-          <Text whiteSpace="nowrap">Confidentialité :</Text>
-          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
-            <option value={false}>Entre amis</option>
-            <option value={true}>Public</option>
-          </Select>
-        </HStack>
-      </Stack>
-      <HStack>
-        <Button width="100%" onClick={() => setDisplay(<Options />)}>
-          Changer
-        </Button>
-        <Button
-          isLoading={submitting}
-          loadingText="Envoi"
-          variant="primary"
-          width="100%"
-          onClick={handleSubmit}
-        >
-          Publier
-        </Button>
-      </HStack>
     </Stack>
   );
 };

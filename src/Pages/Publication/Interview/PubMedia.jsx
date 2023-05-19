@@ -10,18 +10,18 @@ import { useNavigate } from "react-router-dom";
 import AudioDisplay from "../../../Component/AudioDisplay";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
-import { optionContext } from "./Interview";
+import { interviewContext } from "./Interview";
 import Options from "./Options";
 
 const PubMedia = ({ data }) => {
   const navigate = useNavigate();
-  const { setDisplay, question } = useContext(optionContext);
+  const { setDisplay, question } = useContext(interviewContext);
+  const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useContext(currentUserContext);
   const descriptionRef = useRef();
   const urlRef = useRef();
   const publicConfidentiality = useRef(false);
   const toast=useToast();
-  const [submitting, setSubmitting] = useState(false);
 
   const storeMedia = () => {
     setSubmitting(true);
@@ -118,27 +118,6 @@ const PubMedia = ({ data }) => {
             "::-webkit-resizer": { display: "none" },
           }}
         ></Textarea>
-        <HStack>
-          <Text whiteSpace="nowrap">Confidentialité :</Text>
-          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
-            <option value={false}>Entre amis</option>
-            <option value={true}>Public</option>
-          </Select>
-        </HStack>
-        <HStack>
-          <Button width="100%" onClick={() => setDisplay(<Options />)}>
-            Changer
-          </Button>
-          <Button
-            isLoading={submitting}
-            loadingText="Envoi"
-            variant="primary"
-            width="100%"
-            onClick={storeMedia}
-          >
-            Publier
-          </Button>
-        </HStack>
       </Stack>
     </Stack>
   );

@@ -18,8 +18,9 @@ import { useCallback, useContext, useRef, useState } from "react";
 import WebCam from "react-webcam";
 import { useStopwatch } from "react-timer-hook";
 import PubMedia from "./PubMedia";
-import { optionContext } from "./Interview";
+import { interviewContext } from "./Interview";
 import QuestionSlider from "../../StandalonePost/QuestionSlider";
+import { displayContext } from "./InterviewSlide";
 
 const TakeVideo = () => {
   const webcamRef = useRef(null);
@@ -31,7 +32,8 @@ const TakeVideo = () => {
   const [isPaused, setIsPaused] = useState(true);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [facingMode, setFacingMode] = useState("environment");
-  const { setDisplay,question } = useContext(optionContext);
+  const { setDisplay } = useContext(displayContext);
+  const { question } = useContext(interviewContext);
 
   const { seconds, minutes, start, pause } = useStopwatch({
     autoStart: false,
@@ -86,11 +88,7 @@ const TakeVideo = () => {
       });
       setCamera(false);
       setRecordedChunks([]);
-      setDisplay(
-        <PubMedia
-          data={{ content:blob, contentType: "video" }}
-        />
-      );
+      setDisplay(<PubMedia data={{ content: blob, contentType: "video" }} />);
     }
   };
 
@@ -115,7 +113,10 @@ const TakeVideo = () => {
       <Button
         variant="outline"
         flexDir="column"
-        boxSize={120}
+        height="30vw"
+              maxH={120}
+              width="30vw"
+              maxW={120}
         onClick={() => {
           setRecordedChunks([]);
           setCamera(!camera);
@@ -141,28 +142,27 @@ const TakeVideo = () => {
 
       {cameraReady && (
         <>
-        <Flex position="absolute" zIndex={3} top={0} left={0}>
-          {/* CLOSE BUTTON  */}
-          <Button
-            
-            fontSize="xl"
-            
-            className="bi-x-lg"
-            onClick={() => (capturing ? handleCancel() : handleExit())}
-          ></Button>
+          <Flex position="absolute" zIndex={3} top={0} left={0}>
+            {/* CLOSE BUTTON  */}
+            <Button
+              fontSize="xl"
+              className="bi-x-lg"
+              onClick={() => (capturing ? handleCancel() : handleExit())}
+            ></Button>
+            <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
+              <QuestionSlider question={question} />
+            </Flex>
 
-          <QuestionSlider question={question}/>
-
-          {/* SELFIE BUTTON  */}
-          <Button
-            className="bi-arrow-repeat"
-            fontSize="xl"
-            onClick={() =>
-              facingMode === "user"
-                ? setFacingMode("environment")
-                : setFacingMode("user")
-            }
-          ></Button>
+            {/* SELFIE BUTTON  */}
+            <Button
+              className="bi-arrow-repeat"
+              fontSize="xl"
+              onClick={() =>
+                facingMode === "user"
+                  ? setFacingMode("environment")
+                  : setFacingMode("user")
+              }
+            ></Button>
           </Flex>
 
           {/* CONTROLS BUTTONS */}

@@ -99,7 +99,7 @@ const Question = () => {
             className="bi-arrow-left"
             onClick={() => navigate(-1)}
           ></Button>
-          <Button paddingX={0}>Poser une question</Button>
+          <Button>Poser une question</Button>
         </ButtonGroup>
         {writing && (
           <Button

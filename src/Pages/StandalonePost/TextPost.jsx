@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
 import QuestionSlider from "./QuestionSlider";
@@ -59,7 +59,7 @@ const TextPost = () => {
           <TextItem />
         ) : (
           <Stack>
-            <QuestionSlider question={post.question} />
+            <QuestionSlider question={post.question} index={0}/>
             <InterviewText />
           </Stack>
         )}

@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { postContext } from "./PostContainer";
 import QuestionSlider from "./QuestionSlider";
@@ -22,7 +22,7 @@ import Description from "./Description";
 
 const Post = () => {
   const navigate = useNavigate();
-  const { post,textOverflow } = useContext(postContext);
+  const { post,textOverflow,showReaction } = useContext(postContext);
   const { currentUser } = useContext(currentUserContext);
 
   return (
@@ -94,7 +94,8 @@ const Post = () => {
         left={0}
         bottom={14}
         zIndex={2}
-      ><QuestionSlider/>
+        width={showReaction ? 'calc(100% - 50px)' : '100%'}
+      ><QuestionSlider question={post.question} index={0}/>
       </Box>}
 
       {/* R E A C T I O N              */}

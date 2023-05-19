@@ -1,15 +1,13 @@
 import { Avatar, HStack, Image, useColorMode } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { postContext } from "./PostContainer";
 import "../../Styles/swipers.css";
 
-const QuestionSlider = () => {
+const QuestionSlider = ({question,index}) => {
   // slider transition speed
   //counting word number inside the question, divide by two supposed user reads 2 words per second
-  const { post, showReaction } = useContext(postContext);
-  const speed = (post.question.data[0].split(" ").length / 1.5) * 1000;
+  const speed = (question.data[index].split(" ").length / 1.5) * 1000;
   const { colorMode } = useColorMode();
   const swiperRef = useRef();
   const slideRef = useRef();
@@ -24,18 +22,14 @@ const QuestionSlider = () => {
 
   return (
     <HStack
-      width={
-        !showReaction || post.type === "interview"
-          ? "100%"
-          : "calc(100% - 50px)"
-      }
+      width={'100%'}
       bgColor={colorMode === "light" ? "whiteAlpha.500" : "blackAlpha.500"}
       height={12}
       paddingX={3}
     >
-      {post.question.interviewer.picture ? (
+      {question.interviewer.picture ? (
         <Image
-          src={post.question.interviewer.picture}
+          src={question.interviewer.picture}
           alt="profile_pic"
           boxSize={10}
           minW={10}
@@ -67,16 +61,16 @@ const QuestionSlider = () => {
       >
         {/* yes both swiperslides are the same but loop won't work with just one */}
         <SwiperSlide className="question-slide" ref={slideRef}>
-          {post.question.data[0]} &nbsp;
-          <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{post.question.interviewer.name}_
-          {post.question.interviewer.job && post.question.interviewer.job}
+          {question.data[index]} &nbsp;
+          <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{question.interviewer.name}_
+          {question.interviewer.job && question.interviewer.job}
           </span>
         </SwiperSlide>
         {autoplay && (
           <SwiperSlide className="question-slide">
-          {post.question.data[0]} &nbsp;
-          <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{post.question.interviewer.name}_
-          {post.question.interviewer.job && post.question.interviewer.job}
+          {question.data[index]} &nbsp;
+          <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{question.interviewer.name}_
+          {question.interviewer.job && question.interviewer.job}
           </span>
           </SwiperSlide>
         )}

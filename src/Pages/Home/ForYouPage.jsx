@@ -10,12 +10,12 @@ const ForYouPage = () => {
   const data = useSelector((state) => state.thread[0]);
   return (
     <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical"
-     modules={[Keyboard,Mousewheel]} keyboard={true} mousewheel={true}
+     modules={[Keyboard,Mousewheel]} keyboard={true} mousewheel={{enabled:true,forceToAxis:true}}
      >
       {data?.map((elt) => (
         <SwiperSlide key={elt._id}>
           {elt.type === "question" ? (
-            <QuestionCard question={elt} />
+            <QuestionCard questions={elt} />
           ) : (
             <PostContainer post={elt} homeSlider={homeSliderRef} />
           )}

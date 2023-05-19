@@ -12,10 +12,12 @@ import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
 import textFit from "textfit";
 import { ClickableFlex, iconMd } from "../../Styles/Theme";
-import {IonIcon} from '@ionic/react';
-import {chatbubblesOutline} from 'ionicons/icons';
+import { IonIcon } from "@ionic/react";
+import { chatbubblesOutline } from "ionicons/icons";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Mousewheel, Pagination } from "swiper";
 
-const QuestionCard = ({ question }) => {
+const QuestionCard = ({ questions }) => {
   const { currentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const questionDataRef = useRef();
@@ -29,39 +31,57 @@ const QuestionCard = ({ question }) => {
   }, []);
 
   return (
-    <Flex height="100%" bg={question.bg} justify="center" align="center">
-      <Flex
-        ref={questionDataRef}
-        justify="center"
-        align={"center"}
-        whiteSpace="pre-wrap"
-        height="60vh"
-        width="80%"
-        fontSize="2xl"
-        marginX={3}
+    <Flex height="100%" bg={questions.bg} justify="center" align="center">
+      <Swiper
+        mousewheel={{enabled:true,forceToAxis:true}}
+        modules={[Pagination,Mousewheel]}
+        pagination={{ type: "progressbar" }}
       >
-        {question.data}
-      </Flex>
+        {questions.data.map((question,index) => (
+          <SwiperSlide
+            key={index}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Flex
+              ref={questionDataRef}
+              justify="center"
+              align={"center"}
+              whiteSpace="pre-wrap"
+              height="60vh"
+              width="80%"
+              fontSize="2xl"
+              marginX={3}
+            >
+              {question}
+            </Flex>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       {/* I N F O  */}
       <Flex
         position="absolute"
         left={0}
         top={10}
-        marginX={3} cursor='pointer'
+        marginX={3}
+        cursor="pointer"
         textAlign="left"
         maxWidth="80%"
         onClick={() =>
-          question.interviewer._id === currentUser._id
+          questions.interviewer._id === currentUser._id
             ? navigate("/profile")
-            : navigate("/profile/" + question.interviewer._id)
+            : navigate("/profile/" + questions.interviewer._id)
         }
         zIndex={2}
         justify="space-between"
       >
-        {question.interviewer.picture ? (
+        {questions.interviewer.picture ? (
           <Image
-            src={question.interviewer.picture}
+            src={questions.interviewer.picture}
             alt="profilepic"
             boxSize={12}
             rounded="full"
@@ -71,9 +91,9 @@ const QuestionCard = ({ question }) => {
           <Avatar size="md" />
         )}
         <Stack spacing={0} marginLeft={2} justify="center">
-          <Heading size="sm">{question.interviewer.name}</Heading>
-          {question.interviewer.job && (
-            <Text fontStyle="italic">{question.interviewer.job}</Text>
+          <Heading size="sm">{questions.interviewer.name}</Heading>
+          {questions.interviewer.job && (
+            <Text fontStyle="italic">{questions.interviewer.job}</Text>
           )}
         </Stack>
       </Flex>
@@ -86,8 +106,8 @@ const QuestionCard = ({ question }) => {
         zIndex={2}
         flexDir="column"
       >
-        <IonIcon icon={chatbubblesOutline} style={{fontSize:iconMd}}/>
-        <Text fontSize="xs">{question.interviews.length}</Text>
+        <IonIcon icon={chatbubblesOutline} style={{ fontSize: iconMd }} />
+        <Text fontSize="xs">{questions.interviews.length}</Text>
       </Button>
 
       <Button
@@ -96,8 +116,13 @@ const QuestionCard = ({ question }) => {
         bottom={2}
         zIndex={2}
         variant="cta"
-        leftIcon={<IonIcon style={{fontWeight:'100',fontSize:'20px'}} icon={chatbubblesOutline}/>}
-        onClick={()=>navigate('/interview/'+question._id)}
+        leftIcon={
+          <IonIcon
+            style={{ fontWeight: "100", fontSize: "20px" }}
+            icon={chatbubblesOutline}
+          />
+        }
+        onClick={() => navigate("/interview/" + questions._id)}
       >
         Répondre
       </Button>

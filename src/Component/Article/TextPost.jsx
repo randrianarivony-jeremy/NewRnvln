@@ -1,41 +1,31 @@
 import {
   Avatar,
   Box,
-  Button,
   Flex,
   Heading,
   Image,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { IonIcon } from "@ionic/react";
-import { caretUpOutline, chevronDown } from "ionicons/icons";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
 import QuestionSlider from "../../Pages/StandalonePost/QuestionSlider";
-import { iconMd } from "../../Styles/Theme";
-import CommentPost from "../Post/CommentPost";
 import InterviewText from "../Post/InterviewText";
-import LikePost from "../Post/LikePost";
 import { postContext } from "../Post/PostContainer";
+import ShortPost from "./ShortPost";
 import TextItem from "./TextItem";
 
 const TextPost = () => {
   const navigate = useNavigate();
   const { post, containerRef } = useContext(postContext);
   const { currentUser } = useContext(currentUserContext);
-  const [expandBtn, setExpandBtn] = useState(true);
   return (
     <Flex bg={post.contentType === "short" && post.bg} height="100%">
-      <Stack
-        ref={containerRef}
-        height="calc(100% - 40px)"
-        marginTop={10}
-        >
+      <Stack ref={containerRef} height="calc(100% - 40px)" marginTop={10}>
         {/* I N F O  */}
         <Flex
-        marginX={3}
+          marginX={3}
           cursor="pointer"
           maxWidth="80%"
           onClick={() =>
@@ -56,13 +46,17 @@ const TextPost = () => {
             <Avatar size="md" />
           )}
           <Stack spacing={0} marginLeft={2} justify="flex-start">
-            <Heading size="sm" width='fit-content'>{post.id_user.name}</Heading>
+            <Heading size="sm" width="fit-content">
+              {post.id_user.name}
+            </Heading>
             {post.id_user.job && (
               <Text fontStyle="italic">{post.id_user.job}</Text>
             )}
           </Stack>
         </Flex>
-        {post.type === "article" ? (
+        {post.contentType === "short" ? (
+          <ShortPost />
+        ) : post.type === "article" ? (
           <TextItem />
         ) : (
           <Stack>

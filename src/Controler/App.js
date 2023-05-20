@@ -1,4 +1,4 @@
-import { Box, Image, Spinner, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, Image, Spinner, Stack, Text } from "@chakra-ui/react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/App.css";
 import "swiper/css";
@@ -16,9 +16,9 @@ import { addContentFeeds } from "./Redux/thread.reducer";
 import RealtimeSocketContext from "./Socketio/RealtimeSocketContext";
 
 export const apiCall = axios.create({
-  baseURL: process.env.REACT_APP_API_URL+'/api/',
-  withCredentials:true
-})
+  baseURL: process.env.REACT_APP_API_URL + "/api/",
+  withCredentials: true,
+});
 
 export const socket = io(process.env.REACT_APP_SOCKET_URL);
 
@@ -26,57 +26,49 @@ function App() {
   const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
-  const [step, setStep] = useState(['initial']);
   const dispatch = useDispatch();
-  
+
   const fetchToken = async () => {
-    setStep([...step,'fetchtoken']);
     await apiCall
       .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
       .then(
         (res) => {
-          setStep([...step,'fetchtoken success']);
-          fetchData();
           socket.emit("start", res.data._id);
           setCurrentUser(res.data);
+          apiCall
+            .get("feeds")
+            .then(
+              (res) => {
+                if (res.data.length !== 0) {
+                  const payload = res.data.map((elt) => {
+                    if (elt.type === "interview" || elt.type === "article")
+                      return elt;
+                    else {
+                      elt = { ...elt, type: "question" };
+                      return elt;
+                    }
+                  });
+                  dispatch(addContentFeeds(payload));
+                  dispatch(addPublication(res.data));
+                  dispatch(addInterview(res.data));
+                }
+              },
+              (err) => {
+                console.log(err);
+              }
+            )
+            .finally(() => setInitializing(false));
         },
         (err) => {
-          setStep([...step,'fetchtoken failed']);
           console.log("tsisy token: " + err);
           setInitializing(false);
         }
-        );
-      };
-      
-      const fetchData = async () => {
-        setStep([...step,'fetchdata']);
-        await apiCall.get("feeds")
-        .then((res) => {
-          console.log(res.data)
-          setStep([...step,'fetchdata success']);
-          if (res.data.length!==0){
-            const payload = res.data.map(elt=>{
-              if (elt.type==='interview' || elt.type==='article') return elt;
-              else {
-                elt = {...elt,type:'question'}
-                return elt
-              }
-            })
-            dispatch(addContentFeeds(payload));
-            dispatch(addPublication(res.data));
-            dispatch(addInterview(res.data));
-          }
-          setInitializing(false);
-        },err=>{
-          setStep([...step,'fetchdata failed']);
-          setInitializing(false);
-        console.log(err)
-      });
+      );
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchToken();
-  },[])
+  }, []);
 
   return (
     <Box
@@ -92,13 +84,13 @@ function App() {
           {initializing ? (
             <Stack justify="center" height="100%" align="center">
               <Image src={logo} alt="logo" width="100px" />
+              <Heading size={"xl"}>Ranavalona</Heading>
               <Spinner speed="0.7s" />
-              {step.map((elt,key)=><Text key={key}>{elt}</Text>)}
             </Stack>
           ) : (
             <RealtimeSocketContext>
               <Routes />
-              </RealtimeSocketContext>
+            </RealtimeSocketContext>
           )}
         </publicationContext.Provider>
       </currentUserContext.Provider>

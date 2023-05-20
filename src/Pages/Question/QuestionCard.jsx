@@ -51,7 +51,7 @@ const QuestionCard = ({ questions }) => {
               justify="center"
               align={"center"}
               whiteSpace="pre-wrap"
-              height="60vh"
+              height="50vh"
               width="80%"
               fontSize="2xl"
               marginX={3}

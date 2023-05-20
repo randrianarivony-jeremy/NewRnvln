@@ -1,15 +1,36 @@
-import {Box,Button,Flex,FormControl,FormErrorMessage,Grid,GridItem,Heading,Image,Input,InputGroup,InputRightElement,Stack,Text, useToast,} from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Grid,
+  GridItem,
+  Heading,
+  Image,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Stack,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import logo from "../../Assets/RANAVALONA.png";
 import { useNavigate } from "react-router-dom";
 import { apiCall, currentUserContext } from "../../Controler/App";
+import { addContentFeeds } from "../../Controler/Redux/thread.reducer";
+import { addPublication } from "../../Controler/Redux/publication.reducer";
+import { addInterview } from "../../Controler/Redux/interview.reducer";
+import { useDispatch } from "react-redux";
 
 const SignIn = ({ setSignin }) => {
   const { setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const emailRef = useRef();
   const submitRef = useRef();
-  const toast=useToast();
+  const toast = useToast();
   const [mailError, setMailError] = useState();
   const passwordRef = useRef();
   const [passwordError, setPasswordError] = useState();
@@ -20,26 +41,43 @@ const SignIn = ({ setSignin }) => {
     e.preventDefault();
     setSubmitting(true);
     await apiCall
-      .post(
-         "auth/login",
-        {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        },
-      )
+      .post("auth/login", {
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      })
       .then(
         (res) => {
-          setSubmitting(false);
           setCurrentUser(res.data);
-          navigate("/");
-          toast({
-            title: `Manahoana ${res.data.name} a !`,
-            description: 'Tongasoa',
-            duration: 5000,
-            isClosable: true,
-            position: "top",
-            status: "success",
-          });
+          apiCall.get("feeds").then(
+              (res) => {
+                if (res.data.length !== 0) {
+                  const payload = res.data.map((elt) => {
+                    if (elt.type === "interview" || elt.type === "article")
+                      return elt;
+                    else {
+                      elt = { ...elt, type: "question" };
+                      return elt;
+                    }
+                  });
+                  dispatch(addContentFeeds(payload));
+                  dispatch(addPublication(res.data));
+                  dispatch(addInterview(res.data));
+                  toast({
+                    title: `Manahoana ${res.data.name} a !`,
+                    description: "Tongasoa",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "top",
+                    status: "success",
+                  });
+                  navigate("/");
+                }
+              },
+              (err) => {
+                console.log(err);
+              }
+            )
+            .finally(() => setSubmitting(false));
         },
         (err) => {
           let error = err.response.data;
@@ -53,7 +91,7 @@ const SignIn = ({ setSignin }) => {
   return (
     <Box
       className="signin"
-       h='100%'
+      h="100%"
       width="100%"
       paddingX={3}
       paddingBottom={2}
@@ -74,7 +112,8 @@ const SignIn = ({ setSignin }) => {
           <Stack justify="center">
             <FormControl isInvalid={mailError}>
               <Input
-                ref={emailRef} type='text'
+                ref={emailRef}
+                type="text"
                 isRequired
                 placeholder="Téléphone ou Email"
                 border={mailError && "2px solid red"}

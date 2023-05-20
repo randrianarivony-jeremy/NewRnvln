@@ -7,29 +7,45 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../Controler/firebase.config";
 import AuthSlide from "./AuthSlide";
 import { apiCall, currentUserContext } from "../../../Controler/App";
+import { addContentFeeds } from "../../../Controler/Redux/thread.reducer";
+import { addPublication } from "../../../Controler/Redux/publication.reducer";
+import { addInterview } from "../../../Controler/Redux/interview.reducer";
+import { useDispatch } from "react-redux";
 
 const SignUpSubmit = ({ swiper }) => {
-  let {name,email,setInvalidEmail,phoneNumber,password,confirmPassword,setPasswordError,picture,job,address,} = useContext(signUpContext);
-  let {setCurrentUser} = useContext(currentUserContext);
+  let {
+    name,
+    email,
+    setInvalidEmail,
+    phoneNumber,
+    password,
+    confirmPassword,
+    setPasswordError,
+    picture,
+    job,
+    address,
+  } = useContext(signUpContext);
+  let { setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const submitRef = useRef();
   const [submitting, setSubmitting] = useState(false);
+  const dispatch = useDispatch();
 
   const passwordChecking = (e) => {
     e.preventDefault();
-    if (password.current.value !== confirmPassword.current.value){
+    if (password.current.value !== confirmPassword.current.value) {
       setPasswordError(true);
       setSubmitting(false);
-    }else {
+    } else {
       setSubmitting(true);
       if (
         email.current !== null &&
         email.current !== undefined &&
         !isEmail(email.current.value)
-      ){
+      ) {
         setInvalidEmail(true);
         setSubmitting(false);
-      }else {
+      } else {
         if (picture.current !== undefined) storePicture();
         else handleSubmit();
       }
@@ -52,7 +68,7 @@ const SignUpSubmit = ({ swiper }) => {
     else email.current = email.current.value;
     await apiCall
       .post(
-         "auth/register",
+        "auth/register",
         {
           name: name.current.value,
           email: email.current,
@@ -63,24 +79,47 @@ const SignUpSubmit = ({ swiper }) => {
         },
         { withCredentials: true }
       )
-      .then((res) => {
-        setSubmitting(false);
-        setCurrentUser(res.data);
-        navigate('/');
-      },err=>{
-        setSubmitting(false);
-        console.log(err.response.data);
-        // setEmailError(res.data.error.emailError);
-        // setPasswordError(res.data.error.passwordError);
-        // setSexError(res.data.error.sexError);
-        // toast({
-        //   title: "😕 OH OH !!!",
-        //   status: "error",
-        //   duration: 5000,
-        //   isClosable: true,
-        //   position: "bottom",
-        // });
-      });
+      .then(
+        (res) => {
+          setCurrentUser(res.data);
+          apiCall.get("feeds").then(
+              (res) => {
+                if (res.data.length !== 0) {
+                  const payload = res.data.map((elt) => {
+                    if (elt.type === "interview" || elt.type === "article")
+                      return elt;
+                    else {
+                      elt = { ...elt, type: "question" };
+                      return elt;
+                    }
+                  });
+                  dispatch(addContentFeeds(payload));
+                  dispatch(addPublication(res.data));
+                  dispatch(addInterview(res.data));
+                  navigate("/");
+                }
+              },
+              (err) => {
+                console.log(err);
+              }
+            )
+            .finally(() => setSubmitting(false));
+        },
+        (err) => {
+          setSubmitting(false);
+          console.log(err.response.data);
+          // setEmailError(res.data.error.emailError);
+          // setPasswordError(res.data.error.passwordError);
+          // setSexError(res.data.error.sexError);
+          // toast({
+          //   title: "😕 OH OH !!!",
+          //   status: "error",
+          //   duration: 5000,
+          //   isClosable: true,
+          //   position: "bottom",
+          // });
+        }
+      );
   };
 
   return (

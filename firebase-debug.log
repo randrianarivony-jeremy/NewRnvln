@@ -45,3 +45,6 @@ Java HotSpot(TM) 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
 
 Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
  
+[info] {"result":{"permit":true},"id":34,"status":"ok"}
+{"result":{"permit":true},"id":35,"status":"ok"}
+{"result":{"permit":true},"id":36,"status":"ok"} {"metadata":{"emulator":{"name":"storage"},"message":"{\"result\":{\"permit\":true},\"id\":34,\"status\":\"ok\"}\r\n{\"result\":{\"permit\":true},\"id\":35,\"status\":\"ok\"}\r\n{\"result\":{\"permit\":true},\"id\":36,\"status\":\"ok\"}"}}

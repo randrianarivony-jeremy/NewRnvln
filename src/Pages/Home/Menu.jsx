@@ -1,6 +1,28 @@
-import {Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerHeader,DrawerOverlay,Flex,Stack,Text,useColorMode,useDisclosure,} from "@chakra-ui/react";
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  Stack,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { menuOutline } from "ionicons/icons";
+import {
+  cogOutline,
+  help,
+  homeOutline,
+  logOutOutline,
+  menuOutline,
+  moonOutline,
+  peopleOutline,
+  sunnyOutline,
+} from "ionicons/icons";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
@@ -8,59 +30,118 @@ import { iconMd } from "../../Styles/Theme";
 import Logout from "../Login/Logout";
 
 const Menu = () => {
-  const { isOpen, onOpen,onClose } = useDisclosure();
-  const { onOpen:openLogoutModal,onClose:closeLogoutModal,isOpen:openedLogoutModal } = useDisclosure();
-  const {currentUser}=useContext(currentUserContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    onOpen: openLogoutModal,
+    onClose: closeLogoutModal,
+    isOpen: openedLogoutModal,
+  } = useDisclosure();
+  const { currentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <>
-      <Button fontSize='xl' position='absolute' zIndex={2} onClick={onOpen}>
-      <IonIcon icon={menuOutline} style={{fontSize:iconMd}}/>
+      <Button fontSize="xl" position="absolute" zIndex={2} onClick={onOpen}>
+        <IonIcon icon={menuOutline} style={{ fontSize: iconMd }} />
       </Button>
-      <Drawer onOpen={onOpen} isOpen={isOpen} placement="left"
+      <Drawer
+        onOpen={onOpen}
+        isOpen={isOpen}
+        placement="left"
         onClose={() => {
           onClose();
-        //   setLogoutModal(false);
+          //   setLogoutModal(false);
         }}
-        >
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader fontSize='md' fontWeight='bold'>Menu</DrawerHeader>
+          <DrawerHeader fontSize="md" fontWeight="bold">
+            Menu
+          </DrawerHeader>
           <DrawerBody paddingX={3} paddingY={0}>
             <Stack>
-              <Button justifyContent='flex-start' onClick={()=>{navigate('/');onClose()}}>
-                <Flex className="bi-house" width={10} fontSize='xl'></Flex>
+              <Button
+                justifyContent="flex-start"
+                onClick={() => {
+                  navigate("/");
+                  onClose();
+                }}
+              >
+                <IonIcon icon={homeOutline} 
+                  style={{ fontSize: iconMd, width: "40px" }} />
                 <Text>Accueil</Text>
               </Button>
-              <Button justifyContent='flex-start' onClick={()=>{navigate('/subscriptions_only');onClose()}}>
-                <Flex className="bi-people" width={10} fontSize='xl'></Flex>
+              <Button
+                justifyContent="flex-start"
+                onClick={() => {
+                  navigate("/subscriptions_only");
+                  onClose();
+                }}
+              >
+                <IonIcon
+                  icon={peopleOutline}
+                  style={{ fontSize: iconMd, width: "40px" }}
+                />
                 <Text>Abonnements</Text>
               </Button>
-              <Button justifyContent='flex-start' onClick={()=>{navigate('/questions_only');onClose()}}>
-                <Flex className="bi-question-lg" width={10} fontSize='xl'></Flex>
+              <Button
+                justifyContent="flex-start"
+                onClick={() => {
+                  navigate("/questions_only");
+                  onClose();
+                }}
+              >
+                <IonIcon
+                  icon={help}
+                  style={{ fontSize: iconMd, width: "40px" }}
+                />
                 <Text>Questionnaires</Text>
               </Button>
-              <Button justifyContent='flex-start' onClick={()=>navigate('/parameters')}>
-                <Flex className="bi-gear" width={10} fontSize='xl'></Flex>
+              <Button
+                justifyContent="flex-start"
+                onClick={() => navigate("/parameters")}
+              >
+                <IonIcon
+                  icon={cogOutline}
+                  style={{ fontSize: iconMd, width: "40px" }}
+                />
                 <Text>Paramètres</Text>
               </Button>
-              <Button justifyContent='flex-start' onClick={toggleColorMode}>
-                <Flex className={colorMode === "light" ? "bi-moon" : "bi-sun"} width={10} fontSize='xl'></Flex>
-                <Text>{colorMode === "light" ? "Dark mode" : "Light mode"}</Text>
+              <Button justifyContent="flex-start" onClick={toggleColorMode}>
+                <IonIcon
+                  icon={colorMode === "light" ? moonOutline : sunnyOutline}
+                  style={{ fontSize: iconMd, width: "40px" }}
+                />
+                <Text>
+                  {colorMode === "light" ? "Dark mode" : "Light mode"}
+                </Text>
               </Button>
-              {currentUser && <Button justifyContent='flex-start' onClick={openLogoutModal}>
-                <Flex className='bi-box-arrow-right' width={10} fontSize='xl'></Flex>
-                <Text>Se déconnecter</Text>
-              </Button>}
-            {currentUser ? 
-            <Button variant='cta' onClick={()=>navigate('/question')}>Poser une question</Button>
-            : 
-            <Button variant='cta' onClick={()=>navigate('/login')}>Se connecter</Button>}
+              {currentUser && (
+                <Button justifyContent="flex-start" onClick={openLogoutModal}>
+                  <IonIcon
+                    icon={logOutOutline}
+                    style={{ fontSize: iconMd, width: "40px" }}
+                  />
+                  <Text>Se déconnecter</Text>
+                </Button>
+              )}
+              {currentUser ? (
+                <Button variant="cta" onClick={() => navigate("/question")}>
+                  Poser une question
+                </Button>
+              ) : (
+                <Button variant="cta" onClick={() => navigate("/login")}>
+                  Se connecter
+                </Button>
+              )}
             </Stack>
-            <Logout onOpen={openLogoutModal} onClose={closeLogoutModal} isOpen={openedLogoutModal}/>
+            <Logout
+              onOpen={openLogoutModal}
+              onClose={closeLogoutModal}
+              isOpen={openedLogoutModal}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

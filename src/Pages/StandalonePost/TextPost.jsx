@@ -18,7 +18,7 @@ import TextItem from "./TextItem";
 const TextPost = () => {
   const navigate = useNavigate();
   const { post, containerRef } = useContext(postContext);
-  const { data } = useContext(dataContext);
+  const { data,index } = useContext(dataContext);
   const { currentUser } = useContext(currentUserContext);
   return (
     <Flex bg={data.contentType === "short" && data.bg} height="100%">
@@ -54,13 +54,14 @@ const TextPost = () => {
             )}
           </Stack>
         </Flex>
+        
         {data.contentType === "short" ? (
           <ShortPost />
         ) : post.type === "article" ? (
           <TextItem />
         ) : (
           <Stack>
-            <QuestionSlider question={post.question} index={0}/>
+            <QuestionSlider question={post.question} index={index}/>
             <InterviewText />
           </Stack>
         )}

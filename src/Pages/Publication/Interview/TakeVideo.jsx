@@ -10,6 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Portal,
   Text,
   useColorModeValue,
   useDisclosure,
@@ -131,7 +132,7 @@ const TakeVideo = () => {
         <Text fontSize="xs">Film</Text>
       </Button>
       {/* CAMERA  */}
-      {camera && (
+      {camera && (<Portal>
         <Box position="absolute" zIndex={3} top={0} left={0} height="100%">
           <WebCam
             ref={webcamRef}
@@ -143,21 +144,16 @@ const TakeVideo = () => {
             videoConstraints={{ facingMode }}
           />
         </Box>
-      )}
 
       {cameraReady && (
         <>
-          <Flex position="absolute" zIndex={3} top={0} left={0}>
+          <Flex position="absolute" zIndex={3} top={0} left={0} width='100%' justify={'space-between'}>
             {/* CLOSE BUTTON  */}
             <Button
               fontSize="xl"
               className="bi-x-lg"
               onClick={() => (capturing ? handleCancel() : handleExit())}
             ></Button>
-            <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
-              <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex} />
-            </Flex>
-
             {/* SELFIE BUTTON  */}
             <Button
               className="bi-arrow-repeat"
@@ -168,6 +164,11 @@ const TakeVideo = () => {
                   : setFacingMode("user")
               }
             ></Button>
+            
+            <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
+              <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex} />
+            </Flex>
+
           </Flex>
 
           {/* CONTROLS BUTTONS */}
@@ -226,6 +227,8 @@ const TakeVideo = () => {
           </HStack>
         </>
       )}
+      </Portal>
+    )}
 
       {/* Exit confirmation modal */}
       <Modal isCentered onClose={onClose} isOpen={isOpen}>

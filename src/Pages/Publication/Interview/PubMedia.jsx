@@ -38,6 +38,7 @@ const PubMedia = ({ data }) => {
           <AudioDisplay audio={URL.createObjectURL(data.content)} />
         ) : (
           <video
+            height="50vh"
             src={URL.createObjectURL(data.content)}
             alt="video"
             width="100%"
@@ -51,12 +52,12 @@ const PubMedia = ({ data }) => {
             "::-webkit-scrollbar": { display: "none" },
             "::-webkit-resizer": { display: "none" },
           }}
-          onChange={(e) =>{
+          onChange={(e) => {
             responseData.current[swiperRef.current.swiper.activeIndex] = {
               ...data,
               description: e.target.value,
             };
-            console.log(responseData.current)
+            console.log(responseData.current);
           }}
         ></Textarea>
       </Stack>

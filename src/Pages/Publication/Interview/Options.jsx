@@ -16,7 +16,6 @@ const Options = () => {
   return (
     <Stack>
       <HStack alignItems="center" justify="center">
-        <SendVoice />
         <Button
           variant="outline"
           flexDir="column"
@@ -26,7 +25,7 @@ const Options = () => {
           maxW={120}
           onClick={() => {
             setShowOptions((current) => {
-              current[swiperRef.current.swiper.activeIndex] =false;
+              current[swiperRef.current.swiper.activeIndex] = false;
               return current;
             });
             setDisplay(<PubText />);
@@ -35,13 +34,12 @@ const Options = () => {
           <Flex fontSize={40}>Aa</Flex>
           <Text fontSize="xs">Texte</Text>
         </Button>
-      </HStack>
-      <HStack alignItems="center" justify="center">
-        <TakePhoto />
         <UploadPhoto />
+        <TakeVideo />
       </HStack>
       <HStack alignItems="center" justify="center">
-        <TakeVideo />
+        <SendVoice />
+        <TakePhoto />
         <UploadVideo />
       </HStack>
     </Stack>

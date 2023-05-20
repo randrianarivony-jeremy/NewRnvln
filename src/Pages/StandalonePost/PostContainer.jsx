@@ -37,7 +37,7 @@ const PostContainer = ({ post }) => {
           <SwiperSlide key={index}>
             <dataContext.Provider
               value={{
-                data,
+                data,index
               }}
             >
               <Post />

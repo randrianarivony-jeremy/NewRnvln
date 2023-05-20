@@ -83,9 +83,9 @@ const SignUpSubmit = ({ swiper }) => {
         (res) => {
           setCurrentUser(res.data);
           apiCall.get("feeds").then(
-              (res) => {
-                if (res.data.length !== 0) {
-                  const payload = res.data.map((elt) => {
+              (data) => {
+                if (data.data.length !== 0) {
+                  const payload = data.data.map((elt) => {
                     if (elt.type === "interview" || elt.type === "article")
                       return elt;
                     else {
@@ -94,8 +94,8 @@ const SignUpSubmit = ({ swiper }) => {
                     }
                   });
                   dispatch(addContentFeeds(payload));
-                  dispatch(addPublication(res.data));
-                  dispatch(addInterview(res.data));
+                  dispatch(addPublication(payload));
+                  dispatch(addInterview(payload));
                   navigate("/");
                 }
               },

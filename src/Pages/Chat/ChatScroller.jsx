@@ -16,6 +16,7 @@ const ChatScroller = () => {
   })
 
   return (
+    <Box paddingY={2} height='100%'>
     <ScrollableFeed forceScroll={true}
     >
       {messages.map((elt, key) => (
@@ -29,6 +30,7 @@ const ChatScroller = () => {
           <Box className="bi-circle" fontSize='xs'></Box>
         </HStack>}
     </ScrollableFeed>
+    </Box>
   );
 };
 

@@ -9,7 +9,7 @@ import PubMedia from "./PubMedia";
 const SendVoice = () => {
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
-  const { question,setShowOptions,swiperRef } = useContext(interviewContext);
+  const { questions,setShowOptions,swiperRef } = useContext(interviewContext);
   const { setDisplay } = useContext(displayContext);
   const {
     startRecording,
@@ -119,7 +119,7 @@ const SendVoice = () => {
             </Stack>
           </Flex>
           <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
-            <QuestionSlider question={question} />
+            <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex}/>
           </Flex>
         </>
       ) : (

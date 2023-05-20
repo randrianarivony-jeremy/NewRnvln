@@ -5,17 +5,16 @@ import {
   uploadBytes,
   uploadString,
 } from "firebase/storage";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AudioDisplay from "../../../Component/AudioDisplay";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
 import { interviewContext } from "./Interview";
-import Options from "./Options";
 
 const PubMedia = ({ data }) => {
   const navigate = useNavigate();
-  const { setDisplay, question } = useContext(interviewContext);
+  const { swiperRef, question,responseData,showOptions } = useContext(interviewContext);
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useContext(currentUserContext);
   const descriptionRef = useRef();
@@ -78,6 +77,11 @@ const PubMedia = ({ data }) => {
         setSubmitting(false);
       });
   };
+
+  useEffect(()=>{
+    if (showOptions[swiperRef.current.swiper.activeIndex]===false)
+    responseData.current[swiperRef.current.swiper.activeIndex]=data;
+  },[showOptions])
 
   return (
     <Stack height="100%">

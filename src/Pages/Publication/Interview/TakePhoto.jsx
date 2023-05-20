@@ -10,12 +10,17 @@ const TakePhoto = () => {
   const [camera, setCamera] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
   const webcamRef = useRef();
-  const { question } = useContext(interviewContext);
+  const { questions,swiperRef,setShowOptions } = useContext(interviewContext);
   const { setDisplay } = useContext(displayContext);
   const [facingMode, setFacingMode] = useState("environment");
 
   const capture = () => {
     const imgSrc = webcamRef.current.getScreenshot();
+    setShowOptions((current) => {
+      let mirror = [...current];
+      mirror[swiperRef.current.swiper.activeIndex]=false;
+      return mirror;
+    })
     setDisplay(
       <PubMedia data={{ content: imgSrc, contentType: "image_url" }} />
     );
@@ -93,7 +98,7 @@ const TakePhoto = () => {
             ></Button>
           </Flex>
           <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
-            <QuestionSlider question={question} />
+            <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex}/>
           </Flex>
         </>
       )}

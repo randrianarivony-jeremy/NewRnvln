@@ -13,7 +13,7 @@ const Question = () => {
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
-  const [writing, setWriting] = useState(false);
+  const [writing, setWriting] = useState([false]);
   const colors = useRef([
     "transparent",
     "gradient1",
@@ -26,15 +26,20 @@ const Question = () => {
     "Ecrire quelque chose",
   ]);
 
-  const handleChange = (index) => {
+  const handleChange = () => {
     setQuestionsArray((current) => {
-      current[index] =
+      let mirror=[...current]
+      mirror[swiperRef.current.swiper.activeIndex] =
         textareaRef.current.value === ""
           ? "Ecrire quelque chose"
           : textareaRef.current.value;
-      return current;
+      return mirror;
     });
-    setWriting(false);
+    setWriting((current) => {
+      let mirror = [...current];
+      mirror[swiperRef.current.swiper.activeIndex] =false;
+      return mirror;
+    });
   };
 
   const checkEmptyValue = () => {
@@ -101,9 +106,9 @@ const Question = () => {
           ></Button>
           <Button>Poser une question</Button>
         </ButtonGroup>
-        {writing && (
+        {writing[swiperRef.current?.swiper.activeIndex] && (
           <Button
-          onClick={() => handleChange(swiperRef.current.swiper.activeIndex)}
+          onClick={handleChange}
           >
             Terminer
           </Button>

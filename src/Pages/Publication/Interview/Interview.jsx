@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../../Controler/Routes";
 import { apiCall } from "../../../Controler/App";
 import InterviewSwiper from "./InterviewSwiper";
+import SubmitHandler from "./SubmitHandler";
 
 export const interviewContext = createContext();
 
@@ -20,7 +21,6 @@ const Interview = () => {
   const { questionId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
   const [showOptions, setShowOptions] = useState([]);
   const responseData = useRef([]);
   const questions = useRef();
@@ -33,7 +33,7 @@ const Interview = () => {
       await apiCall.get("question/" + questionId).then(
         (res) => {
           let mirror = [];
-          res.data.data.map(() => mirror.push(true));
+          res.data.data.map(() => {mirror.push(true);responseData.current.push('empty')});
           setShowOptions(mirror);
           questions.current = res.data;
           setLoading(false);
@@ -57,7 +57,7 @@ const Interview = () => {
       value={{
         questions: questions.current,
         responseData,
-        swiperRef,
+        swiperRef,responseData,
         showOptions,setShowOptions
       }}
     >
@@ -90,25 +90,17 @@ const Interview = () => {
               <HStack>
                 <Button
                   width="100%"
-                  onClick={() =>
+                  onClick={() =>{
                     setShowOptions((current) => {
                       let mirror = [...current];
                       mirror[swiperRef.current.swiper.activeIndex]=true;
                       return mirror;
-                    })
-                  }
+                    });
+                  }}
                 >
                   Changer
                 </Button>
-                <Button
-                  isLoading={submitting}
-                  loadingText="Envoi"
-                  variant="primary"
-                  width="100%"
-                  // onClick={storeMedia}
-                >
-                  Publier
-                </Button>
+                <SubmitHandler/>
               </HStack>
             </Stack>
           </Stack>

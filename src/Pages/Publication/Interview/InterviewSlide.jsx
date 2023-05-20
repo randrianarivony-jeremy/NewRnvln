@@ -7,11 +7,14 @@ import Options from "./Options";
 export const displayContext = createContext();
 
 const InterviewSlide = ({ index }) => {
-  const { questions, showOptions } = useContext(interviewContext);
+  const { questions, showOptions, responseData } = useContext(interviewContext);
   const [display, setDisplay] = useState(<Options />);
 
   useEffect(() => {
-    if (showOptions[index] === true) setDisplay(<Options />);
+    if (showOptions[index] === true) {
+      setDisplay(<Options />);
+      responseData.current[index] = "empty";
+    }
   }, [showOptions]);
 
   return (

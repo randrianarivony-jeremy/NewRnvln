@@ -33,7 +33,7 @@ const TakeVideo = () => {
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [facingMode, setFacingMode] = useState("environment");
   const { setDisplay } = useContext(displayContext);
-  const { question } = useContext(interviewContext);
+  const { questions,setShowOptions,swiperRef } = useContext(interviewContext);
 
   const { seconds, minutes, start, pause } = useStopwatch({
     autoStart: false,
@@ -88,6 +88,11 @@ const TakeVideo = () => {
       });
       setCamera(false);
       setRecordedChunks([]);
+      setShowOptions((current) => {
+        let mirror = [...current];
+        mirror[swiperRef.current.swiper.activeIndex]=false;
+        return mirror;
+      })
       setDisplay(<PubMedia data={{ content: blob, contentType: "video" }} />);
     }
   };
@@ -150,7 +155,7 @@ const TakeVideo = () => {
               onClick={() => (capturing ? handleCancel() : handleExit())}
             ></Button>
             <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
-              <QuestionSlider question={question} />
+              <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex} />
             </Flex>
 
             {/* SELFIE BUTTON  */}

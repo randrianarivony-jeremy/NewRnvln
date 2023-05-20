@@ -1,16 +1,23 @@
 import { Button, Flex, Input, Text, useToast } from '@chakra-ui/react';
 import React, { useContext, useRef } from 'react';
+import { interviewContext } from './Interview';
 import { displayContext } from './InterviewSlide';
 import PubMedia from './PubMedia';
 
 const UploadPhoto = () => {
     const inputRef=useRef();
     const {setDisplay}=useContext(displayContext);
+    const {setShowOptions,swiperRef}=useContext(interviewContext);
     const toast = useToast();
 
     const handleChange=({currentTarget})=>{
-        if(currentTarget.files[0].size<4096000)
-        setDisplay(<PubMedia data={{content:currentTarget.files[0],contentType:'image'}}/>);
+        if(currentTarget.files[0].size<4096000){
+        setShowOptions((current) => {
+          let mirror = [...current];
+          mirror[swiperRef.current.swiper.activeIndex]=false;
+          return mirror;
+        });
+        setDisplay(<PubMedia data={{content:currentTarget.files[0],contentType:'image'}}/>)}
         else toast({
             title:'Limite excédée',
             description:'Votre fichier est trop lourd. Veuillez ne pas dépasser les 4 mo',

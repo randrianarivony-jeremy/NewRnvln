@@ -8,8 +8,7 @@ const InputCard = ({index}) => {
     const textRef = useRef();
 
     useEffect(() => {
-      console.log(questionsArray)
-      if (!writing)
+      if (!writing[index])
         textFit(textRef.current, {
           minFontSize: 16,
           maxFontSize: 24,
@@ -17,7 +16,7 @@ const InputCard = ({index}) => {
     }, [writing,questionsArray]);
     return (
         <>
-            {writing ? (
+            {writing[index] ? (
               <Textarea
                 margin={"auto"}
                 ref={textareaRef}
@@ -38,7 +37,11 @@ const InputCard = ({index}) => {
                 ref={textRef}
                 width={"100%"}
                 height="100%"
-                onClick={() => setWriting(true)}
+                onClick={() => setWriting((current) => {
+                  let mirror = [...current];
+                  mirror[index] =true;
+                  return mirror;
+                })}
                 fontStyle={questionsArray[index]==='Ecrire quelque chose' ? 'italic' : 'normal'}
                 opacity={questionsArray[index]==='Ecrire quelque chose' ? 0.5 : 1}
               >

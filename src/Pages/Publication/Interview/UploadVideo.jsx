@@ -6,11 +6,17 @@ import PubMedia from './PubMedia';
 const UploadVideo = () => {
     const inputRef=useRef();
     const {setDisplay}=useContext(displayContext);
+    const {setShowOptions,swiperRef}=useContext(displayContext);
     const toast = useToast();
 
     const handleChange=({currentTarget})=>{
-        if(currentTarget.files[0].size<20480000)
-        setDisplay(<PubMedia data={{content:currentTarget.files[0],contentType:'video'}}/>);
+        if(currentTarget.files[0].size<20480000){
+            setShowOptions((current) => {
+              let mirror = [...current];
+              mirror[swiperRef.current.swiper.activeIndex]=false;
+              return mirror;
+            });
+        setDisplay(<PubMedia data={{content:currentTarget.files[0],contentType:'video'}}/>);}
         else toast({
             title:'Limite excédée',
             description:'Votre fichier est trop lourd. Veuillez ne pas dépasser les 20 mo',

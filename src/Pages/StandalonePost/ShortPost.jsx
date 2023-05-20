@@ -3,10 +3,10 @@ import React, { useContext, useEffect, useRef } from "react";
 import { FreeMode, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import textFit from "textfit";
-import { postContext } from "./PostContainer";
+import { dataContext } from "./PostContainer";
 
 const ShortPost = () => {
-  const { post } = useContext(postContext);
+  const { data } = useContext(dataContext);
   const shortContainer = useRef();
   const articleSwiperRef = useRef();
 
@@ -33,12 +33,12 @@ const ShortPost = () => {
           <SwiperSlide>
             <Flex
               ref={shortContainer}
-              justify="center"
+              justify="center" align={'center'}
               height="calc(100% - 40px)"
               marginX={3}
               textAlign="center"
             >
-              {post.content}
+              {data.content}
             </Flex>
           </SwiperSlide>
       </Swiper>

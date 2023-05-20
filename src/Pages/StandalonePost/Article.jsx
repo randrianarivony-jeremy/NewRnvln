@@ -1,13 +1,13 @@
 import { Button, Image } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AudioDisplay from "../../Component/AudioDisplay";
-import { postContext } from "./PostContainer";
+import { dataContext } from "./PostContainer";
 import TextPost from "./TextPost";
 
 const Article = () => {
   const videoRef = useRef();
   const [isPaused, setIsPaused] = useState();
-  const { post } = useContext(postContext);
+  const { data } = useContext(dataContext);
 
   useEffect(() => {
     if (isPaused) videoRef.current?.play();
@@ -16,7 +16,7 @@ const Article = () => {
 
   return (
     <>
-      {post.contentType == "video" ? (
+      {data.contentType == "video" ? (
         <>
           {!isPaused && (
             <Button
@@ -29,7 +29,7 @@ const Article = () => {
             ></Button>
           )}
           <video
-            src={post.content}
+            src={data.content}
             alt="video"
             ref={videoRef}
             loop
@@ -37,11 +37,11 @@ const Article = () => {
             onClick={() => setIsPaused(!isPaused)}
           ></video>
         </>
-      ) : post.contentType === "audio" ? (
-        <AudioDisplay audio={post.content} />
-      ) : post.contentType === "image" ? (
+      ) : data.contentType === "audio" ? (
+        <AudioDisplay audio={data.content} />
+      ) : data.contentType === "image" ? (
         <Image
-          src={post.content}
+          src={data.content}
           alt="picture"
           height="100%"
           draggable={false}

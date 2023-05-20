@@ -2,10 +2,10 @@ import { Box, Text, useColorMode } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FreeMode, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { postContext } from "./PostContainer";
+import { dataContext } from "./PostContainer";
 
 const Description = () => {
-  const { post } = useContext(postContext);
+  const { data } = useContext(dataContext);
   const [longDescription, setLongDescription] = useState(false);
   const { colorMode } = useColorMode();
   const swiperRef=useRef();
@@ -37,7 +37,7 @@ const Description = () => {
             paddingY={1}
             rounded="md"
             >
-            {post.description}
+            {data.description}
           </Text>
         </SwiperSlide>
       </Swiper>

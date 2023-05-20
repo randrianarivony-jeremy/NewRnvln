@@ -1,67 +1,21 @@
 import {
-  Button,
-  HStack,
-  Select,
   Stack,
-  Text,
-  useToast,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import BackgroundOptions from "../../../Component/BackgroundOptions";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
-import { apiCall, currentUserContext } from "../../../Controler/App";
 import { interviewContext } from "./Interview";
-import Options from "./Options";
 
 const PubText = () => {
-  const { swiperRef, question, responseData } = useContext(interviewContext);
-  const { currentUser } = useContext(currentUserContext);
+  const { swiperRef, responseData } = useContext(interviewContext);
   const [textareaBg, setTextareaBg] = useState("transparent");
   const [value, setValue] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const publicConfidentiality = useRef(false);
-  const navigate = useNavigate();
-  const toast = useToast();
 
-  const handleSubmit = async () => {
-    setSubmitting(true);
-    await apiCall
-      .post("publication", {
-        content: value,
-        id_user: currentUser._id,
-        question: question._id,
-        bg: textareaBg,
-        type: "interview",
-        public: publicConfidentiality.current,
-        contentType: value.length > 320 ? "text" : "short",
-      })
-      .then(
-        (res) => {
-          setSubmitting(false);
-          toast({
-            title: "Publication réussie",
-            status: "success",
-            duration: 5000,
-            description: "Votre interview a été bien enregistrée !",
-          });
-          navigate("/");
-        },
-        () => {
-          toast({
-            status: "error",
-            duration: 5000,
-            description: "Veuillez réessayer s'il vous plait",
-            title: "Operation failed",
-          });
-          setSubmitting(false);
-        }
-      );
-  };
   useEffect(() => {
     responseData.current[swiperRef.current.swiper.activeIndex] = value.length>0 ? {
       content: value,
       contentType: value.length < 320 ? "short" : "text",
+      bg:textareaBg
     } : 'empty';
   }, [value]);
 

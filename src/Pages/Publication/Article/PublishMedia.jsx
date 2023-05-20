@@ -59,12 +59,15 @@ const PublishMedia = () => {
 
   const handleSubmit = async () => {
     await apiCall
-      .post( "publication", {
-        content: urlRef.current,public:publicConfidentiality.current,
+      .post("publication", {
+        data: {
+          content: urlRef.current,
+          public: publicConfidentiality.current,
+          description: descriptionRef.current.value,
+          contentType:
+            content.contentType === "image_url" ? "image" : content.contentType,
+        },
         id_user: currentUser._id,
-        description: descriptionRef.current.value,
-        contentType:
-          content.contentType === "image_url" ? "image" : content.contentType,
       })
       .then(
         (res) => {
@@ -73,7 +76,7 @@ const PublishMedia = () => {
             title: "Publication réussie",
             status: "success",
             duration: 5000,
-            isClosable:true,
+            isClosable: true,
             description: "Votre interview a été bien enregistrée !",
           });
           navigate("/");
@@ -81,7 +84,7 @@ const PublishMedia = () => {
         () => {
           toast({
             status: "error",
-            isClosable:true,
+            isClosable: true,
             duration: 5000,
             description: "Veuillez réessayer s'il vous plait",
             title: "Operation failed",
@@ -127,7 +130,8 @@ const PublishMedia = () => {
             style={{ objectFit: "contain" }}
           />
         )}
-        <Textarea ref={descriptionRef}
+        <Textarea
+          ref={descriptionRef}
           placeholder="Description"
           sx={{
             "::-webkit-scrollbar": { display: "none" },
@@ -136,16 +140,14 @@ const PublishMedia = () => {
         ></Textarea>
         <HStack>
           <Text whiteSpace="nowrap">Confidentialité :</Text>
-          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
+          <Select
+            onChange={(e) => (publicConfidentiality.current = e.target.value)}
+          >
             <option value={false}>Entre amis</option>
             <option value={true}>Public</option>
           </Select>
         </HStack>
-        <HStack
-          paddingY={2}
-          paddingX={3}
-          width="100%"
-        >
+        <HStack paddingY={2} paddingX={3} width="100%">
           <Button width="100%" onClick={() => navigate(-1)}>
             Annuler
           </Button>

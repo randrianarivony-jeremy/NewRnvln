@@ -18,10 +18,13 @@ const PublishText = () => {
     setSubmitting(true);
     await apiCall
       .post( "publication", {
-        content: value,
-        bg:textareaBg,public:publicConfidentiality.current,
+        data:{
+          content: value,
+          bg:textareaBg,
+          contentType: value.length<320 ? "short" : "text",
+        },
+        public:publicConfidentiality.current,
         id_user: currentUser._id,
-        contentType: value.length<320 ? "short" : "text",
       })
       .then(() => {
         setSubmitting(false);
@@ -67,7 +70,7 @@ const PublishText = () => {
             setValue={setValue}
             textareaBg={textareaBg}
           />
-        {value<320 && <BackgroundOptions textareaBg={textareaBg} setTextareaBg={setTextareaBg}/>}
+        {value.length<320 && <BackgroundOptions textareaBg={textareaBg} setTextareaBg={setTextareaBg}/>}
           <HStack>
           <Text whiteSpace="nowrap">Confidentialité :</Text>
           <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>

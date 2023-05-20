@@ -9,7 +9,8 @@ const Question = () => {
   const { currentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const textareaRef = useRef();
-  const swiperRef = useRef();
+    const slideEvent=useRef();
+    const swiperRef = useRef();
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
@@ -27,6 +28,7 @@ const Question = () => {
   ]);
 
   const handleChange = () => {
+    slideEvent.current = 'update';
     setQuestionsArray((current) => {
       let mirror=[...current]
       mirror[swiperRef.current.swiper.activeIndex] =
@@ -125,7 +127,7 @@ const Question = () => {
           textareaRef,
           swiperRef,
           writing,
-          setWriting,
+          setWriting,slideEvent
         }}
       >
         <SwiperQuestion />

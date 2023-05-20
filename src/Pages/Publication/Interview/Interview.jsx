@@ -33,7 +33,10 @@ const Interview = () => {
       await apiCall.get("question/" + questionId).then(
         (res) => {
           let mirror = [];
-          res.data.data.map(() => {mirror.push(true);responseData.current.push('empty')});
+          res.data.data.map(() => {
+            mirror.push(true);
+            responseData.current.push("empty");
+          });
           setShowOptions(mirror);
           questions.current = res.data;
           setLoading(false);
@@ -52,23 +55,38 @@ const Interview = () => {
     fetchQuestion();
   }, []);
 
+  // useEffect(()=>{
+  //   if (swiperRef.current)
+  //   changeDisabled.current=showOptions[swiperRef.current.swiper.activeIndex]
+  // },[showOptions])
+
   return (
     <interviewContext.Provider
       value={{
         questions: questions.current,
         responseData,
-        swiperRef,responseData,
-        showOptions,setShowOptions
+        swiperRef,
+        responseData,
+        showOptions,
+        setShowOptions,
+        publicConfidentiality
       }}
     >
       <Box>
-        <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-          <Button
-            variant="float"
-            className="bi-arrow-left"
-            onClick={() => navigate(-1)}
-          ></Button>
-          <Button>Interview</Button>
+        <Flex
+          borderBottom="1px solid"
+          borderBottomColor="whiteAlpha.500"
+          justify={"space-between"}
+        >
+          <Flex>
+            <Button
+              variant="float"
+              className="bi-arrow-left"
+              onClick={() => navigate(-1)}
+            ></Button>
+            <Button>Interview</Button>
+          </Flex>
+          {!loading && questions.current.data.length > 1 && <SubmitHandler />}
         </Flex>
         {loading ? (
           <Loader />
@@ -87,21 +105,26 @@ const Interview = () => {
                   <option value={true}>Public</option>
                 </Select>
               </HStack>
-              <HStack>
-                <Button
-                  width="100%"
-                  onClick={() =>{
-                    setShowOptions((current) => {
-                      let mirror = [...current];
-                      mirror[swiperRef.current.swiper.activeIndex]=true;
-                      return mirror;
-                    });
-                  }}
-                >
-                  Changer
-                </Button>
-                <SubmitHandler/>
-              </HStack>
+              {questions.current.data.length > 1 ? (
+                <HStack>
+                  <Button
+                    width="100%"
+                    variant={"outline"}
+                    onClick={() => swiperRef.current.swiper.slidePrev()}
+                  >
+                    Précédent
+                  </Button>
+                  <Button
+                    width="100%"
+                    variant={"primary"}
+                    onClick={() => swiperRef.current.swiper.slideNext()}
+                  >
+                    Suivant
+                  </Button>
+                </HStack>
+              ) : (
+                <SubmitHandler />
+              )}
             </Stack>
           </Stack>
         )}

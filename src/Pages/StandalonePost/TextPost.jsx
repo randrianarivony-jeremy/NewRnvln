@@ -11,16 +11,17 @@ import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
 import QuestionSlider from "./QuestionSlider";
 import InterviewText from "./InterviewText";
-import { postContext } from "./PostContainer";
+import { dataContext, postContext } from "./PostContainer";
 import ShortPost from "./ShortPost";
 import TextItem from "./TextItem";
 
 const TextPost = () => {
   const navigate = useNavigate();
   const { post, containerRef } = useContext(postContext);
+  const { data } = useContext(dataContext);
   const { currentUser } = useContext(currentUserContext);
   return (
-    <Flex bg={post.contentType === "short" && post.bg} height="100%">
+    <Flex bg={data.contentType === "short" && data.bg} height="100%">
       <Stack ref={containerRef} height="calc(100% - 40px)" marginTop={10}>
         {/* I N F O  */}
         <Flex
@@ -53,7 +54,7 @@ const TextPost = () => {
             )}
           </Stack>
         </Flex>
-        {post.contentType === "short" ? (
+        {data.contentType === "short" ? (
           <ShortPost />
         ) : post.type === "article" ? (
           <TextItem />

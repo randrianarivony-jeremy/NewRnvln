@@ -1,8 +1,8 @@
 import { Button, Input } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { image } from "ionicons/icons";
-import React, { useContext, useRef, useState } from "react";
+import { imageOutline } from "ionicons/icons";
+import React, { useContext, useRef } from "react";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
@@ -50,7 +50,7 @@ const SendPicture = () => {
     <>
       <Button variant='float'
         onClick={() => fileInputRef.current.click()}
-      ><IonIcon icon={image}/></Button>
+      ><IonIcon icon={imageOutline}/></Button>
       <Input
         ref={fileInputRef}
         type="file"

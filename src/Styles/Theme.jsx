@@ -52,6 +52,9 @@ export const theme = extendTheme({
   },
   components: {
     Button: {
+      baseStyle:{
+        textOverflow:'ellipsis'
+      },
       variants: {
         cta: (props)=>({
           bg: "gradient",
@@ -77,6 +80,8 @@ export const theme = extendTheme({
         },
         float: (props)=>({
           bg: "transparent",
+          paddingX:0,
+          fontSize:'2xl',
           boxSize: "40px",
           borderRadius: "5px",
           _hover: {

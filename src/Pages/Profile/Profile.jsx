@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   HStack,
   Image,
   Stack,
@@ -20,12 +19,9 @@ import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
 import { apiCall, currentUserContext } from "../../Controler/App";
-import { Scroll } from "../../Styles/Theme";
+import { iconMd, Scroll } from "../../Styles/Theme";
 import UserInterviews from "./Contents/UserInterviews";
 import UserArticles from "./Contents/UserArticles";
-import EnableSubscription from "./Relation/EnableSubscription";
-import RelationList from "./Relation/RelationList";
-import Thumbs from "./Thumbs";
 import AddressModal from "./UpdateProfile/AddressModal";
 import JobModal from "./UpdateProfile/JobModal";
 import PhilosophyModal from "./UpdateProfile/PhilosophyModal";
@@ -33,7 +29,18 @@ import ProfilePicture from "./UpdateProfile/ProfilePicture";
 import ProjectModal from "./UpdateProfile/ProjectModal";
 import RelationBoard from "./Relation/RelationBoard";
 import { IonIcon } from "@ionic/react";
-import { addCircleOutline, apps, arrowBack, bookmarkOutline, briefcase, cog, flag, location, pencil, walletOutline } from "ionicons/icons";
+import {
+  addCircleOutline,
+  apps,
+  arrowBack,
+  bookmarkOutline,
+  briefcase,
+  flag,
+  location,
+  pencil,
+  settingsOutline,
+  walletOutline,
+} from "ionicons/icons";
 
 const Profile = () => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -59,17 +66,14 @@ const Profile = () => {
     onClose: closePhilosophyModal,
   } = useDisclosure();
 
-  
   useEffect(() => {
     const fetchUser = async () => {
-      await apiCall
-        .get( "user/" + currentUser._id)
-        .then(
-          (res) => setCurrentUser(res.data),
-          () => {
-            navigate(-1);
-          }
-        );
+      await apiCall.get("user/" + currentUser._id).then(
+        (res) => setCurrentUser(res.data),
+        () => {
+          navigate(-1);
+        }
+      );
     };
     fetchUser();
   }, []);
@@ -89,32 +93,35 @@ const Profile = () => {
             borderBottom="1px solid"
             borderBottomColor="whiteAlpha.500"
           >
+            <Button size={"lg"} fontSize="2xl" onClick={() => navigate(-1)}>
+              <IonIcon icon={arrowBack} />
+            </Button>
+            <Button size="lg">Profil</Button>
             <Button
-              variant="float"
-              onClick={() => navigate(-1)}
-            ><IonIcon icon={arrowBack}/></Button>
-            <Button>Profil</Button>
-            <Button
-              variant="float"
+              size={"lg"}
+              fontSize="2xl"
               onClick={() => navigate("/parameters")}
-            ><IonIcon icon={cog}/></Button>
+            >
+              <IonIcon icon={settingsOutline} />
+            </Button>
           </Flex>
           <Scroll paddingX={2} spacing={5} height="100%">
             {/* A B O U T  */}
-            <HStack align="center" spacing={3}>
+            <HStack align="center" spacing={2}>
               <ProfilePicture />
               <Box>
                 <Text
                   maxWidth="calc(100vw - 100px)"
                   fontWeight="bold"
-                  fontSize="lg"
+                  fontSize="2xl"
+                  noOfLines={1}
                 >
                   {currentUser.name}
                 </Text>
-                <Stack spacing={0} marginLeft={3} fontSize="sm">
+                <Stack spacing={2} marginLeft={3} fontSize="sm">
                   {/* JOB  */}
                   <HStack align="flex-start">
-                  <IonIcon icon={briefcase}/>
+                    <IonIcon icon={briefcase} />
                     {currentUser.job === "" ? (
                       <Button
                         size="sm"
@@ -126,19 +133,20 @@ const Profile = () => {
                       </Button>
                     ) : (
                       <Text onClick={openJobModal}>
-                        {currentUser.job} <IonIcon icon={pencil}/>
+                        {currentUser.job} 
+                        <IonIcon icon={pencil} />
                       </Text>
                     )}
-                  <JobModal
-                    isOpen={jobModal}
-                    onOpen={openJobModal}
-                    onClose={closeJobModal}
+                    <JobModal
+                      isOpen={jobModal}
+                      onOpen={openJobModal}
+                      onClose={closeJobModal}
                     />
-                    </HStack>
+                  </HStack>
 
                   {/* ADDRESS  */}
                   <HStack align="flex-start">
-                  <IonIcon icon={location}/>
+                    <IonIcon icon={location} />
                     {currentUser.address === "" ? (
                       <Button
                         size="sm"
@@ -150,20 +158,19 @@ const Profile = () => {
                       </Button>
                     ) : (
                       <Text onClick={openAddressModal}>
-                        {currentUser.address}{" "}
-                        <IonIcon icon={pencil}/>
+                        {currentUser.address} <IonIcon icon={pencil} />
                       </Text>
                     )}
-                  <AddressModal
-                    isOpen={addressModal}
-                    onOpen={openAddressModal}
-                    onClose={closeAddressModal}
+                    <AddressModal
+                      isOpen={addressModal}
+                      onOpen={openAddressModal}
+                      onClose={closeAddressModal}
                     />
-                    </HStack>
+                  </HStack>
 
                   {/* PROJECT  */}
                   <HStack align="flex-start">
-                  <IonIcon icon={flag}/>
+                    <IonIcon icon={flag} />
                     {currentUser.project === "" ? (
                       <Button
                         size="sm"
@@ -175,16 +182,15 @@ const Profile = () => {
                       </Button>
                     ) : (
                       <Text onClick={openProjectModal}>
-                        {currentUser.project}{" "}
-                        <IonIcon icon={pencil}/>
+                        {currentUser.project} <IonIcon icon={pencil} />
                       </Text>
                     )}
-                  <ProjectModal
-                    isOpen={projectModal}
-                    onOpen={openProjectModal}
-                    onClose={closeProjectModal}
+                    <ProjectModal
+                      isOpen={projectModal}
+                      onOpen={openProjectModal}
+                      onClose={closeProjectModal}
                     />
-                    </HStack>
+                  </HStack>
                 </Stack>
               </Box>
             </HStack>
@@ -204,7 +210,7 @@ const Profile = () => {
             ) : (
               <Button
                 onClick={openPhilosophyModal}
-                leftIcon={<IonIcon icon={addCircleOutline}/>}
+                leftIcon={<IonIcon icon={addCircleOutline} style={{fontSize:iconMd}}/>}
                 minHeight={10}
               >
                 Ajouter votre philosophie de l'argent
@@ -217,7 +223,7 @@ const Profile = () => {
             />
 
             {/* R E L A T I O N  */}
-            <RelationBoard user={currentUser}/>
+            <RelationBoard user={currentUser} />
 
             {/* P O S T S  T A B  */}
             <Tabs size="sm" isFitted height="100%" isLazy={true}>
@@ -230,19 +236,25 @@ const Profile = () => {
                 </Tab>
                 <Tab width="25%">
                   <Stack spacing={0}>
-                    <Text fontSize="xl"><IonIcon icon={apps}/></Text>
+                    <Text fontSize="xl">
+                      <IonIcon icon={apps} />
+                    </Text>
                     <Text fontSize="xs">Publications</Text>
                   </Stack>
                 </Tab>
                 <Tab width="25%" overflowX="hidden">
                   <Stack spacing={0}>
-                    <Text fontSize="xl"><IonIcon icon={bookmarkOutline}/></Text>
+                    <Text fontSize="xl">
+                      <IonIcon icon={bookmarkOutline} />
+                    </Text>
                     <Text fontSize="xs">Enregistrements</Text>
                   </Stack>
                 </Tab>
                 <Tab width="25%">
                   <Stack spacing={0}>
-                    <Text fontSize="xl"><IonIcon icon={walletOutline}/></Text>
+                    <Text fontSize="xl">
+                      <IonIcon icon={walletOutline} />
+                    </Text>
                     <Text fontSize="xs">Portefeuille</Text>
                   </Stack>
                 </Tab>

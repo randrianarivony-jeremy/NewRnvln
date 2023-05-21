@@ -68,8 +68,7 @@ const Chat = () => {
       <chatContext.Provider value={{ messages, setMessages, userB,conversationId
         ,newConversation,setNewConversation,submitting, setSubmitting,draft }}>
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-          <Button
-            variant="float"
+          <Button size={'lg'}
             onClick={() => navigate(-1)}
           ><IonIcon icon={arrowBack}/></Button>
           <Button>{userB?.name} &nbsp; <Flex fontStyle='italic' fontWeight='normal'>{userB?.job}</Flex></Button>

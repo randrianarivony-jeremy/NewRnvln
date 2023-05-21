@@ -8,7 +8,8 @@ import { chatContext } from "./Chat";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
-import { chevronForward, happy, send } from "ionicons/icons";
+import { chevronForward, happy, happyOutline, send } from "ionicons/icons";
+import { iconMd } from "../../Styles/Theme";
 
 const ChatInputs = ({sendResponse}) => {
   const responseRef = useRef();
@@ -91,11 +92,11 @@ const ChatInputs = ({sendResponse}) => {
           <Popover isLazy={true} returnFocusOnClose={false}>
             <PopoverTrigger>
               <Button
+              variant={'float'}
                 pos="absolute"
                 zIndex={2}
                 left={writing ? 10 : 0}
-                boxSize={38}
-              ><IonIcon icon={happy}/></Button>
+              ><IonIcon icon={happyOutline}/></Button>
             </PopoverTrigger>
             <Portal>
               <PopoverContent>

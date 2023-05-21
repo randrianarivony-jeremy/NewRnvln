@@ -1,7 +1,7 @@
 import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { checkmark, close, mic, refresh } from "ionicons/icons";
+import { checkmark, close, micOutline, refresh } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
@@ -138,7 +138,7 @@ const SendVoice = () => {
         <Button
           variant="float"
           onClick={handleRecordingOn}
-        ><IonIcon icon={mic}/>
+        ><IonIcon icon={micOutline}/>
         </Button>
       )}
     </>

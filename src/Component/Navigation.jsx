@@ -22,7 +22,7 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        {({isActive})=>(<Button flexDir="column">
+        {({isActive})=>(<Button flexDir="column" size={'lg'}>
           <IonIcon icon={isActive ? home : homeOutline} style={{fontSize:iconMd}}/>
           <Text fontSize={12}>Accueil</Text>
         </Button>)}
@@ -34,7 +34,7 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        {({isActive})=>(<Button flexDir="column">
+        {({isActive})=>(<Button flexDir="column" size={'lg'}>
           <Flex position='relative'>  
           <IonIcon icon={isActive ? notifications : notificationsOutline} style={{fontSize:iconMd}}/>  
           {newNotification>0 && <Badge position='absolute' bgColor='red' right='-10px' top={0} lineHeight={5}>{newNotification}</Badge>}
@@ -49,7 +49,7 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        {({isActive})=>(<Button flexDir="column">
+        {({isActive})=>(<Button flexDir="column" size={'lg'}>
           <IonIcon icon={isActive ? addCircle : addCircleOutline} style={{fontSize:iconXl}}/>
       </Button>)}
       </NavLink>
@@ -60,7 +60,7 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        {({isActive})=>(<Button flexDir="column">
+        {({isActive})=>(<Button flexDir="column" size={'lg'}>
           <Flex position='relative'>
           <IonIcon icon={isActive ? chatbox : chatboxOutline} style={{fontSize:iconMd}}/>
           {newMainMessage>0 && 
@@ -78,7 +78,7 @@ const Navigation = () => {
           isActive ? "nav-icons-active" : "nav-icons"
         }
       >
-        {({isActive})=>(<Button flexDir="column">
+        {({isActive})=>(<Button flexDir="column" size={'lg'}>
         <IonIcon icon={isActive ? person : personOutline} style={{fontSize:iconMd}}/>
           <Text fontSize={12}>Profil</Text>
         </Button>)}

@@ -32,6 +32,8 @@ import PhilosophyModal from "./UpdateProfile/PhilosophyModal";
 import ProfilePicture from "./UpdateProfile/ProfilePicture";
 import ProjectModal from "./UpdateProfile/ProjectModal";
 import RelationBoard from "./Relation/RelationBoard";
+import { IonIcon } from "@ionic/react";
+import { addCircleOutline, apps, arrowBack, bookmarkOutline, briefcase, cog, flag, location, pencil, walletOutline } from "ionicons/icons";
 
 const Profile = () => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
@@ -89,15 +91,13 @@ const Profile = () => {
           >
             <Button
               variant="float"
-              className="bi-arrow-left"
               onClick={() => navigate(-1)}
-            ></Button>
+            ><IonIcon icon={arrowBack}/></Button>
             <Button>Profil</Button>
             <Button
               variant="float"
-              className="bi-gear"
               onClick={() => navigate("/parameters")}
-            ></Button>
+            ><IonIcon icon={cog}/></Button>
           </Flex>
           <Scroll paddingX={2} spacing={5} height="100%">
             {/* A B O U T  */}
@@ -114,7 +114,7 @@ const Profile = () => {
                 <Stack spacing={0} marginLeft={3} fontSize="sm">
                   {/* JOB  */}
                   <HStack align="flex-start">
-                    <span className="bi-briefcase-fill"></span>
+                  <IonIcon icon={briefcase}/>
                     {currentUser.job === "" ? (
                       <Button
                         size="sm"
@@ -126,7 +126,7 @@ const Profile = () => {
                       </Button>
                     ) : (
                       <Text onClick={openJobModal}>
-                        {currentUser.job} <span className="bi-pencil"></span>
+                        {currentUser.job} <IonIcon icon={pencil}/>
                       </Text>
                     )}
                   <JobModal
@@ -138,7 +138,7 @@ const Profile = () => {
 
                   {/* ADDRESS  */}
                   <HStack align="flex-start">
-                    <span className="bi-geo-alt-fill"></span>
+                  <IonIcon icon={location}/>
                     {currentUser.address === "" ? (
                       <Button
                         size="sm"
@@ -151,7 +151,7 @@ const Profile = () => {
                     ) : (
                       <Text onClick={openAddressModal}>
                         {currentUser.address}{" "}
-                        <span className="bi-pencil"></span>
+                        <IonIcon icon={pencil}/>
                       </Text>
                     )}
                   <AddressModal
@@ -163,7 +163,7 @@ const Profile = () => {
 
                   {/* PROJECT  */}
                   <HStack align="flex-start">
-                    <span className="bi-flag-fill"></span>
+                  <IonIcon icon={flag}/>
                     {currentUser.project === "" ? (
                       <Button
                         size="sm"
@@ -176,7 +176,7 @@ const Profile = () => {
                     ) : (
                       <Text onClick={openProjectModal}>
                         {currentUser.project}{" "}
-                        <span className="bi-pencil"></span>
+                        <IonIcon icon={pencil}/>
                       </Text>
                     )}
                   <ProjectModal
@@ -204,7 +204,7 @@ const Profile = () => {
             ) : (
               <Button
                 onClick={openPhilosophyModal}
-                leftIcon={<span className="bi-plus-circle"></span>}
+                leftIcon={<IonIcon icon={addCircleOutline}/>}
                 minHeight={10}
               >
                 Ajouter votre philosophie de l'argent
@@ -230,19 +230,19 @@ const Profile = () => {
                 </Tab>
                 <Tab width="25%">
                   <Stack spacing={0}>
-                    <Text fontSize="xl" className="bi-grid-3x3-gap"></Text>
+                    <Text fontSize="xl"><IonIcon icon={apps}/></Text>
                     <Text fontSize="xs">Publications</Text>
                   </Stack>
                 </Tab>
                 <Tab width="25%" overflowX="hidden">
                   <Stack spacing={0}>
-                    <Text fontSize="xl" className="bi-bookmark"></Text>
+                    <Text fontSize="xl"><IonIcon icon={bookmarkOutline}/></Text>
                     <Text fontSize="xs">Enregistrements</Text>
                   </Stack>
                 </Tab>
                 <Tab width="25%">
                   <Stack spacing={0}>
-                    <Text fontSize="xl" className="bi-wallet2"></Text>
+                    <Text fontSize="xl"><IonIcon icon={walletOutline}/></Text>
                     <Text fontSize="xs">Portefeuille</Text>
                   </Stack>
                 </Tab>

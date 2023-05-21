@@ -1,4 +1,6 @@
 import { Button, ButtonGroup, Flex } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { close, trashOutline } from "ionicons/icons";
 import React, { useContext, useState } from "react";
 import { useLongPress } from "use-long-press";
 import { apiCall, currentUserContext } from "../../Controler/App";
@@ -43,13 +45,12 @@ const SingleMessage = ({ message }) => {
       <DataDisplay data={message} />
       {deleteFooter && (
         <ButtonGroup size='sm'>
-          <Button className="bi-x-lg" onClick={() => setDeleteFooter(false)}></Button>
+          <Button onClick={() => setDeleteFooter(false)}><IonIcon icon={close}/></Button>
           <Button
             isLoading={submitting}
             variant="outline"
             onClick={deleteMessage}
-            className="bi-trash"
-          >
+          ><IonIcon icon={trashOutline}/>
           </Button>
         </ButtonGroup>
       )}

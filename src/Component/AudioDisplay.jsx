@@ -1,11 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import PropTypes from "prop-types";
-import { Box, Button, ButtonGroup, Flex, HStack, Skeleton, Text } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import {iconMd} from '../Styles/Theme';
+import {
+  pause,
+  play,
+  playBackOutline,
+  playForwardOutline,
+} from "ionicons/icons";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  HStack,
+  Skeleton,
+  Text,
+} from "@chakra-ui/react";
 
 const AudioDisplay = ({ audio }) => {
   const containerRef = useRef();
-  const [duration,setDuration]=useState();
+  const [duration, setDuration] = useState();
   const waveSurferRef = useRef({
     isPlaying: () => false,
   });
@@ -26,7 +42,10 @@ const AudioDisplay = ({ audio }) => {
       setDuration(waveSurferRef.current.getDuration());
     });
     waveSurfer.on("audioprocess", () => {
-      setDuration(waveSurferRef.current.getDuration()-waveSurferRef.current.getCurrentTime());
+      setDuration(
+        waveSurferRef.current.getDuration() -
+          waveSurferRef.current.getCurrentTime()
+      );
     });
     waveSurfer.on("finish", () => {
       toggleIsPlaying(waveSurferRef.current.isPlaying());
@@ -39,35 +58,43 @@ const AudioDisplay = ({ audio }) => {
 
   return (
     <Flex width="100%" flexDir="column" alignItems="center">
-        <Box width="90%" ref={containerRef} />
+      <Box width="90%" ref={containerRef} />
       <ButtonGroup variant="ghost">
+        <Button onClick={() => waveSurferRef.current.skipBackward()}>
+          <IonIcon icon={playBackOutline} style={{ fontSize: iconMd }} />
+        </Button>
         <Button
-          className="bi-rewind"
-          onClick={() => waveSurferRef.current.skipBackward()}
-        ></Button>
-        <Button fontSize='3xl'
+          fontSize="3xl"
           onClick={() => {
             waveSurferRef.current.playPause();
             toggleIsPlaying(waveSurferRef.current.isPlaying());
           }}
-          className={isPlaying ? "bi-pause" : "bi-play"}
-        ></Button>
+        >
+          <IonIcon
+            icon={isPlaying ? pause : play}
+            style={{ fontSize: iconMd }}
+          />
+        </Button>
         <Button
-          className="bi-fast-forward"
           onClick={() => waveSurferRef.current.skipForward()}
-        ></Button>
+        >
+          <IonIcon icon={playForwardOutline} style={{ fontSize: iconMd }} />
+        </Button>
       </ButtonGroup>
-        {duration===undefined ? <HStack>
-        <Skeleton height={4} width={2} rounded={2}/>
-        <Skeleton height={4} width={2} rounded={2}/>
-        <Box>:</Box>
-        <Skeleton height={4} width={2} rounded={2}/>
-        <Skeleton height={4} width={2} rounded={2}/>
+      {duration === undefined ? (
+        <HStack>
+          <Skeleton height={4} width={2} rounded={2} />
+          <Skeleton height={4} width={2} rounded={2} />
+          <Box>:</Box>
+          <Skeleton height={4} width={2} rounded={2} />
+          <Skeleton height={4} width={2} rounded={2} />
         </HStack>
-         : <Text width="fit-content" marginLeft={1}>
+      ) : (
+        <Text width="fit-content" marginLeft={1}>
           {String(Math.floor(duration / 60)).padStart(2, 0)}:
           {String(Math.floor(duration % 60)).padStart(2, 0)}
-        </Text>}
+        </Text>
+      )}
     </Flex>
   );
 };

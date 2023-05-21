@@ -9,7 +9,7 @@ const Logout = ({onOpen,onClose,isOpen}) => {
   const toast = useToast();
   const navigate = useNavigate();
   const {setCurrentUser}=useContext(currentUserContext);
-  const bg = useColorModeValue('white','dark.0')
+  const bg = useColorModeValue('white','dark.50')
 
   const removeCookie = (key) => {
     if (window !== "undefined") {
@@ -45,8 +45,8 @@ const Logout = ({onOpen,onClose,isOpen}) => {
           <ModalBody>Tena hi-déconnecte marina ve ?</ModalBody>
           <ModalFooter d='flex'>
             <ButtonGroup>
-            <Button bgColor='transparent' onClick={handleLogout}>Confirmer</Button>
-            <Button variant='outline' onClick={onClose}>Annuler</Button>
+            <Button variant='dissuasive' onClick={handleLogout}>Se déconnecter</Button>
+            <Button onClick={onClose}>Annuler</Button>
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>

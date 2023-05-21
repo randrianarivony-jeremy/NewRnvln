@@ -6,6 +6,8 @@ import ChatInput from "./ChatInput";
 import { Scroll } from "../../Styles/Theme";
 import { Loader } from "../../Controler/Routes";
 import { apiCall, currentUserContext } from "../../Controler/App";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 
 export const chatContext = createContext();
 
@@ -68,9 +70,8 @@ const Chat = () => {
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
           <Button
             variant="float"
-            className="bi-arrow-left"
             onClick={() => navigate(-1)}
-          ></Button>
+          ><IonIcon icon={arrowBack}/></Button>
           <Button>{userB?.name} &nbsp; <Flex fontStyle='italic' fontWeight='normal'>{userB?.job}</Flex></Button>
         </Flex>
         {loading ? (

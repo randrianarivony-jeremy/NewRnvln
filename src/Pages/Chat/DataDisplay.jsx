@@ -1,5 +1,7 @@
 import { Box, Button, Image } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
 import axios from "axios";
+import { play } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
 import { currentUserContext } from "../../Controler/App";
@@ -42,10 +44,9 @@ const DataDisplay = ({ data }) => {
               position="absolute"
               zIndex={1}
               fontSize="8xl"
-              className="bi-play-fill"
               color="white"
               onClick={() => setIsPaused(!isPaused)}
-              ></Button>
+              ><IonIcon icon={play}/></Button>
               )}
           <video
             src={data.content}

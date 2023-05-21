@@ -1,5 +1,5 @@
-import { Box, Button, Flex, Stack, useColorMode } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef } from "react";
+import { Box, Button, Flex, Stack } from "@chakra-ui/react";
+import React, { useContext, useEffect } from "react";
 import { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { IonIcon } from "@ionic/react";
@@ -17,7 +17,6 @@ const SwiperQuestion = () => {
     colors,
     slideEvent,
   } = useContext(questionContext);
-  const { colorMode } = useColorMode();
 
   const appendQuestion = () => {
     let mirror = [...questionsArray];
@@ -78,7 +77,7 @@ const SwiperQuestion = () => {
           paddingX={0}
           boxSize={12}
           rounded="full"
-          bgColor={colorMode === "dark" ? "blackAlpha.400" : "whiteAlpha.500"}
+          bgColor={'blackAlpha.400'}
         >
           <IonIcon icon={add} style={{ fontSize: "40px" }} />
         </Button>
@@ -87,7 +86,7 @@ const SwiperQuestion = () => {
           isDisabled={questionsArray.length < 2}
           boxSize={12}
           rounded="full"
-          bgColor={colorMode === "dark" ? "blackAlpha.400" : "whiteAlpha.500"}
+          bgColor={'blackAlpha.400'}
           paddingX={0}
         >
           <IonIcon icon={remove} style={{ fontSize: "30px" }} />
@@ -96,7 +95,7 @@ const SwiperQuestion = () => {
           bg={colors.current[colorIndex + 1]}
           rounded="full"
           onClick={() =>
-            colorIndex == 5
+            colorIndex == 9
               ? setColorIndex(0)
               : setColorIndex((current) => current + 1)
           }

@@ -23,6 +23,8 @@ import { addContentFeeds } from "../../Controler/Redux/thread.reducer";
 import { addPublication } from "../../Controler/Redux/publication.reducer";
 import { addInterview } from "../../Controler/Redux/interview.reducer";
 import { useDispatch } from "react-redux";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 
 const SignIn = ({ setSignin }) => {
   const { setCurrentUser } = useContext(currentUserContext);
@@ -100,9 +102,8 @@ const SignIn = ({ setSignin }) => {
         <GridItem>
           <Button
             variant="float"
-            className="bi-arrow-left"
             onClick={() => navigate(-1)}
-          ></Button>
+          ><IonIcon icon={arrowBack}/></Button>
           <Image src={logo} alt="logo" width="80px" margin="auto" />
           <Heading size="md" textAlign="center" height={10}>
             Connexion

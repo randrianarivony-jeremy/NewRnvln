@@ -1,4 +1,6 @@
 import { Box, Button, Flex, Portal } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { cameraReverseOutline, close, radioButtonOnOutline } from "ionicons/icons";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
@@ -46,10 +48,9 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                 transform="auto"
                 translateX="-50%"
                 bgColor="transparent"
-                className="bi-circle"
                 fontSize={80}
                 onClick={capture}
-              ></Button>
+              ><IonIcon icon={radioButtonOnOutline}/></Button>
               <Flex
                 className="camera"
                 top={0}
@@ -60,22 +61,20 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                 width="100%"
               >
                 <Button
-                  className="bi-x-lg"
                   fontSize="xl"
                   onClick={() => {
                     setCamera(false);
                     setCameraReady(false);
                   }}
-                ></Button>
+                ><IonIcon icon={close}/></Button>
                 <Button
-                  className="bi-arrow-repeat"
                   fontSize="xl"
                   onClick={() =>
                     facingMode === "user"
                       ? setFacingMode("environment")
                       : setFacingMode("user")
                   }
-                ></Button>
+                ><IonIcon icon={cameraReverseOutline}/></Button>
               </Flex>
             </>
           )}

@@ -8,8 +8,10 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   Stack,
+  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
@@ -25,6 +27,7 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
   const confirmPassword = useRef();
   const oldPassword = useRef();
   const password = useRef();
+  const bg = useColorModeValue("white", "dark.50");
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -34,37 +37,35 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
       setSamePasswordErr(true);
     } else {
       await apiCall
-        .put(
-          
-            "user/password/" +
-            currentUser._id,
-          {
-            password: oldPassword.current.value,
-            newPassword: password.current.value,
-          }
-        )
+        .put("user/password/" + currentUser._id, {
+          password: oldPassword.current.value,
+          newPassword: password.current.value,
+        })
         .then(
           () => {
             setSubmitting(false);
             onClose();
             navigate(-1);
             toast({
-                title: "Changement réussi",
-                description: "La modification de votre mot de passe est terminée avec succès",
-                duration: 5000,
-                isClosable: true,
-                position: "top",
-                status: "success",
-              });
+              title: "Changement réussi",
+              description:
+                "La modification de votre mot de passe est terminée avec succès",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+              status: "success",
+            });
           },
           (err) => {
             setSubmitting(false);
-            if (err.response.data === "Mot de passe incorrect") setPasswordErr(true);
+            if (err.response.data === "Mot de passe incorrect")
+              setPasswordErr(true);
             else {
               onClose();
               toast({
                 title: "Changement échoué",
-                description: "La modification de votre mot de passe a malheureusement échoué. Veuillez réessayer ultérieurement",
+                description:
+                  "La modification de votre mot de passe a malheureusement échoué. Veuillez réessayer ultérieurement",
                 duration: 5000,
                 isClosable: true,
                 position: "bottom",
@@ -78,7 +79,7 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
 
   return (
     <Drawer size="full" isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
-      <DrawerContent>
+      <DrawerContent bgColor={bg}>
         <DrawerCloseButton />
         <DrawerHeader paddingX={3}>Changer de mot de passe</DrawerHeader>
         <form onSubmit={changePassword}>
@@ -91,7 +92,7 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
                 isRequired
                 onChange={() => setPasswordErr(false)}
               />
-            <FormErrorMessage>Mot de passe incorrect</FormErrorMessage>
+              <FormErrorMessage>Mot de passe incorrect</FormErrorMessage>
             </FormControl>
 
             <FormControl isInvalid={samePasswordErr}>
@@ -119,17 +120,19 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
           </Stack>
         </form>
         <DrawerFooter paddingX={3}>
-          <Button onClick={onClose} width="100%">
-            Annuler
-          </Button>
-          <Button
-            width="100%"
-            isLoading={submitting}
-            variant="primary"
-            onClick={() => submitControl.current.click()}
-          >
-            Changer
-          </Button>
+          <HStack width={"100%"}>
+            <Button onClick={onClose} width="100%">
+              Annuler
+            </Button>
+            <Button
+              width="100%"
+              isLoading={submitting}
+              variant="solid"
+              onClick={() => submitControl.current.click()}
+            >
+              Changer
+            </Button>
+          </HStack>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

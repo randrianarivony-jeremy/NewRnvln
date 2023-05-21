@@ -1,5 +1,7 @@
 import { Box, Button, Flex, HStack, Image, Stack } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { cameraOutline, cameraReverseOutline, close, radioButtonOn } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import WebCam from "react-webcam";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
@@ -61,10 +63,9 @@ const TakePicture = () => {
   return (
     <Flex>
       <Button
-        className="bi-camera"
         variant="float"
         onClick={() => setCamera(!camera)}
-      ></Button>
+      ><IonIcon icon={cameraOutline}/></Button>
 
       {camera && (
         <Stack
@@ -80,22 +81,20 @@ const TakePicture = () => {
               {!imagePreview && (
                 <Flex justify="space-between" height={10} width="100%">
                   <Button
-                    className="bi-x-lg"
                     fontSize="xl"
                     onClick={() => {
                       setCamera(false);
                       setCameraReady(false);
                     }}
-                  ></Button>
+                  ><IonIcon icon={close}/></Button>
                   <Button
-                    className="bi-arrow-repeat"
                     fontSize="xl"
                     onClick={() =>
                       facingMode === "user"
                         ? setFacingMode("environment")
                         : setFacingMode("user")
                     }
-                  ></Button>
+                  ><IonIcon icon={cameraReverseOutline}/></Button>
                 </Flex>
               )}
             </Box>
@@ -129,10 +128,9 @@ const TakePicture = () => {
                 <Button
                   width={100}
                   bgColor="transparent"
-                  className="bi-circle"
                   fontSize={40}
                   onClick={capture}
-                ></Button>
+                ><IonIcon icon={radioButtonOn}/></Button>
               ) : (
                 <HStack width="100%">
                   <Button width="100%" onClick={() => setImagePreview(false)}>

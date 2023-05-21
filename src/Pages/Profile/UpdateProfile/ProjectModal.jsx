@@ -1,6 +1,7 @@
 import {
     Button,
     Flex,
+    HStack,
     Input,
     Modal,
     ModalBody,
@@ -8,6 +9,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    useColorModeValue,
   } from "@chakra-ui/react";
   import React, { useContext, useRef, useState } from "react";
   import { apiCall, currentUserContext } from "../../../Controler/App";
@@ -15,6 +17,7 @@ import {
   const ProjectModal = ({ onOpen, isOpen, onClose }) => {
     const { currentUser, setCurrentUser } = useContext(currentUserContext);
     const inputRef = useRef();
+    const bg = useColorModeValue('white','dark.50')
     const [submitting, setSubmitting] = useState(false);
     const [deleteSubmitting, setDeleteSubmitting] = useState(false);
   
@@ -44,7 +47,7 @@ import {
     return (
       <Modal isOpen={isOpen} onOpen={onOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bgColor={bg}>
           <ModalHeader paddingX={3}>Changer votre projet</ModalHeader>
           <ModalBody paddingX={3}>
             <Input
@@ -55,7 +58,7 @@ import {
           </ModalBody>
           <ModalFooter justifyContent={currentUser.project ? "space-between" : 'flex-end'} paddingX={3}>
             {currentUser.project && (
-              <Button isLoading={deleteSubmitting}
+              <Button isLoading={deleteSubmitting} variant='dissuasive'
                 onClick={() => {
                   changeProject("");
                   setDeleteSubmitting(true);
@@ -64,7 +67,7 @@ import {
                 Supprimer
               </Button>
             )}
-            <Flex justify="flex-end">
+            <HStack marginLeft={2} justify="flex-end">
               <Button onClick={onClose}>Annuler</Button>
               <Button
                 variant="outline"
@@ -76,7 +79,7 @@ import {
               >
                 Enregistrer
               </Button>
-            </Flex>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

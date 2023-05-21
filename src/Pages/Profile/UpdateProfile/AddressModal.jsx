@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  HStack,
   Input,
   Modal,
   ModalBody,
@@ -8,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { apiCall, currentUserContext } from "../../../Controler/App";
@@ -16,6 +18,7 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
   const inputRef = useRef();
   const [submitting, setSubmitting] = useState(false);
+  const bg = useColorModeValue('white','dark.50')
   const [deleteSubmitting, setDeleteSubmitting] = useState(false);
 
   const changeAddress = async (address) => {
@@ -44,7 +47,7 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onOpen={onOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent bgColor={bg}>
         <ModalHeader paddingX={3}>Changer votre lieu de travail</ModalHeader>
         <ModalBody paddingX={3}>
           <Input
@@ -55,7 +58,7 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
         </ModalBody>
         <ModalFooter justifyContent={currentUser.address ? "space-between" : 'flex-end'} paddingX={3}>
           {currentUser.address && (
-            <Button isLoading={deleteSubmitting}
+            <Button isLoading={deleteSubmitting} variant='dissuasive'
               onClick={() => {
                 changeAddress("");
                 setDeleteSubmitting(true);
@@ -64,7 +67,7 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
               Supprimer
             </Button>
           )}
-          <Flex justify="flex-end">
+          <HStack justify="flex-end" marginLeft={2}>
             <Button onClick={onClose}>Annuler</Button>
             <Button
               variant="outline"
@@ -76,7 +79,7 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
             >
               Enregistrer
             </Button>
-          </Flex>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

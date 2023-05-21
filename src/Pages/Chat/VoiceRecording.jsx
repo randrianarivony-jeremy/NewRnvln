@@ -1,5 +1,7 @@
 import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { checkmark, close, mic, refresh } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
@@ -79,11 +81,11 @@ const SendVoice = () => {
               recorderControls={recorderControls}
             />
           </Box>
-          <Button position='absolute' zIndex={4} top={0} left={0} className="bi-x-lg"
+          <Button position='absolute' zIndex={4} top={0} left={0}
       onClick={()=>{
         handleReset();
         setRecording(false)
-        }}></Button>
+        }}><IonIcon icon={close}/></Button>
           <Flex
             position="absolute"
             zIndex={3}
@@ -102,13 +104,12 @@ const SendVoice = () => {
               </Text>
               <HStack>
                 <Button
-                  className="bi-arrow-counterclockwise"
                   fontSize="2xl"
                   border="1px solid"
                   rounded="full"
                   variant="float"
                   onClick={handleReset}
-                ></Button>
+                ><IonIcon icon={refresh}/></Button>
                 <Button
                     fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
                   className={
@@ -123,22 +124,21 @@ const SendVoice = () => {
                   }
                 ></Button>
                 <Button
-                  className="bi-check-lg"
                   fontSize="2xl"
                   border="1px solid"
                   rounded="full"
                   variant="float"
                   onClick={stopRecording}
-                ></Button>
+                ><IonIcon icon={checkmark}/></Button>
               </HStack>
             </Stack>
           </Flex>
         </Portal>
       ) : (
-        <Button  className="bi-mic"
+        <Button
           variant="float"
           onClick={handleRecordingOn}
-        >
+        ><IonIcon icon={mic}/>
         </Button>
       )}
     </>

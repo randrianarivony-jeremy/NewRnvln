@@ -16,6 +16,8 @@ import {
   faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IonIcon } from "@ionic/react";
+import { people, personAdd } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
@@ -74,7 +76,7 @@ const Notification = () => {
               picture: elt.from.picture,
               length: currentUser.subscribers.length,
               url: "/profile/"+elt.from._id,
-              icon: <Flex className="bi-people-fill"></Flex>,
+              icon: <IonIcon icon={people}/>,
             },
           ];
           break;
@@ -87,7 +89,7 @@ const Notification = () => {
               picture: elt.from.picture,
               length: currentUser.friendRequest.length,
               url: "/profile/"+elt.from._id,
-              icon: <Flex className="bi-person-fill-add"></Flex>,
+              icon: <IonIcon icon={personAdd}/>,
             },
           ];
           break;

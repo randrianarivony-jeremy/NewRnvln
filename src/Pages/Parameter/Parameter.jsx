@@ -9,6 +9,8 @@ import ChangeFees from "./ChangeFees";
 import { currentUserContext } from "../../Controler/App";
 import EnableSubscription from "../Profile/Relation/EnableSubscription";
 import DisableSubscription from "./DisableSubscription";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 
 const Parameter = () => {
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ const Parameter = () => {
   return (
     <Stack height='100%'>
       <Flex borderBottom='1px solid' borderBottomColor='whiteAlpha.500'>
-        <Button variant='float' className="bi-arrow-left" onClick={() => navigate(-1)}></Button>
+        <Button variant='float' onClick={() => navigate(-1)}><IonIcon icon={arrowBack}/></Button>
         <Button>Paramètres</Button>
       </Flex>
       <Scroll paddingX={3} height='100%'>

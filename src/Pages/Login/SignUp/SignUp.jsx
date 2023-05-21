@@ -13,6 +13,8 @@ import logo from "../../../Assets/RANAVALONA.png";
 import { useNavigate } from "react-router-dom";
 import SignUpSliders from "./SignUpSliders";
 import PaginationSignUpSlide from "./PaginationSignUpSlide";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 
 const SignUp = ({ setSignin }) => {
   const navigate = useNavigate();
@@ -30,9 +32,8 @@ const SignUp = ({ setSignin }) => {
         <GridItem minH='140px'>
           <Button
             variant="float"
-            className="bi-arrow-left"
             onClick={() => navigate(-1)}
-          ></Button>
+          ><IonIcon icon={arrowBack}/></Button>
           <Image src={logo} alt="logo" width="80px" margin="auto" />
           <Heading size="md" textAlign="center" height={10}>
             Rejoindre

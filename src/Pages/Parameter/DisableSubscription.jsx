@@ -8,9 +8,11 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   Stack,
   Text,
+  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
@@ -23,6 +25,7 @@ const DisableSubscription = ({ onOpen, onClose, isOpen }) => {
   const [passwordErr, setPasswordErr] = useState(false);
   const submitControl = useRef();
   const inputRef = useRef();
+  const bg = useColorModeValue("white", "dark.50");
   const passwordRef = useRef();
   const navigate = useNavigate();
   const toast = useToast();
@@ -30,15 +33,10 @@ const DisableSubscription = ({ onOpen, onClose, isOpen }) => {
   const changeFees = async (e) => {
     e.preventDefault();
     await apiCall
-      .put(
-        
-          "user/subscription/" +
-          currentUser._id,
-        {
-          enabled: false,
-          password: passwordRef.current.value,
-        }
-      )
+      .put("user/subscription/" + currentUser._id, {
+        enabled: false,
+        password: passwordRef.current.value,
+      })
       .then(
         (res) => {
           setSubmitting(false);
@@ -79,19 +77,21 @@ const DisableSubscription = ({ onOpen, onClose, isOpen }) => {
   };
   return (
     <Drawer size="full" isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
-      <DrawerContent>
+      <DrawerContent bgColor={bg}>
         <DrawerCloseButton />
         <DrawerHeader paddingX={3}>Montant d'abonnement</DrawerHeader>
         <form onSubmit={changeFees}>
           <Stack spacing={5} marginX={3}>
-            <Text rounded='md' border='1px solid' paddingX={3} paddingY={2}>
+            <Text rounded="md" border="1px solid" paddingX={3} paddingY={2}>
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Optio
               nam ratione nobis est adipisci distinctio laboriosam, vitae
               molestiae enim necessitatibus, soluta tempora quisquam quasi
               fugit. Nihil in esse omnis quidem, et consequatur sit assumenda
             </Text>
             <FormControl isInvalid={passwordErr}>
-              <FormLabel>Confirmer la désactivation avec votre mot de passe :</FormLabel>
+              <FormLabel>
+                Confirmer la désactivation avec votre mot de passe :
+              </FormLabel>
               <Input
                 ref={passwordRef}
                 type="password"
@@ -104,17 +104,19 @@ const DisableSubscription = ({ onOpen, onClose, isOpen }) => {
           </Stack>
         </form>
         <DrawerFooter paddingX={3}>
-          <Button onClick={onClose} width="100%">
-            Annuler
-          </Button>
-          <Button
-            width="100%"
-            isLoading={submitting}
-            variant="outline"
-            onClick={() => submitControl.current.click()}
-          >
-            Désactiver
-          </Button>
+          <HStack width={"100%"}>
+            <Button onClick={onClose} width="100%">
+              Annuler
+            </Button>
+            <Button
+              width="100%"
+              isLoading={submitting}
+              variant="dissuasive"
+              onClick={() => submitControl.current.click()}
+            >
+              Désactiver
+            </Button>
+          </HStack>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

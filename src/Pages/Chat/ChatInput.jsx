@@ -7,6 +7,8 @@ import EmojiPicker from "emoji-picker-react";
 import { chatContext } from "./Chat";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { useNavigate } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { chevronForward, happy, send } from "ionicons/icons";
 
 const ChatInputs = ({sendResponse}) => {
   const responseRef = useRef();
@@ -81,9 +83,8 @@ const ChatInputs = ({sendResponse}) => {
           {writing && (
             <Button
               variant="float"
-              className="bi-chevron-right"
               onClick={() => setWriting(false)}
-            ></Button>
+            ><IonIcon icon={chevronForward}/></Button>
           )}
 
           {/* <Emojis/> */}
@@ -92,10 +93,9 @@ const ChatInputs = ({sendResponse}) => {
               <Button
                 pos="absolute"
                 zIndex={2}
-                className="bi-emoji-smile"
                 left={writing ? 10 : 0}
                 boxSize={38}
-              ></Button>
+              ><IonIcon icon={happy}/></Button>
             </PopoverTrigger>
             <Portal>
               <PopoverContent>
@@ -127,12 +127,11 @@ const ChatInputs = ({sendResponse}) => {
             onChange={handleTextChange}
           ></Textarea>
           <Button isLoading={submitting}
-            className="bi-send"
             variant="float"
             onClick={() =>
               responseRef.current.value.length > 0 ? sendText() : {}
             }
-          ></Button>
+          ><IonIcon icon={send}/></Button>
         </HStack>
       </HStack>
     </>

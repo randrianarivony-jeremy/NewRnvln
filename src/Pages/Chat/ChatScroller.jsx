@@ -1,4 +1,6 @@
 import { Box, Flex, HStack } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { ellipse } from "ionicons/icons";
 import React, { useContext, useEffect } from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import { socket } from "../../Controler/App";
@@ -27,7 +29,7 @@ const ChatScroller = () => {
           >
             <DataDisplay data={draft.current}/>
           </Box>
-          <Box className="bi-circle" fontSize='xs'></Box>
+          <Box fontSize='xs'><IonIcon icon={ellipse}/></Box>
         </HStack>}
     </ScrollableFeed>
     </Box>

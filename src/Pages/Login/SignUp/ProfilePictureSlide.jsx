@@ -1,4 +1,6 @@
 import {Button,FormControl,FormLabel,HStack,Image,Input,Stack,} from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { camera } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { signUpContext } from "../Login";
 
@@ -28,9 +30,9 @@ const ProfilePictureSlide = ({ swiper }) => {
             onClick={() => fileRef.current.click()}
           />
         ) : (
-          <Button className="bi-camera" boxSize={120} border="1px solid" borderRadius="full" fontSize={60}
+          <Button boxSize={120} border="1px solid" borderRadius="full" fontSize={60}
             onClick={() => fileRef.current.click()}
-          ></Button>
+          ><IonIcon icon={camera}/></Button>
         )}
       </FormControl>
 

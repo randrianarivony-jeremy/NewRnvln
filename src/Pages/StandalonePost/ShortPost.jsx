@@ -1,12 +1,14 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef } from "react";
 import { FreeMode, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import textFit from "textfit";
-import { dataContext } from "./PostContainer";
+import { dataContext, postContext } from "./PostContainer";
+import QuestionSlider from "./QuestionSlider";
 
 const ShortPost = () => {
-  const { data } = useContext(dataContext);
+  const { data,index } = useContext(dataContext);
+  const {post}=useContext(postContext);
   const shortContainer = useRef();
   const articleSwiperRef = useRef();
 
@@ -31,15 +33,18 @@ const ShortPost = () => {
         className="article-swiper"
       >
           <SwiperSlide>
-            <Flex
+          <Stack
+              height="calc(100% - 50px)">
+            {post.type==='interview' && <QuestionSlider question={post.question} index={index}/>}
+            <Flex className="hey"
               ref={shortContainer}
               justify="center" align={'center'}
-              height="calc(100% - 40px)"
-              marginX={3}
+              marginX={3} height={post.type==='interview' ? 'calc(100% - 46px)' : '100%'}
               textAlign="center"
             >
               {data.content}
             </Flex>
+          </Stack>
           </SwiperSlide>
       </Swiper>
   );

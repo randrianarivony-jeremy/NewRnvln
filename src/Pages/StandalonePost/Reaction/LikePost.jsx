@@ -46,17 +46,8 @@ const LikePost = ({post}) => {
     <Button
       flexDir="column"
       onClick={handleLikeDislike}
-      color={
-        post.contentType === "string" &&
-        post.bg !== "transparent" &&
-        "black"
-      }
+      size='lg'
     >
-      {/* <Flex
-        className={liked ? "bi-heart-fill" : "bi-heart"}
-        fontSize="xl"
-        color={liked ? "red" : ""}
-      ></Flex> */}
       <IonIcon icon={liked ? heart : heartOutline} style={{fontSize:iconMd,color:liked && 'red'}}/>
       <Text fontSize="xs">{post.likers.length}</Text>
     </Button>

@@ -1,7 +1,7 @@
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { ellipse } from "ionicons/icons";
-import React, { useContext, useEffect } from "react";
+import { ellipseOutline } from "ionicons/icons";
+import React, { useContext, useEffect, useRef } from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import { socket } from "../../Controler/App";
 import { chatContext } from "./Chat";
@@ -9,29 +9,36 @@ import DataDisplay from "./DataDisplay";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {
-  const {messages,setMessages,submitting,draft}=useContext(chatContext);
+  const { messages,scrollRef, setMessages, submitting, draft } = useContext(chatContext);
 
-  useEffect(()=>{
-    socket.on('new message',(newMessage)=>{
-      setMessages([...messages,newMessage.newMessage])
-    })
-  })
+  useEffect(() => {
+    socket.on("new message", (newMessage) => {
+      setMessages([...messages, newMessage.newMessage]);
+    });
+  },[socket]);
+
+  // useEffect(()=>{
+  //   scrollRef.current.scrollToBottom();
+  // },[submitting])
 
   return (
-    <Box paddingY={2} height='100%'>
-    <ScrollableFeed forceScroll={true}
-    >
-      {messages.map((elt, key) => (
-        <SingleMessage message={elt} key={key}/>
-      ))}
-        {submitting && <HStack justify="flex-end" align='flex-end'>
-          <Box maxW="80%"
-          >
-            <DataDisplay data={draft.current}/>
-          </Box>
-          <Box fontSize='xs'><IonIcon icon={ellipse}/></Box>
-        </HStack>}
-    </ScrollableFeed>
+    <Box paddingY={2} height="100%" overflowY={'hidden'}>
+      <ScrollableFeed forceScroll={true} className='scrollablefeed' ref={scrollRef} 
+      // onScroll={(isAtBottom)=>console.log(isAtBottom)}
+      // onScrollComplete={()=>scrollRef.current.scrollToBottom()}
+      >
+        {messages.map((elt, key) => (
+          <SingleMessage message={elt} key={key} />
+        ))}
+        {submitting && (
+          <HStack justify="flex-end" align="flex-end">
+              <DataDisplay data={draft.current} />
+            <Box fontSize="xs">
+              <IonIcon icon={ellipseOutline} />
+            </Box>
+          </HStack>
+        )}
+      </ScrollableFeed>
     </Box>
   );
 };

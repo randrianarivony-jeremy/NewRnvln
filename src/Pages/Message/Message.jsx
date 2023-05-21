@@ -32,9 +32,9 @@ const Message = () => {
           {newSecondMessage>0 && <Badge bgColor='red'>{newSecondMessage}</Badge>}
           </Tab>
         </TabList>
-        <TabPanels>
-          <TabPanel padding={0}><MainConversation/></TabPanel>
-          <TabPanel padding={0}><SecondaryConversation/></TabPanel>
+        <TabPanels height={'calc(100% - 42px)'}>
+          <TabPanel padding={0} height={'100%'}><MainConversation/></TabPanel>
+          <TabPanel padding={0} height={'100%'}><SecondaryConversation/></TabPanel>
         </TabPanels>
       </Tabs>
       

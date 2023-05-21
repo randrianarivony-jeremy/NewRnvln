@@ -20,7 +20,7 @@ const Home = () => {
 
       <Menu />
       <Button
-        fontSize="xl"
+        size={'lg'}
         onClick={() => navigate("/search")}
         position="absolute"
         right={0}

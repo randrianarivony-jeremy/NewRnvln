@@ -28,7 +28,7 @@ const Post = () => {
       {(data.contentType!=='short' && data.contentType!=='text') && <Flex
         position="absolute"
         left={0}
-        top={10}
+        top={12}
         marginX={3}
         textAlign="left"
         zIndex={2}

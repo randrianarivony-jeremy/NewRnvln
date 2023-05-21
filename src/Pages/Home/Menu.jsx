@@ -42,7 +42,7 @@ const Menu = () => {
 
   return (
     <>
-      <Button fontSize="xl" position="absolute" zIndex={2} onClick={onOpen}>
+      <Button size={'lg'} position="absolute" zIndex={2} onClick={onOpen}>
         <IonIcon icon={menuOutline} style={{ fontSize: iconMd }} />
       </Button>
       <Drawer

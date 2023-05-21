@@ -22,7 +22,7 @@ const TextPost = () => {
   const { currentUser } = useContext(currentUserContext);
   return (
     <Flex bg={data.contentType === "short" && data.bg} height="100%">
-      <Stack ref={containerRef} height="calc(100% - 40px)" marginTop={10}>
+      <Stack ref={containerRef} height="calc(100% - 48px)" marginTop={12}>
         {/* I N F O  */}
         <Flex
           marginX={3}

@@ -82,9 +82,7 @@ const CommentPost = ({ post }) => {
         flexDir="column"
         onClick={openComments}
         fontSize="xl"
-        color={
-          post.contentType === "string" && post.bg !== "transparent" && "black"
-        }
+        size={'lg'}
       >
       <IonIcon icon={chatbubbleOutline} style={{fontSize:iconMd}}/>
         <Text fontSize="xs">{post.comments.length}</Text>

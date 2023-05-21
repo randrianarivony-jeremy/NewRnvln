@@ -44,7 +44,8 @@ const ChatInputs = ({sendResponse}) => {
           console.log(err);
           navigate(-1);
         }
-      ).finally(()=>setSubmitting(false));
+      )
+      .finally(()=>setSubmitting(false));
   };
 
   const handleTextChange = ({ currentTarget }) => {

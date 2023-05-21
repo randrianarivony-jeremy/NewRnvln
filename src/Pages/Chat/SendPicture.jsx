@@ -34,17 +34,19 @@ const SendPicture = () => {
         recipient:userB._id,
         content:urlRef.current,
         contentType:'image',
-        conversationId: newConversation ? null : conversationId
+        conversationId: newConversation ? null : conversationId.current
       })
       .then(
         (res) => {
-          setMessages([...messages,res.data]);
+          setMessages([...messages,res.data.newMessage]);
+          conversationId.current = res.data.newMessage.conversationId;
           socket.emit('message sent',res.data,userB._id)
           },
           (err) => {
           console.log(err);
         }
-      ).finally(()=>setSubmitting(false));
+      )
+      .finally(()=>setSubmitting(false));
   };
   return (
     <>
@@ -57,7 +59,6 @@ const SendPicture = () => {
         display="none"
         accept=".png,.jpg,.jpeg"
         onChange={storePicture}
-        // onChange={(e)=>sendResponse(e.target.files[0],'image')}
       />
     </>
   );

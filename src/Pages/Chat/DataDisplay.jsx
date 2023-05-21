@@ -6,11 +6,14 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLongPress } from "use-long-press";
 import { currentUserContext } from "../../Controler/App";
 import AudioDisplay from "./AudioDisplay";
+import { chatContext } from "./Chat";
+import ImageItem from "./ImageItem";
 
 const DataDisplay = ({ data }) => {
   const videoRef = useRef();
   const [isPaused, setIsPaused] = useState();
   const {currentUser}=useContext(currentUserContext);
+  const {mediaRef,scrollRef}=useContext(chatContext);
   
   useEffect(() => {
     if (isPaused) videoRef.current?.play();
@@ -18,7 +21,7 @@ const DataDisplay = ({ data }) => {
   }, [isPaused]);
   
   return (
-    <Box maxW="80%">
+    <Box maxW="75%" className="datadisplay">
       {data.contentType === "string" && (
         <Box whiteSpace="pre-wrap" padding="4px 8px" rounded="lg"
         borderBottomLeftRadius={data.sender!==currentUser._id && 0}
@@ -30,12 +33,15 @@ const DataDisplay = ({ data }) => {
       </Box>
       )}
       {data.contentType === "image" && (
-        <Image
-          src={data.content}
-          alt="picture" rounded="xl"
-          borderBottomLeftRadius={data.sender!==currentUser._id && 0}
-          borderBottomRightRadius={data.sender===currentUser._id && 0}
-          />
+        // <Box boxSize={'200px'}>
+          <Image ref={mediaRef}
+        src={data.content} onLoad={()=>scrollRef.current.scrollToBottom()}
+        alt="picture" rounded="xl"
+        borderBottomLeftRadius={data.sender!==currentUser._id && 0}
+        borderBottomRightRadius={data.sender===currentUser._id && 0}
+        />
+        // </Box>
+        // <ImageItem data={data}/>
       )}
       {data.contentType === "video" && (
         <>

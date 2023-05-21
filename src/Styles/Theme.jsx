@@ -104,6 +104,7 @@ export const theme = extendTheme({
           }
         },
         link:{
+          height:'20px',
           _active:{
             bgColor:'initial'
           }

@@ -121,7 +121,7 @@ const Profile = () => {
                 <Stack spacing={2} marginLeft={3} fontSize="sm">
                   {/* JOB  */}
                   <HStack align="flex-start">
-                    <IonIcon icon={briefcase} />
+                    <Flex boxSize={5} minW={5} fontSize={'xl'}><IonIcon icon={briefcase}/></Flex>
                     {currentUser.job === "" ? (
                       <Button
                         size="sm"
@@ -134,6 +134,7 @@ const Profile = () => {
                     ) : (
                       <Text onClick={openJobModal}>
                         {currentUser.job} 
+                        {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem, dicta. */}
                         <IonIcon icon={pencil} />
                       </Text>
                     )}
@@ -146,7 +147,7 @@ const Profile = () => {
 
                   {/* ADDRESS  */}
                   <HStack align="flex-start">
-                    <IonIcon icon={location} />
+                  <Flex boxSize={5} minW={5} fontSize={'xl'}><IonIcon icon={location}/></Flex>
                     {currentUser.address === "" ? (
                       <Button
                         size="sm"
@@ -170,7 +171,7 @@ const Profile = () => {
 
                   {/* PROJECT  */}
                   <HStack align="flex-start">
-                    <IonIcon icon={flag} />
+                  <Flex boxSize={5} minW={5} fontSize={'xl'}><IonIcon icon={flag}/></Flex>
                     {currentUser.project === "" ? (
                       <Button
                         size="sm"

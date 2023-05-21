@@ -1,3 +1,4 @@
+import { Box, Flex } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { apiCall, socket } from "../../Controler/App";
@@ -21,7 +22,8 @@ const MainConversation = () => {
           console.log(err);
           navigate(-1);
         }
-      ).finally(()=>setLoading(false));
+      )
+      .finally(()=>setLoading(false));
     };
   
     useEffect(() => {
@@ -36,7 +38,7 @@ const MainConversation = () => {
     })
 
     return (
-        <div>
+        <>
             {loading ? (
           <Loader />
         ) : (
@@ -46,7 +48,7 @@ const MainConversation = () => {
             ))}
           </Scroll>
         )}
-        </div>
+        </>
     );
 };
 

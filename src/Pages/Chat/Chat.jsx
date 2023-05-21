@@ -22,6 +22,8 @@ const Chat = () => {
   const [userB, setUserB] = useState();
   const toast = useToast();
   let draft=useRef();
+  let mediaRef=useRef();
+  let scrollRef=useRef();
   const conversationId=useRef();
 
   const fetchMessages = async () => {
@@ -29,7 +31,7 @@ const Chat = () => {
       .get( "message/"+userId)
       .then(
         (res) => {
-          if(res.data.messages==undefined){
+          if(res.data.messages===undefined){
           setNewConversation(true);
           setUserB(res.data.user)
           }else {
@@ -66,12 +68,12 @@ const Chat = () => {
       position="relative"
     >
       <chatContext.Provider value={{ messages, setMessages, userB,conversationId
-        ,newConversation,setNewConversation,submitting, setSubmitting,draft }}>
+        ,newConversation,setNewConversation,submitting, setSubmitting,draft,mediaRef,scrollRef }}>
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
           <Button size={'lg'}
             onClick={() => navigate(-1)}
           ><IonIcon icon={arrowBack}/></Button>
-          <Button>{userB?.name} &nbsp; <Flex fontStyle='italic' fontWeight='normal'>{userB?.job}</Flex></Button>
+          <Button size={'lg'}>{userB?.name} &nbsp; <Flex fontStyle='italic' fontWeight='normal'>{userB?.job}</Flex></Button>
         </Flex>
         {loading ? (
           <Loader />

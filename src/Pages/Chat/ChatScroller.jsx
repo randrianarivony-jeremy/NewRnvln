@@ -9,30 +9,28 @@ import DataDisplay from "./DataDisplay";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {
-  const { messages,scrollRef, setMessages, submitting, draft } = useContext(chatContext);
+  const { messages, scrollRef, setMessages, submitting, draft } =
+    useContext(chatContext);
 
   useEffect(() => {
     socket.on("new message", (newMessage) => {
       setMessages([...messages, newMessage.newMessage]);
     });
-  },[socket]);
-
-  // useEffect(()=>{
-  //   scrollRef.current.scrollToBottom();
-  // },[submitting])
+  }, [socket]);
 
   return (
-    <Box paddingY={2} height="100%" overflowY={'hidden'}>
-      <ScrollableFeed forceScroll={true} className='scrollablefeed' ref={scrollRef} 
-      // onScroll={(isAtBottom)=>console.log(isAtBottom)}
-      // onScrollComplete={()=>scrollRef.current.scrollToBottom()}
+    <Box paddingY={2} height="100%" overflowY={"hidden"}>
+      <ScrollableFeed
+        forceScroll={true}
+        className="scrollablefeed"
+        ref={scrollRef}
       >
         {messages.map((elt, key) => (
           <SingleMessage message={elt} key={key} />
         ))}
         {submitting && (
           <HStack justify="flex-end" align="flex-end">
-              <DataDisplay data={draft.current} />
+            <DataDisplay data={draft.current} />
             <Box fontSize="xs">
               <IonIcon icon={ellipseOutline} />
             </Box>

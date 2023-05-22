@@ -2,6 +2,7 @@ import {
   Avatar,
   Flex,
   Heading,
+  HStack,
   Image,
   Stack,
   Text,
@@ -18,16 +19,22 @@ import TextItem from "./TextItem";
 const TextPost = () => {
   const navigate = useNavigate();
   const { post, containerRef } = useContext(postContext);
-  const { data,index } = useContext(dataContext);
+  const { data, index } = useContext(dataContext);
   const { currentUser } = useContext(currentUserContext);
   return (
-    <Flex bg={data.contentType === "short" && data.bg} height="100%">
-      <Stack ref={containerRef} height="calc(100% - 48px)" marginTop={12}>
+    <Flex height="100%" maxWidth={"100%"}>
+      <Stack
+        ref={containerRef}
+        height="calc(100% - 48px)"
+        marginTop={12}
+        width="100%"
+        className="eto"
+      >
         {/* I N F O  */}
-        <Flex
+        <HStack
           marginX={3}
           cursor="pointer"
-          maxWidth="80%"
+          maxWidth="100%"
           onClick={() =>
             post.id_user._id === currentUser._id
               ? navigate("/profile")
@@ -39,13 +46,14 @@ const TextPost = () => {
               src={post.id_user.picture}
               alt="profilepic"
               boxSize={12}
+              minWidth={12}
               rounded="full"
               objectFit="cover"
             />
           ) : (
             <Avatar size="md" />
           )}
-          <Stack spacing={0} marginLeft={2} justify="flex-start">
+          <Stack spacing={0} justify="flex-start">
             <Heading size="sm" width="fit-content">
               {post.id_user.name}
             </Heading>
@@ -53,15 +61,15 @@ const TextPost = () => {
               <Text fontStyle="italic">{post.id_user.job}</Text>
             )}
           </Stack>
-        </Flex>
-        
+        </HStack>
+
         {data.contentType === "short" ? (
           <ShortPost />
         ) : post.type === "article" ? (
           <TextItem />
         ) : (
           <Stack>
-            <QuestionSlider question={post.question} index={index}/>
+            <QuestionSlider question={post.question} index={index} />
             <InterviewText />
           </Stack>
         )}

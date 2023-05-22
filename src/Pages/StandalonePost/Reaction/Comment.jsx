@@ -5,12 +5,14 @@ import { useLongPress } from "use-long-press";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { updateComment } from "../../../Controler/Redux/thread.reducer";
 import { ClickableFlex } from "../../../Styles/Theme";
+import { postContext } from "../PostContainer";
 
 const Comment = ({ comment, postId }) => {
   const [deleteFooter, setDeleteFooter] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useContext(currentUserContext);
   const dispatch = useDispatch();
+  const {post}=useContext(postContext);
 
   const bind = useLongPress(() => setDeleteFooter(true), {
     threshold: 1000,
@@ -22,8 +24,7 @@ const Comment = ({ comment, postId }) => {
     setSubmitting(true);
     await apiCall
       .delete(
-        
-          `publication/` +
+          `${post.type}/` +
           postId +
           "/" +
           comment._id

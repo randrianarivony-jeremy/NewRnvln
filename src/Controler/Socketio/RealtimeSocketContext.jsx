@@ -1,39 +1,24 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, memo, useEffect, useState } from "react";
 import { apiCall, socket } from "../App";
 
 export const socketContext = createContext();
-const RealtimeSocketContext = ({ children }) => {
+
+const RealtimeSocketContext = memo(({ children }) => {
   const [newMainMessage, setNewMainMessage] = useState(0);
   const [newSecondMessage, setNewSecondMessage] = useState(0);
   const [newNotification, setNewNotification] = useState(0);
 
-  const checkNewMessageNumber = async () => {
-    await apiCall.get("conversation/new").then(
-      (res) => {
-        setNewMainMessage(res.data.newMainMessage);
-        setNewSecondMessage(res.data.newSecondMessage);
-      },
-      (err) => {
-        console.log(err);
-        // navigate(-1);
-      }
-    );
-  };
-
-  const checkNewNotificationNumber = async () => {
-    await apiCall.get("notification/new").then(
-      (res) => {
-        setNewNotification(res.data);
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
-  };
-
   useEffect(() => {
-    checkNewMessageNumber();
-    checkNewNotificationNumber();
+    Promise.all([
+      apiCall.get("conversation/new"),
+      apiCall.get("notification/new"),
+    ])
+      .then((res) => {
+        setNewMainMessage(res[0].data.newMainMessage);
+        setNewSecondMessage(res[0].data.newSecondMessage);
+        setNewNotification(res[1].data);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -41,8 +26,8 @@ const RealtimeSocketContext = ({ children }) => {
       if (category == "main") setNewMainMessage((current) => current + 1);
       else setNewSecondMessage((current) => current + 1);
     });
-    socket.on("new notification", () =>{
-      setNewNotification((current) => current + 1)
+    socket.on("new notification", () => {
+      setNewNotification((current) => current + 1);
     });
   }, [socket]);
 
@@ -60,6 +45,6 @@ const RealtimeSocketContext = ({ children }) => {
       {children}
     </socketContext.Provider>
   );
-};
+});
 
 export default RealtimeSocketContext;

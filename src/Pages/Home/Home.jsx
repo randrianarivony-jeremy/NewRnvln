@@ -20,14 +20,14 @@ const Home = () => {
 
       <Menu />
       <Button
-        size={'lg'}
+        size={"lg"}
         onClick={() => navigate("/search")}
         position="absolute"
         right={0}
         top={0}
         zIndex={2}
       >
-        <IonIcon icon={searchOutline} style={{fontSize:iconMd}}/>
+        <IonIcon icon={searchOutline} style={{ fontSize: iconMd }} />
       </Button>
     </Flex>
   );

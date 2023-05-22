@@ -7,7 +7,6 @@ import { useLongPress } from "use-long-press";
 import { currentUserContext } from "../../Controler/App";
 import AudioDisplay from "./AudioDisplay";
 import { chatContext } from "./Chat";
-import ImageItem from "./ImageItem";
 
 const DataDisplay = ({ data }) => {
   const videoRef = useRef();

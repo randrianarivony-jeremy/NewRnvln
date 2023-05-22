@@ -5,8 +5,8 @@ import { apiCall } from "../../Controler/App";
 import { Loader } from "../../Controler/Routes";
 import PostContainer from "./PostContainer";
 
-const PostCard = () => {
-  const { id } = useParams();
+const SinglePost = () => {
+  const { id,type } = useParams();
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState();
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const PostCard = () => {
   useEffect(() => {
     const fetchPost = async () => {
       await apiCall
-        .get("publication/" + id)
+        .get(`${type}/` + id)
         .then(
           (res) => {
             setPost(res.data);
@@ -30,7 +30,7 @@ const PostCard = () => {
 
   return (
     <>
-      <Flex position='absolute' top={0} left={0}>
+      <Flex position='absolute' top={0} left={0} zIndex={2}>
         <Button variant="float" className="bi-arrow-left" onClick={() => navigate(-1)}
         ></Button>
         <Button>Publication</Button>
@@ -40,4 +40,4 @@ const PostCard = () => {
   );
 };
 
-export default PostCard;
+export default SinglePost;

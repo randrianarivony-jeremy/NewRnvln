@@ -60,7 +60,8 @@ const SendVoice = () => {
       })
       .then(
         (res) => {
-          setMessages([...messages,res.data]);
+          setMessages([...messages,res.data.newMessage]);
+          conversationId.current = res.data.newMessage.conversationId;
           socket.emit('message sent',res.data,userB._id)
           },
           (err) => {

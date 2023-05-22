@@ -28,46 +28,49 @@ function App() {
   const [initializing, setInitializing] = useState(true);
   const dispatch = useDispatch();
 
-  const fetchToken = async () => {
-    await apiCall
-      .get(process.env.REACT_APP_API_URL + "/jwtid", { withCredentials: true })
-      .then(
-        (res) => {
-          socket.emit("start", res.data._id);
-          setCurrentUser(res.data);
-          apiCall
-            .get("feeds")
-            .then(
-              (res) => {
-                if (res.data.length !== 0) {
-                  const payload = res.data.map((elt) => {
-                    if (elt.type === "interview" || elt.type === "article")
-                      return elt;
-                    else {
-                      elt = { ...elt, type: "question" };
-                      return elt;
-                    }
-                  });
-                  dispatch(addContentFeeds(payload));
-                  dispatch(addPublication(res.data));
-                  dispatch(addInterview(res.data));
-                }
-              },
-              (err) => {
-                console.log(err);
-              }
-            )
-            .finally(() => setInitializing(false));
-        },
-        (err) => {
-          console.log("tsisy token: " + err);
-          setInitializing(false);
-        }
-      );
-  };
-
+  
   useEffect(() => {
+    const fetchToken = async () => {
+      await apiCall
+        .get(process.env.REACT_APP_API_URL + "/jwtid", {
+          withCredentials: true,
+        })
+        .then(
+          (res) => {
+            socket.emit("start", res.data._id);
+            setCurrentUser(res.data);
+            apiCall
+              .get("feeds")
+              .then(
+                (res) => {
+                  if (res.data.length !== 0) {
+                    const payload = res.data.map((elt) => {
+                      if (elt.type === "interview" || elt.type === "article")
+                        return elt;
+                      else {
+                        elt = { ...elt, type: "question" };
+                        return elt;
+                      }
+                    });
+                    dispatch(addContentFeeds(payload));
+                    dispatch(addPublication(res.data));
+                    dispatch(addInterview(res.data));
+                  }
+                },
+                (err) => {
+                  console.log(err);
+                }
+              )
+              .finally(() => setInitializing(false));
+          },
+          (err) => {
+            console.log("tsisy token: " + err);
+            setInitializing(false);
+          }
+        );
+    };
     fetchToken();
+    localStorage.setItem("for_you_page_current_slide", 0);
   }, []);
 
   return (

@@ -49,7 +49,7 @@ const Notification = () => {
               picture: elt.from.picture,
               text: "a aimé votre publication.",
               length: elt.on.likers.length,
-              url: '/post/'+elt.on._id,
+              url: '/post/'+elt.docModel+'/'+elt.on._id,
               icon: <FontAwesomeIcon icon={faHeart}></FontAwesomeIcon>,
             },
           ];
@@ -62,7 +62,7 @@ const Notification = () => {
               picture: elt.from.picture,
               length: elt.on.comments.length,
               text: "a commenté votre publication.",
-              url: '/post/'+elt.on._id,
+              url: '/post/'+elt.docModel+'/'+elt.on._id,
               icon: <FontAwesomeIcon icon={faComment}></FontAwesomeIcon>,
             },
           ];

@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { heart, heartOutline } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
@@ -17,7 +17,7 @@ const LikePost = ({post}) => {
       await apiCall
       .patch(
           
-          `publication/like/` +
+          `${post.type}/like/` +
           post._id,
           {
               id_user: currentUser._id,

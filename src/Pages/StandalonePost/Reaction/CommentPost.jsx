@@ -40,7 +40,7 @@ const CommentPost = ({ post }) => {
     setSubmitting(true);
     await apiCall
       .patch(
-         `publication/comment/` + post._id,
+         `${post.type}/comment/` + post._id,
         {
           commenterId: currentUser._id,
           text: inputRef.current.value,
@@ -63,7 +63,7 @@ const CommentPost = ({ post }) => {
   const fetchComments = async () => {
     await apiCall
       .get(
-         "publication/comments/" + post._id
+         post.type+"/comments/" + post._id
       )
       .then(
         (res) => {

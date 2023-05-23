@@ -1,12 +1,12 @@
 .question-swiper{
-    height: fit-content;
+    height: 24px;
     width: calc(100vw - 64px);
     max-width: 356px; /*420px maxwidth - profilepic 40px - marginx 12px*2 - spacing 8px hstack */
 }
 .question-slide{
       width: fit-content;
       white-space: nowrap;
-      font-weight: 700;
+      font-weight: 500;
       font-size: large;
   }
 

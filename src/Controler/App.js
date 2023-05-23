@@ -40,7 +40,7 @@ function App() {
             socket.emit("start", res.data._id);
             setCurrentUser(res.data);
             apiCall
-              .get("feeds")
+              .get("feeds/" + Date.now() + "/" + Date.now())
               .then(
                 (res) => {
                   if (res.data.length !== 0) {

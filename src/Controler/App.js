@@ -14,6 +14,7 @@ import { addPublication } from "./Redux/publication.reducer";
 import { addInterview } from "./Redux/interview.reducer";
 import { addContentFeeds } from "./Redux/thread.reducer";
 import RealtimeSocketContext from "./Socketio/RealtimeSocketContext";
+import { useFetchContentsQuery } from "./Redux/apiSlice";
 
 export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL + "/api/",
@@ -27,8 +28,8 @@ function App() {
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
   const dispatch = useDispatch();
+  const { data } = useFetchContentsQuery();
 
-  
   useEffect(() => {
     const fetchToken = async () => {
       await apiCall
@@ -40,19 +41,11 @@ function App() {
             socket.emit("start", res.data._id);
             setCurrentUser(res.data);
             apiCall
-              .get("feeds/" + Date.now() + "/" + Date.now())
+              .get("feeds")
               .then(
                 (res) => {
                   if (res.data.length !== 0) {
-                    const payload = res.data.map((elt) => {
-                      if (elt.type === "interview" || elt.type === "article")
-                        return elt;
-                      else {
-                        elt = { ...elt, type: "question" };
-                        return elt;
-                      }
-                    });
-                    dispatch(addContentFeeds(payload));
+                    dispatch(addContentFeeds(res.data));
                     dispatch(addPublication(res.data));
                     dispatch(addInterview(res.data));
                   }

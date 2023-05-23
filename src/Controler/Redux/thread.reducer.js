@@ -8,7 +8,7 @@ export const threadSlice = createSlice({
       return action.payload;
     },
     likeDislike: (state, action) => {
-      state[0].map((post) => {
+      state.map((post) => {
         if (post._id === action.payload.postId)
           action.payload.like
             ? (post.likers = [
@@ -22,7 +22,7 @@ export const threadSlice = createSlice({
       });
     },
     updateComment:(state,action)=>{
-        state[0].map((post) => {
+        state.map((post) => {
             if (post._id === action.payload.postId)
               post.comments = action.payload.data
             else return post;

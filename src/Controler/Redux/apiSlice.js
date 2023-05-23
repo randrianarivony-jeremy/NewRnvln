@@ -3,15 +3,26 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL + "/api/feeds",
+    baseUrl: process.env.REACT_APP_API_URL + "/api/",
   }),
   endpoints: (builder) => ({
+    fetchPublications: builder.query({
+      query: () => {
+        return {
+          url: "/publication",
+          credentials: "include",
+        };
+      },
+    }),
     fetchContents: builder.query({
       query: () => {
         return {
-          url: "/" + Date.now() + "/" + Date.now(),
+          url: "/interview",
           credentials: "include",
         };
+      },
+      async onQueryStarted(arg, { dispatch }) {
+        dispatch(apiSlice.endpoints.fetchPublications);
       },
     }),
   }),

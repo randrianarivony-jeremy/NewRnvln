@@ -1,6 +1,8 @@
 import { Heading, Image, Spinner, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
+import logo from "../Assets/RANAVALONA.png";
 import React, { createContext, useEffect, useState } from "react";
+import Routes from "./Routes";
 
 export const currentUserContext = createContext();
 
@@ -15,7 +17,6 @@ const Preload = () => {
         })
         .then(
           (res) => {
-            fetchData();
             setCurrentUser(res.data);
           },
           (err) => {

@@ -1,17 +1,20 @@
-import { Box } from "@chakra-ui/react";
-import axios from "axios";
+import { Box, Heading, Image, Spinner, Stack, Text } from "@chakra-ui/react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { createContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import io from "socket.io-client";
+import "../Styles/App.css";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../Styles/App.css";
+import Routes from "./Routes";
+import { createContext, useEffect, useState } from "react";
 import { publicationContext } from "./Context";
-import { useFetchContentsQuery } from "./Redux/Features/apiSlice";
-import { getContents } from "./Redux/thread.reducer";
-import Routes, { Loader } from "./Routes";
+import axios from "axios";
+import io from "socket.io-client";
+import logo from "../Assets/RANAVALONA.png";
+import { useDispatch } from "react-redux";
+import { addPublication } from "./Redux/publication.reducer";
+import { addInterview } from "./Redux/interview.reducer";
+import { addContentFeeds } from "./Redux/thread.reducer";
 import RealtimeSocketContext from "./Socketio/RealtimeSocketContext";
+import { useFetchContentsQuery } from "./Redux/apiSlice";
 
 export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL + "/api/",
@@ -20,22 +23,49 @@ export const apiCall = axios.create({
 
 export const socket = io(process.env.REACT_APP_SOCKET_URL);
 
-function App({ user }) {
-  const [currentUser, setCurrentUser] = useState(user);
+function App() {
+  const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
+  const [initializing, setInitializing] = useState(true);
   const dispatch = useDispatch();
-  const { isSuccess, isLoading, data } = useFetchContentsQuery();
+  const { data } = useFetchContentsQuery();
 
   useEffect(() => {
+    const fetchToken = async () => {
+      await apiCall
+        .get(process.env.REACT_APP_API_URL + "/jwtid", {
+          withCredentials: true,
+        })
+        .then(
+          (res) => {
+            socket.emit("start", res.data._id);
+            setCurrentUser(res.data);
+            apiCall
+              .get("feeds")
+              .then(
+                (res) => {
+                  if (res.data.length !== 0) {
+                    dispatch(addContentFeeds(res.data));
+                    dispatch(addPublication(res.data));
+                    dispatch(addInterview(res.data));
+                  }
+                },
+                (err) => {
+                  console.log(err);
+                }
+              )
+              .finally(() => setInitializing(false));
+          },
+          (err) => {
+            console.log("tsisy token: " + err);
+            setInitializing(false);
+          }
+        );
+    };
+    fetchToken();
     localStorage.setItem("for_you_page_current_slide", 0);
-    console.log(currentUser);
   }, []);
 
-  useEffect(() => {
-    if (isSuccess) dispatch(getContents(data));
-  }, [isSuccess]);
-
-  if (isLoading) return <Loader />;
   return (
     <Box
       maxW={420}
@@ -47,9 +77,17 @@ function App({ user }) {
     >
       <currentUserContext.Provider value={{ currentUser, setCurrentUser }}>
         <publicationContext.Provider value={{ content, setContent }}>
-          <RealtimeSocketContext>
-            <Routes />
-          </RealtimeSocketContext>
+          {initializing ? (
+            <Stack justify="center" height="100%" align="center">
+              <Image src={logo} alt="logo" width="100px" />
+              <Heading size={"xl"}>Ranavalona</Heading>
+              <Spinner speed="0.7s" />
+            </Stack>
+          ) : (
+            <RealtimeSocketContext>
+              <Routes />
+            </RealtimeSocketContext>
+          )}
         </publicationContext.Provider>
       </currentUserContext.Provider>
     </Box>

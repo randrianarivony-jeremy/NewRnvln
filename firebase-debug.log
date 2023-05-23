@@ -1,33 +1,33 @@
-[debug] [2023-05-23T05:10:18.139Z] ----------------------------------------------------------------------
-[debug] [2023-05-23T05:10:18.141Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Boss\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --import ./firebase-data --export-on-exit
-[debug] [2023-05-23T05:10:18.142Z] CLI Version:   11.23.1
-[debug] [2023-05-23T05:10:18.142Z] Platform:      win32
-[debug] [2023-05-23T05:10:18.142Z] Node Version:  v17.9.1
-[debug] [2023-05-23T05:10:18.143Z] Time:          Tue May 23 2023 08:10:18 GMT+0300 (East Africa Time)
-[debug] [2023-05-23T05:10:18.144Z] ----------------------------------------------------------------------
+[debug] [2023-05-20T04:42:57.332Z] ----------------------------------------------------------------------
+[debug] [2023-05-20T04:42:57.335Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Boss\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --import ./firebase-data --export-on-exit
+[debug] [2023-05-20T04:42:57.336Z] CLI Version:   11.23.1
+[debug] [2023-05-20T04:42:57.336Z] Platform:      win32
+[debug] [2023-05-20T04:42:57.336Z] Node Version:  v17.9.1
+[debug] [2023-05-20T04:42:57.721Z] Time:          Sat May 20 2023 07:42:57 GMT+0300 (East Africa Time)
+[debug] [2023-05-20T04:42:57.723Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2023-05-23T05:10:18.232Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2023-05-23T05:10:18.232Z] > authorizing via signed-in user (randrianarivonykoloinaj@gmail.com)
-[debug] [2023-05-23T05:10:18.411Z] java version "19.0.2" 2023-01-17
-Java(TM) SE Runtime Environment (build 19.0.2+7-44)
+[debug] [2023-05-20T04:42:57.933Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-05-20T04:42:57.933Z] > authorizing via signed-in user (randrianarivonykoloinaj@gmail.com)
+[debug] [2023-05-20T04:43:00.907Z] java version "19.0.2" 2023-01-17
 
-[debug] [2023-05-23T05:10:18.412Z] Java HotSpot(TM) 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
+[debug] [2023-05-20T04:43:00.909Z] Java(TM) SE Runtime Environment (build 19.0.2+7-44)
+Java HotSpot(TM) 64-Bit Server VM (build 19.0.2+7-44, mixed mode, sharing)
 
-[debug] [2023-05-23T05:10:18.432Z] Parsed Java major version: 19
+[debug] [2023-05-20T04:43:00.938Z] Parsed Java major version: 19
 [info] i  emulators: Starting emulators: storage {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: storage"}}
-[debug] [2023-05-23T05:10:18.452Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2023-05-23T05:10:18.452Z] [storage] Storage Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2023-05-23T05:10:18.453Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}]},"metadata":{"message":"assigned listening specs for emulators"}}
-[debug] [2023-05-23T05:10:18.458Z] [hub] writing locator at C:\Users\Boss\AppData\Local\Temp\hub-rnvln-611b7.json
-[debug] [2023-05-23T05:10:18.472Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"storage"},"message":"Ignoring unsupported arg: port"}}
-[debug] [2023-05-23T05:10:19.698Z] Temp file directory for storage emulator: C:\Users\Boss\AppData\Local\Temp/firebase/storage/blobs {"metadata":{"emulator":{"name":"storage"},"message":"Temp file directory for storage emulator: C:\\Users\\Boss\\AppData\\Local\\Temp/firebase/storage/blobs"}}
-[debug] [2023-05-23T05:10:19.768Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
-[debug] [2023-05-23T05:10:19.769Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
-[debug] [2023-05-23T05:10:19.769Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Boss\\.cache\\firebase\\emulators\\ui-v1.11.4\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Boss\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.4\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[debug] [2023-05-20T04:43:00.957Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-20T04:43:00.957Z] [storage] Storage Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-05-20T04:43:00.958Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-05-20T04:43:00.966Z] [hub] writing locator at C:\Users\Boss\AppData\Local\Temp\hub-rnvln-611b7.json
+[debug] [2023-05-20T04:43:00.978Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"storage"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-20T04:43:01.993Z] Temp file directory for storage emulator: C:\Users\Boss\AppData\Local\Temp/firebase/storage/blobs {"metadata":{"emulator":{"name":"storage"},"message":"Temp file directory for storage emulator: C:\\Users\\Boss\\AppData\\Local\\Temp/firebase/storage/blobs"}}
+[debug] [2023-05-20T04:43:02.301Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-05-20T04:43:02.302Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-05-20T04:43:02.303Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\Boss\\.cache\\firebase\\emulators\\ui-v1.11.4\\server\\server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\Boss\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.11.4\\\\server\\\\server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
 [info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
-[debug] [2023-05-23T05:10:19.991Z] Web / API server started at 127.0.0.1:4000
+[debug] [2023-05-20T04:43:02.582Z] Web / API server started at 127.0.0.1:4000
  {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
-[debug] [2023-05-23T05:10:19.992Z] Web / API server started at ::1:4000
+[debug] [2023-05-20T04:43:02.582Z] Web / API server started at ::1:4000
  {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
 [info] 
 ┌─────────────────────────────────────────────────────────────┐
@@ -45,3 +45,6 @@ Java(TM) SE Runtime Environment (build 19.0.2+7-44)
 
 Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
  
+[info] {"result":{"permit":true},"id":34,"status":"ok"}
+{"result":{"permit":true},"id":35,"status":"ok"}
+{"result":{"permit":true},"id":36,"status":"ok"} {"metadata":{"emulator":{"name":"storage"},"message":"{\"result\":{\"permit\":true},\"id\":34,\"status\":\"ok\"}\r\n{\"result\":{\"permit\":true},\"id\":35,\"status\":\"ok\"}\r\n{\"result\":{\"permit\":true},\"id\":36,\"status\":\"ok\"}"}}

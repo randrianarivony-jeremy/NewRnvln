@@ -1,11 +1,11 @@
-import { Heading, Image, Spinner, Stack } from "@chakra-ui/react";
+import { Heading, Image, Spinner, Stack, Text } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import App from "./App";
-import logo from "../Assets/RANAVALONA.png";
+import React, { createContext, useEffect, useState } from "react";
+
+export const currentUserContext = createContext();
 
 const Preload = () => {
-  const user = useRef();
+  const [currentUser, setCurrentUser] = useState();
   const [initializing, setInitializing] = useState(true);
   useEffect(() => {
     const fetchToken = async () => {
@@ -15,7 +15,8 @@ const Preload = () => {
         })
         .then(
           (res) => {
-            user.current = res.data;
+            fetchData();
+            setCurrentUser(res.data);
           },
           (err) => {
             console.log("tsisy token: " + err);
@@ -34,7 +35,12 @@ const Preload = () => {
         <Spinner speed="0.7s" />
       </Stack>
     );
-  else return <App user={user.current} />;
+  else
+    return (
+      <currentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+        <Routes />
+      </currentUserContext.Provider>
+    );
 };
 
 export default Preload;

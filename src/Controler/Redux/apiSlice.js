@@ -21,9 +21,6 @@ export const apiSlice = createApi({
           credentials: "include",
         };
       },
-      async onQueryStarted(arg, { dispatch }) {
-        dispatch(apiSlice.endpoints.fetchPublications);
-      },
     }),
   }),
 });

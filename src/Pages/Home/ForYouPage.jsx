@@ -8,7 +8,7 @@ import PostContainer from "../StandalonePost/PostContainer";
 
 const ForYouPage = () => {
   const homeSliderRef = useRef();
-  const data = useSelector((state) => state.thread[0]);
+  const data = useSelector(({ thread }) => thread);
 
   useEffect(() => {
     homeSliderRef.current.swiper.setProgress(

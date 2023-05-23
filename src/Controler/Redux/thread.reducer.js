@@ -5,7 +5,7 @@ export const threadSlice = createSlice({
   initialState: [],
   reducers: {
     addContentFeeds: (state, action) => {
-      return [...state, action.payload];
+      return action.payload;
     },
     likeDislike: (state, action) => {
       state[0].map((post) => {

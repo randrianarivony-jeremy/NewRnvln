@@ -11,7 +11,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import interviewReducer from "./Controler/Redux/interview.reducer";
 import threadReducer from "./Controler/Redux/thread.reducer";
-import { apiSlice } from "./Controler/Redux/apiSlice";
+import { apiSlice } from "./Controler/Redux/Features/apiSlice";
 
 const { ToastContainer } = createStandaloneToast();
 const store = configureStore({

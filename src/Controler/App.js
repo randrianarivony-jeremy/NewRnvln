@@ -14,7 +14,7 @@ import { addPublication } from "./Redux/publication.reducer";
 import { addInterview } from "./Redux/interview.reducer";
 import { addContentFeeds } from "./Redux/thread.reducer";
 import RealtimeSocketContext from "./Socketio/RealtimeSocketContext";
-import { useFetchContentsQuery } from "./Redux/apiSlice";
+import { apiSlice, useFetchContentsQuery } from "./Redux/Features/apiSlice";
 
 export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL + "/api/",
@@ -28,7 +28,6 @@ function App() {
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
   const dispatch = useDispatch();
-  const { data } = useFetchContentsQuery();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -40,21 +39,8 @@ function App() {
           (res) => {
             socket.emit("start", res.data._id);
             setCurrentUser(res.data);
-            apiCall
-              .get("feeds")
-              .then(
-                (res) => {
-                  if (res.data.length !== 0) {
-                    dispatch(addContentFeeds(res.data));
-                    dispatch(addPublication(res.data));
-                    dispatch(addInterview(res.data));
-                  }
-                },
-                (err) => {
-                  console.log(err);
-                }
-              )
-              .finally(() => setInitializing(false));
+            dispatch(apiSlice.endpoints.fetchContents.initiate());
+            setInitializing(false);
           },
           (err) => {
             console.log("tsisy token: " + err);

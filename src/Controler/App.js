@@ -1,4 +1,4 @@
-import { Box, Heading, Image, Spinner, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, Image, Spinner, Stack } from "@chakra-ui/react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/App.css";
 import "swiper/css";
@@ -9,12 +9,7 @@ import { publicationContext } from "./Context";
 import axios from "axios";
 import io from "socket.io-client";
 import logo from "../Assets/RANAVALONA.png";
-import { useDispatch } from "react-redux";
-import { addPublication } from "./Redux/publication.reducer";
-import { addInterview } from "./Redux/interview.reducer";
-import { addContentFeeds } from "./Redux/thread.reducer";
 import RealtimeSocketContext from "./Socketio/RealtimeSocketContext";
-import { apiSlice, useFetchContentsQuery } from "./Redux/Features/apiSlice";
 
 export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL + "/api/",
@@ -27,7 +22,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -39,7 +33,6 @@ function App() {
           (res) => {
             socket.emit("start", res.data._id);
             setCurrentUser(res.data);
-            dispatch(apiSlice.endpoints.fetchContents.initiate());
             setInitializing(false);
           },
           (err) => {

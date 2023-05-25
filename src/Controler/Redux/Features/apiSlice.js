@@ -16,33 +16,46 @@ export const apiSlice = createApi({
     fetchContents: builder.query({
       query: () => {
         return {
-          url: "feeds",
+          url: "feeds/" + Date.now(),
           credentials: "include",
         };
       },
       transformResponse: (responseData) =>
         postsAdapter.setAll(initialState, responseData),
-      // async onQueryStarted(undefined, { dispatch, queryFulfilled }) {
-      //   const publications = await dispatch(
-      //     apiSlice.endpoints.fetchPublications.initiate()
-      //   );
-      //   console.log(publications);
-      // },
     }),
-    fetchPublications: builder.query({
-      query: () => {
+    fetchMoreContents: builder.mutation({
+      query: (dateRange) => {
         return {
-          url: "publication",
+          url: "feeds/" + dateRange,
           credentials: "include",
         };
       },
+      transformResponse: (responseData) =>
+        postsAdapter.setAll(initialState, responseData),
     }),
-    fetchInterviews: builder.query({
-      query: () => {
-        return {
+
+    fetchAll: builder.query({
+      queryFn: async (_arg, _queryApi, _extraOptions, fetchWithBQ) => {
+        // try {
+        //   const result = await Promise.all([
+        //     await fetchWithBQ({ url: "interview", credentials: "include" }),
+        //     await fetchWithBQ({ url: "publication", credentials: "include" }),
+        //   ]);
+        //   return { data: [...result[0].data, ...result[1].data] };
+        // } catch (error) {
+        //   console.log(error);
+        //   return { data: error };
+        // }
+        const result = await fetchWithBQ({
           url: "interview",
           credentials: "include",
-        };
+        });
+        if (result.error) return { error: result.error };
+        return { data: result.data };
+      },
+      transformResponse: (response) => {
+        console.log(response.data);
+        return postsAdapter.setAll(initialState, response);
       },
     }),
   }),

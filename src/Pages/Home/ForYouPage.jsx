@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { selectAllPosts } from "../../Controler/Redux/Features/apiSlice";
+import {
+  apiSlice,
+  selectAllPosts,
+} from "../../Controler/Redux/Features/apiSlice";
 import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
 
@@ -11,6 +14,7 @@ const ForYouPage = () => {
   // const data = useSelector(({ thread }) => thread);
   // const { data } = apiSlice.endpoints.fetchContents.useQueryState();
   const data = useSelector(selectAllPosts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     homeSliderRef.current.swiper.setProgress(
@@ -33,6 +37,7 @@ const ForYouPage = () => {
         )
       }
       mousewheel={{ enabled: true, forceToAxis: true }}
+      onReachEnd={() => dispatch(apiSlice.endpoints.fetchContents.initiate())}
     >
       {data?.map((elt) => (
         <SwiperSlide key={elt._id}>

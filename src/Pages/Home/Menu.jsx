@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
   useColorMode,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
@@ -39,10 +40,11 @@ const Menu = () => {
   const { currentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
+  const bg = useColorModeValue("whiteAlpha.900", "dark.50");
 
   return (
     <>
-      <Button size={'lg'} position="absolute" zIndex={2} onClick={onOpen}>
+      <Button size={"lg"} position="absolute" zIndex={2} onClick={onOpen}>
         <IonIcon icon={menuOutline} style={{ fontSize: iconMd }} />
       </Button>
       <Drawer
@@ -55,7 +57,7 @@ const Menu = () => {
         }}
       >
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent bgColor={bg}>
           <DrawerCloseButton />
           <DrawerHeader fontSize="md" fontWeight="bold">
             Menu
@@ -68,10 +70,14 @@ const Menu = () => {
                   navigate("/");
                   onClose();
                 }}
+                leftIcon={
+                  <IonIcon
+                    icon={homeOutline}
+                    style={{ fontSize: iconMd, width: "40px" }}
+                  />
+                }
               >
-                <IonIcon icon={homeOutline} 
-                  style={{ fontSize: iconMd, width: "40px" }} />
-                <Text>Accueil</Text>
+                Accueil
               </Button>
               <Button
                 justifyContent="flex-start"
@@ -79,12 +85,14 @@ const Menu = () => {
                   navigate("/subscriptions_only");
                   onClose();
                 }}
+                leftIcon={
+                  <IonIcon
+                    icon={peopleOutline}
+                    style={{ fontSize: iconMd, width: "40px" }}
+                  />
+                }
               >
-                <IonIcon
-                  icon={peopleOutline}
-                  style={{ fontSize: iconMd, width: "40px" }}
-                />
-                <Text>Abonnements</Text>
+                Abonnements
               </Button>
               <Button
                 justifyContent="flex-start"
@@ -92,39 +100,53 @@ const Menu = () => {
                   navigate("/questions_only");
                   onClose();
                 }}
+                leftIcon={
+                  <IonIcon
+                    icon={help}
+                    style={{ fontSize: iconMd, width: "40px" }}
+                  />
+                }
               >
-                <IonIcon
-                  icon={help}
-                  style={{ fontSize: iconMd, width: "40px" }}
-                />
-                <Text>Questionnaires</Text>
+                Questionnaires
               </Button>
               <Button
                 justifyContent="flex-start"
                 onClick={() => navigate("/parameters")}
+                leftIcon={
+                  <IonIcon
+                    icon={cogOutline}
+                    style={{ fontSize: iconMd, width: "40px" }}
+                  />
+                }
               >
-                <IonIcon
-                  icon={cogOutline}
-                  style={{ fontSize: iconMd, width: "40px" }}
-                />
-                <Text>Paramètres</Text>
+                Paramètres
               </Button>
-              <Button justifyContent="flex-start" onClick={toggleColorMode}>
-                <IonIcon
-                  icon={colorMode === "light" ? moonOutline : sunnyOutline}
-                  style={{ fontSize: iconMd, width: "40px" }}
-                />
+              <Button
+                justifyContent="flex-start"
+                onClick={toggleColorMode}
+                leftIcon={
+                  <IonIcon
+                    icon={colorMode === "light" ? moonOutline : sunnyOutline}
+                    style={{ fontSize: iconMd, width: "40px" }}
+                  />
+                }
+              >
                 <Text>
                   {colorMode === "light" ? "Dark mode" : "Light mode"}
                 </Text>
               </Button>
               {currentUser && (
-                <Button justifyContent="flex-start" onClick={openLogoutModal}>
-                  <IonIcon
-                    icon={logOutOutline}
-                    style={{ fontSize: iconMd, width: "40px" }}
-                  />
-                  <Text>Se déconnecter</Text>
+                <Button
+                  justifyContent="flex-start"
+                  onClick={openLogoutModal}
+                  leftIcon={
+                    <IonIcon
+                      icon={logOutOutline}
+                      style={{ fontSize: iconMd, width: "40px" }}
+                    />
+                  }
+                >
+                  Se déconnecter
                 </Button>
               )}
               {currentUser ? (

@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { apiSlice } from "../../Controler/Redux/apiSlice";
+import { selectAllPosts } from "../../Controler/Redux/apiSlice";
 import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
 
 const ForYouPage = () => {
   const homeSliderRef = useRef();
   // const data = useSelector(({ thread }) => thread);
-  const { data } = apiSlice.endpoints.fetchContents.useQueryState();
+  // const { data } = apiSlice.endpoints.fetchContents.useQueryState();
+  const data = useSelector(selectAllPosts);
 
   useEffect(() => {
     homeSliderRef.current.swiper.setProgress(

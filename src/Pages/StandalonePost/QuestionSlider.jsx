@@ -22,7 +22,7 @@ const QuestionSlider = ({question,index}) => {
 
   return (
     <HStack
-      width={'100%'}
+      width={"100%"}
       bgColor={colorMode === "light" ? "whiteAlpha.500" : "blackAlpha.500"}
       height={12}
       paddingX={3}
@@ -53,8 +53,8 @@ const QuestionSlider = ({question,index}) => {
           autoplay
             ? {
                 delay: 1000,
-                disableOnInteraction:false,
-                pauseOnMouseEnter:true
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
               }
             : false
         }
@@ -62,16 +62,18 @@ const QuestionSlider = ({question,index}) => {
         {/* yes both swiperslides are the same but loop won't work with just one */}
         <SwiperSlide className="question-slide" ref={slideRef}>
           {question.data[index]} &nbsp;
-          <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{question.interviewer.name}_
-          {question.interviewer.job && question.interviewer.job}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            /{question.interviewer.name}_
+            {question.interviewer.job && question.interviewer.job}
           </span>
         </SwiperSlide>
         {autoplay && (
           <SwiperSlide className="question-slide">
-          {question.data[index]} &nbsp;
-          <span style={{fontStyle:'italic',fontWeight:'normal'}}>/{question.interviewer.name}_
-          {question.interviewer.job && question.interviewer.job}
-          </span>
+            {question.data[index]} &nbsp;
+            <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+              /{question.interviewer.name}_
+              {question.interviewer.job && question.interviewer.job}
+            </span>
           </SwiperSlide>
         )}
       </Swiper>

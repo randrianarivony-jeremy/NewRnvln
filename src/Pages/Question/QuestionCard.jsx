@@ -33,11 +33,11 @@ const QuestionCard = ({ questions }) => {
   return (
     <Flex height="100%" bg={questions.bg} justify="center" align="center">
       <Swiper
-        mousewheel={{enabled:true,forceToAxis:true}}
-        modules={[Pagination,Mousewheel]}
+        mousewheel={{ enabled: true, forceToAxis: true }}
+        modules={[Pagination, Mousewheel]}
         pagination={{ type: "progressbar" }}
       >
-        {questions.data.map((question,index) => (
+        {questions.data.map((question, index) => (
           <SwiperSlide
             key={index}
             style={{
@@ -66,7 +66,7 @@ const QuestionCard = ({ questions }) => {
       <Flex
         position="absolute"
         left={0}
-        top={10}
+        top={12}
         marginX={3}
         cursor="pointer"
         textAlign="left"
@@ -104,6 +104,7 @@ const QuestionCard = ({ questions }) => {
         right={0}
         bottom={2}
         zIndex={2}
+        size="lg"
         flexDir="column"
       >
         <IonIcon icon={chatbubblesOutline} style={{ fontSize: iconMd }} />

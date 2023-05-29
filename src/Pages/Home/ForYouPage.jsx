@@ -17,11 +17,11 @@ const ForYouPage = () => {
         direction="vertical"
         modules={[Keyboard, Mousewheel]}
         keyboard={true}
-        mousewheel={{ enabled: true, forceToAxis: true }}
+        // mousewheel={{ enabled: true, forceToAxis: true }}
       >
-        {timeRange.map((elt) => (
+        {timeRange.map((elt, index) => (
           <SwiperSlide key={elt}>
-            <FYPList timeRange={elt} />
+            <FYPList index={index} />
           </SwiperSlide>
         ))}
       </Swiper>

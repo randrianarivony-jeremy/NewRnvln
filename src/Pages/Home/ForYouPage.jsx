@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, { createContext, useRef, useState } from "react";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import FYPList from "./FYPList";
@@ -7,10 +7,10 @@ export const newsfeedContext = createContext();
 
 const ForYouPage = () => {
   const parentSwiperRef = useRef();
-  const entryTimeRef = useRef([Date.now()]);
+  const [timeRange, setTimeRange] = useState([Date.now()]);
 
   return (
-    <newsfeedContext.Provider value={{ entryTimeRef }}>
+    <newsfeedContext.Provider value={{ timeRange, setTimeRange }}>
       <Swiper
         ref={parentSwiperRef}
         className="feed-slides"
@@ -19,7 +19,7 @@ const ForYouPage = () => {
         keyboard={true}
         mousewheel={{ enabled: true, forceToAxis: true }}
       >
-        {entryTimeRef.current.map((elt) => (
+        {timeRange.map((elt) => (
           <SwiperSlide key={elt}>
             <FYPList timeRange={elt} />
           </SwiperSlide>

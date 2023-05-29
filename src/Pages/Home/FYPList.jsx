@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -12,25 +11,23 @@ import PostContainer from "../StandalonePost/PostContainer";
 import { newsfeedContext } from "./ForYouPage";
 
 const FYPList = ({ timeRange }) => {
+  console.log(timeRange);
+  const { setTimeRange } = useContext(newsfeedContext);
   const homeSliderRef = useRef();
-  const { entryTimeRef } = useContext(newsfeedContext);
   const { data, isLoading, isSuccess, isError, error } =
     useFetchContentsQuery(timeRange);
-
-  const lastSlideCreatedAt = useRef();
   const [fetchContents] = useLazyFetchContentsQuery();
-  // const data = useSelector(selectAllPosts);
-  const dispatch = useDispatch();
 
-  const fetchMoreContents = () => {
-    fetchContents(lastSlideCreatedAt.current);
+  const fetchMoreContents = (activeIndex) => {
+    const lastSlideCreatedAt = new Date(
+      data.entities[data.ids[activeIndex]].createdAt
+    ).getTime();
+    fetchContents(lastSlideCreatedAt);
+    setTimeRange((current) => [...current, lastSlideCreatedAt]);
   };
 
   useEffect(() => {
     if (isSuccess) {
-      lastSlideCreatedAt.current = new Date(
-        data.entities[data.ids[data.ids.length - 1]].createdAt
-      ).getTime();
       homeSliderRef.current.swiper.setProgress(
         localStorage.getItem("for_you_page_current_slide"),
         0
@@ -51,11 +48,11 @@ const FYPList = ({ timeRange }) => {
         onSlideChange={({ activeIndex }) =>
           localStorage.setItem(
             "for_you_page_current_slide",
-            activeIndex / data.length
+            activeIndex / data.ids.length
           )
         }
         mousewheel={{ enabled: true, forceToAxis: true }}
-        onReachEnd={fetchMoreContents}
+        onReachEnd={({ activeIndex }) => fetchMoreContents(activeIndex)}
       >
         {data.ids.map((id) => (
           <SwiperSlide key={id}>

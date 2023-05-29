@@ -1,55 +1,37 @@
-import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useContext, useRef } from "react";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  apiSlice,
-  selectAllPosts,
-} from "../../Controler/Redux/Features/apiSlice";
-import QuestionCard from "../Question/QuestionCard";
-import PostContainer from "../StandalonePost/PostContainer";
+import { useFetchContentsQuery } from "../../Controler/Redux/Features/postSlice";
+import { Loader } from "../../Controler/Routes";
+import FYPList from "./FYPList";
+import { newsfeedContext } from "./Home";
 
 const ForYouPage = () => {
-  const homeSliderRef = useRef();
-  // const data = useSelector(({ thread }) => thread);
-  // const { data } = apiSlice.endpoints.fetchContents.useQueryState();
-  const data = useSelector(selectAllPosts);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    homeSliderRef.current.swiper.setProgress(
-      localStorage.getItem("for_you_page_current_slide"),
-      0
-    );
-  }, []);
-
-  return (
-    <Swiper
-      ref={homeSliderRef}
-      className="feed-slides"
-      direction="vertical"
-      modules={[Keyboard, Mousewheel]}
-      keyboard={true}
-      onSlideChange={({ activeIndex }) =>
-        localStorage.setItem(
-          "for_you_page_current_slide",
-          activeIndex / data.length
-        )
-      }
-      mousewheel={{ enabled: true, forceToAxis: true }}
-      onReachEnd={() => dispatch(apiSlice.endpoints.fetchContents.initiate())}
-    >
-      {data?.map((elt) => (
-        <SwiperSlide key={elt._id}>
-          {elt.type === "question" ? (
-            <QuestionCard questions={elt} />
-          ) : (
-            <PostContainer post={elt} homeSlider={homeSliderRef} />
-          )}
-        </SwiperSlide>
-      ))}
-    </Swiper>
+  const parentSwiperRef = useRef();
+  const { entryTimeRef } = useContext(newsfeedContext);
+  const { isLoading, isSuccess, isError, error } = useFetchContentsQuery(
+    entryTimeRef.current
   );
+
+  if (isLoading) return <Loader />;
+  if (isError) return <p>Error {error}</p>;
+  if (isSuccess)
+    return (
+      <Swiper
+        ref={parentSwiperRef}
+        className="feed-slides"
+        direction="vertical"
+        modules={[Keyboard, Mousewheel]}
+        keyboard={true}
+        mousewheel={{ enabled: true, forceToAxis: true }}
+      >
+        {entryTimeRef.current.map((elt) => (
+          <SwiperSlide key={elt}>
+            <FYPList />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    );
 };
 
 export default ForYouPage;

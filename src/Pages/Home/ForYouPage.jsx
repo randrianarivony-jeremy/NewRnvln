@@ -1,22 +1,16 @@
-import React, { useContext, useRef } from "react";
+import React, { createContext, useContext, useRef } from "react";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useFetchContentsQuery } from "../../Controler/Redux/Features/postSlice";
-import { Loader } from "../../Controler/Routes";
 import FYPList from "./FYPList";
-import { newsfeedContext } from "./Home";
+
+export const newsfeedContext = createContext();
 
 const ForYouPage = () => {
   const parentSwiperRef = useRef();
-  const { entryTimeRef } = useContext(newsfeedContext);
-  const { isLoading, isSuccess, isError, error } = useFetchContentsQuery(
-    entryTimeRef.current
-  );
+  const entryTimeRef = useRef([Date.now()]);
 
-  if (isLoading) return <Loader />;
-  if (isError) return <p>Error {error}</p>;
-  if (isSuccess)
-    return (
+  return (
+    <newsfeedContext.Provider value={{ entryTimeRef }}>
       <Swiper
         ref={parentSwiperRef}
         className="feed-slides"
@@ -27,11 +21,12 @@ const ForYouPage = () => {
       >
         {entryTimeRef.current.map((elt) => (
           <SwiperSlide key={elt}>
-            <FYPList />
+            <FYPList timeRange={elt} />
           </SwiperSlide>
         ))}
       </Swiper>
-    );
+    </newsfeedContext.Provider>
+  );
 };
 
 export default ForYouPage;

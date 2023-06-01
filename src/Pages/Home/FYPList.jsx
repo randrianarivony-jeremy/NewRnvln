@@ -7,21 +7,9 @@ import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
 import { newsfeedContext } from "./ForYouPage";
 
-const FYPList = ({ index }) => {
-  const { setTimeRange, timeRange } = useContext(newsfeedContext);
-  const homeSliderRef = useRef();
-  const { data, isLoading, isSuccess, isError, error } = useFetchContentsQuery(
-    timeRange[index]
-  );
-
-  const fetchMoreContents = (activeIndex) => {
-    const lastSlideCreatedAt = new Date(
-      data.entities[data.ids[activeIndex]].createdAt
-    ).getTime();
-    // console.log(timeRange[timeRange.length - 1], lastSlideCreatedAt);
-    if (timeRange[timeRange.length - 1] !== lastSlideCreatedAt)
-      setTimeRange((current) => [...current, lastSlideCreatedAt]);
-  };
+const FYPList = ({ timeRange }) => {
+  const { data, isLoading, isSuccess, isError, error } =
+    useFetchContentsQuery(timeRange);
 
   // useEffect(() => {
   //   if (isSuccess) {
@@ -36,34 +24,19 @@ const FYPList = ({ index }) => {
   if (isError) return <p>Error {error}</p>;
   if (isSuccess)
     return (
-      <Swiper
-        ref={homeSliderRef}
-        className="feed-slides"
-        direction="vertical"
-        modules={[Keyboard, Mousewheel]}
-        keyboard={true}
-        onSlideChange={({ activeIndex }) =>
-          localStorage.setItem(
-            "for_you_page_current_slide",
-            activeIndex / data.ids.length
-          )
-        }
-        // mousewheel={{ enabled: true, forceToAxis: true }}
-        onReachEnd={({ activeIndex }) => fetchMoreContents(activeIndex)}
-      >
-        {data.ids.map((id) => (
-          <SwiperSlide key={id}>
-            {data.entities[id].type === "question" ? (
+      // <>
+      //   {data.ids.map((id) => (
+      <SwiperSlide>
+        {/* {data.entities[id].type === "question" ? (
               <QuestionCard questions={data.entities[id]} />
             ) : (
-              <PostContainer
-                post={data.entities[id]}
-                homeSlider={homeSliderRef}
-              />
-            )}
-          </SwiperSlide>
-        ))}
-      </Swiper>
+              <PostContainer post={data.entities[id]} />
+            )} */}
+        1
+      </SwiperSlide>
+      //   <SwiperSlide>2</SwiperSlide>
+      //   ))}
+      // </>
     );
 };
 

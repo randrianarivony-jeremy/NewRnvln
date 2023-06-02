@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
+  postSlice,
   useFetchContentsQuery,
   useLazyFetchContentsQuery,
 } from "../../Controler/Redux/Features/postSlice";
@@ -13,77 +14,56 @@ import FYPList from "./FYPList";
 export const newsfeedContext = createContext();
 
 const ForYouPage = () => {
+  const entryTime = useRef(Date.now());
   const parentSwiperRef = useRef();
-  const [timeRange, setTimeRange] = useState(
-    Date.now()
-    // new Date("2023-05-23T05:09:45.772+00:00").getTime()
-  );
-  // const [timeRange, setTimeRange] = useState([
-  //   Date.now(),
-  //   new Date("2023-05-23T05:09:45.772+00:00").getTime(),
-  // ]);
-  const {
-    data: initialData,
-    isLoading: initialLoading,
-    isSuccess: initialSuccessEvent,
-    isError: initialErrorEvent,
-    error: initialError,
-  } = useFetchContentsQuery(timeRange);
-  const [fetchContents, { data, isLoading, isSuccess, isError, error }] =
-    useLazyFetchContentsQuery();
-  const dataItem = useRef({ ids: [], entities: {} });
-  // const [dataItem, setDataItem] = useState(initialData);
+  const [feedsData, setFeedsData] = useState();
+  const [fetchContents] = useLazyFetchContentsQuery();
 
-  const fetchMoreContents = (activeIndex) => {
-    console.log("end");
+  const fetchMoreContents = async (activeIndex) => {
     const lastSlideCreatedAt = new Date(
-      dataItem.current.entities[dataItem.current.ids[activeIndex]].createdAt
+      feedsData.entities[feedsData.ids[activeIndex]].createdAt
     ).getTime();
-    // console.log(timeRange[timeRange.length - 1], lastSlideCreatedAt);
-    if (timeRange !== lastSlideCreatedAt) setTimeRange(lastSlideCreatedAt);
-    // fetchContents(lastSlideCreatedAt);
-    // data
+    const { data } = await fetchContents(lastSlideCreatedAt);
+    setFeedsData({
+      ids: [...feedsData.ids, ...data.ids],
+      entities: { ...feedsData.entities, ...data.entities },
+    });
   };
 
-  // useEffect(() => {
-  //   console.log(timeRange, dataItem.current);
-  // }, [timeRange]);
-
-  if (initialLoading) return <Loader />;
-  if (initialErrorEvent) return <p>Error {initialError}</p>;
-  if (initialSuccessEvent) {
-    console.log(initialData);
-    dataItem.current.ids = [...dataItem.current.ids, ...initialData.ids];
-    dataItem.current.entities = {
-      ...dataItem.current.entities,
-      ...initialData.entities,
+  useEffect(() => {
+    const fetchInitialContents = async () => {
+      const { data } = await fetchContents(entryTime.current);
+      setFeedsData(data);
     };
-    // dataItem.current = initialData;
+    fetchInitialContents();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(feedsData);
+  // }, [fetching]);
+  if (feedsData)
     return (
-      <newsfeedContext.Provider value={{ timeRange, setTimeRange }}>
-        <Swiper
-          ref={parentSwiperRef}
-          className="feed-slides"
-          direction="vertical"
-          modules={[Keyboard, Mousewheel]}
-          keyboard={true}
-          mousewheel={{ enabled: true, forceToAxis: true }}
-          onReachEnd={({ activeIndex }) => fetchMoreContents(activeIndex)}
-        >
-          {dataItem.current.ids.map((id) => (
-            <SwiperSlide key={id}>
-              {/* <FYPList timeRange={elt} /> */}
-              {dataItem.current.entities[id].type === "question" ? (
-                <QuestionCard questions={dataItem.current.entities[id]} />
-              ) : (
-                <PostContainer post={dataItem.current.entities[id]} />
-              )}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </newsfeedContext.Provider>
+      <Swiper
+        ref={parentSwiperRef}
+        className="feed-slides"
+        direction="vertical"
+        modules={[Keyboard, Mousewheel]}
+        keyboard={true}
+        mousewheel={{ enabled: true, forceToAxis: true }}
+        onReachEnd={({ activeIndex }) => fetchMoreContents(activeIndex)}
+      >
+        {feedsData.ids.map((id) => (
+          <SwiperSlide key={id}>
+            {feedsData.entities[id].type === "question" ? (
+              <QuestionCard questions={feedsData.entities[id]} />
+            ) : (
+              <PostContainer post={feedsData.entities[id]} />
+            )}
+          </SwiperSlide>
+        ))}
+      </Swiper>
     );
-  }
+  return <Loader />;
 };
 
 export default ForYouPage;

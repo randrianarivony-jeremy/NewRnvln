@@ -5,7 +5,6 @@ import { useFetchContentsQuery } from "../../Controler/Redux/Features/postSlice"
 import { Loader } from "../../Controler/Routes";
 import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
-import { newsfeedContext } from "./ForYouPage";
 
 const FYPList = ({ timeRange }) => {
   const { data, isLoading, isSuccess, isError, error } =

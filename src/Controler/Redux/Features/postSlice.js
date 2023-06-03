@@ -10,8 +10,8 @@ const initialState = postsAdapter.getInitialState();
 export const postSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     fetchContents: builder.query({
-      query: (date) => ({
-        url: `feeds/${date}`,
+      query: () => ({
+        url: `feeds`,
         credentials: "include",
       }),
       transformResponse: (responseData) =>
@@ -23,44 +23,59 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     fetchMoreContents: builder.mutation({
-      query: (body) => {
-        return {
-          url: "publication",
-          method: "POST",
-          credentials: "include",
-          body,
-        };
+      query: (lastPostCreatedAt) => ({
+        url: "feeds/" + lastPostCreatedAt,
+        method: "PATCH",
+        credentials: "include",
+      }),
+      transformResponse: (responseData) =>
+        postsAdapter.setAll(initialState, responseData),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          if (data.ids.length > 0)
+            dispatch(
+              postSlice.util.updateQueryData(
+                "fetchContents",
+                undefined,
+                (draft) => {
+                  draft.entities = { ...draft.entities, ...data.entities };
+                  draft.ids = [...draft.ids, ...data.ids];
+                }
+              )
+            );
+        } catch (error) {
+          console.log(error);
+        }
       },
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
     }),
     likePost: builder.mutation({
-      query: ({ type, postId, body, date }) => ({
+      query: ({ type, postId, body }) => ({
         url: `${type}/like/` + postId,
         method: "PATCH",
         credentials: "include",
-        // In a real app, we'd probably need to base this on user ID somehow
-        // so that a user can't do the same reaction more than once
         body,
       }),
       async onQueryStarted(
-        { type, postId, body, date },
+        { type, postId, body },
         { dispatch, queryFulfilled }
       ) {
-        // `updateQueryData` requires the endpoint name and cache key arguments,
-        // so it knows which piece of cache state to update
         const patchResult = dispatch(
-          postSlice.util.updateQueryData("fetchContents", date, (draft) => {
-            console.log(draft);
-            // The `draft` is Immer-wrapped and can be "mutated" like in createSlice
-            const post = draft.entities[postId];
-            if (post)
-              body.like
-                ? (post.likers = [...post.likers, body.id_user])
-                : (post.likers = post.likers.filter(
-                    (liker) => liker !== body.id_user
-                  ));
-            else return post;
-          })
+          postSlice.util.updateQueryData(
+            "fetchContents",
+            undefined,
+            (draft) => {
+              const post = draft.entities[postId];
+              if (post)
+                body.like
+                  ? (post.likers = [...post.likers, body.id_user])
+                  : (post.likers = post.likers.filter(
+                      (liker) => liker !== body.id_user
+                    ));
+              else return post;
+            }
+          )
         );
         try {
           await queryFulfilled;
@@ -103,17 +118,15 @@ export const {
   useLikePostMutation,
 } = postSlice;
 
-// Creates memoized selector
 const selectPostsData = createSelector(
-  (state, date) => postSlice.endpoints.fetchContents.select(date)(state),
-  (postsResult) => postsResult.data // normalized state object with ids & entities
+  postSlice.endpoints.fetchContents.select(),
+  (postsResult) => postsResult.data
 );
 
 export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,
   selectIds: selectPostIds,
-  // Pass in a selector that returns the posts slice of state
 } = postsAdapter.getSelectors(
-  (state, date) => selectPostsData(state, date) ?? initialState
+  (state) => selectPostsData(state) ?? initialState
 );

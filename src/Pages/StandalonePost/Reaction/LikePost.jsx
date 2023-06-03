@@ -55,7 +55,6 @@ const LikePost = ({ post }) => {
           type: post.type,
           postId: post._id,
           body: { id_user: currentUser._id, like: !liked },
-          date: "1684818585772",
         })
       }
       size="lg"

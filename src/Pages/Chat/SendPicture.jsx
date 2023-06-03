@@ -6,53 +6,76 @@ import React, { useContext, useRef } from "react";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
+import Compressor from "compressorjs";
 
 const SendPicture = () => {
   const fileInputRef = useRef();
   const urlRef = useRef();
-  const {messages,setMessages,conversationId,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
-  const {currentUser}=useContext(currentUserContext);
+  const {
+    messages,
+    setMessages,
+    conversationId,
+    userB,
+    newConversation,
+    setNewConversation,
+    setSubmitting,
+    draft,
+  } = useContext(chatContext);
+  const { currentUser } = useContext(currentUserContext);
 
-  const storePicture=({currentTarget})=>{
+  const storePicture = ({ currentTarget }) => {
     setSubmitting(true);
     if (newConversation) setNewConversation(false);
-    draft.current = {content:URL.createObjectURL(currentTarget.files[0]),contentType:'image',sender:currentUser._id}
-    const fileName = new Date().getTime() + `${currentUser._id}`;
-    const storageRef = ref(storage, "conversation/image/" + fileName);
-    uploadBytes(storageRef, currentTarget.files[0]).then((snapshot) =>
-        getDownloadURL(snapshot.ref).then((url) => {
-          urlRef.current = url;
-          handleSubmit();
-        })
-      );
-  }
+    draft.current = {
+      content: URL.createObjectURL(currentTarget.files[0]),
+      contentType: "image",
+      sender: currentUser._id,
+    };
+    new Compressor(currentTarget.files[0], {
+      quality: 0.6,
+      success(result) {
+        console.log({ result, original: currentTarget.files[0].size });
+        const fileName = new Date().getTime() + `${currentUser._id}`;
+        const storageRef = ref(storage, "conversation/image/" + fileName);
+        uploadBytes(storageRef, result).then((snapshot) =>
+          getDownloadURL(snapshot.ref).then((url) => {
+            urlRef.current = url;
+            handleSubmit();
+          })
+        );
+      },
+      error(err) {
+        console.log({ Error: "Image compression error " + err.message });
+      },
+    });
+  };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     await apiCall
-      .post( "message",{
-        sender:currentUser._id,
-        recipient:userB._id,
-        content:urlRef.current,
-        contentType:'image',
-        conversationId: newConversation ? null : conversationId.current
+      .post("message", {
+        sender: currentUser._id,
+        recipient: userB._id,
+        content: urlRef.current,
+        contentType: "image",
+        conversationId: newConversation ? null : conversationId.current,
       })
       .then(
         (res) => {
-          setMessages([...messages,res.data.newMessage]);
+          setMessages([...messages, res.data.newMessage]);
           conversationId.current = res.data.newMessage.conversationId;
-          socket.emit('message sent',res.data,userB._id)
-          },
-          (err) => {
+          socket.emit("message sent", res.data, userB._id);
+        },
+        (err) => {
           console.log(err);
         }
       )
-      .finally(()=>setSubmitting(false));
+      .finally(() => setSubmitting(false));
   };
   return (
     <>
-      <Button variant='float'
-        onClick={() => fileInputRef.current.click()}
-      ><IonIcon icon={imageOutline}/></Button>
+      <Button variant="float" onClick={() => fileInputRef.current.click()}>
+        <IonIcon icon={imageOutline} />
+      </Button>
       <Input
         ref={fileInputRef}
         type="file"

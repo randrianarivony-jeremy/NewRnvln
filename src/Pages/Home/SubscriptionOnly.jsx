@@ -2,7 +2,6 @@ import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Navigation from "../../Component/Navigation";
-import InterviewCard from "../InterviewCard/InterviewCard";
 
 const SubscriptionOnly = () => {
   const homeSliderRef = useRef();
@@ -21,10 +20,10 @@ const SubscriptionOnly = () => {
       >
         Abonnements
       </Button>
-      <Swiper ref={homeSliderRef} className="feed-slides"direction="vertical">
+      <Swiper ref={homeSliderRef} className="feed-slides" direction="vertical">
         {data.map((elt, key) => (
           <SwiperSlide key={key}>
-            <InterviewCard />
+            <p>content</p>
           </SwiperSlide>
         ))}
       </Swiper>

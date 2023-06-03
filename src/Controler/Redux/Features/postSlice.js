@@ -33,6 +33,17 @@ export const postSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: [{ type: "Post", id: "LIST" }],
     }),
+    likePost: builder.mutation({
+      query: (body) => {
+        return {
+          url: "publication",
+          method: "PATCH",
+          credentials: "include",
+          body,
+        };
+      },
+      invalidatesTags: [{ type: "Post", id: "LIST" }],
+    }),
 
     fetchAll: builder.query({
       queryFn: async (_arg, _queryApi, _extraOptions, fetchWithBQ) => {
@@ -66,11 +77,9 @@ export const {
   useFetchMoreContentsMutation,
 } = postSlice;
 
-export const selectPostsResult = postSlice.endpoints.fetchContents.select();
-
 // Creates memoized selector
 const selectPostsData = createSelector(
-  selectPostsResult,
+  (state, date) => postSlice.endpoints.fetchContents.select(date)(state),
   (postsResult) => postsResult.data // normalized state object with ids & entities
 );
 
@@ -80,5 +89,5 @@ export const {
   selectIds: selectPostIds,
   // Pass in a selector that returns the posts slice of state
 } = postsAdapter.getSelectors(
-  (state) => selectPostsData(state) ?? initialState
+  (state, date) => selectPostsData(state, date) ?? initialState
 );

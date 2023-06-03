@@ -1,23 +1,26 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
-  postSlice,
-  useFetchContentsQuery,
+  selectAllPosts,
   useLazyFetchContentsQuery,
 } from "../../Controler/Redux/Features/postSlice";
 import { Loader } from "../../Controler/Routes";
 import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
-import FYPList from "./FYPList";
 
 export const newsfeedContext = createContext();
 
 const ForYouPage = () => {
+  // const entryTime = useRef("1684818585772");
   const entryTime = useRef(Date.now());
   const parentSwiperRef = useRef();
   const [feedsData, setFeedsData] = useState();
   const [fetchContents] = useLazyFetchContentsQuery();
+  const result = useSelector((state) =>
+    selectAllPosts(state, entryTime.current)
+  );
 
   const fetchMoreContents = async (activeIndex) => {
     const lastSlideCreatedAt = new Date(
@@ -38,9 +41,9 @@ const ForYouPage = () => {
     fetchInitialContents();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(feedsData);
-  // }, [fetching]);
+  useEffect(() => {
+    console.log(result);
+  }, [result]);
   if (feedsData)
     return (
       <Swiper

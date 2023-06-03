@@ -18,7 +18,7 @@ const Reaction = () => {
       {showReaction && (
         <>
           <LikePost post={post} />
-          <CommentPost post={post} />
+          <CommentPost />
           {post.type === "interview" && (
             <Button flexDir="column" size={"lg"}>
               <IonIcon icon={chatbubblesOutline} style={{ fontSize: iconMd }} />
@@ -32,7 +32,7 @@ const Reaction = () => {
         color={
           post.contentType === "string" && post.bg !== "transparent" && "black"
         }
-        size='lg'
+        size="lg"
       >
         <IonIcon
           icon={showReaction ? chevronDown : caretUpOutline}

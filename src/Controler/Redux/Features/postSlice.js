@@ -33,7 +33,6 @@ export const postSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           if (data.ids.length > 0)
             dispatch(
               postSlice.util.updateQueryData(
@@ -84,6 +83,60 @@ export const postSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    fetchComments: builder.mutation({
+      query: ({ postId, type }) => ({
+        url: `${type}/comments/` + postId,
+        method: "GET",
+        credentials: "include",
+      }),
+      async onQueryStarted({ postId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.length > 0)
+            dispatch(
+              postSlice.util.updateQueryData(
+                "fetchContents",
+                undefined,
+                (draft) => {
+                  draft.entities[postId].comments = data;
+                }
+              )
+            );
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
+    commentPost: builder.mutation({
+      query: ({ postId, type, text, commenterId }) => ({
+        url: `${type}/comment/` + postId,
+        method: "PATCH",
+        credentials: "include",
+        body: { text, commenterId: commenterId._id },
+      }),
+      async onQueryStarted(
+        { postId, text, commenterId },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          postSlice.util.updateQueryData(
+            "fetchContents",
+            undefined,
+            (draft) => {
+              const post = draft.entities[postId];
+              if (post)
+                post.comments = [...post.comments, { commenterId, text }];
+              else return post;
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
 
     fetchAll: builder.query({
       queryFn: async (_arg, _queryApi, _extraOptions, fetchWithBQ) => {
@@ -116,6 +169,8 @@ export const {
   useLazyFetchContentsQuery,
   useFetchMoreContentsMutation,
   useLikePostMutation,
+  useFetchCommentsMutation,
+  useCommentPostMutation,
 } = postSlice;
 
 const selectPostsData = createSelector(

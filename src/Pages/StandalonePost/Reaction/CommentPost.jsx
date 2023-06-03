@@ -12,79 +12,42 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import ScrollableFeed from "react-scrollable-feed";
-import React, { useContext, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import Comment from "./Comment";
-import UserLoader from "../../../Component/Loaders/UserLoader";
 import { IonIcon } from "@ionic/react";
 import { chatbubbleOutline } from "ionicons/icons";
-import { apiCall, currentUserContext, socket } from "../../../Controler/App";
-import { updateComment } from "../../../Controler/Redux/thread.reducer";
+import React, { useContext, useEffect, useRef } from "react";
+import ScrollableFeed from "react-scrollable-feed";
+import UserLoader from "../../../Component/Loaders/UserLoader";
+import { currentUserContext } from "../../../Controler/App";
+import {
+  useCommentPostMutation,
+  useFetchCommentsMutation,
+} from "../../../Controler/Redux/Features/postSlice";
 import { iconMd } from "../../../Styles/Theme";
+import { postContext } from "../PostContainer";
+import Comment from "./Comment";
 
-const CommentPost = ({ post }) => {
+const CommentPost = () => {
+  const { post } = useContext(postContext);
   const { onOpen, isOpen, onClose } = useDisclosure();
   const inputRef = useRef();
-  const dispatch = useDispatch();
   const { currentUser } = useContext(currentUserContext);
-  const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [fetchComments, { isLoading, isSuccess, isError }] =
+    useFetchCommentsMutation();
+  const [commentPost] = useCommentPostMutation();
 
   const openComments = () => {
-    fetchComments();
+    fetchComments({ postId: post._id, type: post.type });
     onOpen();
   };
 
-  const submitComment = async () => {
-    setSubmitting(true);
-    await apiCall
-      .patch(
-         `${post.type}/comment/` + post._id,
-        {
-          commenterId: currentUser._id,
-          text: inputRef.current.value,
-        }
-      )
-      .then(
-        (res) => {
-          socket.emit('notification',post.id_user._id)
-          dispatch(updateComment({ postId: post._id, data: res.data }));
-          setSubmitting(false);
-          inputRef.current.value = "";
-        },
-        (err) => {
-          console.log(err);
-          setSubmitting(false);
-        }
-      );
-  };
-
-  const fetchComments = async () => {
-    await apiCall
-      .get(
-         post.type+"/comments/" + post._id
-      )
-      .then(
-        (res) => {
-          dispatch(updateComment({ postId: post._id, data: res.data }));
-          setLoading(false);
-        },
-        () => {
-          onClose();
-        }
-      );
-  };
+  useEffect(() => {
+    if (isError) onClose();
+  }, [isLoading, isError]);
 
   return (
     <>
-      <Button
-        flexDir="column"
-        onClick={openComments}
-        fontSize="xl"
-        size={'lg'}
-      >
-      <IonIcon icon={chatbubbleOutline} style={{fontSize:iconMd}}/>
+      <Button flexDir="column" onClick={openComments} fontSize="xl" size={"lg"}>
+        <IonIcon icon={chatbubbleOutline} style={{ fontSize: iconMd }} />
         <Text fontSize="xs">{post.comments.length}</Text>
       </Button>
       <Drawer
@@ -107,7 +70,7 @@ const CommentPost = ({ post }) => {
           <ScrollableFeed forceScroll={true} className="scrollablefeed">
             {post.comments.map((comment, key) => (
               <Box key={key}>
-                {loading ? (
+                {isLoading ? (
                   <Stack marginLeft={3} marginBottom={2}>
                     <UserLoader length={post.comments.length} />
                   </Stack>
@@ -120,10 +83,21 @@ const CommentPost = ({ post }) => {
           <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}>
             <Input ref={inputRef} placeholder="Ajouter un commentaire" />
             <Button
-              isLoading={submitting}
               variant="float"
               className="bi-send"
-              onClick={submitComment}
+              onClick={() => {
+                commentPost({
+                  postId: post._id,
+                  type: post.type,
+                  text: inputRef.current.value,
+                  commenterId: {
+                    _id: currentUser._id,
+                    name: currentUser.name,
+                    picture: currentUser.picture,
+                  },
+                });
+                inputRef.current.value = "";
+              }}
             ></Button>
           </DrawerFooter>
         </DrawerContent>

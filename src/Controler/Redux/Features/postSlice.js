@@ -34,15 +34,40 @@ export const postSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Post", id: "LIST" }],
     }),
     likePost: builder.mutation({
-      query: (body) => {
-        return {
-          url: "publication",
-          method: "PATCH",
-          credentials: "include",
-          body,
-        };
+      query: ({ type, postId, body, date }) => ({
+        url: `${type}/like/` + postId,
+        method: "PATCH",
+        credentials: "include",
+        // In a real app, we'd probably need to base this on user ID somehow
+        // so that a user can't do the same reaction more than once
+        body,
+      }),
+      async onQueryStarted(
+        { type, postId, body, date },
+        { dispatch, queryFulfilled }
+      ) {
+        // `updateQueryData` requires the endpoint name and cache key arguments,
+        // so it knows which piece of cache state to update
+        const patchResult = dispatch(
+          postSlice.util.updateQueryData("fetchContents", date, (draft) => {
+            console.log(draft);
+            // The `draft` is Immer-wrapped and can be "mutated" like in createSlice
+            const post = draft.entities[postId];
+            if (post)
+              body.like
+                ? (post.likers = [...post.likers, body.id_user])
+                : (post.likers = post.likers.filter(
+                    (liker) => liker !== body.id_user
+                  ));
+            else return post;
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
       },
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
     }),
 
     fetchAll: builder.query({
@@ -75,6 +100,7 @@ export const {
   useFetchContentsQuery,
   useLazyFetchContentsQuery,
   useFetchMoreContentsMutation,
+  useLikePostMutation,
 } = postSlice;
 
 // Creates memoized selector

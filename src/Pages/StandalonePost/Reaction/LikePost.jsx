@@ -4,36 +4,40 @@ import { heart, heartOutline } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { apiCall, currentUserContext, socket } from "../../../Controler/App";
+import { useLikePostMutation } from "../../../Controler/Redux/Features/postSlice";
 import { likeDislike } from "../../../Controler/Redux/thread.reducer";
 import { iconMd } from "../../../Styles/Theme";
 
-const LikePost = ({post}) => {
+const LikePost = ({ post }) => {
   const { currentUser } = useContext(currentUserContext);
   const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
+  const [likePost] = useLikePostMutation();
 
   const handleLikeDislike = async () => {
     setLiked(!liked);
-      await apiCall
+    await apiCall
       .patch(
-          
-          `${post.type}/like/` +
-          post._id,
-          {
-              id_user: currentUser._id,
+        `${post.type}/like/` + post._id,
+        {
+          id_user: currentUser._id,
+          like: !liked,
+        },
+        { withCredentials: true }
+      )
+      .then(
+        () => {
+          if (!liked) {
+            socket.emit("notification", post.id_user._id);
+          }
+          dispatch(
+            likeDislike({
               like: !liked,
-            },{ withCredentials: true }
-            )
-            .then(
-                () => {
-                if (!liked){socket.emit('notification',post.id_user._id)}
-                dispatch(
-                  likeDislike({
-                    like: !liked,
-                    postId: post._id,
-                    id_user: currentUser._id,
-                  })
-                )},
+              postId: post._id,
+              id_user: currentUser._id,
+            })
+          );
+        },
         (err) => console.log(err)
       );
   };
@@ -45,10 +49,21 @@ const LikePost = ({post}) => {
   return (
     <Button
       flexDir="column"
-      onClick={handleLikeDislike}
-      size='lg'
+      // onClick={handleLikeDislike}
+      onClick={() =>
+        likePost({
+          type: post.type,
+          postId: post._id,
+          body: { id_user: currentUser._id, like: !liked },
+          date: "1684818585772",
+        })
+      }
+      size="lg"
     >
-      <IonIcon icon={liked ? heart : heartOutline} style={{fontSize:iconMd,color:liked && 'red'}}/>
+      <IonIcon
+        icon={liked ? heart : heartOutline}
+        style={{ fontSize: iconMd, color: liked && "red" }}
+      />
       <Text fontSize="xs">{post.likers.length}</Text>
     </Button>
   );

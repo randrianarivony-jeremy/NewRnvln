@@ -1,10 +1,17 @@
-import { Avatar, HStack, Image, useColorMode } from "@chakra-ui/react";
+import {
+  Avatar,
+  Flex,
+  HStack,
+  Image,
+  SkeletonCircle,
+  useColorMode,
+} from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "../../Styles/swipers.css";
 
-const QuestionSlider = ({question,index}) => {
+const QuestionSlider = ({ question, index }) => {
   // slider transition speed
   //counting word number inside the question, divide by two supposed user reads 2 words per second
   const speed = (question.data[index].split(" ").length / 1.5) * 1000;
@@ -12,6 +19,7 @@ const QuestionSlider = ({question,index}) => {
   const swiperRef = useRef();
   const slideRef = useRef();
   const [autoplay, setAutoplay] = useState(false);
+  const [imgLoading, setImgLoading] = useState(true);
 
   useEffect(() => {
     if (swiperRef.current.clientWidth < slideRef.current.clientWidth) {
@@ -28,14 +36,17 @@ const QuestionSlider = ({question,index}) => {
       paddingX={3}
     >
       {question.interviewer.picture ? (
-        <Image
-          src={question.interviewer.picture}
-          alt="profile_pic"
-          boxSize={10}
-          minW={10}
-          rounded="full"
-          objectFit="cover"
-        />
+        <Flex boxSize={10} position="relative">
+          <Image
+            src={question.interviewer.picture}
+            alt="profile_pic"
+            minW={10}
+            rounded="full"
+            objectFit="cover"
+            onLoad={() => setImgLoading(false)}
+          />
+          {imgLoading && <SkeletonCircle size={10} position="absolute" />}
+        </Flex>
       ) : (
         <Avatar size="md" />
       )}

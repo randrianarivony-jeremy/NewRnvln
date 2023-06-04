@@ -10,19 +10,18 @@ const UserArticles = ({user}) => {
   const {currentUser}=useContext(currentUserContext);
 
   const fetchUserPublications = async () => {
-    await apiCall
-      .get( "publication/article/user/" + user)
-      .then(
-        (res) => {
-            if (res.data===null) userPublication.current=[];
-            else userPublication.current = res.data
-          setLoading(false);
-        },
-        (err) => {
-          console.log(err);
-            fetchingError.current = 'Une erreur est survenue lors du chargement de vos publications. Veuillez réessayer plus tard.'
-        }
-      );
+    await apiCall.get("publication/user/" + user).then(
+      (res) => {
+        if (res.data === null) userPublication.current = [];
+        else userPublication.current = res.data;
+        setLoading(false);
+      },
+      (err) => {
+        console.log(err);
+        fetchingError.current =
+          "Une erreur est survenue lors du chargement de vos publications. Veuillez réessayer plus tard.";
+      }
+    );
   };
 
   useEffect(() => {

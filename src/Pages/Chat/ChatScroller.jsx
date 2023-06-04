@@ -9,8 +9,8 @@ import DataDisplay from "./DataDisplay";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {
-  const { messages, scrollRef, setMessages, submitting, draft } =
-    useContext(chatContext);
+  const { messages, setMessages, submitting, draft } = useContext(chatContext);
+  let scrollRef = useRef();
 
   useEffect(() => {
     socket.on("new message", (newMessage) => {

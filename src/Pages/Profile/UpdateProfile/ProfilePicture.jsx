@@ -1,4 +1,21 @@
-import {Avatar,Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,Image,Input,Menu,MenuButton,MenuItem,MenuList,useDisclosure,} from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  Image,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  SkeletonCircle,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Compressor from "compressorjs";
 import {
   getDownloadURL,
@@ -15,6 +32,7 @@ const ProfilePicture = () => {
   const profilePicInputRef = useRef();
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
   const [submitting, setSubmitting] = useState(false);
+  const [imgLoading, setImgLoading] = useState(true);
   const picture = useRef();
   const [selectedImage, setSelectedImage] = useState();
   const [camera, setCamera] = useState(false);
@@ -93,16 +111,28 @@ const ProfilePicture = () => {
   return (
     <>
       <Menu>
-        <MenuButton>
+        <MenuButton position={"relative"}>
           {currentUser.picture ? (
-            <Image
-              src={currentUser.picture}
-              alt="profile_pic"
-              boxSize="60px"
-              minW="60px"
-              rounded="full"
-              objectFit="cover"
-            />
+            <>
+              <Image
+                src={currentUser.picture}
+                alt="profile_pic"
+                boxSize="60px"
+                minW="60px"
+                rounded="full"
+                objectFit="cover"
+                onLoad={() => setImgLoading(false)}
+                onError={() => setImgLoading(false)}
+              />
+              {imgLoading && (
+                <SkeletonCircle
+                  size={"60px"}
+                  position="absolute"
+                  top={0}
+                  zIndex={1}
+                />
+              )}
+            </>
           ) : (
             <Avatar size="md" />
           )}

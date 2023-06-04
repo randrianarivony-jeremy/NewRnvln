@@ -1,9 +1,7 @@
-import { Box, Button, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import axios from "axios";
 import { play } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useLongPress } from "use-long-press";
 import { currentUserContext } from "../../Controler/App";
 import AudioDisplay from "./AudioDisplay";
 import { chatContext } from "./Chat";
@@ -11,14 +9,16 @@ import { chatContext } from "./Chat";
 const DataDisplay = ({ data }) => {
   const videoRef = useRef();
   const [isPaused, setIsPaused] = useState();
-  const {currentUser}=useContext(currentUserContext);
-  const {mediaRef,scrollRef}=useContext(chatContext);
-  
+  const [imgLoading, setImgLoading] = useState(true);
+  const [imgError, setImgError] = useState(false);
+  const { currentUser } = useContext(currentUserContext);
+  const { mediaRef } = useContext(chatContext);
+
   useEffect(() => {
     if (isPaused) videoRef.current?.play();
     else videoRef.current?.pause();
   }, [isPaused]);
-  
+
   return (
     <Box maxW="75%" className="datadisplay">
       {data.contentType === "string" && (
@@ -35,17 +35,39 @@ const DataDisplay = ({ data }) => {
         </Box>
       )}
       {data.contentType === "image" && (
-        // <Box boxSize={'200px'}>
-        <Image
-          ref={mediaRef}
-          src={data.content}
-          alt="picture"
-          rounded="xl"
-          borderBottomLeftRadius={data.sender !== currentUser._id && 0}
-          borderBottomRightRadius={data.sender === currentUser._id && 0}
-        />
-        // </Box>
-        // <ImageItem data={data}/>
+        <>
+          {imgLoading && <Skeleton height={240} width={150} rounded="xl" />}
+          {imgError && (
+            <Flex
+              width={150}
+              height={240}
+              align={"center"}
+              justify="center"
+              rounded={"xl"}
+              border="1px solid"
+              borderColor={"blackAlpha.200"}
+            >
+              <Text opacity={0.5} fontStyle="italic">
+                Image indisponible
+              </Text>
+            </Flex>
+          )}
+          {!imgError && (
+            <Image
+              ref={mediaRef}
+              src={data.content}
+              alt="picture"
+              rounded="xl"
+              borderBottomLeftRadius={data.sender !== currentUser._id && 0}
+              borderBottomRightRadius={data.sender === currentUser._id && 0}
+              onLoad={() => setImgLoading(false)}
+              onError={() => {
+                setImgError(true);
+                setImgLoading(false);
+              }}
+            />
+          )}
+        </>
       )}
       {data.contentType === "video" && (
         <>

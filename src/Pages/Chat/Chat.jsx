@@ -22,39 +22,39 @@ const Chat = () => {
   const [userB, setUserB] = useState();
   const toast = useToast();
   let draft=useRef();
-  let mediaRef=useRef();
-  let scrollRef=useRef();
-  const conversationId=useRef();
+  let mediaRef = useRef();
+  const conversationId = useRef();
 
   const fetchMessages = async () => {
     await apiCall
-      .get( "message/"+userId)
+      .get("message/" + userId)
       .then(
         (res) => {
-          if(res.data.messages===undefined){
-          setNewConversation(true);
-          setUserB(res.data.user)
-          }else {
-            conversationId.current = res.data.messages._id
+          if (res.data.messages === undefined) {
+            setNewConversation(true);
+            setUserB(res.data.user);
+          } else {
+            conversationId.current = res.data.messages._id;
             setMessages(res.data.messages.messages);
             setUserB(
-              res.data.messages.members.filter((u) => u._id !== currentUser._id)[0]
+              res.data.messages.members.filter(
+                (u) => u._id !== currentUser._id
+              )[0]
             );
           }
         },
         (err) => {
           console.log(err);
           toast({
-            status:'error',
-            duration:5000,
-            isClosable:true,
-            title:'Error',
-            description:'Une erreur est survenue'
-          })
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            title: "Error",
+            description: "Une erreur est survenue",
+          });
         }
-        ).finally(()=>
-        setLoading(false)
-      );
+      )
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -64,16 +64,34 @@ const Chat = () => {
   return (
     <Scroll
       height="100%"
-      className="chat" paddingBottom={2}
+      className="chat"
+      paddingBottom={2}
       position="relative"
     >
-      <chatContext.Provider value={{ messages, setMessages, userB,conversationId
-        ,newConversation,setNewConversation,submitting, setSubmitting,draft,mediaRef,scrollRef }}>
+      <chatContext.Provider
+        value={{
+          messages,
+          setMessages,
+          userB,
+          conversationId,
+          newConversation,
+          setNewConversation,
+          submitting,
+          setSubmitting,
+          draft,
+          mediaRef,
+        }}
+      >
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-          <Button size={'lg'}
-            onClick={() => navigate(-1)}
-          ><IonIcon icon={arrowBack}/></Button>
-          <Button size={'lg'}>{userB?.name} &nbsp; <Flex fontStyle='italic' fontWeight='normal'>{userB?.job}</Flex></Button>
+          <Button size={"lg"} onClick={() => navigate(-1)}>
+            <IonIcon icon={arrowBack} />
+          </Button>
+          <Button size={"lg"}>
+            {userB?.name} &nbsp;{" "}
+            <Flex fontStyle="italic" fontWeight="normal">
+              {userB?.job}
+            </Flex>
+          </Button>
         </Flex>
         {loading ? (
           <Loader />

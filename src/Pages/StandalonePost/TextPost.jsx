@@ -4,10 +4,11 @@ import {
   Heading,
   HStack,
   Image,
+  SkeletonCircle,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
 import QuestionSlider from "./QuestionSlider";
@@ -21,6 +22,7 @@ const TextPost = () => {
   const { post, containerRef } = useContext(postContext);
   const { data, index } = useContext(dataContext);
   const { currentUser } = useContext(currentUserContext);
+  const [imgLoading, setImgLoading] = useState(true);
   return (
     <Stack
       ref={containerRef}
@@ -40,14 +42,17 @@ const TextPost = () => {
         }
       >
         {post.id_user.picture ? (
-          <Image
-            src={post.id_user.picture}
-            alt="profilepic"
-            boxSize={12}
-            minWidth={12}
-            rounded="full"
-            objectFit="cover"
-          />
+          <Flex position={"relative"} boxSize={12}>
+            <Image
+              src={post.id_user.picture}
+              alt="profilepic"
+              minWidth={12}
+              rounded="full"
+              objectFit="cover"
+              onLoad={() => setImgLoading(false)}
+            />
+            {imgLoading && <SkeletonCircle size={12} position="absolute" />}
+          </Flex>
         ) : (
           <Avatar size="md" />
         )}

@@ -19,7 +19,12 @@ const ChatScroller = () => {
   }, [socket]);
 
   return (
-    <Box paddingY={2} height="100%" overflowY={"hidden"}>
+    <Box
+      paddingY={2}
+      height="100%"
+      overflowY={"hidden"}
+      onLoad={() => scrollRef.current.scrollToBottom()}
+    >
       <ScrollableFeed
         forceScroll={true}
         className="scrollablefeed"

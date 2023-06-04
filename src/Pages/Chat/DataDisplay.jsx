@@ -22,22 +22,27 @@ const DataDisplay = ({ data }) => {
   return (
     <Box maxW="75%" className="datadisplay">
       {data.contentType === "string" && (
-        <Box whiteSpace="pre-wrap" padding="4px 8px" rounded="lg"
-        borderBottomLeftRadius={data.sender!==currentUser._id && 0}
-        borderBottomRightRadius={data.sender===currentUser._id && 0}
-        bgColor={data.sender===currentUser._id ? "bleu" : ""}
-        border={data.sender!==currentUser._id ? "1px solid" : ""}
+        <Box
+          whiteSpace="pre-wrap"
+          padding="4px 8px"
+          rounded="lg"
+          borderBottomLeftRadius={data.sender !== currentUser._id && 0}
+          borderBottomRightRadius={data.sender === currentUser._id && 0}
+          bgColor={data.sender === currentUser._id ? "bleu" : ""}
+          border={data.sender !== currentUser._id ? "1px solid" : ""}
         >
-        {data.content}
-      </Box>
+          {data.content}
+        </Box>
       )}
       {data.contentType === "image" && (
         // <Box boxSize={'200px'}>
-          <Image ref={mediaRef}
-        src={data.content} onLoad={()=>scrollRef.current.scrollToBottom()}
-        alt="picture" rounded="xl"
-        borderBottomLeftRadius={data.sender!==currentUser._id && 0}
-        borderBottomRightRadius={data.sender===currentUser._id && 0}
+        <Image
+          ref={mediaRef}
+          src={data.content}
+          alt="picture"
+          rounded="xl"
+          borderBottomLeftRadius={data.sender !== currentUser._id && 0}
+          borderBottomRightRadius={data.sender === currentUser._id && 0}
         />
         // </Box>
         // <ImageItem data={data}/>
@@ -51,8 +56,10 @@ const DataDisplay = ({ data }) => {
               fontSize="8xl"
               color="white"
               onClick={() => setIsPaused(!isPaused)}
-              ><IonIcon icon={play}/></Button>
-              )}
+            >
+              <IonIcon icon={play} />
+            </Button>
+          )}
           <video
             src={data.content}
             alt="video"
@@ -64,13 +71,17 @@ const DataDisplay = ({ data }) => {
         </>
       )}
       {data.contentType === "audio" && (
-        <Box rounded="xl" padding="4px 8px"
-        borderBottomLeftRadius={data.sender!==currentUser._id && 0}
-        borderBottomRightRadius={data.sender===currentUser._id && 0}
-        bgColor={data.sender===currentUser._id ? "bleu" : ""}
-        border={data.sender!==currentUser._id ? "1px solid" : ""}>
-        <AudioDisplay audio={data.content} /></Box>
-        )}
+        <Box
+          rounded="xl"
+          padding="4px 8px"
+          borderBottomLeftRadius={data.sender !== currentUser._id && 0}
+          borderBottomRightRadius={data.sender === currentUser._id && 0}
+          bgColor={data.sender === currentUser._id ? "bleu" : ""}
+          border={data.sender !== currentUser._id ? "1px solid" : ""}
+        >
+          <AudioDisplay audio={data.content} />
+        </Box>
+      )}
     </Box>
   );
 };

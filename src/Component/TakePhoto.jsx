@@ -1,6 +1,11 @@
 import { Box, Button, Flex, Portal } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { cameraReverseOutline, close, radioButtonOnOutline } from "ionicons/icons";
+import Compressor from "compressorjs";
+import {
+  cameraReverseOutline,
+  close,
+  radioButtonOnOutline,
+} from "ionicons/icons";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
@@ -10,9 +15,23 @@ const TakePhoto = ({ output, camera, setCamera }) => {
   const [facingMode, setFacingMode] = useState("environment");
 
   const capture = () => {
-    setCamera(false);
-    setCameraReady(false);
-    output(webcamRef.current.getScreenshot());
+    let imgSrc = webcamRef.current.getScreenshot();
+    fetch(imgSrc)
+      .then((response) => response.blob())
+      .then((blob) => {
+        imgSrc = new File([blob], `${Date.now()}.jpeg`, { type: blob.type });
+        new Compressor(imgSrc, {
+          quality: 0.6,
+          success(result) {
+            output(result);
+            setCameraReady(false);
+            setCamera(false);
+          },
+          error(err) {
+            console.log({ Error: "Image compression error " + err.message });
+          },
+        });
+      });
   };
 
   return (
@@ -50,7 +69,9 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                 bgColor="transparent"
                 fontSize={80}
                 onClick={capture}
-              ><IonIcon icon={radioButtonOnOutline}/></Button>
+              >
+                <IonIcon icon={radioButtonOnOutline} />
+              </Button>
               <Flex
                 className="camera"
                 top={0}
@@ -66,7 +87,9 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                     setCamera(false);
                     setCameraReady(false);
                   }}
-                ><IonIcon icon={close}/></Button>
+                >
+                  <IonIcon icon={close} />
+                </Button>
                 <Button
                   fontSize="xl"
                   onClick={() =>
@@ -74,7 +97,9 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                       ? setFacingMode("environment")
                       : setFacingMode("user")
                   }
-                ><IonIcon icon={cameraReverseOutline}/></Button>
+                >
+                  <IonIcon icon={cameraReverseOutline} />
+                </Button>
               </Flex>
             </>
           )}

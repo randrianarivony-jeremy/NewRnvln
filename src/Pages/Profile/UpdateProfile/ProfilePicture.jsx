@@ -1,5 +1,11 @@
 import {Avatar,Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,Image,Input,Menu,MenuButton,MenuItem,MenuList,useDisclosure,} from "@chakra-ui/react";
-import {getDownloadURL,ref,uploadBytes,uploadString,} from "firebase/storage";
+import Compressor from "compressorjs";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadString,
+} from "firebase/storage";
 import React, { useContext, useRef, useState } from "react";
 import TakePhoto from "../../../Component/TakePhoto";
 import { apiCall, currentUserContext } from "../../../Controler/App";
@@ -13,23 +19,35 @@ const ProfilePicture = () => {
   const [selectedImage, setSelectedImage] = useState();
   const [camera, setCamera] = useState(false);
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const { onOpen:openProfilePicView, onClose:closeProfilePicView, isOpen:profilePicView } = useDisclosure();
+  const {
+    onOpen: openProfilePicView,
+    onClose: closeProfilePicView,
+    isOpen: profilePicView,
+  } = useDisclosure();
 
   const handleChange = ({ currentTarget }) => {
     try {
-      picture.current = {
-        content: currentTarget.files[0],
-        contentType: "image",
-      };
-      setSelectedImage(URL.createObjectURL(currentTarget.files[0]));
-      onOpen();
+      new Compressor(currentTarget.files[0], {
+        quality: 0.6,
+        success(result) {
+          picture.current = {
+            content: result,
+            contentType: "image",
+          };
+          setSelectedImage(URL.createObjectURL(result));
+          onOpen();
+        },
+        error(err) {
+          console.log({ Error: "Image compression error " + err.message });
+        },
+      });
     } catch (error) {
       return;
     }
   };
 
   const handleCamera = (imgSrc) => {
-    picture.current = { content: imgSrc, contentType: "image_url" };
+    picture.current = { content: imgSrc, contentType: "image" };
     setSelectedImage(imgSrc);
     onOpen();
   };
@@ -57,13 +75,9 @@ const ProfilePicture = () => {
 
   const changeProfilePicture = async () => {
     await apiCall
-      .put(
-          "user/profilepicture/" +
-          currentUser._id,
-        {
-          picture: picture.current,
-        }
-      )
+      .put("user/profilepicture/" + currentUser._id, {
+        picture: picture.current,
+      })
       .then(
         (res) => {
           setSubmitting(false);
@@ -84,7 +98,8 @@ const ProfilePicture = () => {
             <Image
               src={currentUser.picture}
               alt="profile_pic"
-              boxSize='60px' minW='60px'
+              boxSize="60px"
+              minW="60px"
               rounded="full"
               objectFit="cover"
             />
@@ -93,7 +108,11 @@ const ProfilePicture = () => {
           )}
         </MenuButton>
         <MenuList>
-          {currentUser.picture && <MenuItem onClick={openProfilePicView}>Voir la photo de profil</MenuItem>}
+          {currentUser.picture && (
+            <MenuItem onClick={openProfilePicView}>
+              Voir la photo de profil
+            </MenuItem>
+          )}
           <MenuItem onClick={() => profilePicInputRef.current.click()}>
             Selectionner dans le téléphone
           </MenuItem>
@@ -135,10 +154,20 @@ const ProfilePicture = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <Drawer size='full' isOpen={profilePicView} onOpen={openProfilePicView} onClose={closeProfilePicView}>
+      <Drawer
+        size="full"
+        isOpen={profilePicView}
+        onOpen={openProfilePicView}
+        onClose={closeProfilePicView}
+      >
         <DrawerContent>
-        <DrawerCloseButton/>
-          <Image src={currentUser.picture} alt='profilePic' width='100%' margin='auto'/>
+          <DrawerCloseButton />
+          <Image
+            src={currentUser.picture}
+            alt="profilePic"
+            width="100%"
+            margin="auto"
+          />
         </DrawerContent>
       </Drawer>
     </>

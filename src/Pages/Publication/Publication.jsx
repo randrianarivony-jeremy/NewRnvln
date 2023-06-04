@@ -17,7 +17,7 @@ const Publication = () => {
   const [camera, setCamera] = useState(false);
 
   const handlePhoto = (imgSrc) => {
-    setContent({ content: imgSrc, contentType: "image_url" });
+    setContent({ content: imgSrc, contentType: "image" });
     navigate("/publication/media");
   };
   return (

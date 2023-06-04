@@ -1,4 +1,5 @@
 import { Box, Button, Flex, Portal, Text } from "@chakra-ui/react";
+import Compressor from "compressorjs";
 import React, { useContext, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import QuestionSlider from "../../StandalonePost/QuestionSlider";
@@ -15,16 +16,29 @@ const TakePhoto = () => {
   const [facingMode, setFacingMode] = useState("environment");
 
   const capture = () => {
-    const imgSrc = webcamRef.current.getScreenshot();
+    let imgSrc = webcamRef.current.getScreenshot();
     setShowOptions((current) => {
       let mirror = [...current];
       mirror[swiperRef.current.swiper.activeIndex] = false;
       return mirror;
     });
-    setDisplay(
-      <PubMedia data={{ content: imgSrc, contentType: "image_url" }} />
-    );
-    setCamera(false);
+    fetch(imgSrc)
+      .then((response) => response.blob())
+      .then((blob) => {
+        imgSrc = new File([blob], `${Date.now()}.jpeg`, { type: blob.type });
+        new Compressor(imgSrc, {
+          quality: 0.6,
+          success(result) {
+            setDisplay(
+              <PubMedia data={{ content: result, contentType: "image" }} />
+            );
+            setCamera(false);
+          },
+          error(err) {
+            console.log({ Error: "Image compression error " + err.message });
+          },
+        });
+      });
   };
 
   return (

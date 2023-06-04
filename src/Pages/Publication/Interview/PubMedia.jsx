@@ -57,7 +57,6 @@ const PubMedia = ({ data }) => {
               ...data,
               description: e.target.value,
             };
-            console.log(responseData.current);
           }}
         ></Textarea>
       </Stack>

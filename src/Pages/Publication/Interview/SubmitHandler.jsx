@@ -34,23 +34,18 @@ const SubmitHandler = () => {
   const { responseData, swiperRef,publicConfidentiality } = useContext(interviewContext);
   const { currentUser } = useContext(currentUserContext);
   const empty = useRef();
-  const fileName = new Date().getTime() + `${currentUser._id}`;
-
-  const uploadImageUrl = async (elt) => {
-    const data = await uploadString(
-      ref(storage, "interview/image/" + fileName),
-      elt.content,
-      "data_url"
-    );
-    return { content: data, contentType: "image",description:elt.description };
-  };
 
   const uploadMedia = async (elt) => {
+    const fileName = elt.content.name + `${currentUser._id}`;
     const data = await uploadBytes(
       ref(storage, "interview/" + `${elt.contentType}` + "/" + fileName),
       elt.content
     );
-    return { content: data, contentType: elt.contentType,description:elt.description };
+    return {
+      content: data,
+      contentType: elt.contentType,
+      description: elt.description,
+    };
   };
 
   const handleSubmit = () => {
@@ -59,45 +54,49 @@ const SubmitHandler = () => {
     if (empty.current !== -1) {
       swiperRef.current.swiper.slideTo(empty.current);
       onOpen();
-    } 
+    }
     //everything is ok
     else {
       setSubmitting(true);
       let storagePromises = [];
       responseData.current.map((elt) => {
-        if (elt.contentType === "short" || elt.contentType === "text")
+        if (elt.contentType === "short" || elt.contentType === "text") {
           storagePromises.push(elt);
-        else {
-          if (elt.contentType === "image_url")
-            storagePromises.push(uploadImageUrl(elt));
-          else storagePromises.push(uploadMedia(elt));
+          console.log(elt);
+        } else {
+          storagePromises.push(uploadMedia(elt));
         }
       });
       //store media to firebase
       Promise.all(storagePromises)
         .then((res) => {
           let urlPromises = [];
+          console.log(res);
           res.map((data) => {
             if (data.contentType === "short" || data.contentType === "text") {
               urlPromises.push(data);
             } else {
               urlPromises.push(
                 getDownloadURL(data.content.ref).then((url) => {
-                  return { content: url, contentType: data.contentType,description:data.description };
+                  return {
+                    content: url,
+                    contentType: data.contentType,
+                    description: data.description,
+                  };
                 })
               );
             }
           });
           //get media url
           Promise.all(urlPromises)
-          .then(async (payload) => {
+            .then(async (payload) => {
               //send to database
               await apiCall
                 .post("interview", {
                   data: payload,
                   public: publicConfidentiality.current,
                   id_user: currentUser._id,
-                  question:questionId
+                  question: questionId,
                 })
                 .then(
                   (res) => {
@@ -130,7 +129,6 @@ const SubmitHandler = () => {
         .catch((error) => console.log("upload to storage error: " + error));
     }
   };
-
 
   useEffect(() => {
     if (responseData.current.length < 2) setMultipleQuestion(false);
@@ -167,7 +165,9 @@ const SubmitHandler = () => {
           </DrawerBody>
           <DrawerFooter>
             <ButtonGroup>
-              <Button variant={"outline"}>Publier</Button>
+              <Button variant={"outline"} onClick={handleSubmit}>
+                Publier
+              </Button>
               <Button variant={"primary"} onClick={onClose}>
                 Compléter
               </Button>

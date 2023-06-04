@@ -12,12 +12,15 @@ const PubText = () => {
   const [value, setValue] = useState("");
 
   useEffect(() => {
-    responseData.current[swiperRef.current.swiper.activeIndex] = value.length>0 ? {
-      content: value,
-      contentType: value.length < 320 ? "short" : "text",
-      bg:textareaBg
-    } : 'empty';
-  }, [value]);
+    responseData.current[swiperRef.current.swiper.activeIndex] =
+      value.length > 0
+        ? {
+            content: value,
+            contentType: value.length < 320 ? "short" : "text",
+            bg: textareaBg,
+          }
+        : "empty";
+  }, [value, textareaBg]);
 
   return (
     <Stack height="100%" justify="space-between" paddingX={3}>

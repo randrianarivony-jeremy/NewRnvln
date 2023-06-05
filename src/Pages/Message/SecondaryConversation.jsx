@@ -1,50 +1,54 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Scroll } from "../../Styles/Theme";
-import { apiCall, socket } from "../../Controler/App";
+import { Flex, Text } from "@chakra-ui/react";
+import React, { useContext, useEffect } from "react";
+import { socket } from "../../Controler/App";
+import {
+  useFetchSecondConversationQuery,
+  useLazyFetchSecondConversationQuery,
+} from "../../Controler/Redux/Features/chatSlice";
 import { Loader } from "../../Controler/Routes";
-import ConversationCard from './ConversationCard';
-import { socketContext } from '../../Controler/Socketio/RealtimeSocketContext';
+import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
+import { Scroll } from "../../Styles/Theme";
+import ConversationCard from "./ConversationCard";
 
 const SecondaryConversation = () => {
-    const {setNewSecondMessage}=useContext(socketContext);
-    const [conversations, setConversations] = useState([]);
-    const [loading, setLoading] = useState(true);
-  
-    const fetchConversations = async () => {
-      await apiCall.get("conversation/second").then(
-        (res) => {
-          setConversations(res.data);
-        },
-        (err) => {
-          console.log(err);
-        }
-      ).finally(()=>setLoading(false));
-    };
-  
-    useEffect(() => {
-      setNewSecondMessage(0)
-      fetchConversations();
-    }, []);
+  const { setNewSecondMessage } = useContext(socketContext);
+  const { data, isLoading, isSuccess, isError } =
+    useFetchSecondConversationQuery();
+  const [fetchSecondConversation] = useLazyFetchSecondConversationQuery();
 
-    useEffect(()=>{
-      socket.on('new message',()=>{
-          fetchConversations()
-      })
-    })
+  useEffect(() => {
+    setNewSecondMessage(0);
+  }, []);
 
+  useEffect(() => {
+    socket.on("new message", () => {
+      fetchSecondConversation();
+    });
+  });
+
+  if (isLoading) return <Loader />;
+  if (isError)
     return (
-        <>
-            {loading ? (
-          <Loader />
-        ) : (
-          <Scroll height="100%">
-            {conversations?.map((convers, key) => (
-              <ConversationCard conversation={convers} key={key}/>
-            ))}
-          </Scroll>
-        )}
-        </>
+      <p>
+        Une erreur est survenue lors du chargement. Veuillez réessayer plus
+        tard.
+      </p>
     );
+  if (isSuccess) {
+    if (data.length === 0)
+      return (
+        <Flex align="center" justify={"center"} boxSize="100%">
+          <Text textAlign="center">Empty state</Text>
+        </Flex>
+      );
+    return (
+      <Scroll height="100%">
+        {data.map((convers, key) => (
+          <ConversationCard conversation={convers} key={key} />
+        ))}
+      </Scroll>
+    );
+  }
 };
 
 export default SecondaryConversation;

@@ -1,20 +1,33 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiSlice } from "./apiSlice";
 
-export const apiSlice = createApi({
-  reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL + "/api/user",
-  }),
+export const userSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    fetchContents: builder.query({
-      query: () => {
+    fetchUser: builder.query({
+      query: (userId) => {
         return {
-          url: "/" + Date.now() + "/" + Date.now(),
+          url: "user/" + userId,
           credentials: "include",
         };
       },
+      providesTags: (result) => [{ type: "User", id: result._id }],
+    }),
+    fetchUserFriends: builder.query({
+      query: ({ userId, category }) => {
+        return {
+          url: "user/" + category + "/" + userId,
+          credentials: "include",
+        };
+      },
+      providesTags: (result) => [
+        { type: "User", id: "LIST" },
+        ...result.map((user) => ({ type: "User", id: user._id })),
+      ],
     }),
   }),
 });
 
-export const { useFetchContentsQuery } = apiSlice;
+export const {
+  useFetchUserQuery,
+  useLazyFetchUserFriendsQuery,
+  useFetchUserFriendsQuery,
+} = userSlice;

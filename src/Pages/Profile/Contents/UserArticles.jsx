@@ -1,47 +1,40 @@
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { Flex, Text } from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { currentUserContext } from "../../../Controler/App";
+import { useFetchUserArticlesQuery } from "../../../Controler/Redux/Features/postSlice";
+import { Loader } from "../../../Controler/Routes";
 import Thumbs from "../Thumbs";
 
-const UserArticles = ({user}) => {
-  const userPublication = useRef([]);
-  const [loading, setLoading] = useState(true);
-  const fetchingError=useRef();
-  const {currentUser}=useContext(currentUserContext);
+const UserArticles = ({ user }) => {
+  const { currentUser } = useContext(currentUserContext);
+  const { data, isLoading, isSuccess, isError } =
+    useFetchUserArticlesQuery(user);
 
-  const fetchUserPublications = async () => {
-    await apiCall.get("publication/user/" + user).then(
-      (res) => {
-        if (res.data === null) userPublication.current = [];
-        else userPublication.current = res.data;
-        setLoading(false);
-      },
-      (err) => {
-        console.log(err);
-        fetchingError.current =
-          "Une erreur est survenue lors du chargement de vos publications. Veuillez réessayer plus tard.";
-      }
+  if (isLoading) return <Loader />;
+  if (isError)
+    return (
+      <p>
+        Une erreur est survenue lors du chargement de vos publications. Veuillez
+        réessayer plus tard.
+      </p>
     );
-  };
-
-  useEffect(() => {
-    fetchUserPublications();
-  }, []);
-
-  return (
-    <Flex height='100%' justify='center'>
-      {loading ? (
-        <Spinner marginTop={10}/>
-      ) : fetchingError.current ? <Text>{fetchingError.current}</Text> : 
-      userPublication.current.length===0 ? <Text marginTop={10}>{user===currentUser._id ? "Vous n'avez" : "Cette personne n'a"} pas encore publié quelque chose</Text> :
-        <Flex wrap="wrap" justify="center">
-          {userPublication.current.map((elt, key) => (
-            <Thumbs data={elt} type='publication' key={key} />
-          ))}
-        </Flex>
-      }
-    </Flex>
-  );
+  if (isSuccess)
+    return (
+      <Flex height="100%" justify="center">
+        {data.ids.length === 0 ? (
+          <Text marginTop={10}>
+            {user === currentUser._id ? "Vous n'avez" : "Cette personne n'a"}{" "}
+            pas encore publié quelque chose
+          </Text>
+        ) : (
+          <Flex wrap="wrap" justify="center">
+            {data.ids.map((id) => (
+              <Thumbs data={data.entities[id]} key={id} />
+            ))}
+          </Flex>
+        )}
+      </Flex>
+    );
 };
 
 export default UserArticles;

@@ -25,39 +25,41 @@ import Subscribe from "./Relation/Subscribe";
 import UserProfilepic from "./UserProfilepic";
 import { apiCall } from "../../Controler/App";
 import RelationBoard from "./Relation/RelationBoard";
+import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 
 export const userContext = createContext();
 
 const UserProfile = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const { data, isLoading, isSuccess, isError } = useFetchUserQuery(userId);
   const [user, setUser] = useState();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      await apiCall.get( "user/user/" + userId).then(
-        (res) => setUser(res.data),
-        () => {
-          navigate(-1);
-        }
-      );
-    };
-    fetchUser();
-  }, []);
+    if (isSuccess) setUser(data);
+  }, [isSuccess]);
 
-  return (
-    <Stack height="100%" spacing={0}>
-      <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-        <Button
-          variant="float"
-          className="bi-arrow-left"
-          onClick={() => navigate(-1)}
-        ></Button>
-        <Button>Profil utilisateur</Button>
-      </Flex>
+  if (isLoading) return <Loader />;
+  if (isError)
+    return (
+      <p>
+        Une erreur est survenue lors du chargement. Veuillez réessayer plus
+        tard.
+      </p>
+    );
+  if (isSuccess && user) {
+    return (
+      <Stack height="100%" spacing={0}>
+        <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
+          <Button
+            variant="float"
+            className="bi-arrow-left"
+            onClick={() => navigate(-1)}
+          ></Button>
+          <Button>Profil utilisateur</Button>
+        </Flex>
 
-      <userContext.Provider value={{ user, setUser }}>
-        {user ? (
+        <userContext.Provider value={{ user, setUser }}>
           <Scroll paddingX={2} paddingY={2} spacing={5} height="100%">
             {/* A B O U T  */}
             <HStack align="flex-start" spacing={3}>
@@ -104,17 +106,28 @@ const UserProfile = () => {
 
             {/* R E L A T I O N  */}
             <Stack>
-              <Button variant='outline' leftIcon={<Flex className='bi-chat-left'></Flex>}>Envoyer un message</Button>
+              <Button
+                variant="outline"
+                leftIcon={<Flex className="bi-chat-left"></Flex>}
+              >
+                Envoyer un message
+              </Button>
               <HStack justify="space-around" width="100%">
-                <FriendHandler/>
+                <FriendHandler />
                 {user.subscription ? (
-                  <Subscribe
-                  />
-                ) : 
-                <Button variant='outline' width='100%' leftIcon={<Flex className='bi-chat-left'></Flex>} onClick={()=>navigate("/chat/"+user._id)}>Message</Button>
-                }
+                  <Subscribe />
+                ) : (
+                  <Button
+                    variant="outline"
+                    width="100%"
+                    leftIcon={<Flex className="bi-chat-left"></Flex>}
+                    onClick={() => navigate("/chat/" + user._id)}
+                  >
+                    Message
+                  </Button>
+                )}
               </HStack>
-              <RelationBoard user={user}/>
+              <RelationBoard user={user} />
             </Stack>
 
             {/* P O S T S  */}
@@ -136,20 +149,18 @@ const UserProfile = () => {
 
               <TabPanels>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <UserInterviews user={user._id}/>
+                  <UserInterviews user={user._id} />
                 </TabPanel>
                 <TabPanel paddingY={1} paddingX={0}>
-                  <UserArticles user={user._id}/>
+                  <UserArticles user={user._id} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </Scroll>
-        ) : (
-          <Loader />
-        )}
-      </userContext.Provider>
-    </Stack>
-  );
+        </userContext.Provider>
+      </Stack>
+    );
+  }
 };
 
 export default UserProfile;

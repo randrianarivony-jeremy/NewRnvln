@@ -8,6 +8,7 @@ import { Loader } from "../../Controler/Routes";
 import { apiCall, currentUserContext } from "../../Controler/App";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
+import { useFetchMessagesQuery } from "../../Controler/Redux/Features/chatSlice";
 
 export const chatContext = createContext();
 
@@ -21,45 +22,79 @@ const Chat = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userB, setUserB] = useState();
   const toast = useToast();
-  let draft=useRef();
+  let draft = useRef();
   let mediaRef = useRef();
   const conversationId = useRef();
+  const { data, isLoading, isSuccess, isError } = useFetchMessagesQuery(userId);
 
-  const fetchMessages = async () => {
-    await apiCall
-      .get("message/" + userId)
-      .then(
-        (res) => {
-          if (res.data.messages === undefined) {
-            setNewConversation(true);
-            setUserB(res.data.user);
-          } else {
-            conversationId.current = res.data.messages._id;
-            setMessages(res.data.messages.messages);
-            setUserB(
-              res.data.messages.members.filter(
-                (u) => u._id !== currentUser._id
-              )[0]
-            );
-          }
-        },
-        (err) => {
-          console.log(err);
-          toast({
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            title: "Error",
-            description: "Une erreur est survenue",
-          });
-        }
-      )
-      .finally(() => setLoading(false));
-  };
+  // const fetchMessages = async () => {
+  //   await apiCall
+  //     .get("message/" + userId)
+  //     .then(
+  //       (res) => {
+  //         if (res.data.messages === undefined) {
+  //           setNewConversation(true);
+  //           setUserB(res.data.user);
+  //         } else {
+  //           conversationId.current = res.data.messages._id;
+  //           setMessages(res.data.messages.messages);
+  //           setUserB(
+  //             res.data.messages.members.filter(
+  //               (u) => u._id !== currentUser._id
+  //             )[0]
+  //             );
+  //           }
+  //         },
+  //         (err) => {
+  //           console.log(err);
+  //         toast({
+  //           status: "error",
+  //           duration: 5000,
+  //           isClosable: true,
+  //           title: "Error",
+  //           description: "Une erreur est survenue",
+  //         });
+  //       }
+  //     )
+  //     .finally(() => setLoading(false));
+  // };
 
   useEffect(() => {
-    fetchMessages();
-  }, []);
+    if (isSuccess) {
+      if (data.messages === undefined) {
+        setUserB(data.user);
+        setNewConversation(true);
+      } else {
+        setUserB(
+          data.messages.members.filter((u) => u._id !== currentUser._id)[0]
+        );
+        setMessages(data.messages.messages);
+        conversationId.current = data.messages._id;
+      }
+    }
+  }, [isSuccess]);
+
+  let display;
+
+  if (isLoading) display = <Loader />;
+  if (isError)
+    display = (
+      <p>
+        Une erreur est survenue lors du chargement. Veuillez réessayer plus
+        tard.
+      </p>
+    );
+  if (isSuccess) {
+    if (data.messages === undefined) {
+      display = (
+        <Flex justify="center" alignItems="center" height="100%">
+          <Text>Démarrez une nouvelle conversation</Text>
+        </Flex>
+      );
+    } else {
+      display = <ChatScroller />;
+    }
+  }
 
   return (
     <Scroll
@@ -93,15 +128,7 @@ const Chat = () => {
             </Flex>
           </Button>
         </Flex>
-        {loading ? (
-          <Loader />
-        ) : newConversation ? (
-          <Flex justify="center" alignItems="center" height="100%">
-            <Text>Démarrez une nouvelle conversation</Text>
-          </Flex>
-        ) : (
-          <ChatScroller />
-        )}
+        {display}
         <ChatInput />
       </chatContext.Provider>
     </Scroll>

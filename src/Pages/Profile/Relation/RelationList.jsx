@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -18,54 +17,84 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { apiCall } from "../../../Controler/App";
+import React, { useEffect } from "react";
+import { useLazyFetchUserFriendsQuery } from "../../../Controler/Redux/Features/userSlice";
 import { ClickableFlex } from "../../../Styles/Theme";
 
-const RelationList = ({ category, userId,length }) => {
-  const navigate = useNavigate();
+const RelationList = ({ category, userId, length }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loading, setLoading] = useState(true);
-  const list = useRef([1, 2, 3]);
-
-  const fetchList = async () => {
-    await apiCall
-      .get(
-        
-          "user/" +
-          (category === "Abonnés"
-            ? "subscribers"
-            : category === "Partenaires"
-            ? "friends"
-            : category === "Demandes"
-            ? "requests"
-            : "subscriptions") + "/" + userId
-      )
-      .then(
-        (res) => {
-          list.current = res.data;
-          setLoading(false);
-        },
-        (err) => {
-          console.log(err)
-          onClose();
-        }
-      );
-  };
+  const [fetchUserFriends, { isLoading, isSuccess, isError, data }] =
+    useLazyFetchUserFriendsQuery();
 
   useEffect(() => {
-    if (isOpen) fetchList();
+    if (isOpen)
+      fetchUserFriends(
+        {
+          userId,
+          category:
+            category === "Abonnés"
+              ? "subscribers"
+              : category === "Partenaires"
+              ? "friends"
+              : category === "Demandes"
+              ? "requests"
+              : "subscriptions",
+        },
+        { preferCacheValue: true }
+      );
   }, [isOpen]);
+
+  let display;
+  if (isLoading)
+    display = (
+      <HStack>
+        <SkeletonCircle boxSize={10} />
+        <Skeleton height={5} width={200} />
+      </HStack>
+    );
+  if (isError)
+    display = (
+      <p>
+        Une erreur est survenue lors du chargement. Veuillez réessayer plus
+        tard.
+      </p>
+    );
+  if (isSuccess)
+    display = (
+      <Stack>
+        {data.map((elt, key) => (
+          <ClickableFlex key={key} justify="space-between">
+            <Flex>
+              {elt.picture ? (
+                <Image
+                  src={elt.picture}
+                  alt="profilepic"
+                  boxSize={12}
+                  rounded="full"
+                  objectFit="cover"
+                />
+              ) : (
+                <Avatar size="md" />
+              )}
+              <Stack spacing={0} marginLeft={2} justify="center">
+                <Heading size="sm">{elt.name}</Heading>
+                {elt.job && <Text fontStyle="italic">{elt.job}</Text>}
+              </Stack>
+            </Flex>
+            {category === "Demandes" && (
+              <Button variant="primary">Confirmer</Button>
+            )}
+            {category === "Partenaires" && (
+              <Button variant="outline">Retirer</Button>
+            )}
+          </ClickableFlex>
+        ))}
+      </Stack>
+    );
 
   return (
     <>
-      <Button
-        flexDir="column"
-        onClick={() =>
-          length > 0 ? onOpen() : null
-        }
-      >
+      <Button flexDir="column" onClick={() => (length > 0 ? onOpen() : null)}>
         <Heading size="md">{length}</Heading>
         <Text fontSize="xs">{category}</Text>
       </Button>
@@ -83,7 +112,7 @@ const RelationList = ({ category, userId,length }) => {
             {category}
           </DrawerHeader>
           <DrawerBody paddingX={0}>
-            <Stack>
+            {/* <Stack>
               {list.current.map((elt, key) => (
                 <Box key={key}>
                   {loading ? (
@@ -112,14 +141,12 @@ const RelationList = ({ category, userId,length }) => {
                       </Flex>
                       {category==='Demandes' && <Button variant='primary'>Confirmer</Button>}
                 {category==='Partenaires' && <Button variant='outline'>Retirer</Button>}
-                {/* {category==='Abonnés' && <Button variant='cta' onClick={onOpenSubscription}>S'abonner</Button>}
-                {category==='Abonnements' && <Button variant='outline'>Abonné</Button>} */}
-      {/* <SubscribeDrawer isOpen={isOpenSubscription} onClose={onCloseSubscription} onOpen={onOpenSubscription}/> */}
                     </ClickableFlex>
                   )}
                 </Box>
               ))}
-            </Stack>
+            </Stack> */}
+            {display}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

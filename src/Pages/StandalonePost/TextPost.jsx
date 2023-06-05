@@ -50,6 +50,7 @@ const TextPost = () => {
               rounded="full"
               objectFit="cover"
               onLoad={() => setImgLoading(false)}
+              onError={() => setImgLoading(false)}
             />
             {imgLoading && <SkeletonCircle size={12} position="absolute" />}
           </Flex>

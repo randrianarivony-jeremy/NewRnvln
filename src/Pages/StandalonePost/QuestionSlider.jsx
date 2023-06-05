@@ -44,6 +44,7 @@ const QuestionSlider = ({ question, index }) => {
             rounded="full"
             objectFit="cover"
             onLoad={() => setImgLoading(false)}
+            onError={() => setImgLoading(false)}
           />
           {imgLoading && <SkeletonCircle size={10} position="absolute" />}
         </Flex>

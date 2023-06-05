@@ -49,6 +49,31 @@ export const postSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    fetchUserArticles: builder.query({
+      query: (userId) => ({
+        url: `publication/user/${userId}`,
+        credentials: "include",
+      }),
+      transformResponse: (responseData) =>
+        postsAdapter.setAll(initialState, responseData),
+      providesTags: (result) => [
+        { type: "Post", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "Post", id })),
+      ],
+    }),
+    fetchUserInterviews: builder.query({
+      query: (userId) => ({
+        url: `interview/user/${userId}`,
+        credentials: "include",
+      }),
+      transformResponse: (responseData) =>
+        postsAdapter.setAll(initialState, responseData),
+      providesTags: (result) => [
+        { type: "Post", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "Post", id })),
+      ],
+    }),
     likePost: builder.mutation({
       query: ({ type, postId, body }) => ({
         url: `${type}/like/` + postId,
@@ -56,10 +81,7 @@ export const postSlice = apiSlice.injectEndpoints({
         credentials: "include",
         body,
       }),
-      async onQueryStarted(
-        { type, postId, body },
-        { dispatch, queryFulfilled }
-      ) {
+      onQueryStarted({ postId, body }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           postSlice.util.updateQueryData(
             "fetchContents",
@@ -76,11 +98,7 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
-        }
+        queryFulfilled.catch(patchResult.undo);
       },
     }),
     fetchComments: builder.mutation({
@@ -114,7 +132,7 @@ export const postSlice = apiSlice.injectEndpoints({
         credentials: "include",
         body: { text, commenterId: commenterId._id },
       }),
-      async onQueryStarted(
+      onQueryStarted(
         { postId, text, commenterId },
         { dispatch, queryFulfilled }
       ) {
@@ -130,47 +148,19 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
-        }
-      },
-    }),
-
-    fetchAll: builder.query({
-      queryFn: async (_arg, _queryApi, _extraOptions, fetchWithBQ) => {
-        // try {
-        //   const result = await Promise.all([
-        //     await fetchWithBQ({ url: "interview", credentials: "include" }),
-        //     await fetchWithBQ({ url: "publication", credentials: "include" }),
-        //   ]);
-        //   return { data: [...result[0].data, ...result[1].data] };
-        // } catch (error) {
-        //   console.log(error);
-        //   return { data: error };
-        // }
-        const result = await fetchWithBQ({
-          url: "interview",
-          credentials: "include",
-        });
-        if (result.error) return { error: result.error };
-        return { data: result.data };
-      },
-      transformResponse: (response) => {
-        console.log(response.data);
-        return postsAdapter.setAll(initialState, response);
+        queryFulfilled.catch(patchResult.undo);
       },
     }),
   }),
 });
 export const {
   useFetchContentsQuery,
-  useLazyFetchContentsQuery,
   useFetchMoreContentsMutation,
   useLikePostMutation,
   useFetchCommentsMutation,
   useCommentPostMutation,
+  useFetchUserInterviewsQuery,
+  useFetchUserArticlesQuery,
 } = postSlice;
 
 const selectPostsData = createSelector(

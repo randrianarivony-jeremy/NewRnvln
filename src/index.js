@@ -1,23 +1,19 @@
-import React, { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
 import {
   ChakraProvider,
   ColorModeScript,
   createStandaloneToast,
 } from "@chakra-ui/react";
-import { theme } from "./Styles/Theme";
-import App from "./Controler/App";
 import { configureStore } from "@reduxjs/toolkit";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import interviewReducer from "./Controler/Redux/interview.reducer";
-import threadReducer from "./Controler/Redux/thread.reducer";
+import App from "./Controler/App";
 import { apiSlice } from "./Controler/Redux/Features/apiSlice";
+import { theme } from "./Styles/Theme";
 
 const { ToastContainer } = createStandaloneToast();
 const store = configureStore({
   reducer: {
-    thread: threadReducer,
-    interviews: interviewReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -27,12 +23,12 @@ const store = configureStore({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <StrictMode>
-    <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <App />
-        <ToastContainer />
-      </ChakraProvider>
-    </Provider>
+  <Provider store={store}>
+    <ChakraProvider theme={theme}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <App />
+      <ToastContainer />
+    </ChakraProvider>
+  </Provider>
   // </StrictMode>
 );

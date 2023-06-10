@@ -1,52 +1,44 @@
 import { Button, ButtonGroup, Flex, HStack, Select, Stack, Text, useToast } from "@chakra-ui/react";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundOptions from "../../../Component/BackgroundOptions";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
 import { apiCall, currentUserContext } from "../../../Controler/App";
+import { useCreatePostMutation } from "../../../Controler/Redux/Features/postSlice";
 
 const PublishText = () => {
   const navigate = useNavigate();
   const { currentUser } = useContext(currentUserContext);
   const [textareaBg, setTextareaBg] = useState("transparent");
-  const [submitting, setSubmitting] = useState(false);
   const [value, setValue] = useState("");
+  const [createPost, { isLoading, isSuccess, isError }] =
+    useCreatePostMutation();
   const toast = useToast();
-  const publicConfidentiality=useRef(false);
+  const publicConfidentiality = useRef(false);
 
-  const handleSubmit = async () => {
-    setSubmitting(true);
-    await apiCall
-      .post( "publication", {
-        data:{
-          content: value,
-          bg:textareaBg,
-          contentType: value.length<320 ? "short" : "text",
-        },
-        public:publicConfidentiality.current,
-        id_user: currentUser._id,
-      })
-      .then(() => {
-        setSubmitting(false);
-        toast({
-          title: "Publication réussie",
-          status: "success",
-          duration: 5000,
-          isClosable:true,
-          description: "Votre publication a été bien enregistrée !",
-        });
-        navigate("/");
-      },() => {
-        toast({
-          status: "error",
-          duration: 5000,
-          isClosable:true,
-          description: "Veuillez réessayer s'il vous plait",
-          title: "Operation failed",
-        });
-        setSubmitting(false);
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Publication réussie",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        description: "Votre publication a été bien enregistrée !",
       });
-  };
+      navigate("/");
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError)
+      toast({
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        description: "Veuillez réessayer s'il vous plait",
+        title: "Operation failed",
+      });
+  }, [isError]);
 
   return (
     <Stack position="relative" height="100%" minH="450px" paddingBottom={2}>
@@ -70,25 +62,45 @@ const PublishText = () => {
             setValue={setValue}
             textareaBg={textareaBg}
           />
-        {value.length<320 && <BackgroundOptions textareaBg={textareaBg} setTextareaBg={setTextareaBg}/>}
+          {value.length < 320 && (
+            <BackgroundOptions
+              textareaBg={textareaBg}
+              setTextareaBg={setTextareaBg}
+            />
+          )}
           <HStack>
-          <Text whiteSpace="nowrap">Confidentialité :</Text>
-          <Select onChange={(e)=>publicConfidentiality.current = e.target.value}>
-            <option value={false}>Entre amis</option>
-            <option value={true}>Public</option>
-          </Select>
-        </HStack>
+            <Text whiteSpace="nowrap">Confidentialité :</Text>
+            <Select
+              onChange={(e) => (publicConfidentiality.current = e.target.value)}
+            >
+              <option value={false}>Entre amis</option>
+              <option value={true}>Public</option>
+            </Select>
+          </HStack>
         </Stack>
         <HStack>
           <Button width="100%" onClick={() => navigate(-1)}>
             Annuler
           </Button>
           <Button
-            isLoading={submitting}
+            isLoading={isLoading}
             loadingText="Envoi"
             variant="primary"
             width="100%"
-            onClick={handleSubmit}
+            onClick={() =>
+              createPost({
+                category: "publication",
+                body: {
+                  data: {
+                    content: value,
+                    bg: textareaBg,
+                    contentType: value.length < 320 ? "short" : "text",
+                  },
+                  public: publicConfidentiality.current,
+                  id_user: currentUser._id,
+                },
+              })
+            }
           >
             Publier
           </Button>

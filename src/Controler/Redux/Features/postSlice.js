@@ -48,6 +48,16 @@ export const postSlice = apiSlice.injectEndpoints({
       },
     }),
 
+    createPost: builder.mutation({
+      query: ({ category, body }) => ({
+        url: category,
+        method: "POST",
+        credentials: "include",
+        body,
+      }),
+      invalidatesTags: [{ type: "Post", id: "LIST" }],
+    }),
+
     fetchUserArticles: builder.query({
       query: (userId) => ({
         url: `publication/user/${userId}`,
@@ -60,6 +70,7 @@ export const postSlice = apiSlice.injectEndpoints({
         ...result.ids.map((id) => ({ type: "Post", id })),
       ],
     }),
+
     fetchUserInterviews: builder.query({
       query: (userId) => ({
         url: `interview/user/${userId}`,
@@ -72,6 +83,7 @@ export const postSlice = apiSlice.injectEndpoints({
         ...result.ids.map((id) => ({ type: "Post", id })),
       ],
     }),
+
     likePost: builder.mutation({
       query: ({ type, postId, body, postCreator }) => ({
         url: `${type}/like/` + postId,
@@ -108,6 +120,7 @@ export const postSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+
     fetchComments: builder.mutation({
       query: ({ postId, type }) => ({
         url: `${type}/comments/` + postId,
@@ -132,6 +145,7 @@ export const postSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+
     commentPost: builder.mutation({
       query: ({ postId, type, text, commenterId, postCreator }) => ({
         url: `${type}/comment/` + postId,
@@ -168,12 +182,13 @@ export const postSlice = apiSlice.injectEndpoints({
 });
 export const {
   useFetchContentsQuery,
+  useFetchUserInterviewsQuery,
+  useFetchUserArticlesQuery,
+  useCreatePostMutation,
   useFetchMoreContentsMutation,
   useLikePostMutation,
   useFetchCommentsMutation,
   useCommentPostMutation,
-  useFetchUserInterviewsQuery,
-  useFetchUserArticlesQuery,
 } = postSlice;
 
 const selectPostsData = createSelector(

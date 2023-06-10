@@ -9,18 +9,14 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadString,
-} from "firebase/storage";
-import React, { useContext, useRef, useState } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AudioDisplay from "../../../Component/AudioDisplay";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { publicationContext } from "../../../Controler/Context";
 import { storage } from "../../../Controler/firebase.config";
+import { useCreatePostMutation } from "../../../Controler/Redux/Features/postSlice";
 
 const PublishMedia = () => {
   const navigate = useNavigate();
@@ -28,6 +24,7 @@ const PublishMedia = () => {
   const { currentUser } = useContext(currentUserContext);
   const descriptionRef = useRef();
   const urlRef = useRef();
+  const [createPost, { isSuccess, isError }] = useCreatePostMutation();
   const publicConfidentiality = useRef(false);
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
@@ -35,64 +32,51 @@ const PublishMedia = () => {
   const storeMedia = () => {
     setSubmitting(true);
     const fileName = new Date().getTime() + `${currentUser._id}`;
-    if (content.contentType === "image_url") {
-      const storageRef = ref(storage, "publication/image/" + fileName);
-      uploadString(storageRef, content.content, "data_url").then((snapshot) =>
-        getDownloadURL(snapshot.ref).then((url) => {
-          urlRef.current = url;
-          handleSubmit();
-        })
-      );
-    } else {
-      const storageRef = ref(
-        storage,
-        "publication/" + `${content.contentType}` + "/" + fileName
-      );
-      uploadBytes(storageRef, content.content).then((snapshot) =>
-        getDownloadURL(snapshot.ref).then((url) => {
-          urlRef.current = url;
-          handleSubmit();
-        })
-      );
-    }
+    const storageRef = ref(
+      storage,
+      "publication/" + `${content.contentType}` + "/" + fileName
+    );
+    uploadBytes(storageRef, content.content).then((snapshot) =>
+      getDownloadURL(snapshot.ref).then((url) => {
+        urlRef.current = url;
+        createPost({
+          category: "publication",
+          body: {
+            data: {
+              content: urlRef.current,
+              public: publicConfidentiality.current,
+              description: descriptionRef.current.value,
+              contentType: content.contentType,
+            },
+            id_user: currentUser._id,
+          },
+        });
+      })
+    );
   };
 
-  const handleSubmit = async () => {
-    await apiCall
-      .post("publication", {
-        data: {
-          content: urlRef.current,
-          public: publicConfidentiality.current,
-          description: descriptionRef.current.value,
-          contentType:
-            content.contentType === "image_url" ? "image" : content.contentType,
-        },
-        id_user: currentUser._id,
-      })
-      .then(
-        (res) => {
-          setSubmitting(false);
-          toast({
-            title: "Publication réussie",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-            description: "Votre interview a été bien enregistrée !",
-          });
-          navigate("/");
-        },
-        () => {
-          toast({
-            status: "error",
-            isClosable: true,
-            duration: 5000,
-            description: "Veuillez réessayer s'il vous plait",
-            title: "Operation failed",
-          });
-          setSubmitting(false);
-        }
-      );
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Publication réussie",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        description: "Votre interview a été bien enregistrée !",
+      });
+      navigate("/");
+    }
+    if (isError) {
+      toast({
+        status: "error",
+        isClosable: true,
+        duration: 5000,
+        description: "Veuillez réessayer s'il vous plait",
+        title: "Operation failed",
+      });
+      setSubmitting(false);
+    }
+  }, [isSuccess, isError]);
 
   return (
     <Stack position="relative" minHeight="100vh" spacing={0}>
@@ -110,13 +94,7 @@ const PublishMedia = () => {
             src={URL.createObjectURL(content.content)}
             alt="image"
             width="100%"
-            objectFit="contain"
-          />
-        ) : content.contentType === "image_url" ? (
-          <Image
-            src={content.content}
-            alt="image"
-            width="100%"
+            maxHeight={"50vh"}
             objectFit="contain"
           />
         ) : content.contentType === "audio" ? (

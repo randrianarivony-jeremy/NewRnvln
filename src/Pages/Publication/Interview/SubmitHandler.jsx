@@ -21,17 +21,20 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
+import { useCreatePostMutation } from "../../../Controler/Redux/Features/postSlice";
 import { interviewContext } from "./Interview";
 
 const SubmitHandler = () => {
   const { questionId } = useParams();
-  const navigate=useNavigate();
+  const [createPost, { isSuccess, isError }] = useCreatePostMutation();
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [multipleQuestion, setMultipleQuestion] = useState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const { responseData, swiperRef,publicConfidentiality } = useContext(interviewContext);
+  const { responseData, swiperRef, publicConfidentiality } =
+    useContext(interviewContext);
   const { currentUser } = useContext(currentUserContext);
   const empty = useRef();
 
@@ -62,7 +65,6 @@ const SubmitHandler = () => {
       responseData.current.map((elt) => {
         if (elt.contentType === "short" || elt.contentType === "text") {
           storagePromises.push(elt);
-          console.log(elt);
         } else {
           storagePromises.push(uploadMedia(elt));
         }
@@ -71,7 +73,6 @@ const SubmitHandler = () => {
       Promise.all(storagePromises)
         .then((res) => {
           let urlPromises = [];
-          console.log(res);
           res.map((data) => {
             if (data.contentType === "short" || data.contentType === "text") {
               urlPromises.push(data);
@@ -91,36 +92,15 @@ const SubmitHandler = () => {
           Promise.all(urlPromises)
             .then(async (payload) => {
               //send to database
-              await apiCall
-                .post("interview", {
+              createPost({
+                category: "interview",
+                body: {
                   data: payload,
                   public: publicConfidentiality.current,
                   id_user: currentUser._id,
                   question: questionId,
-                })
-                .then(
-                  (res) => {
-                    toast({
-                      title: "Publication réussie",
-                      status: "success",
-                      duration: 5000,
-                      isClosable: true,
-                      description: "Votre interview a été bien enregistrée !",
-                    });
-                    navigate("/");
-                  },
-                  (err) => {
-                    console.log("database error: " + err);
-                    toast({
-                      status: "error",
-                      isClosable: true,
-                      duration: 5000,
-                      description: "Veuillez réessayer s'il vous plait",
-                      title: "Operation failed",
-                    });
-                  }
-                )
-                .finally(() => setSubmitting(false));
+                },
+              });
             })
             .catch((error) => {
               console.log("url promises error: " + error);
@@ -136,6 +116,29 @@ const SubmitHandler = () => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Publication réussie",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        description: "Votre interview a été bien enregistrée !",
+      });
+      navigate("/");
+    }
+    if (isError) {
+      toast({
+        status: "error",
+        isClosable: true,
+        duration: 5000,
+        description: "Veuillez réessayer s'il vous plait",
+        title: "Operation failed",
+      });
+      setSubmitting(false);
+    }
+  }, [isSuccess, isError]);
+
   return (
     <>
       {!loading && (
@@ -144,7 +147,6 @@ const SubmitHandler = () => {
           width={multipleQuestion ? "fit-content" : "100%"}
           variant={multipleQuestion ? "ghost" : "primary"}
           loadingText="Envoi"
-          // onClick={()=>uploadMedia(responseData.current[1])}
           onClick={handleSubmit}
         >
           Publier

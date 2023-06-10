@@ -59,7 +59,7 @@ function App() {
           {initializing ? (
             <Stack justify="center" height="100%" align="center">
               <Image src={logo} alt="logo" width="100px" />
-              <Heading size={"xl"}>Ranavalona</Heading>
+              <Heading size={"xl"}>Plusvaloo</Heading>
               <Spinner speed="0.7s" />
             </Stack>
           ) : (

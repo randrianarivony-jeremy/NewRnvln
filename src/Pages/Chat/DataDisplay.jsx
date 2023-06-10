@@ -6,7 +6,7 @@ import { currentUserContext } from "../../Controler/App";
 import AudioDisplay from "./AudioDisplay";
 import { chatContext } from "./Chat";
 
-const DataDisplay = ({ data }) => {
+const DataDisplay = ({ message }) => {
   const videoRef = useRef();
   const [isPaused, setIsPaused] = useState();
   const [imgLoading, setImgLoading] = useState(true);
@@ -20,21 +20,21 @@ const DataDisplay = ({ data }) => {
   }, [isPaused]);
 
   return (
-    <Box maxW="75%" className="datadisplay">
-      {data.contentType === "string" && (
+    <Box maxW="75%" className="messagedisplay">
+      {message.contentType === "string" && (
         <Box
           whiteSpace="pre-wrap"
           padding="4px 8px"
           rounded="lg"
-          borderBottomLeftRadius={data.sender !== currentUser._id && 0}
-          borderBottomRightRadius={data.sender === currentUser._id && 0}
-          bgColor={data.sender === currentUser._id ? "bleu" : ""}
-          border={data.sender !== currentUser._id ? "1px solid" : ""}
+          borderBottomLeftRadius={message.sender !== currentUser._id && 0}
+          borderBottomRightRadius={message.sender === currentUser._id && 0}
+          bgColor={message.sender === currentUser._id ? "bleu" : ""}
+          border={message.sender !== currentUser._id ? "1px solid" : ""}
         >
-          {data.content}
+          {message.content}
         </Box>
       )}
-      {data.contentType === "image" && (
+      {message.contentType === "image" && (
         <>
           {imgLoading && <Skeleton height={240} width={150} rounded="xl" />}
           {imgError && (
@@ -55,11 +55,11 @@ const DataDisplay = ({ data }) => {
           {!imgError && (
             <Image
               ref={mediaRef}
-              src={data.content}
+              src={message.content}
               alt="picture"
               rounded="xl"
-              borderBottomLeftRadius={data.sender !== currentUser._id && 0}
-              borderBottomRightRadius={data.sender === currentUser._id && 0}
+              borderBottomLeftRadius={message.sender !== currentUser._id && 0}
+              borderBottomRightRadius={message.sender === currentUser._id && 0}
               onLoad={() => setImgLoading(false)}
               onError={() => {
                 setImgError(true);
@@ -69,7 +69,7 @@ const DataDisplay = ({ data }) => {
           )}
         </>
       )}
-      {data.contentType === "video" && (
+      {message.contentType === "video" && (
         <>
           {!isPaused && (
             <Button
@@ -83,7 +83,7 @@ const DataDisplay = ({ data }) => {
             </Button>
           )}
           <video
-            src={data.content}
+            src={message.content}
             alt="video"
             ref={videoRef}
             loop
@@ -92,16 +92,16 @@ const DataDisplay = ({ data }) => {
           ></video>
         </>
       )}
-      {data.contentType === "audio" && (
+      {message.contentType === "audio" && (
         <Box
           rounded="xl"
           padding="4px 8px"
-          borderBottomLeftRadius={data.sender !== currentUser._id && 0}
-          borderBottomRightRadius={data.sender === currentUser._id && 0}
-          bgColor={data.sender === currentUser._id ? "bleu" : ""}
-          border={data.sender !== currentUser._id ? "1px solid" : ""}
+          borderBottomLeftRadius={message.sender !== currentUser._id && 0}
+          borderBottomRightRadius={message.sender === currentUser._id && 0}
+          bgColor={message.sender === currentUser._id ? "bleu" : ""}
+          border={message.sender !== currentUser._id ? "1px solid" : ""}
         >
-          <AudioDisplay audio={data.content} />
+          <AudioDisplay audio={message.content} />
         </Box>
       )}
     </Box>

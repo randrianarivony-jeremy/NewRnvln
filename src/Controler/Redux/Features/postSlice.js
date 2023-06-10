@@ -28,19 +28,17 @@ export const postSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         credentials: "include",
       }),
-      transformResponse: (responseData) =>
-        postsAdapter.setAll(initialState, responseData),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.ids.length > 0)
+          console.log(data);
+          if (data.length > 0)
             dispatch(
               postSlice.util.updateQueryData(
                 "fetchContents",
                 undefined,
                 (draft) => {
-                  draft.entities = { ...draft.entities, ...data.entities };
-                  draft.ids = [...draft.ids, ...data.ids];
+                  postsAdapter.addMany(draft, data);
                 }
               )
             );

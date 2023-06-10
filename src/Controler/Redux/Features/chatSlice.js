@@ -1,7 +1,23 @@
+import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
+
+export const chatAdapter = createEntityAdapter({
+  selectId: (messages) => messages._id,
+  sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
+});
+
+const initialState = chatAdapter.getInitialState();
 
 export const chatSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    fetchConversation: builder.query({
+      query: (userId) => {
+        return {
+          url: "conversation/" + userId,
+          credentials: "include",
+        };
+      },
+    }),
     fetchMainConversation: builder.query({
       query: () => {
         return {
@@ -25,6 +41,8 @@ export const chatSlice = apiSlice.injectEndpoints({
           credentials: "include",
         };
       },
+      transformResponse: (responseData) =>
+        chatAdapter.setAll(initialState, responseData),
     }),
 
     addMessage: builder.mutation({
@@ -34,21 +52,38 @@ export const chatSlice = apiSlice.injectEndpoints({
         credentials: "include",
         body,
       }),
-      onQueryStarted(body, { dispatch, queryFulfilled }) {
+      async onQueryStarted(body, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           chatSlice.util.updateQueryData(
             "fetchMessages",
             body.recipient,
-            (draft) => [...draft, body]
+            (draft) => {
+              chatAdapter.addOne(draft, body);
+            }
           )
         );
-        queryFulfilled.catch(patchResult.undo);
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            chatSlice.util.updateQueryData(
+              "fetchMessages",
+              body.recipient,
+              (draft) => {
+                chatAdapter.removeOne(draft, body._id);
+                chatAdapter.addOne(draft, data.newMessage);
+              }
+            )
+          );
+        } catch {
+          patchResult.undo();
+        }
       },
     }),
   }),
 });
 
 export const {
+  useFetchConversationQuery,
   useFetchMainConversationQuery,
   useLazyFetchMainConversationQuery,
   useFetchSecondConversationQuery,
@@ -56,3 +91,29 @@ export const {
   useFetchMessagesQuery,
   useAddMessageMutation,
 } = chatSlice;
+
+export const selectMessagesData = createSelector(
+  (state, userId) => chatSlice.endpoints.fetchMessages.select(userId)(state),
+  (conversationMessages) => conversationMessages.data
+);
+
+export const getSelectors = (userId) => {
+  const selectMessages = chatSlice.endpoints.fetchMessages.select(userId);
+
+  const chatSelectors = createSelector(selectMessages, (result) =>
+    chatAdapter.getSelectors(() => result?.data ?? initialState)
+  );
+
+  return {
+    selectById: (id) =>
+      createSelector(chatSelectors, (s) => s.selectById(s, id)),
+  };
+};
+
+export const {
+  selectAll: selectAllMessages,
+  selectById: selectMessagesById,
+  selectIds: selectMessagesIds,
+} = chatAdapter.getSelectors(
+  (state, userId) => selectMessagesData(state, userId) ?? initialState
+);

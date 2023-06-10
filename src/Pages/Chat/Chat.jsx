@@ -1,14 +1,13 @@
-import { Button, Flex, Text, useToast } from "@chakra-ui/react";
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import ChatScroller from "./ChatScroller";
-import ChatInput from "./ChatInput";
-import { Scroll } from "../../Styles/Theme";
-import { Loader } from "../../Controler/Routes";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { Button, Flex, Skeleton, useToast } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
-import { useFetchMessagesQuery } from "../../Controler/Redux/Features/chatSlice";
+import React, { createContext, useContext, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { currentUserContext } from "../../Controler/App";
+import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
+import { Scroll } from "../../Styles/Theme";
+import ChatInput from "./ChatInput";
+import ChatScroller from "./ChatScroller";
 
 export const chatContext = createContext();
 
@@ -19,13 +18,14 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newConversation, setNewConversation] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
+  const submitting = useRef(false);
   const [userB, setUserB] = useState();
   const toast = useToast();
   let draft = useRef();
   let mediaRef = useRef();
   const conversationId = useRef();
-  const { data, isLoading, isSuccess, isError } = useFetchMessagesQuery(userId);
+  const { data: user, isLoading, isSuccess } = useFetchUserQuery(userId);
 
   // const fetchMessages = async () => {
   //   await apiCall
@@ -59,41 +59,18 @@ const Chat = () => {
   //     .finally(() => setLoading(false));
   // };
 
-  useEffect(() => {
-    if (isSuccess) {
-      if (data.messages === undefined) {
-        setUserB(data.user);
-        setNewConversation(true);
-      } else {
-        setUserB(
-          data.messages.members.filter((u) => u._id !== currentUser._id)[0]
-        );
-        setMessages(data.messages.messages);
-        conversationId.current = data.messages._id;
-      }
-    }
-  }, [isSuccess]);
-
   let display;
 
-  if (isLoading) display = <Loader />;
-  if (isError)
-    display = (
-      <p>
-        Une erreur est survenue lors du chargement. Veuillez réessayer plus
-        tard.
-      </p>
-    );
+  if (isLoading) display = <Skeleton height={5} width="50vw" />;
   if (isSuccess) {
-    if (data.messages === undefined) {
-      display = (
-        <Flex justify="center" alignItems="center" height="100%">
-          <Text>Démarrez une nouvelle conversation</Text>
+    display = (
+      <Button size={"lg"}>
+        {user.name} &nbsp;{" "}
+        <Flex fontStyle="italic" fontWeight="normal">
+          {user.job}
         </Flex>
-      );
-    } else {
-      display = <ChatScroller />;
-    }
+      </Button>
+    );
   }
 
   return (
@@ -112,7 +89,7 @@ const Chat = () => {
           newConversation,
           setNewConversation,
           submitting,
-          setSubmitting,
+          // setSubmitting,
           draft,
           mediaRef,
         }}
@@ -121,14 +98,9 @@ const Chat = () => {
           <Button size={"lg"} onClick={() => navigate(-1)}>
             <IonIcon icon={arrowBack} />
           </Button>
-          <Button size={"lg"}>
-            {userB?.name} &nbsp;{" "}
-            <Flex fontStyle="italic" fontWeight="normal">
-              {userB?.job}
-            </Flex>
-          </Button>
+          {display}
         </Flex>
-        {display}
+        <ChatScroller />
         <ChatInput />
       </chatContext.Provider>
     </Scroll>

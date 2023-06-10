@@ -1,52 +1,81 @@
-import {Button,HStack,Popover,PopoverArrow,PopoverBody,PopoverContent,PopoverTrigger,Portal,Textarea,useColorModeValue,} from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Portal,
+  Textarea,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import EmojiPicker from "emoji-picker-react";
+import { chevronForward, happyOutline, send } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { currentUserContext, socket } from "../../Controler/App";
+import {
+  useAddMessageMutation,
+  useFetchConversationQuery,
+} from "../../Controler/Redux/Features/chatSlice";
+import { chatContext } from "./Chat";
 import SendPicture from "./SendPicture";
 import TakePicture from "./TakePicture";
 import VoiceRecording from "./VoiceRecording";
-import EmojiPicker from "emoji-picker-react";
-import { chatContext } from "./Chat";
-import { apiCall, currentUserContext, socket } from "../../Controler/App";
-import { useNavigate } from "react-router-dom";
-import { IonIcon } from "@ionic/react";
-import { chevronForward, happy, happyOutline, send } from "ionicons/icons";
-import { iconMd } from "../../Styles/Theme";
 
-const ChatInputs = ({sendResponse}) => {
+const ChatInputs = ({ sendResponse }) => {
   const responseRef = useRef();
-  const {messages,setMessages,userB,newConversation,setNewConversation,conversationId,submitting,setSubmitting,draft}=useContext(chatContext);
-  const {currentUser}=useContext(currentUserContext);
+  const { userId } = useParams();
+  const { data: conversation } = useFetchConversationQuery(userId);
+  const { setNewConversation } = useContext(chatContext);
+  const { currentUser } = useContext(currentUserContext);
   const [value, setValue] = useState("");
   const emojibg = useColorModeValue("light", "dark");
   const [writing, setWriting] = useState(false);
-  const navigate = useNavigate();
-  const mediaContent=useRef();
+  const mediaContent = useRef();
+  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
 
-  const sendText = async() => {
+  const sendText = async () => {
     setWriting(false);
-    setValue('');
-    draft.current = {content:responseRef.current.value,contentType:'string',sender:currentUser._id}
-    setSubmitting(true);
-    await apiCall
-    .post( "message",{
-        sender:currentUser._id,
-        recipient:userB._id, //this conversationId from params would be the userId
-        content:responseRef.current.value,
-        conversationId: newConversation ? null : conversationId.current
-      })
-      .then(
-        (res) => {
-          setMessages([...messages,res.data.newMessage]);
-          setNewConversation(false);
-          conversationId.current = res.data.newMessage.conversationId;
-          socket.emit('message sent',res.data,userB._id)
-          },
-          (err) => {
-          console.log(err);
-          navigate(-1);
-        }
-      )
-      .finally(()=>setSubmitting(false));
+    setValue("");
+    addMessage({
+      _id: 1,
+      sender: currentUser._id,
+      recipient: userId, //this conversationId from params would be the userId
+      content: responseRef.current.value,
+      conversationId: conversation._id,
+      contentType: "string",
+      createdAt: new Date().toJSON(),
+    });
   };
+  // const sendText = async() => {
+  //   setWriting(false);
+  //   setValue('');
+  //   draft.current = {content:responseRef.current.value,contentType:'string',sender:currentUser._id}
+  //   setSubmitting(true);
+  //   await apiCall
+  //   .post( "message",{
+  //       sender:currentUser._id,
+  //       recipient:userB._id, //this conversationId from params would be the userId
+  //       content:responseRef.current.value,
+  //       conversationId: newConversation ? null : conversationId.current
+  //     })
+  //     .then(
+  //       (res) => {
+  //         setMessages([...messages,res.data.newMessage]);
+  //         setNewConversation(false);
+  //         conversationId.current = res.data.newMessage.conversationId;
+  //         socket.emit('message sent',res.data,userB._id)
+  //         },
+  //         (err) => {
+  //         console.log(err);
+  //         navigate(-1);
+  //       }
+  //     )
+  //     .finally(()=>setSubmitting(false));
+  // };
 
   const handleTextChange = ({ currentTarget }) => {
     setValue(currentTarget.value);
@@ -71,33 +100,41 @@ const ChatInputs = ({sendResponse}) => {
     }
   }, [responseRef, value]);
 
+  useEffect(() => {
+    if (isSuccess) {
+      setNewConversation(false);
+      socket.emit("message sent", data, userId);
+    }
+  }, [isSuccess, isLoading]);
+
   return (
     <>
       <HStack alignItems="flex-end" justify="flex-start">
         {!writing && (
           <>
-            <TakePicture output={mediaContent}/>
+            <TakePicture output={mediaContent} />
             <SendPicture sendResponse={sendResponse} />
             <VoiceRecording sendResponse={sendResponse} />
           </>
         )}
         <HStack pos="relative" width="100%" align="flex-end" spacing={0}>
           {writing && (
-            <Button
-              variant="float"
-              onClick={() => setWriting(false)}
-            ><IonIcon icon={chevronForward}/></Button>
+            <Button variant="float" onClick={() => setWriting(false)}>
+              <IonIcon icon={chevronForward} />
+            </Button>
           )}
 
           {/* <Emojis/> */}
           <Popover isLazy={true} returnFocusOnClose={false}>
             <PopoverTrigger>
               <Button
-              variant={'float'}
+                variant={"float"}
                 pos="absolute"
                 zIndex={2}
                 left={writing ? 10 : 0}
-              ><IonIcon icon={happyOutline}/></Button>
+              >
+                <IonIcon icon={happyOutline} />
+              </Button>
             </PopoverTrigger>
             <Portal>
               <PopoverContent>
@@ -128,12 +165,14 @@ const ChatInputs = ({sendResponse}) => {
             }}
             onChange={handleTextChange}
           ></Textarea>
-          <Button isLoading={submitting}
+          <Button
             variant="float"
             onClick={() =>
               responseRef.current.value.length > 0 ? sendText() : {}
             }
-          ><IonIcon icon={send}/></Button>
+          >
+            <IonIcon icon={send} />
+          </Button>
         </HStack>
       </HStack>
     </>

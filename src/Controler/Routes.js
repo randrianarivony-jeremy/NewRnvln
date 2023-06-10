@@ -43,154 +43,83 @@ const Routes = () => {
   return (
     <Box height="100%" className="route" width="100%">
       <BrowserRouter>
+        {/* prettier-ignore  */}
         <ROUTES>
           <Route path="/" element={currentUser ? <Home /> : <Login />}>
             <Route index element={currentUser ? <ForYouPage /> : <Login />} />
             {/* <Route index element={<Suspense fallback={<Loader/>}>{currentUser ? <ForYouPage /> : <Login/>}</Suspense>} /> */}
             <Route
               path="/subscriptions_only"
-              element={
-                <Suspense fallback={<Loader />}>
-                  {currentUser ? <SubscriptionOnly /> : <Login />}
-                </Suspense>
-              }
+              element={<Suspense fallback={<Loader />}>{currentUser ? <SubscriptionOnly /> : <Login />}</Suspense>}
             />
             <Route
               path="/questions_only"
-              element={
-                <Suspense fallback={<Loader />}>
-                  {currentUser ? <SinglePost /> : <Login />}
-                </Suspense>
-              }
+              element={<Suspense fallback={<Loader />}>{currentUser ? <SinglePost /> : <Login />}</Suspense>}
             />
           </Route>
           <Route
             path="/post/:type/:id"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <SinglePost /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <SinglePost /> : <Login />}</Suspense>}
           />
           <Route
             path="/login"
-            element={
-              <Suspense fallback={<Loader />}>
-                <Login />
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}><Login /></Suspense>}
           />
           <Route
             path="/message"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Message /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Message /> : <Login />}</Suspense>}
           />
           <Route
             path="/chat/:userId"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Chat /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Chat /> : <Login />}</Suspense>}
           />
           <Route
             path="/notification"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Notification /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Notification /> : <Login />}</Suspense>}
           />
           <Route
             path="/profile"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Profile /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Profile /> : <Login />}</Suspense>}
           />
           <Route
             path="/profile/:userId"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <UserProfile /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <UserProfile /> : <Login />}</Suspense>}
           />
           <Route
             path="/publication"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Publication /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Publication /> : <Login />}</Suspense>}
           />
           <Route
             path="/interview/:questionId"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Interview /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Interview /> : <Login />}</Suspense>}
           />
           <Route
             path="/publication/media"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <PublishMedia /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <PublishMedia /> : <Login />}</Suspense>}
           />
           <Route
             path="/publication/text"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <PublishText /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <PublishText /> : <Login />}</Suspense>}
           />
           <Route
             path="/question"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Question /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Question /> : <Login />}</Suspense>}
           />
           <Route
             path="/single_question"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <AskQuestion /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <AskQuestion /> : <Login />}</Suspense>}
           />
           <Route
             path="/parameters"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Parameter /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Parameter /> : <Login />}</Suspense>}
           />
           <Route
             path="/search"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <Search /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Search /> : <Login />}</Suspense>}
           />
           <Route
             path="/search/:keyword"
-            element={
-              <Suspense fallback={<Loader />}>
-                {currentUser ? <SearchResult /> : <Login />}
-              </Suspense>
-            }
+            element={<Suspense fallback={<Loader />}>{currentUser ? <SearchResult /> : <Login />}</Suspense>}
           />
         </ROUTES>
       </BrowserRouter>

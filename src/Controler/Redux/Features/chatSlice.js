@@ -19,20 +19,34 @@ export const chatSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-    fetchMainConversation: builder.query({
-      query: () => {
+    fetchConversations: builder.query({
+      query: (category) => {
         return {
-          url: "conversation/main",
+          url: "conversation/" + category,
           credentials: "include",
         };
       },
-    }),
-    fetchSecondConversation: builder.query({
-      query: () => {
-        return {
-          url: "conversation/second",
-          credentials: "include",
-        };
+      providesTags: (response, err, category) => [
+        { type: "Conversation", id: category },
+      ],
+      async onCacheEntryAdded(
+        category,
+        { dispatch, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          await cacheDataLoaded;
+          socket.on("new message", () => {
+            dispatch(
+              chatSlice.util.invalidateTags([
+                { type: "Conversation", id: category },
+              ])
+            );
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        await cacheEntryRemoved;
+        socket.off("new message");
       },
     }),
     fetchMessages: builder.query({
@@ -55,13 +69,11 @@ export const chatSlice = apiSlice.injectEndpoints({
               chatAdapter.addOne(draft, newMessage);
             });
           });
-
-          await cacheEntryRemoved;
         } catch (error) {
-          // if cacheEntryRemoved resolved before cacheDataLoaded,
-          // cacheDataLoaded throws
           console.log(error);
         }
+        await cacheEntryRemoved;
+        socket.off("new message");
       },
     }),
     addMessage: builder.mutation({
@@ -83,6 +95,7 @@ export const chatSlice = apiSlice.injectEndpoints({
         );
         try {
           const { data } = await queryFulfilled;
+          socket.emit("message sent", data, body.recipient);
           dispatch(
             chatSlice.util.updateQueryData(
               "fetchMessages",
@@ -103,6 +116,7 @@ export const chatSlice = apiSlice.injectEndpoints({
 
 export const {
   useFetchConversationQuery,
+  useFetchConversationsQuery,
   useFetchMainConversationQuery,
   useLazyFetchMainConversationQuery,
   useFetchSecondConversationQuery,

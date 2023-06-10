@@ -1,10 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
-import { socket } from "../../Controler/App";
-import {
-  useFetchMainConversationQuery,
-  useLazyFetchMainConversationQuery,
-} from "../../Controler/Redux/Features/chatSlice";
+import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
 import { Loader } from "../../Controler/Routes";
 import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import { Scroll } from "../../Styles/Theme";
@@ -13,18 +9,11 @@ import ConversationCard from "./ConversationCard";
 const MainConversation = () => {
   const { setNewMainMessage } = useContext(socketContext);
   const { data, isLoading, isSuccess, isError } =
-    useFetchMainConversationQuery();
-  const [fetchMainConversation] = useLazyFetchMainConversationQuery();
+    useFetchConversationsQuery("main");
 
   useEffect(() => {
     setNewMainMessage(0);
   }, []);
-
-  useEffect(() => {
-    socket.on("new message", () => {
-      fetchMainConversation();
-    });
-  });
 
   if (isLoading) return <Loader />;
   if (isError)

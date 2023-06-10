@@ -5,154 +5,39 @@ import {
   Flex,
   HStack,
   Image,
-  Skeleton,
   SkeletonCircle,
   Stack,
   Text,
-  useToast,
 } from "@chakra-ui/react";
-import {
-  faHeart,
-  faComment,
-  faComments,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IonIcon } from "@ionic/react";
-import { people, personAdd } from "ionicons/icons";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  chatbubble,
+  chatbubbles,
+  heart,
+  people,
+  personAdd,
+} from "ionicons/icons";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
 import Navigation from "../../Component/Navigation";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { currentUserContext } from "../../Controler/App";
+import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notificationSlice";
 import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import { ClickableFlex, Scroll } from "../../Styles/Theme";
 
 const Notification = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [notifDataFormated, setNotifDataFormated] = useState([]);
-  const [imgLoading, setImgLoading] = useState(true);
   const { currentUser } = useContext(currentUserContext);
-  const notificationList = useRef();
-  const emptyNotification = useRef(false);
-  const toast = useToast();
+  const { data, isLoading, isError } = useFetchNotificationsQuery({
+    friendRequest: currentUser.friendRequest.length,
+    friends: currentUser.friends.length,
+    subscribers: currentUser.subscribers.length,
+  });
+  const navigate = useNavigate();
+  const [imgLoading, setImgLoading] = useState(true);
   const { setNewNotification } = useContext(socketContext);
 
-  const formatNotifData = () => {
-    let notifArray = [];
-    notificationList.current.map((elt) => {
-      switch (elt.action) {
-        case "like":
-          notifArray = [
-            ...notifArray,
-            {
-              name: elt.from.name,
-              picture: elt.from.picture,
-              text: "a aimé votre publication.",
-              length: elt.on.likers.length,
-              url: "/post/" + elt.docModel + "/" + elt.on._id,
-              icon: <FontAwesomeIcon icon={faHeart}></FontAwesomeIcon>,
-            },
-          ];
-          break;
-        case "comment":
-          notifArray = [
-            ...notifArray,
-            {
-              name: elt.from.name,
-              picture: elt.from.picture,
-              length: elt.on.comments.length,
-              text: "a commenté votre publication.",
-              url: "/post/" + elt.docModel + "/" + elt.on._id,
-              icon: <FontAwesomeIcon icon={faComment}></FontAwesomeIcon>,
-            },
-          ];
-          break;
-        case "subscribe":
-          notifArray = [
-            ...notifArray,
-            {
-              text: "vient de s'abonner à vous.",
-              name: elt.from.name,
-              picture: elt.from.picture,
-              length: currentUser.subscribers.length,
-              url: "/profile/" + elt.from._id,
-              icon: <IonIcon icon={people} />,
-            },
-          ];
-          break;
-        case "friendRequest":
-          notifArray = [
-            ...notifArray,
-            {
-              text: "vous a envoyé une invitation.",
-              name: elt.from.name,
-              picture: elt.from.picture,
-              length: currentUser.friendRequest.length,
-              url: "/profile/" + elt.from._id,
-              icon: <IonIcon icon={personAdd} />,
-            },
-          ];
-          break;
-        case "friendAccepted":
-          notifArray = [
-            ...notifArray,
-            {
-              text: "a accepté votre invitation.",
-              name: elt.from.name,
-              picture: elt.from.picture,
-              length: currentUser.friends.length,
-              url: "/profile/" + elt.from._id,
-              icon: <Flex className="bi-person-fill-check"></Flex>,
-            },
-          ];
-          break;
-        case "interview":
-          notifArray = [
-            ...notifArray,
-            {
-              name: elt.from.name,
-              picture: elt.from.picture,
-              length: elt.on.question.interviews.length,
-              text: "a répondu à votre question.",
-              url: "/post/" + elt.on._id,
-              icon: <FontAwesomeIcon icon={faComments}></FontAwesomeIcon>,
-            },
-          ];
-          break;
-
-        default:
-          break;
-      }
-      setNotifDataFormated(notifArray);
-      setLoading(false);
-      return notifArray;
-    });
-  };
-
   useEffect(() => {
-    const fetchNotification = async () => {
-      await apiCall.get("notification").then(
-        (res) => {
-          notificationList.current = res.data;
-          if (res.data.length === 0) {
-            emptyNotification.current = true;
-            setLoading(false);
-          } else formatNotifData();
-        },
-        (err) => {
-          toast({
-            status: "error",
-            duration: 5000,
-            description: err.message + "Veuillez réessayer s'il vous plait",
-            title: "Operation failed",
-          });
-          navigate(-1);
-          console.error(err);
-        }
-      );
-    };
-    fetchNotification();
     setNewNotification(0);
   }, []);
 
@@ -161,19 +46,26 @@ const Notification = () => {
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button width="100%">Notifications</Button>
       </Flex>
-      {loading ? (
+      {isLoading ? (
         <Scroll height="100%">
           <Stack height="100%" marginLeft={3}>
             <UserLoader length={5} />
           </Stack>
         </Scroll>
-      ) : emptyNotification.current ? (
+      ) : isError ? (
+        <Flex height="100%" align="center" justify="center">
+          <p>
+            Une erreur est survenue lors du chargement. Veuillez réessayer plus
+            tard.
+          </p>
+        </Flex>
+      ) : data.length === 0 ? (
         <Flex height="100%" align="center" justify="center">
           <Text>EMPTYSTATE</Text>
         </Flex>
       ) : (
         <Scroll height="100%">
-          {notifDataFormated.map((elt, key) => (
+          {data.map((elt, key) => (
             <ClickableFlex
               key={key}
               justify="space-between"
@@ -207,7 +99,21 @@ const Notification = () => {
                   </Text>
                 </Box>
                 <Button boxSize={12} flexDir="column">
-                  <Flex fontSize="xl">{elt.icon}</Flex>
+                  <Flex fontSize="xl">
+                    {elt.action === "like" ? (
+                      <IonIcon icon={heart} />
+                    ) : elt.action === "comment" ? (
+                      <IonIcon icon={chatbubble} />
+                    ) : elt.action === "subscribe" ? (
+                      <IonIcon icon={people} />
+                    ) : elt.action === "friendRequest" ? (
+                      <IonIcon icon={personAdd} />
+                    ) : elt.action === "friendAccepted" ? (
+                      <Flex className="bi-person-fill-check"></Flex>
+                    ) : (
+                      <IonIcon icon={chatbubbles} />
+                    )}
+                  </Flex>
                   <Text fontSize="xs">{elt.length}</Text>
                 </Button>
               </HStack>

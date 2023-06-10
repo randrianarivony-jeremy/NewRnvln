@@ -71,13 +71,6 @@ const SendVoice = () => {
     );
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      // setNewConversation(false);
-      socket.emit("message sent", data, userId);
-    }
-  }, [isSuccess, isLoading]);
-
   // const handleSubmit = async () => {
   //   await apiCall
   //     .post("message", {

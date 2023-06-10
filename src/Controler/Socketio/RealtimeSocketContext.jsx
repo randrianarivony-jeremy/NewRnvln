@@ -29,7 +29,12 @@ const RealtimeSocketContext = memo(({ children }) => {
     socket.on("new notification", () => {
       setNewNotification((current) => current + 1);
     });
-  }, [socket]);
+    return () => {
+      console.log("unmounted navigation");
+      socket.off("new message");
+      socket.off("new notification");
+    };
+  });
 
   return (
     <socketContext.Provider

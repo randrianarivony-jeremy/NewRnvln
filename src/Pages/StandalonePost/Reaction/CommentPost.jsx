@@ -95,6 +95,7 @@ const CommentPost = () => {
                     name: currentUser.name,
                     picture: currentUser.picture,
                   },
+                  postCreator: post.id_user._id,
                 });
                 inputRef.current.value = "";
               }}

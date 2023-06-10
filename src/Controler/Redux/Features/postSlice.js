@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { socket } from "../../App";
 import { apiSlice } from "./apiSlice";
 
 const postsAdapter = createEntityAdapter({
@@ -31,7 +32,6 @@ export const postSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           if (data.length > 0)
             dispatch(
               postSlice.util.updateQueryData(
@@ -73,13 +73,16 @@ export const postSlice = apiSlice.injectEndpoints({
       ],
     }),
     likePost: builder.mutation({
-      query: ({ type, postId, body }) => ({
+      query: ({ type, postId, body, postCreator }) => ({
         url: `${type}/like/` + postId,
         method: "PATCH",
         credentials: "include",
         body,
       }),
-      onQueryStarted({ postId, body }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        { postId, body, postCreator },
+        { dispatch, queryFulfilled }
+      ) {
         const patchResult = dispatch(
           postSlice.util.updateQueryData(
             "fetchContents",
@@ -96,7 +99,13 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
-        queryFulfilled.catch(patchResult.undo);
+        try {
+          await queryFulfilled;
+          if (body.like && postCreator !== body.id_user)
+            socket.emit("notification", postCreator);
+        } catch {
+          patchResult.undo();
+        }
       },
     }),
     fetchComments: builder.mutation({
@@ -124,14 +133,14 @@ export const postSlice = apiSlice.injectEndpoints({
       },
     }),
     commentPost: builder.mutation({
-      query: ({ postId, type, text, commenterId }) => ({
+      query: ({ postId, type, text, commenterId, postCreator }) => ({
         url: `${type}/comment/` + postId,
         method: "PATCH",
         credentials: "include",
         body: { text, commenterId: commenterId._id },
       }),
-      onQueryStarted(
-        { postId, text, commenterId },
+      async onQueryStarted(
+        { postId, text, commenterId, postCreator },
         { dispatch, queryFulfilled }
       ) {
         const patchResult = dispatch(
@@ -146,7 +155,13 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
-        queryFulfilled.catch(patchResult.undo);
+        try {
+          await queryFulfilled;
+          if (postCreator !== commenterId._id)
+            socket.emit("notification", postCreator);
+        } catch {
+          patchResult.undo();
+        }
       },
     }),
   }),

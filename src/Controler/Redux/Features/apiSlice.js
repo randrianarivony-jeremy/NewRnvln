@@ -5,6 +5,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_API_URL + "/api/",
   }),
-  tagTypes: ["Post", "User"],
+  keepUnusedDataFor: 900, //15min
+  tagTypes: ["Post", "User", "Conversation", "Notification"],
   endpoints: (builder) => ({}),
 });

@@ -54,6 +54,7 @@ const LikePost = ({ post }) => {
         likePost({
           type: post.type,
           postId: post._id,
+          postCreator: post.id_user._id,
           body: { id_user: currentUser._id, like: !liked },
         })
       }

@@ -100,13 +100,6 @@ const ChatInputs = ({ sendResponse }) => {
     }
   }, [responseRef, value]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      setNewConversation(false);
-      socket.emit("message sent", data, userId);
-    }
-  }, [isSuccess, isLoading]);
-
   return (
     <>
       <HStack alignItems="flex-end" justify="flex-start">

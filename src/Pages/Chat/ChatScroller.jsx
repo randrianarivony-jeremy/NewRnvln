@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -32,13 +32,6 @@ const ChatScroller = () => {
       </Flex>
     );
   if (isSuccess)
-    // if (data === undefined) {
-    //   display = (
-    //     <Flex justify="center" alignItems="center" height="100%">
-    //       <Text>Démarrez une nouvelle conversation</Text>
-    //     </Flex>
-    //   );
-    // }
     return (
       <Box
         paddingY={2}
@@ -51,9 +44,13 @@ const ChatScroller = () => {
           className="scrollablefeed"
           ref={scrollRef}
         >
-          {messageIds.map((id) => (
-            <SingleMessage messageId={id} key={id} />
-          ))}
+          {messageIds.length > 0 ? (
+            messageIds.map((id) => <SingleMessage messageId={id} key={id} />)
+          ) : (
+            <Flex justify="center" alignItems="center" height="100%">
+              <Text>Démarrez une nouvelle conversation</Text>
+            </Flex>
+          )}
         </ScrollableFeed>
       </Box>
     );

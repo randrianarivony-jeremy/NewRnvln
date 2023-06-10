@@ -13,6 +13,7 @@ const Notification = lazy(() => import("../Pages/Notification/Notification"));
 const Profile = lazy(() => import("../Pages/Profile/Profile"));
 const UserProfile = lazy(() => import("../Pages/Profile/UserProfile"));
 const Message = lazy(() => import("../Pages/Message/Message"));
+const NewMessage = lazy(() => import("../Pages/Message/NewMessage"));
 const Chat = lazy(() => import("../Pages/Chat/Chat"));
 const Publication = lazy(() => import("../Pages/Publication/Publication"));
 const Interview = lazy(() =>
@@ -68,6 +69,10 @@ const Routes = () => {
           <Route
             path="/message"
             element={<Suspense fallback={<Loader />}>{currentUser ? <Message /> : <Login />}</Suspense>}
+          />
+          <Route
+            path="/message/new"
+            element={<Suspense fallback={<Loader />}>{currentUser ? <NewMessage /> : <Login />}</Suspense>}
           />
           <Route
             path="/chat/:userId"

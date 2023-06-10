@@ -18,7 +18,11 @@ export const chatSlice = apiSlice.injectEndpoints({
           credentials: "include",
         };
       },
+      providesTags: (response, err, userId) => [
+        { type: "Conversation", id: userId },
+      ],
     }),
+
     fetchConversations: builder.query({
       query: (category) => {
         return {
@@ -56,8 +60,11 @@ export const chatSlice = apiSlice.injectEndpoints({
           credentials: "include",
         };
       },
-      transformResponse: (responseData) =>
-        chatAdapter.setAll(initialState, responseData),
+      transformResponse: (responseData) => {
+        if (responseData !== null)
+          return chatAdapter.setAll(initialState, responseData);
+        else return responseData;
+      },
       async onCacheEntryAdded(
         userId,
         { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
@@ -89,6 +96,8 @@ export const chatSlice = apiSlice.injectEndpoints({
             "fetchMessages",
             body.recipient,
             (draft) => {
+              if (draft === null)
+                return chatAdapter.setAll(initialState, [body]);
               chatAdapter.addOne(draft, body);
             }
           )
@@ -96,6 +105,11 @@ export const chatSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           socket.emit("message sent", data, body.recipient);
+          dispatch(
+            chatSlice.util.invalidateTags([
+              { type: "Conversation", id: body.recipient },
+            ])
+          );
           dispatch(
             chatSlice.util.updateQueryData(
               "fetchMessages",
@@ -111,6 +125,26 @@ export const chatSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    deleteMessage: builder.mutation({
+      query: ({ messageId, userId, conversationId }) => {
+        return {
+          url: `message/` + messageId + "/" + conversationId,
+          method: "DELETE",
+          credentials: "include",
+        };
+      },
+      async onQueryStarted(
+        { userId, messageId },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
+            chatAdapter.removeOne(draft, messageId);
+          })
+        );
+        queryFulfilled.catch(patchResult.undo);
+      },
+    }),
   }),
 });
 
@@ -124,6 +158,7 @@ export const {
   useFetchMessagesQuery,
   useFetchMessagesQueryState,
   useAddMessageMutation,
+  useDeleteMessageMutation,
 } = chatSlice;
 
 export const selectMessagesData = createSelector(

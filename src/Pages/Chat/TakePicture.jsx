@@ -8,24 +8,21 @@ import {
   close,
   radioButtonOn,
 } from "ionicons/icons";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import WebCam from "react-webcam";
-import { currentUserContext, socket } from "../../Controler/App";
+import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
   useAddMessageMutation,
   useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
-import { chatContext } from "./Chat";
 
 const TakePicture = () => {
   const [camera, setCamera] = useState(false);
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
-  const { newConversation, setNewConversation, draft } =
-    useContext(chatContext);
+  const [addMessage] = useAddMessageMutation();
   const { currentUser } = useContext(currentUserContext);
   const [cameraReady, setCameraReady] = useState(false);
   const [imagePreview, setImagePreview] = useState(false);
@@ -42,12 +39,6 @@ const TakePicture = () => {
   const storePicture = () => {
     setCamera(false);
     setCameraReady(false);
-    if (newConversation) setNewConversation(false);
-    draft.current = {
-      content: imageRef.current,
-      contentType: "image",
-      sender: currentUser._id,
-    };
     fetch(imageRef.current)
       .then((response) => response.blob())
       .then((blob) => {

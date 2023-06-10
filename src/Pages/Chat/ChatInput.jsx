@@ -29,23 +29,22 @@ const ChatInputs = ({ sendResponse }) => {
   const responseRef = useRef();
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const { setNewConversation } = useContext(chatContext);
   const { currentUser } = useContext(currentUserContext);
   const [value, setValue] = useState("");
   const emojibg = useColorModeValue("light", "dark");
   const [writing, setWriting] = useState(false);
   const mediaContent = useRef();
-  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
+  const [addMessage] = useAddMessageMutation();
 
   const sendText = async () => {
     setWriting(false);
     setValue("");
     addMessage({
-      _id: 1,
+      _id: Date.now(),
       sender: currentUser._id,
       recipient: userId, //this conversationId from params would be the userId
       content: responseRef.current.value,
-      conversationId: conversation._id,
+      conversationId: conversation?._id ?? null,
       contentType: "string",
       createdAt: new Date().toJSON(),
     });

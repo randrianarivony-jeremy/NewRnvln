@@ -5,17 +5,18 @@ import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useLongPress } from "use-long-press";
-import { apiCall, currentUserContext } from "../../Controler/App";
-import { getSelectors } from "../../Controler/Redux/Features/chatSlice";
-import { chatContext } from "./Chat";
+import { currentUserContext } from "../../Controler/App";
+import {
+  getSelectors,
+  useDeleteMessageMutation,
+} from "../../Controler/Redux/Features/chatSlice";
 import DataDisplay from "./DataDisplay";
 
 const SingleMessage = ({ messageId }) => {
   const { userId } = useParams();
   const { currentUser } = useContext(currentUserContext);
-  const { messages, setMessages } = useContext(chatContext);
   const [deleteFooter, setDeleteFooter] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [deleteMessage] = useDeleteMessageMutation();
 
   // Dinamically get selectors based on parent query
   const { selectById } = getSelectors(userId);
@@ -29,22 +30,6 @@ const SingleMessage = ({ messageId }) => {
     cancelOnMovement: true,
   });
 
-  const deleteMessage = async () => {
-    setSubmitting(true);
-    await apiCall
-      .delete(`message/` + message._id + "/" + message.conversationId)
-      .then(
-        (res) => {
-          setMessages(messages.filter((msg) => msg._id !== res.data));
-          setDeleteFooter(false);
-          setSubmitting(false);
-        },
-        (err) => {
-          console.log(err);
-          setSubmitting(false);
-        }
-      );
-  };
   return (
     <Flex
       justify={message.sender === currentUser._id ? "flex-end" : "flex-start"}
@@ -60,9 +45,14 @@ const SingleMessage = ({ messageId }) => {
             <IonIcon icon={close} />
           </Button>
           <Button
-            isLoading={submitting}
             variant="outline"
-            onClick={deleteMessage}
+            onClick={() =>
+              deleteMessage({
+                userId,
+                messageId,
+                conversationId: message.conversationId,
+              })
+            }
           >
             <IonIcon icon={trashOutline} />
           </Button>

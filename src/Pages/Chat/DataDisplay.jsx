@@ -4,7 +4,6 @@ import { play } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { currentUserContext } from "../../Controler/App";
 import AudioDisplay from "./AudioDisplay";
-import { chatContext } from "./Chat";
 
 const DataDisplay = ({ message }) => {
   const videoRef = useRef();
@@ -12,7 +11,6 @@ const DataDisplay = ({ message }) => {
   const [imgLoading, setImgLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
   const { currentUser } = useContext(currentUserContext);
-  const { mediaRef } = useContext(chatContext);
 
   useEffect(() => {
     if (isPaused) videoRef.current?.play();
@@ -54,7 +52,6 @@ const DataDisplay = ({ message }) => {
           )}
           {!imgError && (
             <Image
-              ref={mediaRef}
               src={message.content}
               alt="picture"
               rounded="xl"

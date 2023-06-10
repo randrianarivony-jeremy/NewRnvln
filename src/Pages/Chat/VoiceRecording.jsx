@@ -2,23 +2,22 @@ import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react
 import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { checkmark, close, micOutline, refresh } from "ionicons/icons";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useParams } from "react-router-dom";
-import { apiCall, currentUserContext, socket } from "../../Controler/App";
+import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
   useAddMessageMutation,
   useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
-import { chatContext } from "./Chat";
 
 const SendVoice = () => {
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
+  const [addMessage] = useAddMessageMutation();
   const {
     startRecording,
     stopRecording,
@@ -29,8 +28,6 @@ const SendVoice = () => {
   } = recorderControls;
   let newBlob = useRef(true);
   const urlRef = useRef();
-  const { newConversation, setNewConversation, draft } =
-    useContext(chatContext);
   const { currentUser } = useContext(currentUserContext);
 
   const handleRecordingOn = () => {
@@ -44,13 +41,6 @@ const SendVoice = () => {
   };
 
   const storeToStorage = (blob) => {
-    draft.current = {
-      content: URL.createObjectURL(blob),
-      contentType: "audio",
-      sender: currentUser._id,
-    };
-    // setSubmitting(true);
-    if (newConversation) setNewConversation(false);
     setRecording(false);
     const fileName = new Date().getTime() + `${currentUser._id}`;
     const storageRef = ref(storage, "conversation/audio/" + fileName);

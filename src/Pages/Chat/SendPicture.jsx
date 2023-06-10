@@ -1,36 +1,26 @@
 import { Button, Input } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
+import Compressor from "compressorjs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageOutline } from "ionicons/icons";
-import React, { useContext, useEffect, useRef } from "react";
-import { apiCall, currentUserContext, socket } from "../../Controler/App";
+import React, { useContext, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
-import { chatContext } from "./Chat";
-import Compressor from "compressorjs";
 import {
   useAddMessageMutation,
   useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
-import { useParams } from "react-router-dom";
 
 const SendPicture = () => {
   const fileInputRef = useRef();
   const urlRef = useRef();
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
-  const { newConversation, setNewConversation, draft } =
-    useContext(chatContext);
+  const [addMessage] = useAddMessageMutation();
   const { currentUser } = useContext(currentUserContext);
 
   const storePicture = ({ currentTarget }) => {
-    // setSubmitting(true);
-    if (newConversation) setNewConversation(false);
-    draft.current = {
-      content: URL.createObjectURL(currentTarget.files[0]),
-      contentType: "image",
-      sender: currentUser._id,
-    };
     new Compressor(currentTarget.files[0], {
       quality: 0.6,
       success(result) {

@@ -15,16 +15,14 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useContext, useRef, useState } from "react";
-import logo from "../../Assets/RANAVALONA.png";
-import { useNavigate } from "react-router-dom";
-import { apiCall, currentUserContext } from "../../Controler/App";
-import { addContentFeeds } from "../../Controler/Redux/thread.reducer";
-import { addPublication } from "../../Controler/Redux/publication.reducer";
-import { addInterview } from "../../Controler/Redux/interview.reducer";
-import { useDispatch } from "react-redux";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
+import React, { useContext, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import logo from "../../Assets/RANAVALONA.png";
+import { apiCall, currentUserContext } from "../../Controler/App";
+import { postSlice } from "../../Controler/Redux/Features/postSlice";
 
 const SignIn = ({ setSignin }) => {
   const { setCurrentUser } = useContext(currentUserContext);
@@ -50,36 +48,11 @@ const SignIn = ({ setSignin }) => {
       .then(
         (res) => {
           setCurrentUser(res.data);
-          apiCall.get("feeds").then(
-              (data) => {
-                if (data.data.length !== 0) {
-                  const payload = data.data.map((elt) => {
-                    if (elt.type === "interview" || elt.type === "article")
-                      return elt;
-                    else {
-                      elt = { ...elt, type: "question" };
-                      return elt;
-                    }
-                  });
-                  dispatch(addContentFeeds(payload));
-                  dispatch(addPublication(payload));
-                  dispatch(addInterview(payload));
-                  toast({
-                    title: `Manahoana ${res.data.name} a !`,
-                    description: "Tongasoa",
-                    duration: 5000,
-                    isClosable: true,
-                    position: "top",
-                    status: "success",
-                  });
-                  navigate("/");
-                }
-              },
-              (err) => {
-                console.log(err);
-              }
-            )
-            .finally(() => setSubmitting(false));
+          dispatch(
+            postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }])
+          );
+          setSubmitting(false);
+          navigate("/");
         },
         (err) => {
           let error = err.response.data;
@@ -100,10 +73,9 @@ const SignIn = ({ setSignin }) => {
     >
       <Grid templateRows="repeat(3, 3fr)" height="100%">
         <GridItem>
-          <Button
-            variant="float"
-            onClick={() => navigate(-1)}
-          ><IonIcon icon={arrowBack}/></Button>
+          <Button variant="float" onClick={() => navigate(-1)}>
+            <IonIcon icon={arrowBack} />
+          </Button>
           <Image src={logo} alt="logo" width="80px" margin="auto" />
           <Heading size="md" textAlign="center" height={10}>
             Connexion

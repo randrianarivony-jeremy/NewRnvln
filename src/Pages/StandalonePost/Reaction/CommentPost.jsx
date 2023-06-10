@@ -20,7 +20,7 @@ import UserLoader from "../../../Component/Loaders/UserLoader";
 import { currentUserContext } from "../../../Controler/App";
 import {
   useCommentPostMutation,
-  useFetchCommentsMutation,
+  useLazyFetchCommentsQuery,
 } from "../../../Controler/Redux/Features/postSlice";
 import { iconMd } from "../../../Styles/Theme";
 import { postContext } from "../PostContainer";
@@ -32,11 +32,14 @@ const CommentPost = () => {
   const inputRef = useRef();
   const { currentUser } = useContext(currentUserContext);
   const [fetchComments, { isLoading, isSuccess, isError }] =
-    useFetchCommentsMutation();
+    useLazyFetchCommentsQuery();
   const [commentPost] = useCommentPostMutation();
 
   const openComments = () => {
-    fetchComments({ postId: post._id, type: post.type });
+    fetchComments(
+      { postId: post._id, type: post.type },
+      { preferCacheValue: true }
+    );
     onOpen();
   };
 

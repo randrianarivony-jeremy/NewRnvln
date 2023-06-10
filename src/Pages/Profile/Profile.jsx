@@ -1,33 +1,11 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+// prettier-ignore
+import {Box,Button,Flex,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,useDisclosure,} from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IonIcon } from "@ionic/react";
-import {
-  addCircleOutline,
-  apps,
-  arrowBack,
-  bookmarkOutline,
-  briefcase,
-  flag,
-  location,
-  pencil,
-  settingsOutline,
-  walletOutline,
-} from "ionicons/icons";
-import React, { useContext } from "react";
+// prettier-ignore
+import {addCircleOutline,apps,arrowBack,bookmarkOutline,briefcase,flag,location,pencil,settingsOutline,walletOutline,} from "ionicons/icons";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
@@ -70,6 +48,10 @@ const Profile = () => {
     onClose: closePhilosophyModal,
   } = useDisclosure();
 
+  useEffect(() => {
+    if (isSuccess) setCurrentUser(data);
+  }, [isSuccess]);
+
   if (isLoading) return <Loader />;
   if (isError)
     return (
@@ -78,8 +60,7 @@ const Profile = () => {
         tard.
       </p>
     );
-  if (isSuccess) {
-    setCurrentUser(data);
+  if (isSuccess)
     return (
       <Stack
         position="relative"
@@ -297,7 +278,6 @@ const Profile = () => {
         <Navigation />
       </Stack>
     );
-  }
 };
 
 export default Profile;

@@ -1,16 +1,14 @@
 import { Button, HStack, Input } from "@chakra-ui/react";
-import React, { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signUpContext } from "../Login";
-import isEmail from "validator/lib/isEmail";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../../../Controler/firebase.config";
-import AuthSlide from "./AuthSlide";
-import { apiCall, currentUserContext } from "../../../Controler/App";
-import { addContentFeeds } from "../../../Controler/Redux/thread.reducer";
-import { addPublication } from "../../../Controler/Redux/publication.reducer";
-import { addInterview } from "../../../Controler/Redux/interview.reducer";
+import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import isEmail from "validator/lib/isEmail";
+import { apiCall, currentUserContext } from "../../../Controler/App";
+import { storage } from "../../../Controler/firebase.config";
+import { postSlice } from "../../../Controler/Redux/Features/postSlice";
+import { signUpContext } from "../Login";
+import AuthSlide from "./AuthSlide";
 
 const SignUpSubmit = ({ swiper }) => {
   let {
@@ -82,31 +80,12 @@ const SignUpSubmit = ({ swiper }) => {
       .then(
         (res) => {
           setCurrentUser(res.data);
-          apiCall.get("feeds").then(
-              (data) => {
-                if (data.data.length !== 0) {
-                  const payload = data.data.map((elt) => {
-                    if (elt.type === "interview" || elt.type === "article")
-                      return elt;
-                    else {
-                      elt = { ...elt, type: "question" };
-                      return elt;
-                    }
-                  });
-                  dispatch(addContentFeeds(payload));
-                  dispatch(addPublication(payload));
-                  dispatch(addInterview(payload));
-                  navigate("/");
-                }
-              },
-              (err) => {
-                console.log(err);
-              }
-            )
-            .finally(() => setSubmitting(false));
+          dispatch(
+            postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }])
+          );
+          navigate("/");
         },
         (err) => {
-          setSubmitting(false);
           console.log(err.response.data);
           // setEmailError(res.data.error.emailError);
           // setPasswordError(res.data.error.passwordError);
@@ -119,7 +98,8 @@ const SignUpSubmit = ({ swiper }) => {
           //   position: "bottom",
           // });
         }
-      );
+      )
+      .finally(() => setSubmitting(false));
   };
 
   return (

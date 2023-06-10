@@ -10,6 +10,14 @@ const initialState = postsAdapter.getInitialState();
 
 export const postSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    fetchSinglePost: builder.query({
+      query: ({ type, postId }) => ({
+        url: `${type}/` + postId,
+        credentials: "include",
+      }),
+      providesTags: (result) => [{ type: "Post", id: result._id }],
+    }),
+
     fetchContents: builder.query({
       query: () => ({
         url: `feeds`,
@@ -91,6 +99,12 @@ export const postSlice = apiSlice.injectEndpoints({
         credentials: "include",
         body,
       }),
+      invalidatesTags: (response, error, { postId }) => [
+        {
+          type: "Post",
+          id: postId,
+        },
+      ],
       async onQueryStarted(
         { postId, body, postCreator },
         { dispatch, queryFulfilled }
@@ -121,13 +135,13 @@ export const postSlice = apiSlice.injectEndpoints({
       },
     }),
 
-    fetchComments: builder.mutation({
+    fetchComments: builder.query({
       query: ({ postId, type }) => ({
         url: `${type}/comments/` + postId,
         method: "GET",
         credentials: "include",
       }),
-      async onQueryStarted({ postId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ postId, type }, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           if (data.length > 0)
@@ -140,6 +154,15 @@ export const postSlice = apiSlice.injectEndpoints({
                 }
               )
             );
+          dispatch(
+            postSlice.util.updateQueryData(
+              "fetchSinglePost",
+              { type, postId },
+              (draft) => {
+                draft.comments = data;
+              }
+            )
+          );
         } catch (error) {
           console.log(error);
         }
@@ -154,10 +177,10 @@ export const postSlice = apiSlice.injectEndpoints({
         body: { text, commenterId: commenterId._id },
       }),
       async onQueryStarted(
-        { postId, text, commenterId, postCreator },
+        { postId, text, commenterId, postCreator, type },
         { dispatch, queryFulfilled }
       ) {
-        const patchResult = dispatch(
+        const newsfeedPatch = dispatch(
           postSlice.util.updateQueryData(
             "fetchContents",
             undefined,
@@ -169,26 +192,84 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
+        const singlePostPatch = dispatch(
+          postSlice.util.updateQueryData(
+            "fetchSinglePost",
+            { type, postId },
+            (draft) => {
+              draft.comments = [...draft.comments, { commenterId, text }];
+            }
+          )
+        );
         try {
           await queryFulfilled;
           if (postCreator !== commenterId._id)
             socket.emit("notification", postCreator);
         } catch {
-          patchResult.undo();
+          newsfeedPatch.undo();
+          singlePostPatch.undo();
+        }
+      },
+    }),
+
+    deleteComment: builder.mutation({
+      query: ({ type, postId, commentId }) => {
+        return {
+          url: `${type}/` + postId + "/" + commentId,
+          method: "DELETE",
+          credentials: "include",
+        };
+      },
+      async onQueryStarted(
+        { commentId, postId, type },
+        { dispatch, queryFulfilled }
+      ) {
+        const newsfeedUpdate = dispatch(
+          postSlice.util.updateQueryData(
+            "fetchContents",
+            undefined,
+            (draft) => {
+              const post = draft.entities[postId];
+              if (post)
+                post.comments = post.comments.filter(
+                  (comment) => comment._id !== commentId
+                );
+              else return post;
+            }
+          )
+        );
+        const singlePostUpdate = dispatch(
+          postSlice.util.updateQueryData(
+            "fetchSinglePost",
+            { type, postId },
+            (draft) => {
+              draft.comments = draft.comments.filter(
+                (comment) => comment._id !== commentId
+              );
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          newsfeedUpdate.undo();
+          singlePostUpdate.undo();
         }
       },
     }),
   }),
 });
 export const {
+  useFetchSinglePostQuery,
   useFetchContentsQuery,
   useFetchUserInterviewsQuery,
   useFetchUserArticlesQuery,
   useCreatePostMutation,
   useFetchMoreContentsMutation,
   useLikePostMutation,
-  useFetchCommentsMutation,
+  useLazyFetchCommentsQuery,
   useCommentPostMutation,
+  useDeleteCommentMutation
 } = postSlice;
 
 const selectPostsData = createSelector(

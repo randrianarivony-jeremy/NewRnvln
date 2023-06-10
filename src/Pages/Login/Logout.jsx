@@ -18,11 +18,9 @@ const Logout = ({onOpen,onClose,isOpen}) => {
   };
 
   const handleLogout = async () => {
-    await apiCall.get("auth/logout",
-      {withCredentials: true},
-    )
+    await apiCall
+      .get("auth/logout", { withCredentials: true })
       .then((res) => {
-        console.log(res);
         removeCookie("jwt");
         toast({
           title: "Vous avez déconnecté",

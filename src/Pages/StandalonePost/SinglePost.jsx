@@ -1,41 +1,45 @@
 import { Button, Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiCall } from "../../Controler/App";
+import { useFetchSinglePostQuery } from "../../Controler/Redux/Features/postSlice";
 import { Loader } from "../../Controler/Routes";
 import PostContainer from "./PostContainer";
 
 const SinglePost = () => {
-  const { id,type } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [post, setPost] = useState();
+  const { id, type } = useParams();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      await apiCall
-        .get(`${type}/` + id)
-        .then(
-          (res) => {
-            setPost(res.data);
-          },
-          () => {
-            navigate(-1);
-          }
-        )
-        .finally(() => setLoading(false));
-    };
-    fetchPost();
-  }, []);
+  const { data, isLoading, isSuccess, isError } = useFetchSinglePostQuery({
+    type,
+    postId: id,
+  });
 
   return (
     <>
-      <Flex position='absolute' top={0} left={0} zIndex={2}>
-        <Button variant="float" className="bi-arrow-left" onClick={() => navigate(-1)}
+      <Flex position="absolute" top={0} left={0} zIndex={2}>
+        <Button
+          variant="float"
+          className="bi-arrow-left"
+          onClick={() => navigate(-1)}
         ></Button>
         <Button>Publication</Button>
       </Flex>
-      {loading ? <Loader /> : <PostContainer post={post} />}
+      {isLoading ? (
+        <Loader />
+      ) : isError ? (
+        <Flex
+          align={"center"}
+          justify="center"
+          height={"100%"}
+          textAlign="center"
+        >
+          <p>
+            Une erreur est survenue lors du chargement. Veuillez réessayer plus
+            tard.
+          </p>
+        </Flex>
+      ) : (
+        isSuccess && <PostContainer post={data} />
+      )}
     </>
   );
 };

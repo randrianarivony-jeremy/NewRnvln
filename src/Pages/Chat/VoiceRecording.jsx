@@ -2,7 +2,7 @@ import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react
 import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { checkmark, close, micOutline, refresh } from "ionicons/icons";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useParams } from "react-router-dom";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
@@ -18,7 +18,7 @@ const SendVoice = () => {
   const recorderControls = useAudioRecorder();
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage] = useAddMessageMutation();
+  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
   const {
     startRecording,
     stopRecording,
@@ -70,6 +70,13 @@ const SendVoice = () => {
       })
     );
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      // setNewConversation(false);
+      socket.emit("message sent", data, userId);
+    }
+  }, [isSuccess, isLoading]);
 
   // const handleSubmit = async () => {
   //   await apiCall

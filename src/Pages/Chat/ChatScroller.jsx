@@ -1,30 +1,20 @@
 import { Box, Flex } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
-import { socket } from "../../Controler/App";
 import {
   selectMessagesIds,
   useFetchMessagesQuery,
 } from "../../Controler/Redux/Features/chatSlice";
 import { Loader } from "../../Controler/Routes";
-import { chatContext } from "./Chat";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {
   const { userId } = useParams();
   const { isLoading, isSuccess, isError } = useFetchMessagesQuery(userId);
-  const { messages, setMessages, submitting, draft, userB } =
-    useContext(chatContext);
   let scrollRef = useRef();
   const messageIds = useSelector((state) => selectMessagesIds(state, userId));
-
-  useEffect(() => {
-    socket.on("new message", (newMessage) => {
-      setMessages([...messages, newMessage.newMessage]);
-    });
-  }, [socket]);
 
   if (isLoading) return <Loader />;
   if (isError)

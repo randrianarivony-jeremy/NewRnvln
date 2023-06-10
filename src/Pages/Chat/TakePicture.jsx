@@ -1,34 +1,29 @@
 import { Box, Button, Flex, HStack, Image, Stack } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadString,
-} from "firebase/storage";
+import Compressor from "compressorjs";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   cameraOutline,
   cameraReverseOutline,
   close,
   radioButtonOn,
 } from "ionicons/icons";
-import React, { useContext, useRef, useState } from "react";
-import WebCam from "react-webcam";
-import { apiCall, currentUserContext, socket } from "../../Controler/App";
-import { storage } from "../../Controler/firebase.config";
-import { chatContext } from "./Chat";
-import Compressor from "compressorjs";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import WebCam from "react-webcam";
+import { currentUserContext, socket } from "../../Controler/App";
+import { storage } from "../../Controler/firebase.config";
 import {
   useAddMessageMutation,
   useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
+import { chatContext } from "./Chat";
 
 const TakePicture = () => {
   const [camera, setCamera] = useState(false);
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage] = useAddMessageMutation();
+  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
   const { newConversation, setNewConversation, draft } =
     useContext(chatContext);
   const { currentUser } = useContext(currentUserContext);
@@ -83,6 +78,13 @@ const TakePicture = () => {
         });
       });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      // setNewConversation(false);
+      socket.emit("message sent", data, userId);
+    }
+  }, [isSuccess, isLoading]);
 
   // const handleSubmit = async () => {
   //   await apiCall

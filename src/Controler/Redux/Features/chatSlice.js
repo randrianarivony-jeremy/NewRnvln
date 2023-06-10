@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { socket } from "../../App";
 import { apiSlice } from "./apiSlice";
 
 export const chatAdapter = createEntityAdapter({
@@ -43,8 +44,26 @@ export const chatSlice = apiSlice.injectEndpoints({
       },
       transformResponse: (responseData) =>
         chatAdapter.setAll(initialState, responseData),
-    }),
+      async onCacheEntryAdded(
+        userId,
+        { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
+      ) {
+        try {
+          await cacheDataLoaded;
+          socket.on("new message", ({ newMessage }) => {
+            updateCachedData((draft) => {
+              chatAdapter.addOne(draft, newMessage);
+            });
+          });
 
+          await cacheEntryRemoved;
+        } catch (error) {
+          // if cacheEntryRemoved resolved before cacheDataLoaded,
+          // cacheDataLoaded throws
+          console.log(error);
+        }
+      },
+    }),
     addMessage: builder.mutation({
       query: (body) => ({
         url: "message",
@@ -89,6 +108,7 @@ export const {
   useFetchSecondConversationQuery,
   useLazyFetchSecondConversationQuery,
   useFetchMessagesQuery,
+  useFetchMessagesQueryState,
   useAddMessageMutation,
 } = chatSlice;
 

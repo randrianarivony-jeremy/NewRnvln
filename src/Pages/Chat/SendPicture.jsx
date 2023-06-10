@@ -2,7 +2,7 @@ import { Button, Input } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageOutline } from "ionicons/icons";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
@@ -18,7 +18,7 @@ const SendPicture = () => {
   const urlRef = useRef();
   const { userId } = useParams();
   const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage] = useAddMessageMutation();
+  const [addMessage, { isLoading, isSuccess, data }] = useAddMessageMutation();
   const { newConversation, setNewConversation, draft } =
     useContext(chatContext);
   const { currentUser } = useContext(currentUserContext);
@@ -58,6 +58,13 @@ const SendPicture = () => {
       },
     });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      // setNewConversation(false);
+      socket.emit("message sent", data, userId);
+    }
+  }, [isSuccess, isLoading]);
 
   // const handleSubmit = async () => {
   //   await apiCall

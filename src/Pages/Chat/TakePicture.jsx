@@ -18,19 +18,19 @@ import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
 import Compressor from "compressorjs";
+import { useParams } from "react-router-dom";
+import {
+  useAddMessageMutation,
+  useFetchConversationQuery,
+} from "../../Controler/Redux/Features/chatSlice";
 
 const TakePicture = () => {
   const [camera, setCamera] = useState(false);
-  const {
-    messages,
-    conversationId,
-    setMessages,
-    userB,
-    newConversation,
-    setNewConversation,
-    setSubmitting,
-    draft,
-  } = useContext(chatContext);
+  const { userId } = useParams();
+  const { data: conversation } = useFetchConversationQuery(userId);
+  const [addMessage] = useAddMessageMutation();
+  const { newConversation, setNewConversation, draft } =
+    useContext(chatContext);
   const { currentUser } = useContext(currentUserContext);
   const [cameraReady, setCameraReady] = useState(false);
   const [imagePreview, setImagePreview] = useState(false);
@@ -53,7 +53,6 @@ const TakePicture = () => {
       contentType: "image",
       sender: currentUser._id,
     };
-    setSubmitting(true);
     fetch(imageRef.current)
       .then((response) => response.blob())
       .then((blob) => {
@@ -66,7 +65,15 @@ const TakePicture = () => {
             uploadBytes(storageRef, result).then((snapshot) =>
               getDownloadURL(snapshot.ref).then((url) => {
                 urlRef.current = url;
-                handleSubmit();
+                addMessage({
+                  _id: Date.now(),
+                  sender: currentUser._id,
+                  recipient: userId, //this conversationId from params would be the userId
+                  content: urlRef.current,
+                  conversationId: conversation._id,
+                  contentType: "image",
+                  createdAt: new Date().toJSON(),
+                });
               })
             );
           },
@@ -77,27 +84,27 @@ const TakePicture = () => {
       });
   };
 
-  const handleSubmit = async () => {
-    await apiCall
-      .post("message", {
-        sender: currentUser._id,
-        recipient: userB._id,
-        content: urlRef.current,
-        contentType: "image",
-        conversationId: newConversation ? null : conversationId.current,
-      })
-      .then(
-        (res) => {
-          setMessages([...messages, res.data.newMessage]);
-          conversationId.current = res.data.newMessage.conversationId;
-          socket.emit("message sent", res.data, userB._id);
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
-      .finally(() => setSubmitting(false));
-  };
+  // const handleSubmit = async () => {
+  //   await apiCall
+  //     .post("message", {
+  //       sender: currentUser._id,
+  //       recipient: userB._id,
+  //       content: urlRef.current,
+  //       contentType: "image",
+  //       conversationId: newConversation ? null : conversationId.current,
+  //     })
+  //     .then(
+  //       (res) => {
+  //         setMessages([...messages, res.data.newMessage]);
+  //         conversationId.current = res.data.newMessage.conversationId;
+  //         socket.emit("message sent", res.data, userB._id);
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     )
+  //     .finally(() => setSubmitting(false));
+  // };
 
   return (
     <Flex>

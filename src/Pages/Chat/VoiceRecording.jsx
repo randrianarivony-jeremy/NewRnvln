@@ -4,13 +4,21 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { checkmark, close, micOutline, refresh } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import { useParams } from "react-router-dom";
 import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
+import {
+  useAddMessageMutation,
+  useFetchConversationQuery,
+} from "../../Controler/Redux/Features/chatSlice";
 import { chatContext } from "./Chat";
 
 const SendVoice = () => {
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
+  const { userId } = useParams();
+  const { data: conversation } = useFetchConversationQuery(userId);
+  const [addMessage] = useAddMessageMutation();
   const {
     startRecording,
     stopRecording,
@@ -21,8 +29,9 @@ const SendVoice = () => {
   } = recorderControls;
   let newBlob = useRef(true);
   const urlRef = useRef();
-  const {messages,conversationId,setMessages,userB,newConversation,setNewConversation,setSubmitting,draft}=useContext(chatContext);
-  const {currentUser}=useContext(currentUserContext);
+  const { newConversation, setNewConversation, draft } =
+    useContext(chatContext);
+  const { currentUser } = useContext(currentUserContext);
 
   const handleRecordingOn = () => {
     startRecording();
@@ -31,45 +40,59 @@ const SendVoice = () => {
 
   const handleReset = () => {
     stopRecording();
-    newBlob.current=false;
+    newBlob.current = false;
   };
-  
-  const storeToStorage=(blob)=>{
-    draft.current = {content:URL.createObjectURL(blob),contentType:'audio',sender:currentUser._id}
-    setSubmitting(true);
+
+  const storeToStorage = (blob) => {
+    draft.current = {
+      content: URL.createObjectURL(blob),
+      contentType: "audio",
+      sender: currentUser._id,
+    };
+    // setSubmitting(true);
     if (newConversation) setNewConversation(false);
     setRecording(false);
     const fileName = new Date().getTime() + `${currentUser._id}`;
     const storageRef = ref(storage, "conversation/audio/" + fileName);
     uploadBytes(storageRef, blob).then((snapshot) =>
-        getDownloadURL(snapshot.ref).then((url) => {
-          urlRef.current = url;
-          handleSubmit();
-        })
-      );
-  }
-
-  const handleSubmit = async() => {
-    await apiCall
-      .post( "message",{
-        sender:currentUser._id,
-        recipient:userB._id, 
-        content:urlRef.current,
-        contentType:'audio',
-        conversationId: newConversation ? null : conversationId
+      getDownloadURL(snapshot.ref).then((url) => {
+        urlRef.current = url;
+        // handleSubmit();
+        addMessage({
+          _id: Date.now(),
+          sender: currentUser._id,
+          recipient: userId, //this conversationId from params would be the userId
+          content: urlRef.current,
+          conversationId: conversation._id,
+          contentType: "audio",
+          createdAt: new Date().toJSON(),
+        });
       })
-      .then(
-        (res) => {
-          setMessages([...messages,res.data.newMessage]);
-          conversationId.current = res.data.newMessage.conversationId;
-          socket.emit('message sent',res.data,userB._id)
-          },
-          (err) => {
-          console.log(err);
-        }
-      ).finally(()=>setSubmitting(false));
+    );
   };
-  
+
+  // const handleSubmit = async () => {
+  //   await apiCall
+  //     .post("message", {
+  //       sender: currentUser._id,
+  //       recipient: userB._id,
+  //       content: urlRef.current,
+  //       contentType: "audio",
+  //       conversationId: newConversation ? null : conversationId,
+  //     })
+  //     .then(
+  //       (res) => {
+  //         setMessages([...messages, res.data.newMessage]);
+  //         conversationId.current = res.data.newMessage.conversationId;
+  //         socket.emit("message sent", res.data, userB._id);
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     )
+  //     .finally(() => setSubmitting(false));
+  // };
+
   return (
     <>
       {recording ? (
@@ -82,11 +105,18 @@ const SendVoice = () => {
               recorderControls={recorderControls}
             />
           </Box>
-          <Button position='absolute' zIndex={4} top={0} left={0}
-      onClick={()=>{
-        handleReset();
-        setRecording(false)
-        }}><IonIcon icon={close}/></Button>
+          <Button
+            position="absolute"
+            zIndex={4}
+            top={0}
+            left={0}
+            onClick={() => {
+              handleReset();
+              setRecording(false);
+            }}
+          >
+            <IonIcon icon={close} />
+          </Button>
           <Flex
             position="absolute"
             zIndex={3}
@@ -110,16 +140,23 @@ const SendVoice = () => {
                   rounded="full"
                   variant="float"
                   onClick={handleReset}
-                ><IonIcon icon={refresh}/></Button>
+                >
+                  <IonIcon icon={refresh} />
+                </Button>
                 <Button
-                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
+                  fontSize="5xl"
+                  border="1px solid white"
+                  rounded="full"
+                  variant="float"
+                  color="red"
+                  boxSize={14}
                   className={
                     !isRecording
                       ? "bi-circle-fill"
                       : isPaused
                       ? "bi-play"
                       : "bi-pause"
-                  } 
+                  }
                   onClick={() =>
                     !isRecording ? handleRecordingOn() : togglePauseResume()
                   }
@@ -130,16 +167,16 @@ const SendVoice = () => {
                   rounded="full"
                   variant="float"
                   onClick={stopRecording}
-                ><IonIcon icon={checkmark}/></Button>
+                >
+                  <IonIcon icon={checkmark} />
+                </Button>
               </HStack>
             </Stack>
           </Flex>
         </Portal>
       ) : (
-        <Button
-          variant="float"
-          onClick={handleRecordingOn}
-        ><IonIcon icon={micOutline}/>
+        <Button variant="float" onClick={handleRecordingOn}>
+          <IonIcon icon={micOutline} />
         </Button>
       )}
     </>

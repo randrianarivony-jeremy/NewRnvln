@@ -7,24 +7,24 @@ import { apiCall, currentUserContext, socket } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import { chatContext } from "./Chat";
 import Compressor from "compressorjs";
+import {
+  useAddMessageMutation,
+  useFetchConversationQuery,
+} from "../../Controler/Redux/Features/chatSlice";
+import { useParams } from "react-router-dom";
 
 const SendPicture = () => {
   const fileInputRef = useRef();
   const urlRef = useRef();
-  const {
-    messages,
-    setMessages,
-    conversationId,
-    userB,
-    newConversation,
-    setNewConversation,
-    setSubmitting,
-    draft,
-  } = useContext(chatContext);
+  const { userId } = useParams();
+  const { data: conversation } = useFetchConversationQuery(userId);
+  const [addMessage] = useAddMessageMutation();
+  const { newConversation, setNewConversation, draft } =
+    useContext(chatContext);
   const { currentUser } = useContext(currentUserContext);
 
   const storePicture = ({ currentTarget }) => {
-    setSubmitting(true);
+    // setSubmitting(true);
     if (newConversation) setNewConversation(false);
     draft.current = {
       content: URL.createObjectURL(currentTarget.files[0]),
@@ -40,7 +40,16 @@ const SendPicture = () => {
         uploadBytes(storageRef, result).then((snapshot) =>
           getDownloadURL(snapshot.ref).then((url) => {
             urlRef.current = url;
-            handleSubmit();
+            // handleSubmit();
+            addMessage({
+              _id: 1,
+              sender: currentUser._id,
+              recipient: userId, //this conversationId from params would be the userId
+              content: urlRef.current,
+              conversationId: conversation._id,
+              contentType: "image",
+              createdAt: new Date().toJSON(),
+            });
           })
         );
       },
@@ -50,27 +59,27 @@ const SendPicture = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    await apiCall
-      .post("message", {
-        sender: currentUser._id,
-        recipient: userB._id,
-        content: urlRef.current,
-        contentType: "image",
-        conversationId: newConversation ? null : conversationId.current,
-      })
-      .then(
-        (res) => {
-          setMessages([...messages, res.data.newMessage]);
-          conversationId.current = res.data.newMessage.conversationId;
-          socket.emit("message sent", res.data, userB._id);
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
-      .finally(() => setSubmitting(false));
-  };
+  // const handleSubmit = async () => {
+  //   await apiCall
+  //     .post("message", {
+  //       sender: currentUser._id,
+  //       recipient: userB._id,
+  //       content: urlRef.current,
+  //       contentType: "image",
+  //       conversationId: newConversation ? null : conversationId.current,
+  //     })
+  //     .then(
+  //       (res) => {
+  //         setMessages([...messages, res.data.newMessage]);
+  //         conversationId.current = res.data.newMessage.conversationId;
+  //         socket.emit("message sent", res.data, userB._id);
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     )
+  //     .finally(() => setSubmitting(false));
+  // };
   return (
     <>
       <Button variant="float" onClick={() => fileInputRef.current.click()}>

@@ -74,15 +74,11 @@ const Profile = () => {
           borderBottom="1px solid"
           borderBottomColor="whiteAlpha.500"
         >
-          <Button size={"lg"} fontSize="2xl" onClick={() => navigate(-1)}>
+          <Button boxSize={12} onClick={() => navigate(-1)}>
             <IonIcon icon={arrowBack} />
           </Button>
           <Button size="lg">Profil</Button>
-          <Button
-            size={"lg"}
-            fontSize="2xl"
-            onClick={() => navigate("/parameters")}
-          >
+          <Button boxSize={12} onClick={() => navigate("/parameters")}>
             <IonIcon icon={settingsOutline} />
           </Button>
         </Flex>

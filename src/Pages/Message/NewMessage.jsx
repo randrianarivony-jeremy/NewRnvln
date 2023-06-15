@@ -23,10 +23,12 @@ const NewMessage = () => {
   return (
     <Stack>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-        <Button variant="float" onClick={() => navigate(-1)}>
+        <Button boxSize={12} onClick={() => navigate(-1)}>
           <IonIcon icon={arrowBack} />
         </Button>
-        <Button>Nouveau message</Button>
+        <Button size={"lg"} paddingX={0}>
+          Nouveau message
+        </Button>
       </Flex>
       <InputGroup>
         <Input

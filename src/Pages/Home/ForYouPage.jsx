@@ -1,4 +1,9 @@
-import React, { createContext, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,19 +16,22 @@ import {
 import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
 
-export const newsfeedContext = createContext();
-
 const ForYouPage = () => {
   const swiperRef = useRef();
   const postsList = useSelector(selectAllPosts);
   const { isLoading, isSuccess, isError, error } = useFetchContentsQuery();
   const [fetchMoreContents] = useFetchMoreContentsMutation();
 
+  useLayoutEffect(() => {
+    if (isSuccess)
+      swiperRef.current.swiper.slideTo(
+        localStorage.getItem("home_slide_position")
+      );
+  }, []);
+
   useEffect(() => {
-    if (isSuccess) {
-      if (postsList.length === 1)
-        fetchMoreContents(new Date(postsList[0].createdAt).getTime());
-    }
+    if (isSuccess && postsList.length === 1)
+      fetchMoreContents(new Date(postsList[0].createdAt).getTime());
   }, [isSuccess, postsList]);
 
   if (isError) return <p>Some error occurs {error}</p>;
@@ -41,6 +49,10 @@ const ForYouPage = () => {
             new Date(postsList[postsList.length - 1].createdAt).getTime()
           )
         }
+        onSlideChange={({ activeIndex }) => {
+          localStorage.setItem("home_slide_position", activeIndex);
+          console.log(activeIndex);
+        }}
       >
         {postsList.map((post, index) => (
           <SwiperSlide key={index}>

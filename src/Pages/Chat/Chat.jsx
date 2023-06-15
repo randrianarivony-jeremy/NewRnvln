@@ -18,7 +18,11 @@ const Chat = () => {
   if (isLoading) display = <Skeleton height={5} width="50vw" />;
   if (isSuccess) {
     display = (
-      <Button size={"lg"}>
+      <Button
+        size={"lg"}
+        paddingX={0}
+        onClick={() => navigate("/profile/" + userId)}
+      >
         {user.name} &nbsp;{" "}
         <Flex fontStyle="italic" fontWeight="normal">
           {user.job}
@@ -35,7 +39,7 @@ const Chat = () => {
       position="relative"
     >
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-        <Button size={"lg"} onClick={() => navigate(-1)}>
+        <Button boxSize={12} onClick={() => navigate(-1)}>
           <IonIcon icon={arrowBack} />
         </Button>
         {display}

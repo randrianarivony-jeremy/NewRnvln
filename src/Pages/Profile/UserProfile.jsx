@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../Component/Miscellanous";
@@ -49,12 +51,12 @@ const UserProfile = () => {
     return (
       <Stack height="100%" spacing={0}>
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-          <Button
-            variant="float"
-            className="bi-arrow-left"
-            onClick={() => navigate(-1)}
-          ></Button>
-          <Button>Profil utilisateur</Button>
+          <Button boxSize={12} onClick={() => navigate(-1)}>
+            <IonIcon icon={arrowBack} />
+          </Button>
+          <Button size={"lg"} paddingX={0}>
+            Profil utilisateur
+          </Button>
         </Flex>
 
         <userContext.Provider value={{ user, setUser }}>

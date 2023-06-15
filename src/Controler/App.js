@@ -42,7 +42,7 @@ function App() {
         );
     };
     fetchToken();
-    localStorage.setItem("for_you_page_current_slide", 0);
+    localStorage.setItem("home_slide_position", 0);
   }, []);
 
   return (

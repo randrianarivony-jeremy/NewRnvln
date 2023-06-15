@@ -1,6 +1,5 @@
-import { Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
-import { Loader } from "../../Component/Miscellanous";
+import { EmptyState, ErrorRender, Loader } from "../../Component/Miscellanous";
 import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
 import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import { Scroll } from "../../Styles/Theme";
@@ -16,20 +15,9 @@ const MainConversation = () => {
   }, []);
 
   if (isLoading) return <Loader />;
-  if (isError)
-    return (
-      <p>
-        Une erreur est survenue lors du chargement. Veuillez réessayer plus
-        tard.
-      </p>
-    );
+  if (isError) return <ErrorRender />;
   if (isSuccess) {
-    if (data.length === 0)
-      return (
-        <Flex align="center" justify={"center"} boxSize="100%">
-          <Text textAlign="center">Empty state</Text>
-        </Flex>
-      );
+    if (data.length === 0) return <EmptyState />;
     return (
       <Scroll height="100%">
         {data.map((convers, key) => (

@@ -13,6 +13,7 @@ import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 import React, { useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import SearchBtn from "../../Component/SearchBtn";
 import InterviewSearchResult from "./InterviewSearchResult";
 import PublicationSearchResult from "./PublicationSearchResult";
 import QuestionSearchResult from "./QuestionSearchResult";
@@ -29,12 +30,15 @@ const Search = () => {
   return (
     <Stack>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
-        <Button variant="float" onClick={() => navigate(-1)}>
+        <Button boxSize={12} onClick={() => navigate(-1)}>
           <IonIcon icon={arrowBack} />
         </Button>
-        <Button>Recherche</Button>
+        <Button size={"lg"} paddingX={0}>
+          Recherche
+        </Button>
+        <SearchBtn />
       </Flex>
-      <Text>
+      <Text paddingX={3}>
         Résultats pour <b>"{keyword}"</b>
       </Text>
       <Tabs isLazy={true} width="100%">

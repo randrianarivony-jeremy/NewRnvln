@@ -10,7 +10,7 @@ const ShortPost = () => {
   const { data, index } = useContext(dataContext);
   const { post } = useContext(postContext);
   const shortContainer = useRef();
-  const articleSwiperRef = useRef();
+  const publicationSwiperRef = useRef();
 
   useEffect(() => {
     textFit(shortContainer.current, {
@@ -22,7 +22,7 @@ const ShortPost = () => {
 
   return (
     <Swiper
-      ref={articleSwiperRef}
+      ref={publicationSwiperRef}
       direction={"vertical"}
       touchReleaseOnEdges={true}
       slidesPerView={"auto"}
@@ -30,7 +30,7 @@ const ShortPost = () => {
       mousewheel={true}
       grabCursor={true}
       modules={[FreeMode, Mousewheel]}
-      className="article-swiper"
+      className="publication-swiper"
     >
       <SwiperSlide>
         <Stack height="100%" paddingBottom={14}>

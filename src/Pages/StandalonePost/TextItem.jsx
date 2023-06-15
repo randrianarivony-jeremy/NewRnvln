@@ -9,7 +9,7 @@ const TextItem = () => {
   const { data } = useContext(dataContext);
   const textContainer = useRef();
   const [height, setHeight] = useState("100%");
-  const articleSwiperRef = useRef();
+  const publicationSwiperRef = useRef();
   const [expand, setExpand] = useState(false);
   const [textOverflow, setTextOverflow] = useState(false);
 
@@ -24,13 +24,13 @@ const TextItem = () => {
     ) {
       setTextOverflow(true);
     } else setTextOverflow(false);
-    articleSwiperRef.current.swiper.update();
+    publicationSwiperRef.current.swiper.update();
   }, [expand, height]);
 
   return (
     <Box height={height}>
       <Swiper
-        ref={articleSwiperRef}
+        ref={publicationSwiperRef}
         direction={"vertical"}
         touchReleaseOnEdges={true}
         slidesPerView={"auto"}
@@ -38,7 +38,7 @@ const TextItem = () => {
         mousewheel={true}
         grabCursor={true}
         modules={[FreeMode, Mousewheel]}
-        className="article-swiper"
+        className="publication-swiper"
       >
         <SwiperSlide className="text-slide">
           <Stack height={expand ? "100%" : height} marginX={3} spacing={0}>

@@ -23,12 +23,6 @@ const ForYouPage = () => {
     if (isSuccess) {
       if (postsList.length === 1)
         fetchMoreContents(new Date(postsList[0].createdAt).getTime());
-      else
-        swiperRef.current.swiper.once("reachEnd", () =>
-          fetchMoreContents(
-            new Date(postsList[postsList.length - 1].createdAt).getTime()
-          )
-        );
     }
   }, [isSuccess, postsList]);
 
@@ -42,6 +36,11 @@ const ForYouPage = () => {
         modules={[Keyboard, Mousewheel]}
         keyboard={true}
         mousewheel={{ enabled: true, forceToAxis: true }}
+        onReachEnd={() =>
+          fetchMoreContents(
+            new Date(postsList[postsList.length - 1].createdAt).getTime()
+          )
+        }
       >
         {postsList.map((post, index) => (
           <SwiperSlide key={index}>

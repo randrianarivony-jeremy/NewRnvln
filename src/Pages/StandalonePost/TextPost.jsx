@@ -69,7 +69,7 @@ const TextPost = () => {
 
       {data.contentType === "short" ? (
         <ShortPost />
-      ) : post.type === "article" ? (
+      ) : post.type === "publication" ? (
         <TextItem />
       ) : (
         <Stack>

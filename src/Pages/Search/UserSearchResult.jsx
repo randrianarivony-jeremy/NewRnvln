@@ -13,7 +13,7 @@ const UserSearchResult = () => {
     type: "user",
     query: keyword,
   });
-  if (isLoading) return <UserLoader />;
+  if (isLoading) return <UserLoader length={3} />;
   if (isError) return <ErrorRender />;
   if (isSuccess) {
     if (data.length > 0)

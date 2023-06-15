@@ -20,6 +20,7 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
+import { EmptyState } from "../../Component/Miscellanous";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
 import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notificationSlice";
@@ -60,9 +61,7 @@ const Notification = () => {
           </p>
         </Flex>
       ) : data.length === 0 ? (
-        <Flex height="100%" align="center" justify="center">
-          <Text>EMPTYSTATE</Text>
-        </Flex>
+        <EmptyState />
       ) : (
         <Scroll height="100%">
           {data.map((elt, key) => (

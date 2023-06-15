@@ -1,4 +1,6 @@
 import { Button, Flex } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../../Component/Miscellanous";
@@ -15,13 +17,13 @@ const SinglePost = () => {
 
   return (
     <>
-      <Flex position="absolute" top={0} left={0} zIndex={2}>
-        <Button
-          variant="float"
-          className="bi-arrow-left"
-          onClick={() => navigate(-1)}
-        ></Button>
-        <Button>Publication</Button>
+      <Flex position={"absolute"} zIndex={2} width="100%">
+        <Button boxSize={12} onClick={() => navigate(-1)}>
+          <IonIcon icon={arrowBack} />
+        </Button>
+        <Button size={"lg"} paddingX={0}>
+          Publication
+        </Button>
       </Flex>
       {isLoading ? (
         <Loader />

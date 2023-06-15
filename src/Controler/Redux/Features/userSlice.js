@@ -26,7 +26,7 @@ export const userSlice = apiSlice.injectEndpoints({
     searchUser: builder.query({
       query: (user) => {
         return {
-          url: "search?user=" + user,
+          url: "user/search?query=" + user,
           credentials: "include",
         };
       },

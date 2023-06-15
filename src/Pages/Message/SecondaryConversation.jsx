@@ -1,7 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
+import { Loader } from "../../Component/Miscellanous";
 import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
-import { Loader } from "../../Controler/Routes";
 import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import { Scroll } from "../../Styles/Theme";
 import ConversationCard from "./ConversationCard";

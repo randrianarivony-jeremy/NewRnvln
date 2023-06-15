@@ -4,7 +4,7 @@ import {
   createStandaloneToast,
 } from "@chakra-ui/react";
 import { configureStore } from "@reduxjs/toolkit";
-import React from "react";
+import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./Controler/App";
@@ -22,13 +22,13 @@ const store = configureStore({
 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  // <StrictMode>
-  <Provider store={store}>
-    <ChakraProvider theme={theme}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      <App />
-      <ToastContainer />
-    </ChakraProvider>
-  </Provider>
-  // </StrictMode>
+  <StrictMode>
+    <Provider store={store}>
+      <ChakraProvider theme={theme}>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <App />
+        <ToastContainer />
+      </ChakraProvider>
+    </Provider>
+  </StrictMode>
 );

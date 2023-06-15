@@ -3,11 +3,11 @@ import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
+import { Loader } from "../../Component/Miscellanous";
 import {
   selectMessagesIds,
   useFetchMessagesQuery,
 } from "../../Controler/Redux/Features/chatSlice";
-import { Loader } from "../../Controler/Routes";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {

@@ -1,8 +1,8 @@
 import { Button, Flex } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Loader } from "../../Component/Miscellanous";
 import { useFetchSinglePostQuery } from "../../Controler/Redux/Features/postSlice";
-import { Loader } from "../../Controler/Routes";
 import PostContainer from "./PostContainer";
 
 const SinglePost = () => {

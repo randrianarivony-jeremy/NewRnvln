@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader } from "../../../Controler/Routes";
+import { Loader } from "../../../Component/Miscellanous";
 import { apiCall } from "../../../Controler/App";
 import InterviewSwiper from "./InterviewSwiper";
 import SubmitHandler from "./SubmitHandler";

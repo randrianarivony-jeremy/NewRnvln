@@ -6,7 +6,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  Flex,
   Stack,
   Text,
   useColorMode,
@@ -15,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import {
-  cogOutline,
   help,
   homeOutline,
   logOutOutline,
   menuOutline,
   moonOutline,
   peopleOutline,
+  settingsOutline,
   sunnyOutline,
 } from "ionicons/icons";
 import React, { useContext } from "react";
@@ -114,7 +113,7 @@ const Menu = () => {
                 onClick={() => navigate("/parameters")}
                 leftIcon={
                   <IonIcon
-                    icon={cogOutline}
+                    icon={settingsOutline}
                     style={{ fontSize: iconMd, width: "40px" }}
                   />
                 }

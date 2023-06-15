@@ -1,8 +1,8 @@
 import { Flex, Text } from "@chakra-ui/react";
 import React, { useContext } from "react";
+import { Loader } from "../../../Component/Miscellanous";
 import { currentUserContext } from "../../../Controler/App";
 import { useFetchUserInterviewsQuery } from "../../../Controler/Redux/Features/postSlice";
-import { Loader } from "../../../Controler/Routes";
 import Thumbs from "../Thumbs";
 
 const UserInterviews = ({ user }) => {

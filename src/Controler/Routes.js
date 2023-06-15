@@ -2,6 +2,7 @@ import { Box, Flex, Spinner } from "@chakra-ui/react";
 import React, { lazy, Suspense, useContext } from "react";
 import {BrowserRouter,Route,Routes as ROUTES,
 } from "react-router-dom";
+import { Loader } from "../Component/Miscellanous";
 import ForYouPage from "../Pages/Home/ForYouPage";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
@@ -30,14 +31,6 @@ const Question = lazy(() => import("../Pages/Question/Question"));
 const Parameter = lazy(() => import("../Pages/Parameter/Parameter"));
 const Search = lazy(() => import("../Pages/Search/Search"));
 const SearchResult = lazy(() => import("../Pages/Search/SearchResult"));
-
-export const Loader = () => {
-  return (
-    <Flex justify="center" alignItems="center" height="100%">
-      <Spinner />
-    </Flex>
-  );
-};
 
 const Routes = () => {
   const { currentUser } = useContext(currentUserContext);

@@ -15,17 +15,15 @@ import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader } from "../../Controler/Routes";
+import { Loader } from "../../Component/Miscellanous";
+import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import { Scroll } from "../../Styles/Theme";
-import UserInterviews from "./Contents/UserInterviews";
 import UserArticles from "./Contents/UserArticles";
+import UserInterviews from "./Contents/UserInterviews";
 import FriendHandler from "./Relation/FriendHandler";
-import RelationList from "./Relation/RelationList";
+import RelationBoard from "./Relation/RelationBoard";
 import Subscribe from "./Relation/Subscribe";
 import UserProfilepic from "./UserProfilepic";
-import { apiCall } from "../../Controler/App";
-import RelationBoard from "./Relation/RelationBoard";
-import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 
 export const userContext = createContext();
 

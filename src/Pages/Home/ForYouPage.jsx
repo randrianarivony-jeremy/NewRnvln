@@ -2,12 +2,12 @@ import React, { createContext, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Loader } from "../../Component/Miscellanous";
 import {
   selectAllPosts,
   useFetchContentsQuery,
   useFetchMoreContentsMutation,
 } from "../../Controler/Redux/Features/postSlice";
-import { Loader } from "../../Controler/Routes";
 import QuestionCard from "../Question/QuestionCard";
 import PostContainer from "../StandalonePost/PostContainer";
 

@@ -7,15 +7,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { currentUserContext } from "../../Controler/App";
-import textFit from "textfit";
-import { ClickableFlex, iconMd } from "../../Styles/Theme";
 import { IonIcon } from "@ionic/react";
 import { chatbubblesOutline } from "ionicons/icons";
-import { Swiper, SwiperSlide } from "swiper/react";
+import React, { useContext, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Mousewheel, Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import textFit from "textfit";
+import { currentUserContext } from "../../Controler/App";
+import { iconMd } from "../../Styles/Theme";
 
 const QuestionCard = ({ questions }) => {
   const { currentUser } = useContext(currentUserContext);
@@ -55,6 +55,7 @@ const QuestionCard = ({ questions }) => {
               width="80%"
               fontSize="2xl"
               marginX={3}
+              textAlign="center"
             >
               {question}
             </Flex>

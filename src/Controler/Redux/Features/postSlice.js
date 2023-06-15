@@ -17,14 +17,27 @@ export const postSlice = apiSlice.injectEndpoints({
       }),
       providesTags: (result) => [{ type: "Post", id: result._id }],
     }),
+    fetchQuestion: builder.query({
+      query: (questionId) => ({
+        url: "question/" + questionId,
+        credentials: "include",
+      }),
+      providesTags: (result) => [{ type: "Question", id: result._id }],
+    }),
 
     fetchContents: builder.query({
       query: () => ({
         url: `feeds`,
         credentials: "include",
       }),
-      transformResponse: (responseData) =>
-        postsAdapter.setAll(initialState, responseData),
+      transformResponse: (responseData) => {
+        responseData = responseData.map((elt) => {
+          if (elt.type === "publication" || elt.type === "interview")
+            return elt;
+          else return { ...elt, type: "question" };
+        });
+        return postsAdapter.setAll(initialState, responseData);
+      },
       providesTags: (result) => [
         { type: "Post", id: "LIST" },
         ...result.ids.map((id) => ({ type: "Post", id })),
@@ -37,6 +50,14 @@ export const postSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         credentials: "include",
       }),
+      transformResponse: (responseData) => {
+        responseData = responseData.map((elt) => {
+          if (elt.type === "publication" || elt.type === "interview")
+            return elt;
+          else return { ...elt, type: "question" };
+        });
+        return responseData;
+      },
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -262,6 +283,7 @@ export const postSlice = apiSlice.injectEndpoints({
 export const {
   useFetchSinglePostQuery,
   useFetchContentsQuery,
+  useFetchQuestionQuery,
   useFetchUserInterviewsQuery,
   useFetchUserArticlesQuery,
   useCreatePostMutation,
@@ -269,7 +291,7 @@ export const {
   useLikePostMutation,
   useLazyFetchCommentsQuery,
   useCommentPostMutation,
-  useDeleteCommentMutation
+  useDeleteCommentMutation,
 } = postSlice;
 
 const selectPostsData = createSelector(

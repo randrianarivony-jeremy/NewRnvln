@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";

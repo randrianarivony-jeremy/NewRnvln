@@ -26,8 +26,8 @@ const PublishMedia = lazy(() =>
 const PublishText = lazy(() =>
   import("../Pages/Publication/Article/PublishText")
 );
-const AskQuestion = lazy(() => import("../Pages/Question/AskQuestion"));
 const Question = lazy(() => import("../Pages/Question/Question"));
+const QuestionItem = lazy(() => import("../Pages/Question/QuestionItem"));
 const Parameter = lazy(() => import("../Pages/Parameter/Parameter"));
 const Search = lazy(() => import("../Pages/Search/Search"));
 const SearchResult = lazy(() => import("../Pages/Search/SearchResult"));
@@ -100,12 +100,12 @@ const Routes = () => {
             element={<Suspense fallback={<Loader />}>{currentUser ? <PublishText /> : <Login />}</Suspense>}
           />
           <Route
-            path="/question"
-            element={<Suspense fallback={<Loader />}>{currentUser ? <Question /> : <Login />}</Suspense>}
+            path="/question/:questionId"
+            element={<Suspense fallback={<Loader />}>{currentUser ? <QuestionItem /> : <Login />}</Suspense>}
           />
           <Route
-            path="/single_question"
-            element={<Suspense fallback={<Loader />}>{currentUser ? <AskQuestion /> : <Login />}</Suspense>}
+            path="/question"
+            element={<Suspense fallback={<Loader />}>{currentUser ? <Question /> : <Login />}</Suspense>}
           />
           <Route
             path="/parameters"

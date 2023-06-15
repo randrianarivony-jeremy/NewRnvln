@@ -14,7 +14,7 @@ const SearchBtn = () => {
   const navigate = useNavigate();
   const searchSubmit = useRef(false);
   const inputRef = useRef();
-  const bg = useColorModeValue("white", "dark.0");
+  const bg = useColorModeValue("white", "dark.50");
   return (
     <InputGroup
       position="absolute"

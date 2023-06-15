@@ -5,6 +5,7 @@ import UserLoader from "../../Component/Loaders/UserLoader";
 import { EmptyState, ErrorRender } from "../../Component/Miscellanous";
 import { useSearchQuery } from "../../Controler/Redux/Features/searchSlice";
 import Thumbs from "../Profile/Thumbs";
+import QuestionThumbs from "../Question/QuestionThumbs";
 
 const QuestionSearchResult = () => {
   const [searchParams] = useSearchParams();
@@ -18,8 +19,8 @@ const QuestionSearchResult = () => {
   if (isSuccess && data.length > 0)
     return (
       <Flex wrap="wrap" justify="center">
-        {data.map((interview) => (
-          <Thumbs data={interview} key={interview._id} />
+        {data.map((question) => (
+          <QuestionThumbs question={question} key={question._id} />
         ))}
       </Flex>
     );

@@ -13,7 +13,7 @@ import { ClickableFlex } from "../Styles/Theme";
 const UserItem = ({ user }) => {
   const [imageLoading, setImageLoading] = useState(true);
   return (
-    <ClickableFlex>
+    <ClickableFlex width="100%">
       {user.picture ? (
         <Flex boxSize={12} position="relative">
           <Image

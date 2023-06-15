@@ -9,7 +9,7 @@ export const searchSlice = apiSlice.injectEndpoints({
           credentials: "include",
         };
       },
-      keepUnusedDataFor: 60,
+      keepUnusedDataFor: 600,
     }),
   }),
 });

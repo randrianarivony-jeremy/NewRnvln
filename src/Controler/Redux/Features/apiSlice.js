@@ -6,6 +6,6 @@ export const apiSlice = createApi({
     baseUrl: process.env.REACT_APP_API_URL + "/api/",
   }),
   keepUnusedDataFor: 900, //15min
-  tagTypes: ["Post", "User", "Conversation", "Notification"],
+  tagTypes: ["Post", "User", "Conversation", "Notification", "Question"],
   endpoints: (builder) => ({}),
 });

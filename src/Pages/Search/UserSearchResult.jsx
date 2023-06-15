@@ -24,6 +24,7 @@ const UserSearchResult = () => {
         <Stack>
           {data.map((user) => (
             <Flex
+              width="100%"
               key={user._id}
               onClick={() =>
                 user._id === currentUser._id

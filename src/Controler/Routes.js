@@ -28,6 +28,9 @@ const PublishText = lazy(() =>
 );
 const Question = lazy(() => import("../Pages/Question/Question"));
 const QuestionItem = lazy(() => import("../Pages/Question/QuestionItem"));
+const QuestionInterviews = lazy(() =>
+  import("../Pages/Question/QuestionInterviews")
+);
 const Parameter = lazy(() => import("../Pages/Parameter/Parameter"));
 const Search = lazy(() => import("../Pages/Search/Search"));
 const SearchResult = lazy(() => import("../Pages/Search/SearchResult"));
@@ -98,6 +101,10 @@ const Routes = () => {
           <Route
             path="/publication/text"
             element={<Suspense fallback={<Loader />}>{currentUser ? <PublishText /> : <Login />}</Suspense>}
+          />
+          <Route
+            path="/question/interviews/:questionId"
+            element={<Suspense fallback={<Loader />}>{currentUser ? <QuestionInterviews /> : <Login />}</Suspense>}
           />
           <Route
             path="/question/:questionId"

@@ -4,7 +4,7 @@ import { arrowBack } from "ionicons/icons";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ErrorRender, Loader } from "../../Component/Miscellanous";
-import { useFetchQuestionQuery } from "../../Controler/Redux/Features/postSlice";
+import { useFetchQuestionQuery } from "../../Controler/Redux/Features/questionSlice";
 import QuestionCard from "./QuestionCard";
 
 const QuestionItem = () => {

@@ -107,6 +107,7 @@ const QuestionCard = ({ questions }) => {
         zIndex={2}
         size="lg"
         flexDir="column"
+        onClick={() => navigate("/question/interviews/" + questions._id)}
       >
         <IonIcon icon={chatbubblesOutline} style={{ fontSize: iconMd }} />
         <Text fontSize="xs">{questions.interviews.length}</Text>

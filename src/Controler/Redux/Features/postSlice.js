@@ -17,13 +17,6 @@ export const postSlice = apiSlice.injectEndpoints({
       }),
       providesTags: (result) => [{ type: "Post", id: result._id }],
     }),
-    fetchQuestion: builder.query({
-      query: (questionId) => ({
-        url: "question/" + questionId,
-        credentials: "include",
-      }),
-      providesTags: (result) => [{ type: "Question", id: result._id }],
-    }),
 
     fetchContents: builder.query({
       query: () => ({
@@ -283,7 +276,6 @@ export const postSlice = apiSlice.injectEndpoints({
 export const {
   useFetchSinglePostQuery,
   useFetchContentsQuery,
-  useFetchQuestionQuery,
   useFetchUserInterviewsQuery,
   useFetchUserArticlesQuery,
   useCreatePostMutation,

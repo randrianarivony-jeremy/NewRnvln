@@ -15,7 +15,11 @@ export const postSlice = apiSlice.injectEndpoints({
         url: `${type}/` + postId,
         credentials: "include",
       }),
-      providesTags: (result) => [{ type: "Post", id: result._id }],
+      transformErrorResponse: (responseData, err) => err.response.statusText,
+      providesTags: (result, err) => {
+        if (err) return [{ type: "Post", id: "Error" }];
+        if (result) return [{ type: "Post", id: result._id }];
+      },
     }),
 
     fetchContents: builder.query({
@@ -107,20 +111,14 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     likePost: builder.mutation({
-      query: ({ type, postId, body, postCreator }) => ({
+      query: ({ type, postId, body, postCreator, question }) => ({
         url: `${type}/like/` + postId,
         method: "PATCH",
         credentials: "include",
         body,
       }),
-      invalidatesTags: (response, error, { postId }) => [
-        {
-          type: "Post",
-          id: postId,
-        },
-      ],
       async onQueryStarted(
-        { postId, body, postCreator },
+        { postId, body, postCreator, type, question },
         { dispatch, queryFulfilled }
       ) {
         const patchResult = dispatch(
@@ -139,26 +137,62 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
+        const singlePostPatch = dispatch(
+          postSlice.util.updateQueryData(
+            "fetchSinglePost",
+            { type, postId },
+            (draft) => {
+              body.like
+                ? (draft.likers = [...draft.likers, body.id_user])
+                : (draft.likers = draft.likers.filter(
+                    (liker) => liker !== body.id_user
+                  ));
+            }
+          )
+        );
+        let interviewsPatch;
+        if (type === "interview") {
+          interviewsPatch = dispatch(
+            postSlice.util.updateQueryData(
+              "fetchQuestionInterviews",
+              question,
+              (draft) => {
+                const post = draft.entities[postId];
+                if (post)
+                  body.like
+                    ? (post.likers = [...post.likers, body.id_user])
+                    : (post.likers = post.likers.filter(
+                        (liker) => liker !== body.id_user
+                      ));
+              }
+            )
+          );
+        }
         try {
           await queryFulfilled;
           if (body.like && postCreator !== body.id_user)
             socket.emit("notification", postCreator);
         } catch {
           patchResult.undo();
+          singlePostPatch.undo();
+          if (type === "interview") interviewsPatch.undo();
         }
       },
     }),
 
     fetchComments: builder.query({
-      query: ({ postId, type }) => ({
+      query: ({ postId, type, question }) => ({
         url: `${type}/comments/` + postId,
         method: "GET",
         credentials: "include",
       }),
-      async onQueryStarted({ postId, type }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        { postId, type, question },
+        { dispatch, queryFulfilled }
+      ) {
         try {
           const { data } = await queryFulfilled;
-          if (data.length > 0)
+          if (data.length > 0) {
             dispatch(
               postSlice.util.updateQueryData(
                 "fetchContents",
@@ -168,15 +202,26 @@ export const postSlice = apiSlice.injectEndpoints({
                 }
               )
             );
-          dispatch(
-            postSlice.util.updateQueryData(
-              "fetchSinglePost",
-              { type, postId },
-              (draft) => {
-                draft.comments = data;
-              }
-            )
-          );
+            dispatch(
+              postSlice.util.updateQueryData(
+                "fetchSinglePost",
+                { type, postId },
+                (draft) => {
+                  draft.comments = data;
+                }
+              )
+            );
+            if (type === "interview")
+              dispatch(
+                postSlice.util.updateQueryData(
+                  "fetchQuestionInterviews",
+                  question,
+                  (draft) => {
+                    draft.entities[postId].comments = data;
+                  }
+                )
+              );
+          }
         } catch (error) {
           console.log(error);
         }
@@ -184,14 +229,14 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     commentPost: builder.mutation({
-      query: ({ postId, type, text, commenterId, postCreator }) => ({
+      query: ({ postId, type, text, commenterId, postCreator, question }) => ({
         url: `${type}/comment/` + postId,
         method: "PATCH",
         credentials: "include",
         body: { text, commenterId: commenterId._id },
       }),
       async onQueryStarted(
-        { postId, text, commenterId, postCreator, type },
+        { postId, text, commenterId, postCreator, type, question },
         { dispatch, queryFulfilled }
       ) {
         const newsfeedPatch = dispatch(
@@ -215,19 +260,68 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
+        let interviewsPatch;
+        if (type === "interview") {
+          interviewsPatch = dispatch(
+            postSlice.util.updateQueryData(
+              "fetchQuestionInterviews",
+              question,
+              (draft) => {
+                const post = draft.entities[postId];
+                if (post)
+                  post.comments = [...post.comments, { commenterId, text }];
+                else return post;
+              }
+            )
+          );
+        }
         try {
-          await queryFulfilled;
+          const { data } = await queryFulfilled;
           if (postCreator !== commenterId._id)
             socket.emit("notification", postCreator);
+
+          dispatch(
+            postSlice.util.updateQueryData(
+              "fetchContents",
+              undefined,
+              (draft) => {
+                const post = draft.entities[postId];
+                if (post) post.comments = data;
+              }
+            )
+          );
+          dispatch(
+            postSlice.util.updateQueryData(
+              "fetchSinglePost",
+              { type, postId },
+              (draft) => {
+                draft.comments = data;
+              }
+            )
+          );
+
+          if (type === "interview") {
+            dispatch(
+              postSlice.util.updateQueryData(
+                "fetchQuestionInterviews",
+                question,
+                (draft) => {
+                  const post = draft.entities[postId];
+                  if (post) post.comments = data;
+                }
+              )
+            );
+          }
         } catch {
           newsfeedPatch.undo();
           singlePostPatch.undo();
+          if (type === "interview") interviewsPatch.undo();
         }
       },
     }),
 
     deleteComment: builder.mutation({
-      query: ({ type, postId, commentId }) => {
+      query: ({ type, postId, commentId, question }) => {
         return {
           url: `${type}/` + postId + "/" + commentId,
           method: "DELETE",
@@ -235,7 +329,7 @@ export const postSlice = apiSlice.injectEndpoints({
         };
       },
       async onQueryStarted(
-        { commentId, postId, type },
+        { commentId, postId, type, question },
         { dispatch, queryFulfilled }
       ) {
         const newsfeedUpdate = dispatch(
@@ -248,7 +342,6 @@ export const postSlice = apiSlice.injectEndpoints({
                 post.comments = post.comments.filter(
                   (comment) => comment._id !== commentId
                 );
-              else return post;
             }
           )
         );
@@ -263,11 +356,28 @@ export const postSlice = apiSlice.injectEndpoints({
             }
           )
         );
+        let interviewsUpdate;
+        if (type === "interview") {
+          interviewsUpdate = dispatch(
+            postSlice.util.updateQueryData(
+              "fetchQuestionInterviews",
+              question,
+              (draft) => {
+                const post = draft.entities[postId];
+                if (post)
+                  post.comments = post.comments.filter(
+                    (comment) => comment._id !== commentId
+                  );
+              }
+            )
+          );
+        }
         try {
           await queryFulfilled;
         } catch (error) {
           newsfeedUpdate.undo();
           singlePostUpdate.undo();
+          if (type === "interview") interviewsUpdate.undo();
         }
       },
     }),

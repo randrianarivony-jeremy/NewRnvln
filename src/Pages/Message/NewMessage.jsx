@@ -13,12 +13,12 @@ import { arrowBack } from "ionicons/icons";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import UserItem from "../../Component/UserItem";
-import { useLazySearchUserQuery } from "../../Controler/Redux/Features/userSlice";
+import { useLazySearchQuery } from "../../Controler/Redux/Features/searchSlice";
 
 const NewMessage = () => {
   const navigate = useNavigate();
   const inputRef = useRef();
-  const [searchUser, { data, isFetching }] = useLazySearchUserQuery();
+  const [searchUser, { data, isFetching }] = useLazySearchQuery();
 
   return (
     <Stack>
@@ -36,7 +36,10 @@ const NewMessage = () => {
           ref={inputRef}
           placeholder="Entrer un nom"
           onChange={(e) =>
-            searchUser(e.target.value, { preferCacheValue: true })
+            searchUser(
+              { type: "user", query: e.target.value },
+              { preferCacheValue: true }
+            )
           }
         />
         {isFetching && (

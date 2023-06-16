@@ -36,10 +36,11 @@ const CommentPost = () => {
   const [commentPost] = useCommentPostMutation();
 
   const openComments = () => {
-    fetchComments(
-      { postId: post._id, type: post.type },
-      { preferCacheValue: true }
-    );
+    if (post.comments.length > 0)
+      fetchComments(
+        { postId: post._id, type: post.type, question: post.question?._id },
+        { preferCacheValue: true }
+      );
     onOpen();
   };
 
@@ -92,6 +93,7 @@ const CommentPost = () => {
                 commentPost({
                   postId: post._id,
                   type: post.type,
+                  question: post.question?._id,
                   text: inputRef.current.value,
                   commenterId: {
                     _id: currentUser._id,

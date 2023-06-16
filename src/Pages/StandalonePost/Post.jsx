@@ -46,6 +46,7 @@ const Post = () => {
                 rounded="full"
                 objectFit="cover"
                 onLoad={() => setImgLoading(false)}
+                onError={() => setImgLoading(false)}
               />
               {imgLoading && (
                 <SkeletonCircle size={12} position="absolute" top={0} />
@@ -70,7 +71,7 @@ const Post = () => {
                 <span style={{ fontStyle: "italic" }}>{post.id_user.job}</span>
               )}
             </Text>
-            <Description />
+            {data.description && <Description />}
           </Stack>
         </Flex>
       )}

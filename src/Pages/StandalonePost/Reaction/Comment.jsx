@@ -62,6 +62,7 @@ const Comment = ({ comment, postId }) => {
                   type: post.type,
                   postId,
                   commentId: comment._id,
+                  question: post.question?._id,
                 })
               }
               // onClick={deleteComment}

@@ -1,4 +1,12 @@
+import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
+
+export const interviewsAdapter = createEntityAdapter({
+  selectId: (interview) => interview._id,
+  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
+});
+
+const initialState = interviewsAdapter.getInitialState();
 
 export const questionSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -19,6 +27,8 @@ export const questionSlice = apiSlice.injectEndpoints({
         };
       },
       providesTags: (response, err, arg) => [{ type: "Question", id: arg }],
+      transformResponse: (responseData) =>
+        interviewsAdapter.setAll(initialState, responseData),
     }),
   }),
 });

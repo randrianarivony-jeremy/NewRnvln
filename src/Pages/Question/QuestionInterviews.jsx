@@ -1,5 +1,8 @@
+import { Button, Flex } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 import React, { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ErrorRender, Loader } from "../../Component/Miscellanous";
@@ -11,33 +14,35 @@ const QuestionInterviews = () => {
   const { data, isSuccess, isError, isLoading } =
     useFetchQuestionInterviewsQuery(questionId);
   const swiperRef = useRef();
+  const navigate = useNavigate();
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorRender />;
   if (isSuccess)
     return (
-      <Swiper
-        ref={swiperRef}
-        direction="vertical"
-        modules={[Keyboard, Mousewheel]}
-        keyboard={true}
-        mousewheel={{ enabled: true, forceToAxis: true }}
-        // onReachEnd={() =>
-        //   fetchMoreContents(
-        //     new Date(postsList[postsList.length - 1].createdAt).getTime()
-        //   )
-        // }
-        // onSlideChange={({ activeIndex }) => {
-        //   localStorage.setItem("home_slide_position", activeIndex);
-        //   console.log(activeIndex);
-        // }}
-      >
-        {data.map((post, index) => (
-          <SwiperSlide key={index}>
-            <PostContainer post={post} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <>
+        <Flex position={"absolute"} zIndex={2}>
+          <Button boxSize={12} onClick={() => navigate(-1)}>
+            <IonIcon icon={arrowBack} />
+          </Button>
+          <Button size={"lg"} paddingX={0}>
+            Même question
+          </Button>
+        </Flex>
+        <Swiper
+          ref={swiperRef}
+          direction="vertical"
+          modules={[Keyboard, Mousewheel]}
+          keyboard={true}
+          mousewheel={{ enabled: true, forceToAxis: true }}
+        >
+          {data.ids.map((id) => (
+            <SwiperSlide key={id}>
+              <PostContainer post={data.entities[id]} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </>
     );
 };
 

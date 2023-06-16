@@ -48,6 +48,7 @@ function App() {
   return (
     <Box
       maxW={420}
+      minH="calc(100vh - 100px)"
       className="app"
       height="100%"
       boxSizing="border-box"

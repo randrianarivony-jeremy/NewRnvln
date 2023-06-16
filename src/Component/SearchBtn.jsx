@@ -27,6 +27,7 @@ const SearchBtn = () => {
       <Input
         ref={inputRef}
         width={0}
+        type="text"
         float="right"
         border={"none"}
         transition={"width .7s ease-out"}

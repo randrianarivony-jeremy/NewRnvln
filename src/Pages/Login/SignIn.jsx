@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { arrowBack } from "ionicons/icons";
+import { arrowBack, eye, eyeOffOutline } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,6 @@ const SignIn = ({ setSignin }) => {
   const dispatch = useDispatch();
   const emailRef = useRef();
   const submitRef = useRef();
-  const toast = useToast();
   const [mailError, setMailError] = useState();
   const passwordRef = useRef();
   const [passwordError, setPasswordError] = useState();
@@ -98,14 +97,9 @@ const SignIn = ({ setSignin }) => {
             <FormControl isInvalid={passwordError}>
               <InputGroup>
                 <InputRightElement
-                  as="button"
-                  bgColor={showPwd ? "dark.0" : "transparent"}
+                  cursor="pointer"
                   onClick={() => setShowPwd(!showPwd)}
-                  children={
-                    <span
-                      className={showPwd ? "bi-eye" : "bi-eye-slash"}
-                    ></span>
-                  }
+                  children={<IonIcon icon={showPwd ? eye : eyeOffOutline} />}
                 />
                 <Input
                   type={showPwd ? "text" : "password"}

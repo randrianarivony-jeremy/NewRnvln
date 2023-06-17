@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 
 export const ErrorRender = () => {
   return (
@@ -23,3 +23,25 @@ export const EmptyState = () => {
     </Flex>
   );
 };
+
+export const ClickableFlex = (BoxProps) => (
+  <Flex
+    cursor="pointer"
+    fontSize="sm"
+    align="center"
+    _hover={{ bg: "whiteAlpha.200" }}
+    rounded="lg"
+    paddingX={3}
+    paddingY={2}
+    {...BoxProps}
+  />
+);
+
+export const Scroll = (BoxProps) => (
+  <Stack
+    overflowY="scroll"
+    spacing={0}
+    sx={{ "::-webkit-scrollbar": { display: "none" } }}
+    {...BoxProps}
+  />
+);

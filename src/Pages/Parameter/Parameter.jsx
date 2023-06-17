@@ -1,7 +1,6 @@
 import {Button,Flex,Heading,Stack,Text, useDisclosure,} from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { ClickableFlex, Scroll } from "../../Styles/Theme";
 import ChangeUsername from "./ChangeUsername";
 import ChangePassword from "./ChangePassword";
 import ChangeEmail from "./ChangeEmail";
@@ -11,6 +10,7 @@ import EnableSubscription from "../Profile/Relation/EnableSubscription";
 import DisableSubscription from "./DisableSubscription";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
+import { ClickableFlex, Scroll } from "../../Component/Miscellanous";
 
 const Parameter = () => {
     const navigate = useNavigate();

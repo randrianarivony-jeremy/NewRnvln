@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/RANAVALONA.png";
 import { apiCall, currentUserContext } from "../../Controler/App";
+import { setCredentials } from "../../Controler/Redux/Features/authSlice";
 import { postSlice } from "../../Controler/Redux/Features/postSlice";
 
 const SignIn = ({ setSignin }) => {
@@ -46,6 +47,8 @@ const SignIn = ({ setSignin }) => {
       })
       .then(
         (res) => {
+          console.log(res);
+          dispatch(setCredentials({ accessToken: res.data.accessToken }));
           setCurrentUser(res.data);
           dispatch(
             postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }])
@@ -54,10 +57,10 @@ const SignIn = ({ setSignin }) => {
           navigate("/");
         },
         (err) => {
+          setSubmitting(false);
           let error = err.response.data;
           if (err.response.data.includes("Email")) setMailError(error);
           else setPasswordError(error);
-          setSubmitting(false);
         }
       );
   };

@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ClickableFlex } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
-import { ClickableFlex } from "../../Styles/Theme";
 
 const ConversationCard = ({ conversation }) => {
   const { currentUser } = useContext(currentUserContext);

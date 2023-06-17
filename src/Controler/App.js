@@ -4,7 +4,7 @@ import "../Styles/App.css";
 import "swiper/css";
 import "swiper/css/pagination";
 import Routes from "./Routes";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { publicationContext } from "./Context";
 import axios from "axios";
 import io from "socket.io-client";
@@ -22,6 +22,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState();
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
+  const minHeight = useRef(window.innerHeight);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -48,7 +49,7 @@ function App() {
   return (
     <Box
       maxW={420}
-      minH="calc(100vh - 100px)"
+      minH={minHeight.current}
       className="app"
       height="100%"
       boxSizing="border-box"

@@ -1,8 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { EmptyState, ErrorRender, Loader } from "../../Component/Miscellanous";
+import {
+  EmptyState,
+  ErrorRender,
+  Loader,
+  Scroll,
+} from "../../Component/Miscellanous";
 import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
 import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
-import { Scroll } from "../../Styles/Theme";
 import ConversationCard from "./ConversationCard";
 
 const SecondaryConversation = () => {

@@ -9,11 +9,13 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./Controler/App";
 import { apiSlice } from "./Controler/Redux/Features/apiSlice";
+import authReducer from "./Controler/Redux/Features/authSlice";
 import { theme } from "./Styles/Theme";
 
 const { ToastContainer } = createStandaloneToast();
 const store = configureStore({
   reducer: {
+    auth: authReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

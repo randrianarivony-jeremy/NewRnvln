@@ -19,10 +19,10 @@ const SearchBtn = () => {
     <InputGroup
       position="absolute"
       zIndex={3}
-      right={0}
+      right={1}
       top={1}
       display="block"
-      width={"calc(100% - 48px)"}
+      width={"calc(100% - 52px)"}
     >
       <Input
         ref={inputRef}

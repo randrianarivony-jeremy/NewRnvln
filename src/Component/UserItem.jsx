@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { ClickableFlex } from "../Styles/Theme";
+import { ClickableFlex } from "./Miscellanous";
 
 const UserItem = ({ user }) => {
   const [imageLoading, setImageLoading] = useState(true);

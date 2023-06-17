@@ -18,8 +18,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
+import { ClickableFlex } from "../../../Component/Miscellanous";
 import { useLazyFetchUserFriendsQuery } from "../../../Controler/Redux/Features/userSlice";
-import { ClickableFlex } from "../../../Styles/Theme";
 
 const RelationList = ({ category, userId, length }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

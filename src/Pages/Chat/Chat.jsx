@@ -3,8 +3,8 @@ import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Scroll } from "../../Component/Miscellanous";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
-import { Scroll } from "../../Styles/Theme";
 import ChatInput from "./ChatInput";
 import ChatScroller from "./ChatScroller";
 

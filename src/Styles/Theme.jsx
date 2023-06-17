@@ -125,34 +125,6 @@ export const theme = extendTheme({
   },
 });
 
-export const noScrollbar = {
-  "::WebkitScrollbar": {
-    display: "none",
-  },
-};
-
-export const ClickableFlex = (BoxProps) => (
-  <Flex
-    cursor="pointer"
-    fontSize="sm"
-    align="center"
-    _hover={{ bg: "whiteAlpha.200" }}
-    rounded="lg"
-    paddingX={3}
-    paddingY={2}
-    {...BoxProps}
-  />
-);
-
-export const Scroll = (BoxProps) => (
-  <Stack
-    overflowY="scroll"
-    spacing={0}
-    sx={{ "::-webkit-scrollbar": { display: "none" } }}
-    {...BoxProps}
-  />
-);
-
 export const iconSm = "16px";
 export const iconMd = "24px";
 export const iconLg = "32px";

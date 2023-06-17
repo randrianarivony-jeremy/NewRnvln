@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import { useLongPress } from "use-long-press";
+import { ClickableFlex } from "../../../Component/Miscellanous";
 import { currentUserContext } from "../../../Controler/App";
 import { useDeleteCommentMutation } from "../../../Controler/Redux/Features/postSlice";
-import { ClickableFlex } from "../../../Styles/Theme";
 import { postContext } from "../PostContainer";
 
 const Comment = ({ comment, postId }) => {

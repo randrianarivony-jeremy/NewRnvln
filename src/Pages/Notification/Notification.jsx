@@ -20,12 +20,15 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
-import { EmptyState } from "../../Component/Miscellanous";
+import {
+  ClickableFlex,
+  EmptyState,
+  Scroll,
+} from "../../Component/Miscellanous";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
 import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notificationSlice";
 import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
-import { ClickableFlex, Scroll } from "../../Styles/Theme";
 
 const Notification = () => {
   const { currentUser } = useContext(currentUserContext);

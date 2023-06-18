@@ -1,21 +1,22 @@
 import { Box, Heading, Image, Spinner, Stack } from "@chakra-ui/react";
-import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { createContext, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import io from "socket.io-client";
+import "../Styles/App.css";
 import "swiper/css";
 import "swiper/css/pagination";
-import logo from "../Assets/RANAVALONA.png";
-import "../Styles/App.css";
+import Routes from "./Routes";
+import { createContext, useEffect, useRef, useState } from "react";
 import { publicationContext } from "./Context";
+import axios from "axios";
+import io from "socket.io-client";
+import logo from "../Assets/RANAVALONA.png";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setNewMainMessage,
   setNewNotification,
   setNewSecondMessage,
 } from "./Redux/Features/credentialSlice";
-import Routes from "./Routes";
 
+export const currentUserContext = createContext();
 export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL + "/api/",
   withCredentials: true,
@@ -28,17 +29,15 @@ function App() {
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
   const minHeight = useRef(window.innerHeight);
-  const dispatch = useDispatch();
   const { newMainMessage, newSecondMessage, newNotification } = useSelector(
     (state) => state.token
   );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchToken = () => {
       apiCall
-        .get(process.env.REACT_APP_API_URL + "/check_user", {
-          withCredentials: true,
-        })
+        .get(process.env.REACT_APP_API_URL + "/check_user")
         .then(
           (res) => {
             if (res.data !== "") {
@@ -99,5 +98,3 @@ function App() {
 }
 
 export default App;
-
-export const currentUserContext = createContext();

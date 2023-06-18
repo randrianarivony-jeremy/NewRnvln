@@ -15,6 +15,7 @@ import {
   setNewNotification,
   setNewSecondMessage,
 } from "./Redux/Features/credentialSlice";
+import { useInitiateMutation } from "./Redux/Features/authSlice";
 
 export const currentUserContext = createContext();
 export const apiCall = axios.create({
@@ -33,34 +34,21 @@ function App() {
     (state) => state.token
   );
   const dispatch = useDispatch();
+  const [initiate, { data, isSuccess, isLoading, isUninitialized }] =
+    useInitiateMutation();
 
   useEffect(() => {
-    const fetchToken = () => {
-      axios
-        .get(process.env.REACT_APP_API_URL + "/check_user", {
-          withCredentials: true,
-        })
-        .then(
-          (res) => {
-            if (res.data !== "") {
-              //refresh token present
-              dispatch(setNewMainMessage(res.data.newMainMessage));
-              dispatch(setNewSecondMessage(res.data.newSecondMessage));
-              dispatch(setNewNotification(res.data.newNotification));
-              socket.emit("start", res.data.user._id);
-              setCurrentUser(res.data.user);
-            }
-          },
-          (err) => {
-            //bad refresh token
-            console.log("bad token: " + err);
-          }
-        )
-        .finally(() => setInitializing(false));
-    };
-    fetchToken();
+    initiate();
     localStorage.setItem("home_slide_position", 0);
   }, []);
+
+  useEffect(() => {
+    if (isSuccess && data !== null) setCurrentUser(data.user);
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (!isUninitialized && !isLoading) setInitializing(false);
+  }, [isLoading, isUninitialized]);
 
   useEffect(() => {
     socket.on("new message", ({ category }) => {

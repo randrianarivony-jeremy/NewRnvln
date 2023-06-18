@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "../../Controler/Redux/Features/apiSlice";
 import { logOut } from "../../Controler/Redux/Features/credentialSlice";
@@ -21,8 +21,10 @@ const Login = () => {
   const picture = useRef();
   const dispatch = useDispatch();
 
-  dispatch(apiSlice.util.resetApiState());
-  dispatch(logOut());
+  useEffect(() => {
+    dispatch(apiSlice.util.resetApiState());
+    dispatch(logOut());
+  }, []);
   return (
     <Box height="100%" minH="80vh" className="login">
       {signin ? (

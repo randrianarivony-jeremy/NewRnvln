@@ -1,51 +1,40 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  Grid,
-  GridItem,
-  Heading,
-  Image,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+// prettier-ignore
+import {Box,Button,Flex,FormControl,FormErrorMessage,Grid,GridItem,Heading,Image,Input,InputGroup,InputRightElement,Stack,Text,} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack, eye, eyeOffOutline } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/RANAVALONA.png";
 import { currentUserContext } from "../../Controler/App";
-import { useLoginMutation } from "../../Controler/Redux/Features/authSlice";
-import { postSlice } from "../../Controler/Redux/Features/postSlice";
+import {
+  useInitiateMutation,
+  useLoginMutation,
+} from "../../Controler/Redux/Features/authSlice";
 
 const SignIn = ({ setSignin }) => {
-  const { setCurrentUser } = useContext(currentUserContext);
+  const { currentUser, setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const emailRef = useRef();
   const submitRef = useRef();
   const [mailError, setMailError] = useState();
   const passwordRef = useRef();
   const [passwordError, setPasswordError] = useState();
   const [showPwd, setShowPwd] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [login, { error, isSuccess, isError, data }] = useLoginMutation();
+  const [login, { error, isSuccess: loginSuccess, isError }] =
+    useLoginMutation();
+  const [initiate, { data, isSuccess, isLoading }] = useInitiateMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
     login({
       email: emailRef.current.value,
       password: passwordRef.current.value,
     });
-    setSubmitting(false);
   };
+
+  useEffect(() => {
+    setCurrentUser();
+  }, []);
 
   useEffect(() => {
     if (isError) {
@@ -56,12 +45,25 @@ const SignIn = ({ setSignin }) => {
         setPasswordError("Veuillez compléter tous les champs");
       }
     }
+  }, [isError]);
+
+  useEffect(() => {
+    if (loginSuccess) {
+      initiate();
+    }
+  }, [loginSuccess]);
+
+  useEffect(() => {
     if (isSuccess) {
       setCurrentUser(data.user);
-      dispatch(postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }]));
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (currentUser) {
       navigate("/");
     }
-  }, [isSuccess, isError]);
+  }, [currentUser]);
 
   return (
     <Box
@@ -119,7 +121,7 @@ const SignIn = ({ setSignin }) => {
               </Button>
             </Flex>
             <Button
-              isLoading={submitting}
+              isLoading={isLoading}
               loadingText="Connexion"
               variant="primary"
               onClick={() => submitRef.current.click()}

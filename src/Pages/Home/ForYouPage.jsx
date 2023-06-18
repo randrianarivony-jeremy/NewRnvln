@@ -1,10 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
-import { useSelector } from "react-redux";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Loader } from "../../Component/Miscellanous";
 import {
-  selectAllPosts,
   useFetchContentsQuery,
   useFetchMoreContentsMutation,
 } from "../../Controler/Redux/Features/postSlice";
@@ -13,8 +11,13 @@ import PostContainer from "../StandalonePost/PostContainer";
 
 const ForYouPage = () => {
   const swiperRef = useRef();
-  const postsList = useSelector(selectAllPosts);
-  const { isLoading, isSuccess, isError, error } = useFetchContentsQuery();
+  const {
+    data: postsList,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useFetchContentsQuery();
   const [fetchMoreContents] = useFetchMoreContentsMutation();
 
   useLayoutEffect(() => {
@@ -25,8 +28,10 @@ const ForYouPage = () => {
   }, []);
 
   useEffect(() => {
-    if (isSuccess && postsList.length === 1)
-      fetchMoreContents(new Date(postsList[0].createdAt).getTime());
+    if (isSuccess && postsList.ids.length === 1)
+      fetchMoreContents(
+        new Date(postsList.entities[postsList.ids[0]].createdAt).getTime()
+      );
   }, [isSuccess, postsList]);
 
   if (isError) return <p>Some error occurs {error}</p>;
@@ -41,20 +46,23 @@ const ForYouPage = () => {
         mousewheel={{ enabled: true, forceToAxis: true }}
         onReachEnd={() =>
           fetchMoreContents(
-            new Date(postsList[postsList.length - 1].createdAt).getTime()
+            new Date(
+              postsList.entities[
+                postsList.ids[postsList.ids.length - 1]
+              ].createdAt
+            ).getTime()
           )
         }
-        onSlideChange={({ activeIndex }) => {
-          localStorage.setItem("home_slide_position", activeIndex);
-          console.log(activeIndex);
-        }}
+        onSlideChange={({ activeIndex }) =>
+          localStorage.setItem("home_slide_position", activeIndex)
+        }
       >
-        {postsList.map((post, index) => (
-          <SwiperSlide key={index}>
-            {post.type === "question" ? (
-              <QuestionCard questions={post} />
+        {postsList.ids.map((id) => (
+          <SwiperSlide key={id}>
+            {postsList.entities[id].type === "question" ? (
+              <QuestionCard questions={postsList.entities[id]} />
             ) : (
-              <PostContainer post={post} />
+              <PostContainer post={postsList.entities[id]} />
             )}
           </SwiperSlide>
         ))}

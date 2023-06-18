@@ -374,15 +374,15 @@ export const {
   useDeleteCommentMutation,
 } = postSlice;
 
-const selectPostsData = createSelector(
-  postSlice.endpoints.fetchContents.select(),
-  (postsResult) => postsResult.data
-);
+// const selectPostsData = createSelector(
+//   postSlice.endpoints.fetchContents.select(),
+//   (postsResult) => postsResult.data
+// );
 
-export const {
-  selectAll: selectAllPosts,
-  selectById: selectPostById,
-  selectIds: selectPostIds,
-} = postsAdapter.getSelectors(
-  (state) => selectPostsData(state) ?? initialState
-);
+// export const {
+//   selectAll: selectAllPosts,
+//   selectById: selectPostById,
+//   selectIds: selectPostIds,
+// } = postsAdapter.getSelectors(
+//   (state) => selectPostsData(state) ?? initialState
+// );

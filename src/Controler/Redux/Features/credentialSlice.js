@@ -1,12 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const credentialSlice = createSlice({
-  name: "auth",
-  initialState: { token: null },
+  name: "credential",
+  initialState: {
+    token: null,
+    newMainMessage: 0,
+    newSecondMessage: 0,
+    newNotification: 0,
+  },
   reducers: {
     setCredentials: (state, action) => {
       const { accessToken } = action.payload;
       state.token = accessToken;
+    },
+    setNewMainMessage: (state, action) => {
+      state.newMainMessage = action.payload;
+    },
+    setNewSecondMessage: (state, action) => {
+      state.newSecondMessage = action.payload;
+    },
+    setNewNotification: (state, action) => {
+      state.newNotification = action.payload;
     },
     logOut: (state, action) => {
       state.token = null;
@@ -14,7 +28,13 @@ const credentialSlice = createSlice({
   },
 });
 
-export const { setCredentials, logOut } = credentialSlice.actions;
+export const {
+  setCredentials,
+  logOut,
+  setNewMainMessage,
+  setNewSecondMessage,
+  setNewNotification,
+} = credentialSlice.actions;
 
 export default credentialSlice.reducer;
 

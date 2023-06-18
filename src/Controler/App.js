@@ -1,15 +1,20 @@
 import { Box, Heading, Image, Spinner, Stack } from "@chakra-ui/react";
+import axios from "axios";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "../Styles/App.css";
+import { createContext, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import io from "socket.io-client";
 import "swiper/css";
 import "swiper/css/pagination";
-import Routes from "./Routes";
-import { createContext, useEffect, useRef, useState } from "react";
-import { publicationContext } from "./Context";
-import axios from "axios";
-import io from "socket.io-client";
 import logo from "../Assets/RANAVALONA.png";
-import RealtimeSocketContext from "./Socketio/RealtimeSocketContext";
+import "../Styles/App.css";
+import { publicationContext } from "./Context";
+import {
+  setNewMainMessage,
+  setNewNotification,
+  setNewSecondMessage,
+} from "./Redux/Features/credentialSlice";
+import Routes from "./Routes";
 
 export const apiCall = axios.create({
   baseURL: process.env.REACT_APP_API_URL + "/api/",
@@ -23,6 +28,10 @@ function App() {
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
   const minHeight = useRef(window.innerHeight);
+  const dispatch = useDispatch();
+  const { newMainMessage, newSecondMessage, newNotification } = useSelector(
+    (state) => state.token
+  );
 
   useEffect(() => {
     const fetchToken = () => {
@@ -34,8 +43,11 @@ function App() {
           (res) => {
             if (res.data !== "") {
               //refresh token present
-              socket.emit("start", res.data._id);
-              setCurrentUser(res.data);
+              dispatch(setNewMainMessage(res.data.newMainMessage));
+              dispatch(setNewSecondMessage(res.data.newSecondMessage));
+              dispatch(setNewNotification(res.data.newNotification));
+              socket.emit("start", res.data.user._id);
+              setCurrentUser(res.data.user);
             }
           },
           (err) => {
@@ -48,6 +60,16 @@ function App() {
     fetchToken();
     localStorage.setItem("home_slide_position", 0);
   }, []);
+
+  useEffect(() => {
+    socket.on("new message", ({ category }) => {
+      if (category == "main") dispatch(setNewMainMessage(newMainMessage + 1));
+      else dispatch(setNewSecondMessage(newSecondMessage + 1));
+    });
+    socket.on("new notification", () =>
+      dispatch(setNewNotification(newNotification + 1))
+    );
+  });
 
   return (
     <Box

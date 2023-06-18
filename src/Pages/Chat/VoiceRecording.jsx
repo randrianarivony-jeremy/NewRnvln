@@ -61,28 +61,6 @@ const SendVoice = () => {
     );
   };
 
-  // const handleSubmit = async () => {
-  //   await apiCall
-  //     .post("message", {
-  //       sender: currentUser._id,
-  //       recipient: userB._id,
-  //       content: urlRef.current,
-  //       contentType: "audio",
-  //       conversationId: newConversation ? null : conversationId,
-  //     })
-  //     .then(
-  //       (res) => {
-  //         setMessages([...messages, res.data.newMessage]);
-  //         conversationId.current = res.data.newMessage.conversationId;
-  //         socket.emit("message sent", res.data, userB._id);
-  //       },
-  //       (err) => {
-  //         console.log(err);
-  //       }
-  //     )
-  //     .finally(() => setSubmitting(false));
-  // };
-
   return (
     <>
       {recording ? (

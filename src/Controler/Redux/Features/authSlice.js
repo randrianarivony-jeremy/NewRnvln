@@ -1,28 +1,46 @@
 import { apiSlice } from "./apiSlice";
 import { logOut, setCredentials } from "./credentialSlice";
 
-export const authApiSlice = apiSlice.injectEndpoints({
+export const authSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: "/auth",
+        url: "/auth/login",
         method: "POST",
-        body: { ...credentials },
+        body: credentials,
       }),
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data.accessToken));
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
+    signUp: builder.mutation({
+      query: (body) => ({
+        url: "/auth/register",
+        method: "POST",
+        body,
+      }),
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data.accessToken));
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     sendLogout: builder.mutation({
-      query: () => ({
-        url: "/auth/logout",
-        method: "POST",
-      }),
+      query: () => "/auth/logout",
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           console.log(data);
           dispatch(logOut());
-          setTimeout(() => {
-            dispatch(apiSlice.util.resetApiState());
-          }, 1000);
+          dispatch(apiSlice.util.resetApiState());
         } catch (err) {
           console.log(err);
         }
@@ -47,5 +65,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useSendLogoutMutation, useRefreshMutation } =
-  authApiSlice;
+export const {
+  useLoginMutation,
+  useSignUpMutation,
+  useSendLogoutMutation,
+  useRefreshMutation,
+} = authSlice;

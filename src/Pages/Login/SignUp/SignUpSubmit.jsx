@@ -1,33 +1,22 @@
 import { Button, HStack, Input } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useContext, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import isEmail from "validator/lib/isEmail";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
-import { postSlice } from "../../../Controler/Redux/Features/postSlice";
+import { useSignUpMutation } from "../../../Controler/Redux/Features/authSlice";
 import { signUpContext } from "../Login";
 import AuthSlide from "./AuthSlide";
 
 const SignUpSubmit = ({ swiper }) => {
-  let {
-    name,
-    email,
-    setInvalidEmail,
-    phoneNumber,
-    password,
-    confirmPassword,
-    setPasswordError,
-    picture,
-    job,
-    address,
-  } = useContext(signUpContext);
+  // prettier-ignore
+  let {name,email,setInvalidEmail,phoneNumber,password,confirmPassword,setPasswordError,picture,job,address,} = useContext(signUpContext);
   let { setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const submitRef = useRef();
+  const [signUp, { isSuccess, data }] = useSignUpMutation();
   const [submitting, setSubmitting] = useState(false);
-  const dispatch = useDispatch();
 
   const passwordChecking = (e) => {
     e.preventDefault();
@@ -45,7 +34,18 @@ const SignUpSubmit = ({ swiper }) => {
         setSubmitting(false);
       } else {
         if (picture.current !== undefined) storePicture();
-        else handleSubmit();
+        else
+          signUp({
+            name: name.current.value,
+            email:
+              phoneNumber.current !== null
+                ? phoneNumber.current.value
+                : email.current.value,
+            password: password.current.value,
+            job: job.current.value,
+            address: address.current.value,
+            picture: picture.current,
+          });
       }
     }
   };
@@ -56,51 +56,27 @@ const SignUpSubmit = ({ swiper }) => {
     uploadBytes(storageRef, picture.current).then((snapshot) =>
       getDownloadURL(snapshot.ref).then((url) => {
         picture.current = url;
-        handleSubmit();
-      })
-    );
-  };
-
-  const handleSubmit = async () => {
-    if (phoneNumber.current !== null) email.current = phoneNumber.current.value;
-    else email.current = email.current.value;
-    await apiCall
-      .post(
-        "auth/register",
-        {
+        signUp({
           name: name.current.value,
-          email: email.current,
+          email:
+            phoneNumber.current !== null
+              ? phoneNumber.current.value
+              : email.current.value,
           password: password.current.value,
           job: job.current.value,
           address: address.current.value,
           picture: picture.current,
-        },
-        { withCredentials: true }
-      )
-      .then(
-        (res) => {
-          setCurrentUser(res.data);
-          dispatch(
-            postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }])
-          );
-          navigate("/");
-        },
-        (err) => {
-          console.log(err.response.data);
-          // setEmailError(res.data.error.emailError);
-          // setPasswordError(res.data.error.passwordError);
-          // setSexError(res.data.error.sexError);
-          // toast({
-          //   title: "😕 OH OH !!!",
-          //   status: "error",
-          //   duration: 5000,
-          //   isClosable: true,
-          //   position: "bottom",
-          // });
-        }
-      )
-      .finally(() => setSubmitting(false));
+        });
+      })
+    );
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCurrentUser(data.user);
+      navigate("/");
+    }
+  }, [isSuccess]);
 
   return (
     <form

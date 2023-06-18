@@ -49,32 +49,6 @@ const ChatInputs = ({ sendResponse }) => {
       createdAt: new Date().toJSON(),
     });
   };
-  // const sendText = async() => {
-  //   setWriting(false);
-  //   setValue('');
-  //   draft.current = {content:responseRef.current.value,contentType:'string',sender:currentUser._id}
-  //   setSubmitting(true);
-  //   await apiCall
-  //   .post( "message",{
-  //       sender:currentUser._id,
-  //       recipient:userB._id, //this conversationId from params would be the userId
-  //       content:responseRef.current.value,
-  //       conversationId: newConversation ? null : conversationId.current
-  //     })
-  //     .then(
-  //       (res) => {
-  //         setMessages([...messages,res.data.newMessage]);
-  //         setNewConversation(false);
-  //         conversationId.current = res.data.newMessage.conversationId;
-  //         socket.emit('message sent',res.data,userB._id)
-  //         },
-  //         (err) => {
-  //         console.log(err);
-  //         navigate(-1);
-  //       }
-  //     )
-  //     .finally(()=>setSubmitting(false));
-  // };
 
   const handleTextChange = ({ currentTarget }) => {
     setValue(currentTarget.value);

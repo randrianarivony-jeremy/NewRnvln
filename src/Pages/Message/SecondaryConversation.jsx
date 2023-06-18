@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   EmptyState,
   ErrorRender,
@@ -6,16 +7,16 @@ import {
   Scroll,
 } from "../../Component/Miscellanous";
 import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
-import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
+import { setNewSecondMessage } from "../../Controler/Redux/Features/credentialSlice";
 import ConversationCard from "./ConversationCard";
 
 const SecondaryConversation = () => {
-  const { setNewSecondMessage } = useContext(socketContext);
   const { data, isLoading, isSuccess, isError } =
     useFetchConversationsQuery("second");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setNewSecondMessage(0);
+    dispatch(setNewSecondMessage(0));
   }, []);
 
   if (isLoading) return <Loader />;

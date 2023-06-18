@@ -18,6 +18,7 @@ import {
   personAdd,
 } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
 import {
@@ -27,8 +28,8 @@ import {
 } from "../../Component/Miscellanous";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
+import { setNewNotification } from "../../Controler/Redux/Features/credentialSlice";
 import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notificationSlice";
-import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 
 const Notification = () => {
   const { currentUser } = useContext(currentUserContext);
@@ -39,10 +40,10 @@ const Notification = () => {
   });
   const navigate = useNavigate();
   const [imgLoading, setImgLoading] = useState(true);
-  const { setNewNotification } = useContext(socketContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setNewNotification(0);
+    dispatch(setNewNotification(0));
   }, []);
 
   return (

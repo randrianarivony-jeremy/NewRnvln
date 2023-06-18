@@ -10,14 +10,16 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
-import { socketContext } from "../../Controler/Socketio/RealtimeSocketContext";
 import MainConversation from "./MainConversation";
 import SecondaryConversation from "./SecondaryConversation";
 
 const Message = () => {
-  const { newMainMessage, newSecondMessage } = useContext(socketContext);
+  const { newMainMessage, newSecondMessage } = useSelector(
+    (state) => state.token
+  );
   const navigate = useNavigate();
 
   return (

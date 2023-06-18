@@ -13,16 +13,15 @@ import {
   InputRightElement,
   Stack,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack, eye, eyeOffOutline } from "ionicons/icons";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/RANAVALONA.png";
-import { apiCall, currentUserContext } from "../../Controler/App";
-import { setCredentials } from "../../Controler/Redux/Features/credentialSlice";
+import { currentUserContext } from "../../Controler/App";
+import { useLoginMutation } from "../../Controler/Redux/Features/authSlice";
 import { postSlice } from "../../Controler/Redux/Features/postSlice";
 
 const SignIn = ({ setSignin }) => {
@@ -36,34 +35,33 @@ const SignIn = ({ setSignin }) => {
   const [passwordError, setPasswordError] = useState();
   const [showPwd, setShowPwd] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [login, { error, isSuccess, isError, data }] = useLoginMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await apiCall
-      .post("auth/login", {
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then(
-        (res) => {
-          console.log(res);
-          dispatch(setCredentials({ accessToken: res.data.accessToken }));
-          setCurrentUser(res.data);
-          dispatch(
-            postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }])
-          );
-          setSubmitting(false);
-          navigate("/");
-        },
-        (err) => {
-          setSubmitting(false);
-          let error = err.response.data;
-          if (err.response.data.includes("Email")) setMailError(error);
-          else setPasswordError(error);
-        }
-      );
+    login({
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    });
+    setSubmitting(false);
   };
+
+  useEffect(() => {
+    if (isError) {
+      if (error.status === 404) setMailError("Utilisateur inconnu");
+      else if (error.status === 406) setPasswordError("Mot de passe incorrect");
+      else if (error.status === 400) {
+        setMailError("Veuillez compléter tous les champs");
+        setPasswordError("Veuillez compléter tous les champs");
+      }
+    }
+    if (isSuccess) {
+      setCurrentUser(data.user);
+      dispatch(postSlice.util.invalidateTags([{ type: "Post", id: "LIST" }]));
+      navigate("/");
+    }
+  }, [isSuccess, isError]);
 
   return (
     <Box

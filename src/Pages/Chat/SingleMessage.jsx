@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 import { useLongPress } from "use-long-press";
 import { currentUserContext } from "../../Controler/App";
 import {
-  getSelectors,
   useDeleteMessageMutation,
+  useFetchMessagesQuery,
 } from "../../Controler/Redux/Features/chatSlice";
 import DataDisplay from "./DataDisplay";
 
@@ -19,10 +19,14 @@ const SingleMessage = ({ messageId }) => {
   const [deleteMessage] = useDeleteMessageMutation();
 
   // Dinamically get selectors based on parent query
-  const { selectById } = getSelectors(userId);
 
   // Use selectors based on parent id 1
-  const message = useSelector(selectById(messageId));
+  // const message = useSelector(selectById(messageId));
+  const { message } = useFetchMessagesQuery(userId, {
+    selectFromResult: ({ data }) => ({
+      message: data?.entities[messageId],
+    }),
+  });
 
   const bind = useLongPress(() => setDeleteFooter(true), {
     threshold: 1000,

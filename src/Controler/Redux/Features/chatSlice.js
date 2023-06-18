@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { createEntityAdapter } from "@reduxjs/toolkit";
 import { socket } from "../../App";
 import { apiSlice } from "./apiSlice";
 
@@ -160,29 +160,3 @@ export const {
   useAddMessageMutation,
   useDeleteMessageMutation,
 } = chatSlice;
-
-export const selectMessagesData = createSelector(
-  (state, userId) => chatSlice.endpoints.fetchMessages.select(userId)(state),
-  (conversationMessages) => conversationMessages.data
-);
-
-export const getSelectors = (userId) => {
-  const selectMessages = chatSlice.endpoints.fetchMessages.select(userId);
-
-  const chatSelectors = createSelector(selectMessages, (result) =>
-    chatAdapter.getSelectors(() => result?.data ?? initialState)
-  );
-
-  return {
-    selectById: (id) =>
-      createSelector(chatSelectors, (s) => s.selectById(s, id)),
-  };
-};
-
-export const {
-  selectAll: selectAllMessages,
-  selectById: selectMessagesById,
-  selectIds: selectMessagesIds,
-} = chatAdapter.getSelectors(
-  (state, userId) => selectMessagesData(state, userId) ?? initialState
-);

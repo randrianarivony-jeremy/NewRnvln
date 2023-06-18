@@ -36,8 +36,10 @@ function App() {
 
   useEffect(() => {
     const fetchToken = () => {
-      apiCall
-        .get(process.env.REACT_APP_API_URL + "/check_user")
+      axios
+        .get(process.env.REACT_APP_API_URL + "/check_user", {
+          withCredentials: true,
+        })
         .then(
           (res) => {
             if (res.data !== "") {

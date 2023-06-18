@@ -373,16 +373,3 @@ export const {
   useCommentPostMutation,
   useDeleteCommentMutation,
 } = postSlice;
-
-// const selectPostsData = createSelector(
-//   postSlice.endpoints.fetchContents.select(),
-//   (postsResult) => postsResult.data
-// );
-
-// export const {
-//   selectAll: selectAllPosts,
-//   selectById: selectPostById,
-//   selectIds: selectPostIds,
-// } = postsAdapter.getSelectors(
-//   (state) => selectPostsData(state) ?? initialState
-// );

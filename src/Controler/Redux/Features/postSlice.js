@@ -13,7 +13,6 @@ export const postSlice = apiSlice.injectEndpoints({
     fetchSinglePost: builder.query({
       query: ({ type, postId }) => ({
         url: `${type}/` + postId,
-        credentials: "include",
       }),
       transformErrorResponse: (responseData, err) => err.response.statusText,
       providesTags: (result, err) => {
@@ -23,10 +22,7 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     fetchContents: builder.query({
-      query: () => ({
-        url: `feeds`,
-        credentials: "include",
-      }),
+      query: () => "feeds",
       transformResponse: (responseData) => {
         responseData = responseData.map((elt) => {
           if (elt.type === "publication" || elt.type === "interview")
@@ -42,11 +38,7 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     fetchMoreContents: builder.mutation({
-      query: (lastPostCreatedAt) => ({
-        url: "feeds/" + lastPostCreatedAt,
-        method: "PATCH",
-        credentials: "include",
-      }),
+      query: (lastPostCreatedAt) => "feeds/" + lastPostCreatedAt,
       transformResponse: (responseData) => {
         responseData = responseData.map((elt) => {
           if (elt.type === "publication" || elt.type === "interview")
@@ -78,17 +70,13 @@ export const postSlice = apiSlice.injectEndpoints({
       query: ({ category, body }) => ({
         url: category,
         method: "POST",
-        credentials: "include",
         body,
       }),
       invalidatesTags: [{ type: "Post", id: "LIST" }],
     }),
 
     fetchUserArticles: builder.query({
-      query: (userId) => ({
-        url: `publication/user/${userId}`,
-        credentials: "include",
-      }),
+      query: (userId) => `publication/user/${userId}`,
       transformResponse: (responseData) =>
         postsAdapter.setAll(initialState, responseData),
       providesTags: (result) => [
@@ -98,10 +86,7 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     fetchUserInterviews: builder.query({
-      query: (userId) => ({
-        url: `interview/user/${userId}`,
-        credentials: "include",
-      }),
+      query: (userId) => `interview/user/${userId}`,
       transformResponse: (responseData) =>
         postsAdapter.setAll(initialState, responseData),
       providesTags: (result) => [
@@ -114,7 +99,6 @@ export const postSlice = apiSlice.injectEndpoints({
       query: ({ type, postId, body, postCreator, question }) => ({
         url: `${type}/like/` + postId,
         method: "PATCH",
-        credentials: "include",
         body,
       }),
       async onQueryStarted(
@@ -181,11 +165,7 @@ export const postSlice = apiSlice.injectEndpoints({
     }),
 
     fetchComments: builder.query({
-      query: ({ postId, type, question }) => ({
-        url: `${type}/comments/` + postId,
-        method: "GET",
-        credentials: "include",
-      }),
+      query: ({ postId, type, question }) => `${type}/comments/` + postId,
       async onQueryStarted(
         { postId, type, question },
         { dispatch, queryFulfilled }
@@ -232,7 +212,6 @@ export const postSlice = apiSlice.injectEndpoints({
       query: ({ postId, type, text, commenterId, postCreator, question }) => ({
         url: `${type}/comment/` + postId,
         method: "PATCH",
-        credentials: "include",
         body: { text, commenterId: commenterId._id },
       }),
       async onQueryStarted(
@@ -325,7 +304,6 @@ export const postSlice = apiSlice.injectEndpoints({
         return {
           url: `${type}/` + postId + "/" + commentId,
           method: "DELETE",
-          credentials: "include",
         };
       },
       async onQueryStarted(

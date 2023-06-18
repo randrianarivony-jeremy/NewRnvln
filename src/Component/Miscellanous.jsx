@@ -1,6 +1,12 @@
 import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const ErrorRender = () => {
+export const ErrorRender = ({ isError, error }) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isError && error.status === 403) navigate("/login");
+  }, [isError]);
   return (
     <p>
       Une erreur est survenue lors du chargement. Veuillez réessayer plus tard.

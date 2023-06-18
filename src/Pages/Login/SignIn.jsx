@@ -22,7 +22,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/RANAVALONA.png";
 import { apiCall, currentUserContext } from "../../Controler/App";
-import { setCredentials } from "../../Controler/Redux/Features/authSlice";
+import { setCredentials } from "../../Controler/Redux/Features/credentialSlice";
 import { postSlice } from "../../Controler/Redux/Features/postSlice";
 
 const SignIn = ({ setSignin }) => {

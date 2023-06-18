@@ -43,7 +43,7 @@ const Routes = () => {
         {/* prettier-ignore  */}
         <ROUTES>
           <Route path="/" element={currentUser ? <Home /> : <Login />}>
-            <Route index element={currentUser ? <ForYouPage /> : <Login />} />
+            <Route index element={<ForYouPage />} />
             {/* <Route index element={<Suspense fallback={<Loader/>}>{currentUser ? <ForYouPage /> : <Login/>}</Suspense>} /> */}
             <Route
               path="/subscriptions_only"

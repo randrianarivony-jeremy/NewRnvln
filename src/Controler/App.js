@@ -25,22 +25,25 @@ function App() {
   const minHeight = useRef(window.innerHeight);
 
   useEffect(() => {
-    const fetchToken = async () => {
-      await apiCall
-        .get(process.env.REACT_APP_API_URL + "/jwtid", {
+    const fetchToken = () => {
+      apiCall
+        .get(process.env.REACT_APP_API_URL + "/check_user", {
           withCredentials: true,
         })
         .then(
           (res) => {
-            socket.emit("start", res.data._id);
-            setCurrentUser(res.data);
-            setInitializing(false);
+            if (res.data !== "") {
+              //refresh token present
+              socket.emit("start", res.data._id);
+              setCurrentUser(res.data);
+            }
           },
           (err) => {
-            console.log("tsisy token: " + err);
-            setInitializing(false);
+            //bad refresh token
+            console.log("bad token: " + err);
           }
-        );
+        )
+        .finally(() => setInitializing(false));
     };
     fetchToken();
     localStorage.setItem("home_slide_position", 0);
@@ -65,9 +68,7 @@ function App() {
               <Spinner speed="0.7s" />
             </Stack>
           ) : (
-            <RealtimeSocketContext>
-              <Routes />
-            </RealtimeSocketContext>
+            <Routes />
           )}
         </publicationContext.Provider>
       </currentUserContext.Provider>

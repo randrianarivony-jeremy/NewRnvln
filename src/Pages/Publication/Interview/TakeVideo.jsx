@@ -22,6 +22,17 @@ import PubMedia from "./PubMedia";
 import { interviewContext } from "./Interview";
 import QuestionSlider from "../../StandalonePost/QuestionSlider";
 import { displayContext } from "./InterviewSlide";
+import { IonIcon } from "@ionic/react";
+import {
+  cameraReverseOutline,
+  checkmark,
+  close,
+  ellipse,
+  pauseOutline,
+  playOutline,
+  refreshOutline,
+  square,
+} from "ionicons/icons";
 
 const TakeVideo = () => {
   const webcamRef = useRef(null);
@@ -34,12 +45,13 @@ const TakeVideo = () => {
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [facingMode, setFacingMode] = useState("environment");
   const { setDisplay } = useContext(displayContext);
-  const { questions,setShowOptions,swiperRef } = useContext(interviewContext);
+  const { questions, setShowOptions, swiperRef } = useContext(interviewContext);
 
   const { seconds, minutes, start, pause } = useStopwatch({
     autoStart: false,
   });
-  const bg = useColorModeValue("white", "dark.0");
+  const bg = useColorModeValue("whiteAlpha.500", "blackAlpha.500");
+  const modalBg = useColorModeValue("white", "dark.0");
 
   const handleDataAvailable = useCallback(
     ({ data }) => {
@@ -91,9 +103,9 @@ const TakeVideo = () => {
       setRecordedChunks([]);
       setShowOptions((current) => {
         let mirror = [...current];
-        mirror[swiperRef.current.swiper.activeIndex]=false;
+        mirror[swiperRef.current.swiper.activeIndex] = false;
         return mirror;
-      })
+      });
       setDisplay(<PubMedia data={{ content: blob, contentType: "video" }} />);
     }
   };
@@ -120,9 +132,9 @@ const TakeVideo = () => {
         variant="outline"
         flexDir="column"
         height="30vw"
-              maxH={120}
-              width="30vw"
-              maxW={120}
+        maxH={120}
+        width="30vw"
+        maxW={120}
         onClick={() => {
           setRecordedChunks([]);
           setCamera(!camera);
@@ -132,108 +144,138 @@ const TakeVideo = () => {
         <Text fontSize="xs">Film</Text>
       </Button>
       {/* CAMERA  */}
-      {camera && (<Portal>
-        <Box position="absolute" zIndex={3} top={0} left={0} height="100%">
-          <WebCam
-            ref={webcamRef}
-            audio="true"
-            onUserMedia={() => setCameraReady(true)}
-            onUserMediaError={() => setCamera(false)}
-            style={{ height: "100%", objectFit: "cover" }}
-            mirrored={facingMode === "user" ? true : false}
-            videoConstraints={{ facingMode }}
-          />
-        </Box>
+      {camera && (
+        <Portal>
+          <Box position="absolute" zIndex={3} top={0} left={0} height="100%">
+            <WebCam
+              ref={webcamRef}
+              audio="true"
+              onUserMedia={() => setCameraReady(true)}
+              onUserMediaError={() => setCamera(false)}
+              style={{ height: "100%", objectFit: "cover" }}
+              mirrored={facingMode === "user" ? true : false}
+              videoConstraints={{ facingMode }}
+            />
+          </Box>
 
-      {cameraReady && (
-        <>
-          <Flex position="absolute" zIndex={3} top={0} left={0} width='100%' justify={'space-between'}>
-            {/* CLOSE BUTTON  */}
-            <Button
-              fontSize="xl"
-              className="bi-x-lg"
-              onClick={() => (capturing ? handleCancel() : handleExit())}
-            ></Button>
-            {/* SELFIE BUTTON  */}
-            <Button
-              className="bi-arrow-repeat"
-              fontSize="xl"
-              onClick={() =>
-                facingMode === "user"
-                  ? setFacingMode("environment")
-                  : setFacingMode("user")
-              }
-            ></Button>
-            
-            <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
-              <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex} />
-            </Flex>
-
-          </Flex>
-
-          {/* CONTROLS BUTTONS */}
-          <HStack
-            position="absolute"
-            zIndex={3}
-            left={"50%"}
-            transform="auto"
-            translateX="-50%"
-            bottom={"10%"}
-          >
-            {capturing && (
-              <HStack>
-                {isPaused ? (
-                  <Button className="bi-play" onClick={handlePlay}></Button>
-                ) : (
-                  <Button className="bi-pause" onClick={handlePause}></Button>
-                )}
-                <Box>
-                  <span>{String(minutes).padStart(2, 0)}</span>:
-                  <span>{String(seconds).padStart(2, 0)}</span>
-                </Box>
-              </HStack>
-            )}
-
-            {/* SAVE & RESET BUTTON  */}
-            {recordedChunks.length > 0 && !capturing && (
+          {cameraReady && (
+            <>
+              {/* CLOSE BUTTON  */}
               <Button
-                onClick={handleStartCaptureClick}
-                className="bi-arrow-clockwise"
-              ></Button>
-            )}
-            {/* start & end capturing button  */}
-            {!capturing ? (
+                position="absolute"
+                fontSize="2xl"
+                zIndex={3}
+                top={2}
+                left={3}
+                onClick={() => (capturing ? handleCancel() : handleExit())}
+              >
+                <IonIcon icon={close} />
+              </Button>
+              {/* SELFIE BUTTON  */}
               <Button
-                boxSize={14}
+                fontSize="2xl"
+                position="absolute"
+                zIndex={3}
+                top={2}
+                right={3}
+                onClick={() =>
+                  facingMode === "user"
+                    ? setFacingMode("environment")
+                    : setFacingMode("user")
+                }
+              >
+                <IonIcon icon={cameraReverseOutline} />
+              </Button>
+
+              <Flex
+                position="absolute"
+                top={14}
+                left={0}
+                zIndex={3}
+                width="100%"
+              >
+                <QuestionSlider
+                  question={questions}
+                  index={swiperRef.current.swiper.activeIndex}
+                />
+              </Flex>
+
+              {/* CONTROLS BUTTONS */}
+              <HStack
+                position="absolute"
+                zIndex={3}
+                left={"50%"}
+                transform="auto"
+                translateX="-50%"
+                bottom={"10%"}
+                bgColor={bg}
                 rounded="full"
-                bgColor="transparent"
-                border="2px solid red"
-                className={"bi-circle-fill"}
-                fontSize={40}
-                onClick={handleStartCaptureClick}
-              ></Button>
-            ) : (
-              <Button
-                className="bi-square-fill"
-                color="red"
-                onClick={handleStopCaptureClick}
-              ></Button>
-            )}
+                width={180}
+                justify="center"
+                height={12}
+                align="center"
+              >
+                {capturing && (
+                  <HStack>
+                    {isPaused ? (
+                      <Button onClick={handlePlay} fontSize="2xl">
+                        <IonIcon icon={playOutline} />
+                      </Button>
+                    ) : (
+                      <Button onClick={handlePause} fontSize="2xl">
+                        <IonIcon icon={pauseOutline} />
+                      </Button>
+                    )}
+                    <Box>
+                      <span>{String(minutes).padStart(2, 0)}</span>:
+                      <span>{String(seconds).padStart(2, 0)}</span>
+                    </Box>
+                    <Button
+                      fontSize={"2xl"}
+                      color="red"
+                      onClick={handleStopCaptureClick}
+                    >
+                      <IonIcon icon={square} />
+                    </Button>
+                  </HStack>
+                )}
 
-            {/* SAVE & RESET BUTTON  */}
-            {recordedChunks.length > 0 && !capturing && (
-              <Button onClick={handleSubmit} className="bi-check-lg"></Button>
-            )}
-          </HStack>
-        </>
+                {/* SAVE & RESET BUTTON  */}
+                {recordedChunks.length > 0 && !capturing && (
+                  <Button fontSize={"2xl"} onClick={handleStartCaptureClick}>
+                    <IonIcon icon={refreshOutline} />
+                  </Button>
+                )}
+                {/* start & end capturing button  */}
+                {!capturing && (
+                  <Button
+                    boxSize={12}
+                    rounded="full"
+                    bgColor="transparent"
+                    border="2px solid red"
+                    fontSize={"3xl"}
+                    onClick={handleStartCaptureClick}
+                  >
+                    <IonIcon icon={ellipse} />
+                  </Button>
+                )}
+
+                {/* SAVE & RESET BUTTON  */}
+                {recordedChunks.length > 0 && !capturing && (
+                  <Button fontSize={"2xl"} onClick={handleSubmit}>
+                    <IonIcon icon={checkmark} />
+                  </Button>
+                )}
+              </HStack>
+            </>
+          )}
+        </Portal>
       )}
-      </Portal>
-    )}
 
       {/* Exit confirmation modal */}
       <Modal isCentered onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
-        <ModalContent bg={bg}>
+        <ModalContent bg={modalBg}>
           <ModalHeader>Fermer la camera</ModalHeader>
           <ModalBody>
             Tena hiala marina ve ? Mbola misy enregistrement mandeha ao mantsy

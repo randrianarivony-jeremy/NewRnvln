@@ -20,8 +20,10 @@ const SignIn = ({ setSignin }) => {
   const passwordRef = useRef();
   const [passwordError, setPasswordError] = useState();
   const [showPwd, setShowPwd] = useState(false);
-  const [login, { error, isSuccess: loginSuccess, isError }] =
-    useLoginMutation();
+  const [
+    login,
+    { error, isSuccess: loginSuccess, isError, isLoading: loginLoading },
+  ] = useLoginMutation();
   const [initiate, { data, isSuccess, isLoading }] = useInitiateMutation();
 
   const handleSubmit = async (e) => {
@@ -121,7 +123,7 @@ const SignIn = ({ setSignin }) => {
               </Button>
             </Flex>
             <Button
-              isLoading={isLoading}
+              isLoading={loginLoading || isLoading}
               loadingText="Connexion"
               variant="primary"
               onClick={() => submitRef.current.click()}

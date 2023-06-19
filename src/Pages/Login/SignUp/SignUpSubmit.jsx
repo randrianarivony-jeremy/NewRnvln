@@ -5,34 +5,38 @@ import { useNavigate } from "react-router-dom";
 import isEmail from "validator/lib/isEmail";
 import { currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
-import { useSignUpMutation } from "../../../Controler/Redux/Features/authSlice";
+import {
+  useInitiateMutation,
+  useSignUpMutation,
+} from "../../../Controler/Redux/Features/authSlice";
 import { signUpContext } from "../Login";
 import AuthSlide from "./AuthSlide";
 
 const SignUpSubmit = ({ swiper }) => {
   // prettier-ignore
   let {name,email,setInvalidEmail,phoneNumber,password,confirmPassword,setPasswordError,picture,job,address,} = useContext(signUpContext);
-  let { setCurrentUser } = useContext(currentUserContext);
+  let { currentUser, setCurrentUser } = useContext(currentUserContext);
   const navigate = useNavigate();
   const submitRef = useRef();
-  const [signUp, { isSuccess, data }] = useSignUpMutation();
+  const [signUp, { isSuccess: signUpSuccess, isError: signUpErrorEvent }] =
+    useSignUpMutation();
+  const [initiate, { data, isSuccess, isLoading, isError }] =
+    useInitiateMutation();
   const [submitting, setSubmitting] = useState(false);
 
   const passwordChecking = (e) => {
     e.preventDefault();
     if (password.current.value !== confirmPassword.current.value) {
       setPasswordError(true);
-      setSubmitting(false);
     } else {
-      setSubmitting(true);
       if (
         email.current !== null &&
         email.current !== undefined &&
         !isEmail(email.current.value)
       ) {
         setInvalidEmail(true);
-        setSubmitting(false);
       } else {
+        setSubmitting(true);
         if (picture.current !== undefined) storePicture();
         else
           signUp({
@@ -72,11 +76,28 @@ const SignUpSubmit = ({ swiper }) => {
   };
 
   useEffect(() => {
+    if (isError || signUpErrorEvent) {
+      setSubmitting(false);
+    }
+  }, [isError, signUpErrorEvent]);
+
+  useEffect(() => {
+    if (signUpSuccess) {
+      initiate();
+    }
+  }, [signUpSuccess]);
+
+  useEffect(() => {
     if (isSuccess) {
       setCurrentUser(data.user);
-      navigate("/");
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [currentUser]);
 
   return (
     <form

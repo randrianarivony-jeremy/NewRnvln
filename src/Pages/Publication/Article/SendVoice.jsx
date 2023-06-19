@@ -1,13 +1,30 @@
-import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Portal,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { micOutline } from "ionicons/icons";
+import {
+  checkmarkCircleOutline,
+  ellipse,
+  micOutline,
+  pauseCircleOutline,
+  playCircleOutline,
+  refreshCircleOutline,
+} from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useNavigate } from "react-router-dom";
 import { publicationContext } from "../../../Controler/Context";
 
 const SendVoice = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const bg = useColorModeValue("white", "dark.0");
   const { setContent } = useContext(publicationContext);
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
@@ -27,15 +44,14 @@ const SendVoice = () => {
   };
 
   const handleSubmit = (blob) => {
-    setContent({content:(blob),contentType:"audio"});
+    setContent({ content: blob, contentType: "audio" });
     setRecording(false);
-    navigate('/publication/media');
+    navigate("/publication/media");
   };
-  
+
   const handleReset = () => {
     stopRecording();
-    newBlob.current=false;
-    console.log('ato',newBlob.current);
+    newBlob.current = false;
   };
 
   return (
@@ -50,11 +66,17 @@ const SendVoice = () => {
               recorderControls={recorderControls}
             />
           </Box>
-          <Button position='absolute' zIndex={4} top={0} left={0} className="bi-x-lg"
-      onClick={()=>{
-        handleReset();
-        setRecording(false)
-        }}></Button>
+          <Button
+            position="absolute"
+            zIndex={4}
+            top={0}
+            left={0}
+            className="bi-x-lg"
+            onClick={() => {
+              handleReset();
+              setRecording(false);
+            }}
+          ></Button>
           <Flex
             position="absolute"
             zIndex={3}
@@ -62,7 +84,7 @@ const SendVoice = () => {
             left={0}
             height="100%"
             width="100%"
-            bgColor="dark.100"
+            bgColor={bg}
             justify="center"
             align="center"
           >
@@ -72,35 +94,32 @@ const SendVoice = () => {
                 {String(recordingTime % 60).padStart(2, 0)}
               </Text>
               <HStack>
+                <Button fontSize="4xl" variant="float" onClick={handleReset}>
+                  <IonIcon icon={refreshCircleOutline} />
+                </Button>
                 <Button
-                  className="bi-arrow-counterclockwise"
-                  fontSize="2xl"
-                  border="1px solid"
-                  rounded="full"
+                  fontSize="6xl"
                   variant="float"
-                  onClick={handleReset}
-                ></Button>
-                <Button
-                    fontSize="5xl" border="1px solid white" rounded="full" variant="float" color='red' boxSize={14}
-                  className={
-                    !isRecording
-                      ? "bi-circle-fill"
-                      : isPaused
-                      ? "bi-play"
-                      : "bi-pause"
-                  } 
+                  // color="red"
+                  boxSize={14}
                   onClick={() =>
                     !isRecording ? handleRecordingOn() : togglePauseResume()
                   }
-                ></Button>
-                <Button
-                  className="bi-check-lg"
-                  fontSize="2xl"
-                  border="1px solid"
-                  rounded="full"
-                  variant="float"
-                  onClick={stopRecording}
-                ></Button>
+                >
+                  <IonIcon
+                    icon={
+                      !isRecording
+                        ? ellipse
+                        : isPaused
+                        ? playCircleOutline
+                        : pauseCircleOutline
+                    }
+                    style={{ color: "red" }}
+                  />
+                </Button>
+                <Button fontSize="4xl" variant="float" onClick={stopRecording}>
+                  <IonIcon icon={checkmarkCircleOutline} />
+                </Button>
               </HStack>
             </Stack>
           </Flex>
@@ -109,10 +128,13 @@ const SendVoice = () => {
         <Button
           variant="outline"
           flexDir="column"
-          height='30vw' maxH={120} width='30vw' maxW={120}
+          height="30vw"
+          maxH={120}
+          width="30vw"
+          maxW={120}
           onClick={handleRecordingOn}
         >
-        <IonIcon icon={micOutline} style={{fontSize:'40px'}}/>
+          <IonIcon icon={micOutline} style={{ fontSize: "40px" }} />
           <Text fontSize={12}>Micro</Text>
         </Button>
       )}

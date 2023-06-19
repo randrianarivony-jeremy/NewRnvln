@@ -20,6 +20,7 @@ const Publication = () => {
     setContent({ content: imgSrc, contentType: "image" });
     navigate("/publication/media");
   };
+  console.log(camera);
   return (
     <Stack height="100%">
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
@@ -37,13 +38,15 @@ const Publication = () => {
               maxW={120}
               onClick={() => setCamera(true)}
             >
-              <IonIcon icon={cameraOutline} style={{fontSize:'40px'}}/>
+              <IonIcon icon={cameraOutline} style={{ fontSize: "40px" }} />
               <Text fontSize="xs">Camera</Text>
-              <TakePhoto
-                setCamera={setCamera}
-                camera={camera}
-                output={handlePhoto}
-              />
+              {camera && (
+                <TakePhoto
+                  setCamera={setCamera}
+                  camera={camera}
+                  output={handlePhoto}
+                />
+              )}
             </Button>
             <Button
               variant="outline"

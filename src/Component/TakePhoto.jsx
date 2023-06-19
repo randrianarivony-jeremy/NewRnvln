@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Portal } from "@chakra-ui/react";
+import { Box, Button, Portal } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import Compressor from "compressorjs";
 import {
@@ -33,10 +33,9 @@ const TakePhoto = ({ output, camera, setCamera }) => {
         });
       });
   };
-
-  return (
-    <Portal>
-      {camera && (
+  if (camera)
+    return (
+      <Portal>
         <Box
           position="absolute"
           zIndex={3}
@@ -66,47 +65,45 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                 bottom={"10%"}
                 transform="auto"
                 translateX="-50%"
-                bgColor="transparent"
                 fontSize={80}
                 onClick={capture}
               >
                 <IonIcon icon={radioButtonOnOutline} />
               </Button>
-              <Flex
-                className="camera"
-                top={0}
-                left={0}
+              {/* CLOSE BUTTON  */}
+              <Button
+                position="absolute"
+                fontSize="2xl"
+                zIndex={3}
+                top={2}
+                left={3}
+                onClick={() => {
+                  setCamera(false);
+                  setCameraReady(false);
+                }}
+              >
+                <IonIcon icon={close} />
+              </Button>
+              {/* SELFIE BUTTON  */}
+              <Button
+                fontSize="2xl"
                 position="absolute"
                 zIndex={3}
-                justify="space-between"
-                width="100%"
+                top={2}
+                right={3}
+                onClick={() =>
+                  facingMode === "user"
+                    ? setFacingMode("environment")
+                    : setFacingMode("user")
+                }
               >
-                <Button
-                  fontSize="xl"
-                  onClick={() => {
-                    setCamera(false);
-                    setCameraReady(false);
-                  }}
-                >
-                  <IonIcon icon={close} />
-                </Button>
-                <Button
-                  fontSize="xl"
-                  onClick={() =>
-                    facingMode === "user"
-                      ? setFacingMode("environment")
-                      : setFacingMode("user")
-                  }
-                >
-                  <IonIcon icon={cameraReverseOutline} />
-                </Button>
-              </Flex>
+                <IonIcon icon={cameraReverseOutline} />
+              </Button>
             </>
           )}
         </Box>
-      )}
-    </Portal>
-  );
+      </Portal>
+    );
 };
 
 export default TakePhoto;

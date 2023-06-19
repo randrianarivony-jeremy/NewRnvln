@@ -6,12 +6,11 @@ import {
   Select,
   Stack,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader } from "../../../Component/Miscellanous";
-import { apiCall } from "../../../Controler/App";
+import { ErrorRender, Loader } from "../../../Component/Miscellanous";
+import { useFetchQuestionQuery } from "../../../Controler/Redux/Features/questionSlice";
 import InterviewSwiper from "./InterviewSwiper";
 import SubmitHandler from "./SubmitHandler";
 
@@ -26,39 +25,21 @@ const Interview = () => {
   const questions = useRef();
   const swiperRef = useRef();
   const publicConfidentiality = useRef(false);
-  const toast = useToast();
+  const { data, isSuccess, isError, error } = useFetchQuestionQuery(questionId);
 
   useEffect(() => {
-    const fetchQuestion = async () => {
-      await apiCall.get("question/" + questionId).then(
-        (res) => {
-          let mirror = [];
-          res.data.data.map(() => {
-            mirror.push(true);
-            responseData.current.push("empty");
-          });
-          setShowOptions(mirror);
-          questions.current = res.data;
-          setLoading(false);
-        },
-        (err) => {
-          toast({
-            status: "error",
-            duration: 5000,
-            description: err.message + "Veuillez réessayer s'il vous plait",
-            title: "Operation failed",
-          });
-          navigate(-1);
-        }
-      );
-    };
-    fetchQuestion();
-  }, []);
-
-  // useEffect(()=>{
-  //   if (swiperRef.current)
-  //   changeDisabled.current=showOptions[swiperRef.current.swiper.activeIndex]
-  // },[showOptions])
+    if (isSuccess) {
+      let mirror = [];
+      data.data.map(() => {
+        mirror.push(true);
+        responseData.current.push("empty");
+      });
+      setShowOptions(mirror);
+      questions.current = data;
+      setLoading(false);
+    }
+    if (isError) setLoading(false);
+  }, [isSuccess, isError]);
 
   return (
     <interviewContext.Provider
@@ -69,7 +50,7 @@ const Interview = () => {
         responseData,
         showOptions,
         setShowOptions,
-        publicConfidentiality
+        publicConfidentiality,
       }}
     >
       <Box>
@@ -86,10 +67,14 @@ const Interview = () => {
             ></Button>
             <Button>Interview</Button>
           </Flex>
-          {!loading && questions.current.data.length > 1 && <SubmitHandler />}
+          {!loading && isSuccess && questions.current.data.length > 1 && (
+            <SubmitHandler />
+          )}
         </Flex>
         {loading ? (
           <Loader />
+        ) : isError ? (
+          <ErrorRender isError={isError} error={error} />
         ) : (
           <Stack spacing={5} paddingBottom={2}>
             <InterviewSwiper />

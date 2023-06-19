@@ -40,17 +40,19 @@ export const postSlice = apiSlice.injectEndpoints({
     fetchMoreContents: builder.mutation({
       query: (lastPostCreatedAt) => "feeds/" + lastPostCreatedAt,
       transformResponse: (responseData) => {
-        responseData = responseData.map((elt) => {
-          if (elt.type === "publication" || elt.type === "interview")
-            return elt;
-          else return { ...elt, type: "question" };
-        });
+        if (responseData !== null) {
+          responseData = responseData.map((elt) => {
+            if (elt.type === "publication" || elt.type === "interview")
+              return elt;
+            else return { ...elt, type: "question" };
+          });
+        }
         return responseData;
       },
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.length > 0)
+          if (data!==null && data.length > 0)
             dispatch(
               postSlice.util.updateQueryData(
                 "fetchContents",

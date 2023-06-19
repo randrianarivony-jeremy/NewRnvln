@@ -20,7 +20,15 @@ import { useStopwatch } from "react-timer-hook";
 import { publicationContext } from "../../../Controler/Context";
 import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
-import { videocamOutline } from "ionicons/icons";
+import {
+  cameraReverseOutline,
+  checkmarkOutline,
+  close,
+  pauseOutline,
+  playOutline,
+  refreshOutline,
+  videocamOutline,
+} from "ionicons/icons";
 
 const VideoRecord = () => {
   const webcamRef = useRef(null);
@@ -113,13 +121,16 @@ const VideoRecord = () => {
       <Button
         variant="outline"
         flexDir="column"
-        height='30vw' maxH={120} width='30vw' maxW={120}
+        height="30vw"
+        maxH={120}
+        width="30vw"
+        maxW={120}
         onClick={() => {
           setRecordedChunks([]);
           setCamera(!camera);
         }}
       >
-      <IonIcon icon={videocamOutline} style={{fontSize:'40px'}}/>
+        <IonIcon icon={videocamOutline} style={{ fontSize: "40px" }} />
         <Text fontSize="xs">Film</Text>
       </Button>
       {/* CAMERA  */}
@@ -144,25 +155,27 @@ const VideoRecord = () => {
             position="absolute"
             fontSize="xl"
             zIndex={3}
-            top={5}
-            left={5}
-            className="bi-x-lg"
+            top={2}
+            left={3}
             onClick={() => (capturing ? handleCancel() : handleExit())}
-          ></Button>
+          >
+            <IonIcon icon={close} />
+          </Button>
           {/* SELFIE BUTTON  */}
           <Button
-            className="bi-arrow-repeat"
             fontSize="xl"
             position="absolute"
             zIndex={3}
-            top={5}
-            right={5}
+            top={2}
+            right={3}
             onClick={() =>
               facingMode === "user"
                 ? setFacingMode("environment")
                 : setFacingMode("user")
             }
-          ></Button>
+          >
+            <IonIcon icon={cameraReverseOutline} />
+          </Button>
 
           {/* CONTROLS BUTTONS */}
           <HStack
@@ -176,9 +189,13 @@ const VideoRecord = () => {
             {capturing && (
               <HStack>
                 {isPaused ? (
-                  <Button className="bi-play" onClick={handlePlay}></Button>
+                  <Button onClick={handlePlay}>
+                    <IonIcon icon={playOutline} />
+                  </Button>
                 ) : (
-                  <Button className="bi-pause" onClick={handlePause}></Button>
+                  <Button onClick={handlePause}>
+                    <IonIcon icon={pauseOutline} />
+                  </Button>
                 )}
                 <Box>
                   <span>{String(minutes).padStart(2, 0)}</span>:
@@ -189,10 +206,9 @@ const VideoRecord = () => {
 
             {/* SAVE & RESET BUTTON  */}
             {recordedChunks.length > 0 && !capturing && (
-              <Button
-                onClick={handleStartCaptureClick}
-                className="bi-arrow-clockwise"
-              ></Button>
+              <Button onClick={handleStartCaptureClick} fontSize="2xl">
+                <IonIcon icon={refreshOutline} />
+              </Button>
             )}
             {/* start & end capturing button  */}
             {!capturing ? (
@@ -215,7 +231,9 @@ const VideoRecord = () => {
 
             {/* SAVE & RESET BUTTON  */}
             {recordedChunks.length > 0 && !capturing && (
-              <Button onClick={handleSubmit} className="bi-check-lg"></Button>
+              <Button onClick={handleSubmit} fontSize="2xl">
+                <IonIcon icon={checkmarkOutline} />
+              </Button>
             )}
           </HStack>
         </>

@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Loader } from "../../Component/Miscellanous";
+import { ErrorRender, Loader } from "../../Component/Miscellanous";
 import {
   useFetchContentsQuery,
   useFetchMoreContentsMutation,
@@ -18,7 +18,8 @@ const ForYouPage = () => {
     isError,
     error,
   } = useFetchContentsQuery();
-  const [fetchMoreContents] = useFetchMoreContentsMutation();
+  const [fetchMoreContents, { isLoading: loading }] =
+    useFetchMoreContentsMutation();
 
   useLayoutEffect(() => {
     if (isSuccess)
@@ -28,13 +29,15 @@ const ForYouPage = () => {
   }, []);
 
   useEffect(() => {
-    if (isSuccess && postsList.ids.length === 1)
+    if (isSuccess && postsList.ids.length < 5)
       fetchMoreContents(
-        new Date(postsList.entities[postsList.ids[0]].createdAt).getTime()
+        new Date(
+          postsList.entities[postsList.ids[postsList.ids.length - 1]].createdAt
+        ).getTime()
       );
   }, [isSuccess, postsList]);
 
-  if (isError) return <p>Some error occurs {error}</p>;
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isLoading) return <Loader />;
   if (isSuccess)
     return (
@@ -44,18 +47,17 @@ const ForYouPage = () => {
         modules={[Keyboard, Mousewheel]}
         keyboard={true}
         mousewheel={{ enabled: true, forceToAxis: true }}
-        onReachEnd={() =>
-          fetchMoreContents(
-            new Date(
-              postsList.entities[
-                postsList.ids[postsList.ids.length - 1]
-              ].createdAt
-            ).getTime()
-          )
-        }
-        onSlideChange={({ activeIndex }) =>
-          localStorage.setItem("home_slide_position", activeIndex)
-        }
+        onSlideChange={({ activeIndex }) => {
+          localStorage.setItem("home_slide_position", activeIndex);
+          if (activeIndex === postsList.ids.length - 2)
+            fetchMoreContents(
+              new Date(
+                postsList.entities[
+                  postsList.ids[postsList.ids.length - 1]
+                ].createdAt
+              ).getTime()
+            );
+        }}
       >
         {postsList.ids.map((id) => (
           <SwiperSlide key={id}>
@@ -66,6 +68,11 @@ const ForYouPage = () => {
             )}
           </SwiperSlide>
         ))}
+        {loading && (
+          <SwiperSlide className="loading">
+            <Loader />
+          </SwiperSlide>
+        )}
       </Swiper>
     );
 };

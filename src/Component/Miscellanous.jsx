@@ -1,11 +1,22 @@
-import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Stack, Text, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ErrorRender = ({ isError, error }) => {
   const navigate = useNavigate();
+  const toast = useToast();
   useEffect(() => {
-    if (isError && error.status === 403) navigate("/login");
+    if (isError && error.status === 403) {
+      toast({
+        title: "Expiration",
+        description:
+          "Vous avez atteint un mois de connexion. Veillez vous reconnecter",
+        status: "info",
+        position: "bottom",
+        duration: 5000,
+      });
+      navigate("/login");
+    }
   }, [isError]);
   return (
     <p>

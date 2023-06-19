@@ -11,12 +11,7 @@ const initialState = interviewsAdapter.getInitialState();
 export const questionSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     fetchQuestion: builder.query({
-      query: (questionId) => {
-        return {
-          url: "question/" + questionId,
-          credentials: "include",
-        };
-      },
+      query: (questionId) => "question/" + questionId,
       providesTags: (response, err, arg) => [{ type: "Question", id: arg }],
     }),
     fetchQuestionInterviews: builder.query({

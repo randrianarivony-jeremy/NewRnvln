@@ -1,5 +1,11 @@
 import { Box, Button, Flex, Portal, Text } from "@chakra-ui/react";
+import { IonIcon } from "@ionic/react";
 import Compressor from "compressorjs";
+import {
+  cameraReverseOutline,
+  close,
+  radioButtonOnOutline,
+} from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import QuestionSlider from "../../StandalonePost/QuestionSlider";
@@ -80,40 +86,44 @@ const TakePhoto = () => {
                 bottom={"10%"}
                 transform="auto"
                 translateX="-50%"
-                bgColor="transparent"
-                className="bi-circle"
                 fontSize={80}
                 onClick={capture}
-              ></Button>
-              <Flex
-                top={0}
-                left={0}
+              >
+                <IonIcon icon={radioButtonOnOutline} />
+              </Button>
+              {/* CLOSE BUTTON  */}
+              <Button
+                position="absolute"
+                fontSize="2xl"
+                zIndex={3}
+                top={2}
+                left={3}
+                onClick={() => {
+                  setCamera(false);
+                  setCameraReady(false);
+                }}
+              >
+                <IonIcon icon={close} />
+              </Button>
+              {/* SELFIE BUTTON  */}
+              <Button
+                fontSize="2xl"
                 position="absolute"
                 zIndex={3}
-                justify="space-between"
-                width="100%"
+                top={2}
+                right={3}
+                onClick={() =>
+                  facingMode === "user"
+                    ? setFacingMode("environment")
+                    : setFacingMode("user")
+                }
               >
-                <Button
-                  className="bi-x-lg"
-                  fontSize="xl"
-                  onClick={() => {
-                    setCamera(false);
-                    setCameraReady(false);
-                  }}
-                ></Button>
-                <Button
-                  className="bi-arrow-repeat"
-                  fontSize="xl"
-                  onClick={() =>
-                    facingMode === "user"
-                      ? setFacingMode("environment")
-                      : setFacingMode("user")
-                  }
-                ></Button>
-              </Flex>
+                <IonIcon icon={cameraReverseOutline} />
+              </Button>
+
               <Flex
                 position="absolute"
-                top={12}
+                top={14}
                 left={0}
                 zIndex={3}
                 width="100%"

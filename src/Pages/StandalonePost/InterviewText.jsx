@@ -16,6 +16,7 @@ const InterviewText = () => {
   useEffect(() => {
     let nbLine = Math.trunc((containerRef.current.clientHeight - 200) / 24);
     setHeight(24 * nbLine);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

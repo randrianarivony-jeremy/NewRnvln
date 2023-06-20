@@ -14,6 +14,7 @@ export const postContext = createContext();
 export const dataContext = createContext();
 
 const PostContainer = ({ post }) => {
+  console.log(post);
   const [showReaction, setShowReaction] = useState(true);
   const postSwiper = useRef();
   const containerRef = useRef();

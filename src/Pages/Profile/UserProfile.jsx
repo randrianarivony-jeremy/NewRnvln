@@ -1,26 +1,12 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-} from "@chakra-ui/react";
-import { faComments } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { arrowBack } from "ionicons/icons";
-import React, { createContext, useEffect, useState } from "react";
+import { arrowBack, chatbox } from "ionicons/icons";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader, Scroll } from "../../Component/Miscellanous";
+import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
-import UserArticles from "./Contents/UserArticles";
-import UserInterviews from "./Contents/UserInterviews";
+import ContentsTab from "./Contents/ContentsTab";
 import FriendHandler from "./Relation/FriendHandler";
 import RelationBoard from "./Relation/RelationBoard";
 import Subscribe from "./Relation/Subscribe";
@@ -30,13 +16,22 @@ export const userContext = createContext();
 
 const UserProfile = () => {
   const navigate = useNavigate();
+  const { currentUser } = useContext(currentUserContext);
   const { userId } = useParams();
   const { data, isLoading, isSuccess, isError } = useFetchUserQuery(userId);
   const [user, setUser] = useState();
+  const [friend, setFriend] = useState("none");
+  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     if (isSuccess) setUser(data);
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (currentUser.friends.includes(userId)) setFriend("friend");
+    if (currentUser.friendInvitation.includes(userId)) setFriend("invitation");
+    if (currentUser.subscriptions.includes(userId)) setSubscribed(true);
+  }, []);
 
   if (isLoading) return <Loader />;
   if (isError)
@@ -105,56 +100,31 @@ const UserProfile = () => {
 
             {/* R E L A T I O N  */}
             <Stack>
-              <Button
-                variant="outline"
-                leftIcon={<Flex className="bi-chat-left"></Flex>}
-              >
-                Envoyer un message
-              </Button>
-              <HStack justify="space-around" width="100%">
-                <FriendHandler />
-                {user.subscription ? (
-                  <Subscribe />
-                ) : (
-                  <Button
-                    variant="outline"
-                    width="100%"
-                    leftIcon={<Flex className="bi-chat-left"></Flex>}
-                    onClick={() => navigate("/chat/" + user._id)}
-                  >
-                    Message
-                  </Button>
-                )}
+              <HStack>
+                {friend === "friend" && <FriendHandler />}
+                <Button
+                  width={"100%"}
+                  variant={
+                    (friend === "invitation" && subscribed) ||
+                    friend === "friend"
+                      ? "primary"
+                      : "solid"
+                  }
+                  leftIcon={<IonIcon icon={chatbox} />}
+                >
+                  Envoyer un message
+                </Button>
               </HStack>
+              {friend !== "friend" && (
+                <HStack justify="space-around" width="100%">
+                  <FriendHandler />
+                  <Subscribe />
+                </HStack>
+              )}
               <RelationBoard user={user} />
             </Stack>
 
-            {/* P O S T S  */}
-            <Tabs size="sm" isFitted height="100%" isLazy={true}>
-              <TabList>
-                <Tab>
-                  <Stack spacing={0}>
-                    <FontAwesomeIcon size="xl" icon={faComments} />
-                    <Text fontSize="xs">Interviews</Text>
-                  </Stack>
-                </Tab>
-                <Tab>
-                  <Stack spacing={0}>
-                    <Text fontSize="xl" className="bi-grid-3x3-gap"></Text>
-                    <Text fontSize="xs">Publications</Text>
-                  </Stack>
-                </Tab>
-              </TabList>
-
-              <TabPanels>
-                <TabPanel paddingY={1} paddingX={0}>
-                  <UserInterviews user={user._id} />
-                </TabPanel>
-                <TabPanel paddingY={1} paddingX={0}>
-                  <UserArticles user={user._id} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+            <ContentsTab userId={user._id} />
           </Scroll>
         </userContext.Provider>
       </Stack>

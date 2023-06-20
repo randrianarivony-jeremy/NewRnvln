@@ -16,6 +16,7 @@ const TextItem = () => {
   useEffect(() => {
     let nbLine = Math.trunc((containerRef.current.clientHeight - 100) / 24);
     setHeight(24 * nbLine);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const TextItem = () => {
       setTextOverflow(true);
     } else setTextOverflow(false);
     publicationSwiperRef.current.swiper.update();
+
   }, [expand, height]);
 
   return (

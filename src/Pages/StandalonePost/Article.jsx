@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Button, Image, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AudioDisplay from "../../Component/AudioDisplay";
 import { dataContext } from "./PostContainer";
@@ -7,6 +7,7 @@ import TextPost from "./TextPost";
 const Article = () => {
   const videoRef = useRef();
   const [isPaused, setIsPaused] = useState();
+  // eslint-disable-next-line
   const [imgLoading, setImgLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
   const [videoError, setVideoError] = useState(false);
@@ -19,7 +20,7 @@ const Article = () => {
 
   return (
     <>
-      {data.contentType == "video" ? (
+      {data.contentType === "video" ? (
         <>
           {!videoError && !isPaused && (
             <Button

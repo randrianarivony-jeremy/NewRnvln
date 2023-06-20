@@ -1,28 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  HStack,
-  Image,
-  Input,
-  Stack,
-  Text,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
+// prettier-ignore
+import {Avatar,Box,Button,Checkbox,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,DrawerOverlay,Flex,FormControl,FormErrorMessage,FormLabel,Heading,HStack,Image,Input,Stack,Text,useDisclosure,useToast,} from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { apiCall, currentUserContext } from "../../../Controler/App";
 import { userContext } from "../UserProfile";
@@ -30,7 +7,11 @@ import Unsubscribe from "./Unsubscribe";
 
 const Subscribe = () => {
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const { onOpen:openUnsubscribeModal, isOpen:unsubscribeModal, onClose:closeUnsubscribeModal } = useDisclosure();
+  const {
+    onOpen: openUnsubscribeModal,
+    isOpen: unsubscribeModal,
+    onClose: closeUnsubscribeModal,
+  } = useDisclosure();
   let currentDate = new Date();
   const [passwordErr, setPasswordErr] = useState(false);
   const { user, setUser } = useContext(userContext);
@@ -40,6 +21,7 @@ const Subscribe = () => {
   const submitControl = useRef();
   const toast = useToast();
   const [subscribed, setSubscribed] = useState(false);
+  const [friend, setFriend] = useState("none");
 
   const handleDateFormat = () => {
     return currentDate.toLocaleString("fr-FR", {
@@ -68,12 +50,10 @@ const Subscribe = () => {
     e.preventDefault();
     setSubmitting(true);
     await apiCall
-      .patch(
-        
-          "user/subscribe/" +
-          currentUser._id,
-        { id_user: user._id, password: passwordRef.current.value }
-      )
+      .patch("user/subscribe/" + currentUser._id, {
+        id_user: user._id,
+        password: passwordRef.current.value,
+      })
       .then(
         (res) => {
           setCurrentUser({
@@ -119,21 +99,38 @@ const Subscribe = () => {
   useEffect(() => {
     if (currentUser.subscriptions.includes(user._id)) setSubscribed(true);
     else setSubscribed(false);
+
+    if (currentUser.friends.includes(user._id)) setFriend("friend");
+    else {
+      if (currentUser.friendRequest.includes(user._id)) setFriend("request");
+      else {
+        if (currentUser.friendInvitation.includes(user._id))
+          setFriend("invitation");
+        else setFriend("none");
+      }
+    }
   }, [currentUser, user]);
 
   return (
     <>
       <Button
         width="100%"
-        rounded='full'
-        variant={subscribed ? "outline" : "cta"}
-        onClick={()=>subscribed ? openUnsubscribeModal() : onOpen()}
+        variant={
+          !subscribed && (friend === "none" || friend === "invitation")
+            ? "primary"
+            : "solid"
+        }
+        onClick={() => (subscribed ? openUnsubscribeModal() : onOpen())}
       >
         {subscribed ? "Abonné" : "S'abonner"}
         {/* {subscribed ? "Abonné" : `S'abonner ${user.fees}kAr`} */}
       </Button>
 
-      <Unsubscribe isOpen={unsubscribeModal} onOpen={openUnsubscribeModal} onClose={closeUnsubscribeModal}/>
+      <Unsubscribe
+        isOpen={unsubscribeModal}
+        onOpen={openUnsubscribeModal}
+        onClose={closeUnsubscribeModal}
+      />
       <Drawer
         onOpen={onOpen}
         isOpen={isOpen}

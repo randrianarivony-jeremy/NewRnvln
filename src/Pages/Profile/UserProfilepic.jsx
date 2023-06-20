@@ -16,7 +16,7 @@ const UserProfilepic = ({ picture }) => {
   return (
     <>
       {picture ? (
-        <Flex boxSize={"60px"} position="relative">
+        <Flex boxSize={"60px"} position="relative" onClick={onOpen}>
           <Image
             src={picture}
             alt="profile_pic"

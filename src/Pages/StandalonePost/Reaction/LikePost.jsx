@@ -14,6 +14,7 @@ const LikePost = ({ post }) => {
   useEffect(() => {
     if (post.likers.includes(currentUser._id)) setLiked(true);
     else setLiked(false);
+    // eslint-disable-next-line
   }, [post]);
   return (
     <Button

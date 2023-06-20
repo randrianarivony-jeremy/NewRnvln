@@ -1,5 +1,5 @@
-import { extendTheme, Flex, Stack } from "@chakra-ui/react";
-import { mode } from '@chakra-ui/theme-tools'
+import { extendTheme } from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 
 const config = {
   initialColorMode: "dark",
@@ -7,12 +7,12 @@ const config = {
 
 export const theme = extendTheme({
   styles: {
-    global: (props)=>({
+    global: (props) => ({
       // styles for the `body`
-      'body,html': {
-        fontFamily:'Nunito Sans,body,Arial',
-        bg: mode('whiteAlpha.50', 'dark.0')(props),
-        color: mode('gray.800', 'whiteAlpha.900')(props)
+      "body,html": {
+        fontFamily: "Nunito Sans,body,Arial",
+        bg: mode("whiteAlpha.50", "dark.0")(props),
+        color: mode("gray.800", "whiteAlpha.900")(props),
       },
     }),
   },
@@ -44,71 +44,72 @@ export const theme = extendTheme({
     gradient4: "-webkit-linear-gradient(top, #FFAE00, #F9E866)", //tropical juice
     gradient5: "-webkit-linear-gradient(right, #ad5389, #3c1053)", //expresso
     gradient6: "-webkit-linear-gradient(right, #4e54c8, #8f94fb)", //moon purple
-    gradient7: "-webkit-linear-gradient(top left, #36D1DC, #5B86E5)",//scooter 100
+    gradient7: "-webkit-linear-gradient(top left, #36D1DC, #5B86E5)", //scooter 100
     // gradient7: "-webkit-linear-gradient(right, #ff9966, #ff5e62)",//orange coral
-    gradient8: "-webkit-linear-gradient(right, #ff416c, #ff4b2b)",//burning orange
-    gradient9: "-webkit-linear-gradient(bottom right, #00416a, #799f0c, #ffe000)",//combi
-    gradient10: "-webkit-linear-gradient(right, #1488CC, #2B32B2)",//skyline
+    gradient8: "-webkit-linear-gradient(right, #ff416c, #ff4b2b)", //burning orange
+    gradient9:
+      "-webkit-linear-gradient(bottom right, #00416a, #799f0c, #ffe000)", //combi
+    gradient10: "-webkit-linear-gradient(right, #1488CC, #2B32B2)", //skyline
   },
   components: {
     Button: {
-      baseStyle:{
-        textOverflow:'ellipsis'
+      baseStyle: {
+        textOverflow: "ellipsis",
       },
       variants: {
-        cta: (props)=>({
+        cta: (props) => ({
           bg: "gradient",
           color: "black",
           borderRadius: "full",
           _hover: {
-            bg: mode('gray.100', 'whiteAlpha.200')(props),
+            bg: mode("gray.100", "whiteAlpha.200")(props),
           },
         }),
         primary: {
           bg: "bleu",
           color: "white",
           _hover: {
-            bg:'whiteAlpha.200'
+            bg: "whiteAlpha.200",
           },
         },
         dissuasive: {
           bg: "#db3030",
           color: "white",
           _hover: {
-            bg:'whiteAlpha.200'
+            bg: "whiteAlpha.200",
           },
         },
-        float: (props)=>({
+        float: (props) => ({
           bg: "transparent",
-          paddingX:0,
-          fontSize:'2xl',
+          paddingX: 0,
+          fontSize: "2xl",
           boxSize: "40px",
           borderRadius: "5px",
           _hover: {
-            bg: mode('gray.100', 'whiteAlpha.200')(props),
+            bg: mode("gray.100", "whiteAlpha.200")(props),
           },
         }),
-        ghost:{
-          _active:{
-            bgColor:'initial'
-          }
+        ghost: {
+          _active: {
+            bgColor: "initial",
+          },
         },
-        outline:{
-          _active:{
-            bgColor:'initial'
-          }
+        outline: {
+          _active: {
+            bgColor: "initial",
+          },
         },
-        solid:{
-          _active:{
-            bgColor:'initial'
-          }
+        solid: {
+          _active: {
+            bgColor: "initial",
+          },
         },
-        link:{
-          height:'20px',
-          _active:{
-            bgColor:'initial'
-          }
-        }
+        link: {
+          height: "20px",
+          _active: {
+            bgColor: "initial",
+          },
+        },
       },
       defaultProps: {
         variant: "ghost",

@@ -1,10 +1,16 @@
 // prettier-ignore
-import {Box,Button,Flex,HStack,Stack,Tab,TabList,TabPanel,TabPanels,Tabs,Text,useDisclosure,} from "@chakra-ui/react";
-import { faComments } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 // prettier-ignore
-import {addCircleOutline,apps,arrowBack,bookmarkOutline,briefcase,flag,location,pencil,settingsOutline,walletOutline,} from "ionicons/icons";
+import { addCircleOutline, arrowBack, briefcase, flag, location, pencil, settingsOutline } from "ionicons/icons";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader, Scroll } from "../../Component/Miscellanous";
@@ -12,8 +18,7 @@ import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import { iconMd } from "../../Styles/Theme";
-import UserArticles from "./Contents/UserArticles";
-import UserInterviews from "./Contents/UserInterviews";
+import ContentsTab from "./Contents/ContentsTab";
 import RelationBoard from "./Relation/RelationBoard";
 import AddressModal from "./UpdateProfile/AddressModal";
 import JobModal from "./UpdateProfile/JobModal";
@@ -210,65 +215,7 @@ const Profile = () => {
           {/* R E L A T I O N  */}
           <RelationBoard user={currentUser} />
 
-          {/* P O S T S  T A B  */}
-          <Tabs size="sm" isFitted height="100%" isLazy={true}>
-            <TabList>
-              <Tab width="25%">
-                <Stack spacing={0}>
-                  <FontAwesomeIcon size="xl" icon={faComments} />
-                  <Text fontSize="xs">Interviews</Text>
-                </Stack>
-              </Tab>
-              <Tab width="25%">
-                <Stack spacing={0}>
-                  <Text fontSize="xl">
-                    <IonIcon icon={apps} />
-                  </Text>
-                  <Text fontSize="xs">Publications</Text>
-                </Stack>
-              </Tab>
-              <Tab width="25%" overflowX="hidden">
-                <Stack spacing={0}>
-                  <Text fontSize="xl">
-                    <IonIcon icon={bookmarkOutline} />
-                  </Text>
-                  <Text fontSize="xs">Enregistrements</Text>
-                </Stack>
-              </Tab>
-              <Tab width="25%">
-                <Stack spacing={0}>
-                  <Text fontSize="xl">
-                    <IonIcon icon={walletOutline} />
-                  </Text>
-                  <Text fontSize="xs">Portefeuille</Text>
-                </Stack>
-              </Tab>
-            </TabList>
-
-            <TabPanels>
-              <TabPanel paddingY={1} paddingX={0}>
-                <UserInterviews user={currentUser._id} />
-              </TabPanel>
-              <TabPanel paddingY={1} paddingX={0}>
-                <UserArticles user={currentUser._id} />
-              </TabPanel>
-              <TabPanel paddingY={1} paddingX={0}>
-                <Flex wrap="wrap" justify="center">
-                  EMPTY STATE
-                </Flex>
-              </TabPanel>
-              <TabPanel paddingY={1} paddingX={0}>
-                <Flex justify="flex-end">
-                  <Button variant="outline">Transfert</Button>
-                </Flex>
-                <Flex align="center" justify="center" height="100px">
-                  <Text fontWeight="bold" fontSize="3xl" textAlign="center">
-                    {currentUser.wallet} kAr
-                  </Text>
-                </Flex>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+          <ContentsTab userId={currentUser._id} />
         </Scroll>
 
         <Navigation />

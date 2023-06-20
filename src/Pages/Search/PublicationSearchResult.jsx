@@ -9,12 +9,12 @@ import Thumbs from "../Profile/Thumbs";
 const PublicationSearchResult = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
-  const { data, isLoading, isSuccess, isError } = useSearchQuery({
+  const { data, isLoading, isSuccess, isError, error } = useSearchQuery({
     type: "publication",
     query: keyword,
   });
   if (isLoading) return <UserLoader />;
-  if (isError) return <ErrorRender />;
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess && data.length === 0) return <EmptyState />;
   if (isSuccess && data.length > 0)
     return (

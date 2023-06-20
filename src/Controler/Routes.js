@@ -1,7 +1,6 @@
-import { Box, Flex, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React, { lazy, Suspense, useContext } from "react";
-import {BrowserRouter,Route,Routes as ROUTES,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes as ROUTES } from "react-router-dom";
 import { Loader } from "../Component/Miscellanous";
 import ForYouPage from "../Pages/Home/ForYouPage";
 import Home from "../Pages/Home/Home";
@@ -33,7 +32,6 @@ const QuestionInterviews = lazy(() =>
 );
 const Parameter = lazy(() => import("../Pages/Parameter/Parameter"));
 const Search = lazy(() => import("../Pages/Search/Search"));
-const SearchResult = lazy(() => import("../Pages/Search/SearchResult"));
 
 const Routes = () => {
   const { currentUser } = useContext(currentUserContext);
@@ -121,10 +119,6 @@ const Routes = () => {
           <Route
             path="/search"
             element={<Suspense fallback={<Loader />}>{currentUser ? <Search /> : <Login />}</Suspense>}
-          />
-          <Route
-            path="/search/:keyword"
-            element={<Suspense fallback={<Loader />}>{currentUser ? <SearchResult /> : <Login />}</Suspense>}
           />
         </ROUTES>
       </BrowserRouter>

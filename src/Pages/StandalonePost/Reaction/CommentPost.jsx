@@ -31,8 +31,7 @@ const CommentPost = () => {
   const { onOpen, isOpen, onClose } = useDisclosure();
   const inputRef = useRef();
   const { currentUser } = useContext(currentUserContext);
-  const [fetchComments, { isLoading, isSuccess, isError }] =
-    useLazyFetchCommentsQuery();
+  const [fetchComments, { isLoading, isError }] = useLazyFetchCommentsQuery();
   const [commentPost] = useCommentPostMutation();
 
   const openComments = () => {
@@ -46,6 +45,7 @@ const CommentPost = () => {
 
   useEffect(() => {
     if (isError) onClose();
+    // eslint-disable-next-line
   }, [isLoading, isError]);
 
   return (

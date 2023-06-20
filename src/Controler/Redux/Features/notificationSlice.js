@@ -19,7 +19,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 action: elt.action,
                 name: elt.from.name,
                 picture: elt.from.picture,
-                text: "a aimé votre publication.",
+                text: `a aimé votre ${elt.docModel}.`,
                 length: elt.on.likers.length,
                 url: "/post/" + elt.docModel + "/" + elt.on._id,
               };
@@ -29,7 +29,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 name: elt.from.name,
                 picture: elt.from.picture,
                 length: elt.on.comments.length,
-                text: "a commenté votre publication.",
+                text: `a commenté votre ${elt.docModel}.`,
                 url: "/post/" + elt.docModel + "/" + elt.on._id,
               };
             case "subscribe":

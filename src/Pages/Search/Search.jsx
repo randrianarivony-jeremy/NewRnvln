@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
-import React, { useRef } from "react";
+import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import SearchBtn from "../../Component/SearchBtn";
 import InterviewSearchResult from "./InterviewSearchResult";
@@ -23,9 +23,6 @@ const Search = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
-  const defaultIndex = searchParams.get("default_index");
-  const inputRef = useRef();
-  const searchSubmit = useRef(false);
 
   return (
     <Stack>

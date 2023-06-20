@@ -8,9 +8,8 @@ export const userSlice = apiSlice.injectEndpoints({
     }),
     fetchUserFriends: builder.query({
       query: ({ userId, category }) => "user/" + category + "/" + userId,
-      providesTags: (result) => [
-        { type: "User", id: "LIST" },
-        ...result.map((user) => ({ type: "User", id: user._id })),
+      providesTags: (res, err, { category, userId }) => [
+        { type: category, id: userId },
       ],
     }),
     addFriend: builder.mutation({
@@ -26,6 +25,7 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      invalidatesTags: (res, err, body) => [{ type: "friends", id: body.to }],
     }),
     confirmFriendRequest: builder.mutation({
       query: (body) => ({
@@ -33,6 +33,7 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      invalidatesTags: (res, err, body) => [{ type: "friends", id: body.from }],
     }),
     cancelFriendInvitation: builder.mutation({
       query: (body) => ({

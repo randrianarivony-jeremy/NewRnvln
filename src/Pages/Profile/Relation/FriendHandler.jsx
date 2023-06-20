@@ -1,23 +1,23 @@
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { people, personAdd } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { currentUserContext } from "../../../Controler/App";
 import {
   useAddFriendMutation,
   useCancelFriendInvitationMutation,
   useConfirmFriendRequestMutation,
   usePullFriendMutation,
 } from "../../../Controler/Redux/Features/userSlice";
+import { userContext } from "../UserProfile";
 
 const FriendHandler = () => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { user, setUser } = useContext(userContext);
   const { userId } = useParams();
-  const toast = useToast();
   const [friend, setFriend] = useState("none");
   const [subscribed, setSubscribed] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [addFriend, { isSuccess: AFIsSuccess, isLoading: AFIsLoading }] =
     useAddFriendMutation();
   const [pullFriend, { isSuccess: PFIsSuccess, isLoading: PFIsLoading }] =
@@ -30,109 +30,6 @@ const FriendHandler = () => {
     confirmFriendRequest,
     { isSuccess: CFRIsSuccess, isLoading: CFRIsLoading },
   ] = useConfirmFriendRequestMutation();
-
-  // const addFriend = async () => {
-  //   setSubmitting(true);
-  //   await apiCall
-  //     .patch("user/friend_invitation/", { to: userId, from: currentUser._id })
-  //     .then(
-  //       () => {
-  //         setCurrentUser({
-  //           ...currentUser,
-  //           friendInvitation: [...currentUser.friendInvitation, userId],
-  //         });
-  //       },
-  //       () => {
-  //         toast({
-  //           status: "error",
-  //           duration: 5000,
-  //           isClosable: true,
-  //           title: "Error",
-  //           description: "Une erreur est survenue",
-  //         });
-  //       }
-  //     )
-  //     .finally(() => setSubmitting(false));
-  // };
-
-  const confirmRequest = async () => {
-    setSubmitting(true);
-    await apiCall
-      .patch("user/accept_friend/", { to: userId, from: currentUser._id })
-      .then(
-        () => {
-          setCurrentUser({
-            ...currentUser,
-            friendRequest: currentUser.friendRequest.filter(
-              (elt) => elt !== userId
-            ),
-            friends: [...currentUser.friends, userId],
-          });
-          setSubmitting(false);
-        },
-        () => {
-          toast({
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            title: "Error",
-            description: "Une erreur est survenue",
-          });
-        }
-      )
-      .finally(() => setSubmitting(false));
-  };
-  const cancelInvitation = async () => {
-    setSubmitting(true);
-    await apiCall
-      .patch("user/cancel_invitation/", { to: userId, from: currentUser._id })
-      .then(
-        () => {
-          setCurrentUser({
-            ...currentUser,
-            friendInvitation: currentUser.friendInvitation.filter(
-              (elt) => elt !== userId
-            ),
-          });
-          setSubmitting(false);
-        },
-        () => {
-          toast({
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            title: "Error",
-            description: "Une erreur est survenue",
-          });
-        }
-      )
-      .finally(() => setSubmitting(false));
-  };
-
-  // const pullFriend = async () => {
-  //   setSubmitting(true);
-  //   await apiCall
-  //     .patch("user/pull_friend/", { to: userId, from: currentUser._id })
-  //     .then(
-  //       () => {
-  //         setCurrentUser({
-  //           ...currentUser,
-  //           friends: currentUser.friends.filter((elt) => elt !== userId),
-  //         });
-  //         setSubmitting(false);
-  //       },
-  //       () => {
-  //         toast({
-  //           status: "error",
-  //           duration: 5000,
-  //           isClosable: true,
-  //           title: "Error",
-  //           description: "Une erreur est survenue",
-  //         });
-  //       }
-  //     )
-  //     .finally(() => setSubmitting(false));
-  // };
 
   useEffect(() => {
     if (currentUser.subscriptions.includes(userId)) setSubscribed(true);
@@ -149,19 +46,25 @@ const FriendHandler = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    if (AFIsSuccess)
+    if (AFIsSuccess) {
       setCurrentUser({
         ...currentUser,
         friendInvitation: [...currentUser.friendInvitation, userId],
       });
+    }
   }, [AFIsLoading]);
 
   useEffect(() => {
-    if (PFIsSuccess)
+    if (PFIsSuccess) {
       setCurrentUser({
         ...currentUser,
         friends: currentUser.friends.filter((elt) => elt !== userId),
       });
+      setUser({
+        ...user,
+        friends: user.friends.filter((elt) => elt !== currentUser._id),
+      });
+    }
   }, [PFIsLoading]);
 
   useEffect(() => {
@@ -177,7 +80,7 @@ const FriendHandler = () => {
   }, [CFIIsLoading]);
 
   useEffect(() => {
-    if (CFRIsSuccess)
+    if (CFRIsSuccess) {
       setCurrentUser({
         ...currentUser,
         friendRequest: currentUser.friendRequest.filter(
@@ -185,6 +88,11 @@ const FriendHandler = () => {
         ),
         friends: [...currentUser.friends, userId],
       });
+      setUser({
+        ...user,
+        friends: [...user.friends, currentUser._id],
+      });
+    }
   }, [CFRIsLoading]);
 
   return (

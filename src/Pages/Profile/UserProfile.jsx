@@ -28,10 +28,17 @@ const UserProfile = () => {
   }, [isSuccess]);
 
   useEffect(() => {
-    if (currentUser.friends.includes(userId)) setFriend("friend");
-    if (currentUser.friendInvitation.includes(userId)) setFriend("invitation");
     if (currentUser.subscriptions.includes(userId)) setSubscribed(true);
-  }, []);
+    if (currentUser.friends.includes(userId)) setFriend("friend");
+    else {
+      if (currentUser.friendRequest.includes(userId)) setFriend("request");
+      else {
+        if (currentUser.friendInvitation.includes(userId))
+          setFriend("invitation");
+        else setFriend("none");
+      }
+    }
+  }, [currentUser]);
 
   if (isLoading) return <Loader />;
   if (isError)

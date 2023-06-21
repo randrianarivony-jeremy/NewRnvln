@@ -36,7 +36,7 @@ const SendPicture = () => {
               sender: currentUser._id,
               recipient: userId, //this conversationId from params would be the userId
               content: urlRef.current,
-              conversationId: conversation._id,
+              conversationId: conversation?._id ?? null,
               contentType: "image",
               createdAt: new Date().toJSON(),
             });

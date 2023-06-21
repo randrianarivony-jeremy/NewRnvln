@@ -44,12 +44,12 @@ const ChatScroller = () => {
           className="scrollablefeed"
           ref={scrollRef}
         >
-          {messages.ids.length > 0 ? (
-            messages.ids.map((id) => <SingleMessage messageId={id} key={id} />)
-          ) : (
+          {messages === null || messages?.ids.length === 0 ? (
             <Flex justify="center" alignItems="center" height="100%">
               <Text>Démarrez une nouvelle conversation</Text>
             </Flex>
+          ) : (
+            messages.ids.map((id) => <SingleMessage messageId={id} key={id} />)
           )}
         </ScrollableFeed>
       </Box>

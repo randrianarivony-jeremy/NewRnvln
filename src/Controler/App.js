@@ -15,7 +15,8 @@ import {
   setNewNotification,
   setNewSecondMessage,
 } from "./Redux/Features/credentialSlice";
-import { useInitiateMutation } from "./Redux/Features/authSlice";
+import { notificationSlice } from "./Redux/Features/notificationSlice";
+import { useInitiateQuery } from "./Redux/Features/authSlice";
 
 export const currentUserContext = createContext();
 export const apiCall = axios.create({
@@ -34,11 +35,12 @@ function App() {
     (state) => state.token
   );
   const dispatch = useDispatch();
-  const [initiate, { data, isSuccess, isLoading, isUninitialized }] =
-    useInitiateMutation();
+  const { data, isSuccess, isLoading, isUninitialized } = useInitiateQuery(
+    "current_user",
+    { refetchOnReconnect: true }
+  );
 
   useEffect(() => {
-    initiate();
     localStorage.setItem("home_slide_position", 0);
   }, []);
 
@@ -55,9 +57,10 @@ function App() {
       if (category == "main") dispatch(setNewMainMessage(newMainMessage + 1));
       else dispatch(setNewSecondMessage(newSecondMessage + 1));
     });
-    socket.on("new notification", () =>
-      dispatch(setNewNotification(newNotification + 1))
-    );
+    socket.on("new notification", () => {
+      dispatch(setNewNotification(newNotification + 1));
+      dispatch(notificationSlice.util.invalidateTags(["Notification"]));
+    });
   });
 
   return (

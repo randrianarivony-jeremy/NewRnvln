@@ -6,7 +6,7 @@ import isEmail from "validator/lib/isEmail";
 import { currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
 import {
-  useInitiateMutation,
+  useLazyInitiateQuery,
   useSignUpMutation,
 } from "../../../Controler/Redux/Features/authSlice";
 import { signUpContext } from "../Login";
@@ -20,8 +20,7 @@ const SignUpSubmit = ({ swiper }) => {
   const submitRef = useRef();
   const [signUp, { isSuccess: signUpSuccess, isError: signUpErrorEvent }] =
     useSignUpMutation();
-  const [initiate, { data, isSuccess, isLoading, isError }] =
-    useInitiateMutation();
+  const [initiate, { data, isSuccess, isError }] = useLazyInitiateQuery();
   const [submitting, setSubmitting] = useState(false);
 
   const passwordChecking = (e) => {

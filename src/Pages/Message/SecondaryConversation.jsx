@@ -11,7 +11,7 @@ import { setNewSecondMessage } from "../../Controler/Redux/Features/credentialSl
 import ConversationCard from "./ConversationCard";
 
 const SecondaryConversation = () => {
-  const { data, isLoading, isSuccess, isError } =
+  const { data, isLoading, isSuccess, isError, error } =
     useFetchConversationsQuery("second");
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ const SecondaryConversation = () => {
   }, []);
 
   if (isLoading) return <Loader />;
-  if (isError) return <ErrorRender />;
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess) {
     if (data.length === 0) return <EmptyState />;
     return (

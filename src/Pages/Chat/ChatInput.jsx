@@ -15,6 +15,7 @@ import EmojiPicker from "emoji-picker-react";
 import { chevronForward, happyOutline, send } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext, socket } from "../../Controler/App";
 import {
   useAddMessageMutation,
@@ -34,7 +35,7 @@ const ChatInputs = ({ sendResponse }) => {
   const emojibg = useColorModeValue("light", "dark");
   const [writing, setWriting] = useState(false);
   const mediaContent = useRef();
-  const [addMessage] = useAddMessageMutation();
+  const [addMessage, { isError, error }] = useAddMessageMutation();
 
   const sendText = async () => {
     setWriting(false);
@@ -72,6 +73,8 @@ const ChatInputs = ({ sendResponse }) => {
       else responseRef.current.style.height = 300 + "px";
     }
   }, [responseRef, value]);
+
+  if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
     <>

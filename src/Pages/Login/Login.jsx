@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { apiSlice } from "../../Controler/Redux/Features/apiSlice";
+import { apiSlice } from "../../Controler/Redux/apiSlice";
 import { logOut } from "../../Controler/Redux/Features/credentialSlice";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp/SignUp";

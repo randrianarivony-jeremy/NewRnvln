@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/RANAVALONA.png";
 import { currentUserContext } from "../../Controler/App";
 import {
-  useInitiateMutation,
+  useLazyInitiateQuery,
   useLoginMutation,
 } from "../../Controler/Redux/Features/authSlice";
 
@@ -24,7 +24,7 @@ const SignIn = ({ setSignin }) => {
     login,
     { error, isSuccess: loginSuccess, isError, isLoading: loginLoading },
   ] = useLoginMutation();
-  const [initiate, { data, isSuccess, isLoading }] = useInitiateMutation();
+  const [initiate, { data, isSuccess, isLoading }] = useLazyInitiateQuery();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

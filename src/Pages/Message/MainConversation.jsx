@@ -12,7 +12,7 @@ import ConversationCard from "./ConversationCard";
 
 const MainConversation = () => {
   const dispatch = useDispatch();
-  const { data, isLoading, isSuccess, isError } =
+  const { data, isLoading, isSuccess, isError, error } =
     useFetchConversationsQuery("main");
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const MainConversation = () => {
   }, []);
 
   if (isLoading) return <Loader />;
-  if (isError) return <ErrorRender />;
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess) {
     if (data.length === 0) return <EmptyState />;
     return (

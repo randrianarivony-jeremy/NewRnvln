@@ -1,5 +1,5 @@
 import { socket } from "../../App";
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../apiSlice";
 
 export const notificationSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

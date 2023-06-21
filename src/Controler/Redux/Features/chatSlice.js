@@ -1,6 +1,6 @@
 import { createEntityAdapter } from "@reduxjs/toolkit";
 import { socket } from "../../App";
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../apiSlice";
 
 export const chatAdapter = createEntityAdapter({
   selectId: (messages) => messages._id,
@@ -142,7 +142,12 @@ export const chatSlice = apiSlice.injectEndpoints({
             chatAdapter.removeOne(draft, messageId);
           })
         );
+
         queryFulfilled.catch(patchResult.undo);
+        await queryFulfilled;
+        dispatch(
+          chatSlice.util.invalidateTags([{ type: "Conversation", id: userId }])
+        );
       },
     }),
   }),

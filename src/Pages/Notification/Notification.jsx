@@ -24,6 +24,7 @@ import UserLoader from "../../Component/Loaders/UserLoader";
 import {
   ClickableFlex,
   EmptyState,
+  ErrorRender,
   Scroll,
 } from "../../Component/Miscellanous";
 import Navigation from "../../Component/Navigation";
@@ -33,7 +34,7 @@ import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notif
 
 const Notification = () => {
   const { currentUser } = useContext(currentUserContext);
-  const { data, isLoading, isError } = useFetchNotificationsQuery({
+  const { data, isLoading, isError, error } = useFetchNotificationsQuery({
     friendRequest: currentUser.friendRequest.length,
     friends: currentUser.friends.length,
     subscribers: currentUser.subscribers.length,
@@ -58,12 +59,7 @@ const Notification = () => {
           </Stack>
         </Scroll>
       ) : isError ? (
-        <Flex height="100%" align="center" justify="center">
-          <p>
-            Une erreur est survenue lors du chargement. Veuillez réessayer plus
-            tard.
-          </p>
-        </Flex>
+        <ErrorRender isError={isError} error={error} />
       ) : data.length === 0 ? (
         <EmptyState />
       ) : (

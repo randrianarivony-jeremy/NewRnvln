@@ -53,7 +53,7 @@ const SendVoice = () => {
           sender: currentUser._id,
           recipient: userId, //this conversationId from params would be the userId
           content: urlRef.current,
-          conversationId: conversation._id,
+          conversationId: conversation?._id ?? null,
           contentType: "audio",
           createdAt: new Date().toJSON(),
         });

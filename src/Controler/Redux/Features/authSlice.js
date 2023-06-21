@@ -1,5 +1,5 @@
 import { socket } from "../../App";
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../apiSlice";
 import {
   logOut,
   setCredentials,
@@ -10,7 +10,7 @@ import {
 
 export const authSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    initiate: builder.mutation({
+    initiate: builder.query({
       query: () => "check_user",
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         try {
@@ -89,7 +89,8 @@ export const authSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useInitiateMutation,
+  useInitiateQuery,
+  useLazyInitiateQuery,
   useLoginMutation,
   useSignUpMutation,
   useSendLogoutMutation,

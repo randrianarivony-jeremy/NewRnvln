@@ -14,7 +14,6 @@ export const postContext = createContext();
 export const dataContext = createContext();
 
 const PostContainer = ({ post }) => {
-  console.log(post);
   const [showReaction, setShowReaction] = useState(true);
   const postSwiper = useRef();
   const containerRef = useRef();
@@ -31,14 +30,16 @@ const PostContainer = ({ post }) => {
       }}
     >
       <Swiper
-        mousewheel={{enabled:true,forceToAxis:true}}
-        modules={[Pagination,Mousewheel]}
-        pagination={{ type: "progressbar" }}>
+        mousewheel={{ enabled: true, forceToAxis: true }}
+        modules={[Pagination, Mousewheel]}
+        pagination={{ type: "progressbar" }}
+      >
         {post.data.map((data, index) => (
           <SwiperSlide key={index}>
             <dataContext.Provider
               value={{
-                data,index
+                data,
+                index,
               }}
             >
               <Post />
@@ -66,12 +67,7 @@ const PostContainer = ({ post }) => {
       <Reaction />
 
       {post.type === "interview" && (
-        <Flex
-          position="absolute"
-          bottom={2}
-          left={0}
-          zIndex={2}
-        >
+        <Flex position="absolute" bottom={2} left={0} zIndex={2}>
           <Button
             marginLeft={3}
             variant="cta"

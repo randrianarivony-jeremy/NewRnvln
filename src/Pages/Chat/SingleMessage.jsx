@@ -5,6 +5,7 @@ import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useLongPress } from "use-long-press";
+import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import {
   useDeleteMessageMutation,
@@ -16,7 +17,7 @@ const SingleMessage = ({ messageId }) => {
   const { userId } = useParams();
   const { currentUser } = useContext(currentUserContext);
   const [deleteFooter, setDeleteFooter] = useState(false);
-  const [deleteMessage] = useDeleteMessageMutation();
+  const [deleteMessage, { error, isError }] = useDeleteMessageMutation();
 
   // Dinamically get selectors based on parent query
 
@@ -33,6 +34,8 @@ const SingleMessage = ({ messageId }) => {
     captureEvent: true,
     cancelOnMovement: true,
   });
+
+  if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
     <Flex

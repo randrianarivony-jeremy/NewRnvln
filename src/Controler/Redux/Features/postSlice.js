@@ -1,6 +1,7 @@
-import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { createEntityAdapter } from "@reduxjs/toolkit";
 import { socket } from "../../App";
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../apiSlice";
+import { questionSlice } from "./questionSlice";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post._id,
@@ -52,7 +53,7 @@ export const postSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data!==null && data.length > 0)
+          if (data !== null && data.length > 0)
             dispatch(
               postSlice.util.updateQueryData(
                 "fetchContents",
@@ -139,7 +140,7 @@ export const postSlice = apiSlice.injectEndpoints({
         let interviewsPatch;
         if (type === "interview") {
           interviewsPatch = dispatch(
-            postSlice.util.updateQueryData(
+            questionSlice.util.updateQueryData(
               "fetchQuestionInterviews",
               question,
               (draft) => {

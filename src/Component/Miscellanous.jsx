@@ -14,6 +14,7 @@ export const ErrorRender = ({ isError, error }) => {
         status: "info",
         position: "bottom",
         duration: 5000,
+        isClosable: true,
       });
       navigate("/login");
     }

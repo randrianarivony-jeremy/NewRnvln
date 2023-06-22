@@ -61,6 +61,9 @@ function App() {
       dispatch(setNewNotification(newNotification + 1));
       dispatch(notificationSlice.util.invalidateTags(["Notification"]));
     });
+    socket.on("deleted message", (messageId) => {
+      console.log(messageId);
+    });
   });
 
   return (

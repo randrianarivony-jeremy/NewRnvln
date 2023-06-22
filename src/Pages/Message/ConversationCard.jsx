@@ -47,6 +47,9 @@ const ConversationCard = ({ conversation }) => {
         )}
         <Stack spacing={1} marginLeft={2}>
           <Heading size="sm">{userB.current.name}</Heading>
+          {conversation.messages[0].contentType === "deleted" && (
+            <Text>a effacé le message</Text>
+          )}
           {conversation.messages[0].contentType === "string" && (
             <Text>{conversation.messages[0].content}</Text>
           )}

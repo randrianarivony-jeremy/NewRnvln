@@ -1,8 +1,7 @@
 import { Button, ButtonGroup, Flex } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { close, trashOutline } from "ionicons/icons";
-import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useLongPress } from "use-long-press";
 import { ErrorRender } from "../../Component/Miscellanous";
@@ -17,12 +16,9 @@ const SingleMessage = ({ messageId }) => {
   const { userId } = useParams();
   const { currentUser } = useContext(currentUserContext);
   const [deleteFooter, setDeleteFooter] = useState(false);
-  const [deleteMessage, { error, isError }] = useDeleteMessageMutation();
+  const [deleteMessage, { error, isError, isSuccess }] =
+    useDeleteMessageMutation();
 
-  // Dinamically get selectors based on parent query
-
-  // Use selectors based on parent id 1
-  // const message = useSelector(selectById(messageId));
   const { message } = useFetchMessagesQuery(userId, {
     selectFromResult: ({ data }) => ({
       message: data?.entities[messageId],
@@ -35,6 +31,12 @@ const SingleMessage = ({ messageId }) => {
     cancelOnMovement: true,
   });
 
+  useEffect(() => {
+    if (isSuccess) {
+      setDeleteFooter(false);
+    }
+  }, [isSuccess]);
+
   if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
@@ -44,6 +46,7 @@ const SingleMessage = ({ messageId }) => {
       align="flex-end"
       marginX={3}
       {...(message.sender === currentUser._id ? bind() : null)}
+      pointerEvents={message.contentType === "deleted" && "none"}
     >
       <DataDisplay message={message} />
       {deleteFooter && (

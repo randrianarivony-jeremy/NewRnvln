@@ -17,7 +17,7 @@ const MainConversation = () => {
 
   useEffect(() => {
     dispatch(setNewMainMessage(0));
-  }, []);
+  });
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;
@@ -25,8 +25,8 @@ const MainConversation = () => {
     if (data.length === 0) return <EmptyState />;
     return (
       <Scroll height="100%">
-        {data.map((convers, key) => (
-          <ConversationCard conversation={convers} key={key} />
+        {data.map((convers) => (
+          <ConversationCard conversation={convers} key={convers._id} />
         ))}
       </Scroll>
     );

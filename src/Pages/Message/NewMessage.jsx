@@ -34,6 +34,7 @@ const NewMessage = () => {
         <Input
           type="text"
           ref={inputRef}
+          autoFocus={true}
           placeholder="Entrer un nom"
           onChange={(e) =>
             searchUser(

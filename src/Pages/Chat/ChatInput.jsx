@@ -16,12 +16,11 @@ import { chevronForward, happyOutline, send } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ErrorRender } from "../../Component/Miscellanous";
-import { currentUserContext, socket } from "../../Controler/App";
+import { currentUserContext } from "../../Controler/App";
 import {
   useAddMessageMutation,
   useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
-import { chatContext } from "./Chat";
 import SendPicture from "./SendPicture";
 import TakePicture from "./TakePicture";
 import VoiceRecording from "./VoiceRecording";

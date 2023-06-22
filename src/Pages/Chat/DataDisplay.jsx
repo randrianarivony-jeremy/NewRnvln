@@ -16,9 +16,24 @@ const DataDisplay = ({ message }) => {
     if (isPaused) videoRef.current?.play();
     else videoRef.current?.pause();
   }, [isPaused]);
-
+  
   return (
     <Box maxW="75%" className="messagedisplay">
+      {message.contentType === "deleted" && (
+        <Text
+          whiteSpace="pre-wrap"
+          padding="4px 8px"
+          rounded="lg"
+          borderBottomLeftRadius={message.sender !== currentUser._id && 0}
+          borderBottomRightRadius={message.sender === currentUser._id && 0}
+          bgColor={message.sender === currentUser._id ? "bleu" : ""}
+          border={message.sender !== currentUser._id ? "1px solid" : ""}
+          fontStyle="italic"
+          opacity={0.5}
+        >
+          Message effacé
+        </Text>
+      )}
       {message.contentType === "string" && (
         <Box
           whiteSpace="pre-wrap"

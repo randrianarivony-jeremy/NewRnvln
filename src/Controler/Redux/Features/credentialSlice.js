@@ -22,7 +22,7 @@ const credentialSlice = createSlice({
     setNewNotification: (state, action) => {
       state.newNotification = action.payload;
     },
-    logOut: (state, action) => {
+    logOut: (state) => {
       state.token = null;
     },
   },

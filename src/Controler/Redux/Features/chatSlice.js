@@ -63,12 +63,7 @@ export const chatSlice = apiSlice.injectEndpoints({
     }),
 
     fetchMessages: builder.query({
-      query: (userId) => {
-        return {
-          url: "message/" + userId,
-          credentials: "include",
-        };
-      },
+      query: (userId) => "message/" + userId,
       providesTags: (res, err, userId) => [
         { type: "Messages", id: "LIST" },
         { type: "Messages", id: userId },
@@ -80,7 +75,7 @@ export const chatSlice = apiSlice.injectEndpoints({
       },
       async onCacheEntryAdded(
         userId,
-        { cacheDataLoaded, cacheEntryRemoved, updateCachedData,dispatch }
+        { cacheDataLoaded, cacheEntryRemoved, updateCachedData, dispatch }
       ) {
         try {
           await cacheDataLoaded;
@@ -96,8 +91,10 @@ export const chatSlice = apiSlice.injectEndpoints({
                 changes: { content: "deleted", contentType: "deleted" },
               });
               if (
-                draft.ids.length === 1 &&
-                draft.entities[messageId].contentType === "deleted"
+                draft !== null &&
+                draft.ids.every(
+                  (id) => draft.entities[id].contentType === "deleted"
+                )
               )
                 dispatch(
                   chatSlice.util.invalidateTags([

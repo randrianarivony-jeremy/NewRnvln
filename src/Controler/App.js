@@ -17,6 +17,7 @@ import {
 } from "./Redux/Features/credentialSlice";
 import { notificationSlice } from "./Redux/Features/notificationSlice";
 import { useInitiateQuery } from "./Redux/Features/authSlice";
+import RealtimeNotification from "../Component/RealtimeNotification";
 
 export const currentUserContext = createContext();
 export const apiCall = axios.create({
@@ -36,7 +37,7 @@ function App() {
   );
   const dispatch = useDispatch();
   const { data, isSuccess, isLoading, isUninitialized } = useInitiateQuery(
-    "current_user",
+    "app",
     { refetchOnReconnect: true }
   );
 
@@ -86,6 +87,7 @@ function App() {
           )}
         </publicationContext.Provider>
       </currentUserContext.Provider>
+      <RealtimeNotification />
     </Box>
   );
 }

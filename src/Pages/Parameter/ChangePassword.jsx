@@ -14,13 +14,13 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiCall, currentUserContext } from "../../Controler/App";
+import { currentUserContext } from "../../Controler/App";
+import { useChangePasswordMutation } from "../../Controler/Redux/Features/userSlice";
 
 const ChangePassword = ({ onOpen, onClose, isOpen }) => {
   const { currentUser } = useContext(currentUserContext);
-  const [submitting, setSubmitting] = useState(false);
   const [passwordErr, setPasswordErr] = useState(false);
   const [samePasswordErr, setSamePasswordErr] = useState(false);
   const submitControl = useRef();
@@ -30,59 +30,68 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
   const bg = useColorModeValue("white", "dark.50");
   const navigate = useNavigate();
   const toast = useToast();
+  const [changePassword, { isSuccess, isLoading, isError, error }] =
+    useChangePasswordMutation();
 
-  const changePassword = async (e) => {
+  const changePasswordHandler = (e) => {
     e.preventDefault();
     if (password.current.value !== confirmPassword.current.value) {
       setSamePasswordErr(true);
-    } else {
-      await apiCall
-        .put("user/password/" + currentUser._id, {
-          password: oldPassword.current.value,
-          newPassword: password.current.value,
-        })
-        .then(
-          () => {
-            setSubmitting(false);
-            onClose();
-            navigate(-1);
-            toast({
-              title: "Changement réussi",
-              description:
-                "La modification de votre mot de passe est terminée avec succès",
-              duration: 5000,
-              isClosable: true,
-              position: "top",
-              status: "success",
-            });
-          },
-          (err) => {
-            setSubmitting(false);
-            if (err.response.data === "Mot de passe incorrect")
-              setPasswordErr(true);
-            else {
-              onClose();
-              toast({
-                title: "Changement échoué",
-                description:
-                  "La modification de votre mot de passe a malheureusement échoué. Veuillez réessayer ultérieurement",
-                duration: 5000,
-                isClosable: true,
-                position: "bottom",
-                status: "error",
-              });
-            }
-          }
-        );
-    }
+    } else
+      changePassword({
+        userId: currentUser._id,
+        password: oldPassword.current.value,
+        newPassword: password.current.value,
+      });
   };
+  useEffect(() => {
+    if (isSuccess) {
+      onClose();
+      navigate(-1);
+      toast({
+        title: "Changement réussi",
+        description:
+          "La modification de votre mot de passe est terminée avec succès",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+        status: "success",
+      });
+    }
+    if (isError) {
+      if (error.data === "Mot de passe incorrect") setPasswordErr(true);
+      else if (error.status === 403) {
+        toast({
+          title: "Expiration",
+          description:
+            "Vous avez atteint un mois de connexion. Veillez vous reconnecter",
+          status: "info",
+          position: "bottom",
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate("/login");
+      } else {
+        onClose();
+        toast({
+          title: "Changement échoué",
+          description:
+            "La modification de votre mot de passe a malheureusement échoué. Veuillez réessayer ultérieurement",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+          status: "error",
+        });
+      }
+    }
+  }, [isSuccess, isLoading, isError]);
 
   return (
     <Drawer size="full" isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
       <DrawerContent bgColor={bg}>
         <DrawerCloseButton />
         <DrawerHeader paddingX={3}>Changer de mot de passe</DrawerHeader>
-        <form onSubmit={changePassword}>
+        <form onSubmit={changePasswordHandler}>
           <Stack spacing={3} marginX={3}>
             <FormControl isInvalid={passwordErr}>
               <FormLabel>Mot de passe actuel :</FormLabel>
@@ -126,7 +135,7 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
             </Button>
             <Button
               width="100%"
-              isLoading={submitting}
+              isLoading={isLoading}
               variant="solid"
               onClick={() => submitControl.current.click()}
             >

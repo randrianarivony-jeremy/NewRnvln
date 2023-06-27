@@ -11,9 +11,9 @@ import {
 import { IonIcon } from "@ionic/react";
 // prettier-ignore
 import { addCircleOutline, arrowBack, briefcase, flag, location, pencil, settingsOutline } from "ionicons/icons";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader, Scroll } from "../../Component/Miscellanous";
+import { ErrorRender, Loader, Scroll } from "../../Component/Miscellanous";
 import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
@@ -27,8 +27,8 @@ import ProfilePicture from "./UpdateProfile/ProfilePicture";
 import ProjectModal from "./UpdateProfile/ProjectModal";
 
 const Profile = () => {
-  const { currentUser, setCurrentUser } = useContext(currentUserContext);
-  const { data, isLoading, isSuccess, isError } = useFetchUserQuery(
+  const { currentUser } = useContext(currentUserContext);
+  const { data, isLoading, isSuccess, isError, error } = useFetchUserQuery(
     currentUser._id
   );
   const navigate = useNavigate();
@@ -53,27 +53,11 @@ const Profile = () => {
     onClose: closePhilosophyModal,
   } = useDisclosure();
 
-  useEffect(() => {
-    if (isSuccess) setCurrentUser(data);
-  }, [isSuccess]);
-
   if (isLoading) return <Loader />;
-  if (isError)
-    return (
-      <p>
-        Une erreur est survenue lors du chargement. Veuillez réessayer plus
-        tard.
-      </p>
-    );
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess)
     return (
-      <Stack
-        position="relative"
-        height="100%"
-        spacing={0}
-        maxWidth="100%"
-        minH={450}
-      >
+      <Stack position="relative" height="100%" spacing={0} maxWidth="100%">
         <Flex
           justify="space-between"
           borderBottom="1px solid"
@@ -98,7 +82,7 @@ const Profile = () => {
                 fontSize="2xl"
                 noOfLines={1}
               >
-                {currentUser.name}
+                {data.name}
               </Text>
               <Stack spacing={2} marginLeft={3} fontSize="sm">
                 {/* JOB  */}
@@ -106,7 +90,7 @@ const Profile = () => {
                   <Flex boxSize={5} minW={5} fontSize={"xl"}>
                     <IonIcon icon={briefcase} />
                   </Flex>
-                  {currentUser.job === "" ? (
+                  {data.job === "" ? (
                     <Button
                       size="sm"
                       variant="link"
@@ -117,7 +101,7 @@ const Profile = () => {
                     </Button>
                   ) : (
                     <Text onClick={openJobModal}>
-                      {currentUser.job}
+                      {data.job}
                       <IonIcon icon={pencil} />
                     </Text>
                   )}
@@ -133,7 +117,7 @@ const Profile = () => {
                   <Flex boxSize={5} minW={5} fontSize={"xl"}>
                     <IonIcon icon={location} />
                   </Flex>
-                  {currentUser.address === "" ? (
+                  {data.address === "" ? (
                     <Button
                       size="sm"
                       variant="link"
@@ -144,7 +128,7 @@ const Profile = () => {
                     </Button>
                   ) : (
                     <Text onClick={openAddressModal}>
-                      {currentUser.address} <IonIcon icon={pencil} />
+                      {data.address} <IonIcon icon={pencil} />
                     </Text>
                   )}
                   <AddressModal
@@ -159,7 +143,7 @@ const Profile = () => {
                   <Flex boxSize={5} minW={5} fontSize={"xl"}>
                     <IonIcon icon={flag} />
                   </Flex>
-                  {currentUser.project === "" ? (
+                  {data.project === "" ? (
                     <Button
                       size="sm"
                       variant="link"
@@ -170,7 +154,7 @@ const Profile = () => {
                     </Button>
                   ) : (
                     <Text onClick={openProjectModal}>
-                      {currentUser.project} <IonIcon icon={pencil} />
+                      {data.project} <IonIcon icon={pencil} />
                     </Text>
                   )}
                   <ProjectModal
@@ -184,7 +168,7 @@ const Profile = () => {
           </HStack>
 
           {/* P H I L O  */}
-          {currentUser.philosophy ? (
+          {data.philosophy ? (
             <Text
               fontSize="sm"
               textAlign="center"
@@ -192,7 +176,7 @@ const Profile = () => {
               onClick={openPhilosophyModal}
             >
               <span className="bi-quote"></span>
-              {currentUser.philosophy}
+              {data.philosophy}
               <span className="bi-quote"></span>
             </Text>
           ) : (
@@ -213,7 +197,7 @@ const Profile = () => {
           />
 
           {/* R E L A T I O N  */}
-          <RelationBoard user={currentUser} />
+          <RelationBoard userId={currentUser._id} />
 
           <ContentsTab userId={currentUser._id} />
         </Scroll>

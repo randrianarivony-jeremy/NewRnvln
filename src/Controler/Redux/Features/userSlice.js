@@ -42,6 +42,27 @@ export const userSlice = apiSlice.injectEndpoints({
         body,
       }),
     }),
+    changeName: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/username/" + userId,
+        method: "PUT",
+        body,
+      }),
+    }),
+    changeEmail: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/email/" + userId,
+        method: "PUT",
+        body,
+      }),
+    }),
+    changePassword: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/password/" + userId,
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -53,4 +74,7 @@ export const {
   usePullFriendMutation,
   useConfirmFriendRequestMutation,
   useCancelFriendInvitationMutation,
+  useChangeNameMutation,
+  useChangeEmailMutation,
+  useChangePasswordMutation,
 } = userSlice;

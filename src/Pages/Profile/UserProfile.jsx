@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react";
 import { arrowBack, chatbox } from "ionicons/icons";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader, Scroll } from "../../Component/Miscellanous";
+import { ErrorRender, Loader, Scroll } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import ContentsTab from "./Contents/ContentsTab";
@@ -18,7 +18,8 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const { currentUser } = useContext(currentUserContext);
   const { userId } = useParams();
-  const { data, isLoading, isSuccess, isError } = useFetchUserQuery(userId);
+  const { data, isLoading, isSuccess, isError, error } =
+    useFetchUserQuery(userId);
   const [user, setUser] = useState();
   const [friend, setFriend] = useState("none");
   const [subscribed, setSubscribed] = useState(false);
@@ -41,13 +42,7 @@ const UserProfile = () => {
   }, [currentUser]);
 
   if (isLoading) return <Loader />;
-  if (isError)
-    return (
-      <p>
-        Une erreur est survenue lors du chargement. Veuillez réessayer plus
-        tard.
-      </p>
-    );
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess && user) {
     return (
       <Stack height="100%" spacing={0}>
@@ -128,7 +123,7 @@ const UserProfile = () => {
                   <Subscribe />
                 </HStack>
               )}
-              <RelationBoard user={user} />
+              <RelationBoard userId={user._id} />
             </Stack>
 
             <ContentsTab userId={user._id} />

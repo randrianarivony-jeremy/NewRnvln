@@ -1,26 +1,50 @@
-import { HStack } from '@chakra-ui/react';
-import React, { useContext } from 'react';
-import { currentUserContext } from '../../../Controler/App';
-import EnableSubscription from './EnableSubscription';
-import RelationList from './RelationList';
+import { Flex, HStack, Skeleton } from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { ErrorRender } from "../../../Component/Miscellanous";
+import { currentUserContext } from "../../../Controler/App";
+import { useFetchUserQuery } from "../../../Controler/Redux/Features/userSlice";
+import RelationList from "./RelationList";
 
-const RelationBoard = ({user}) => {
-    const { currentUser, setCurrentUser } = useContext(currentUserContext);
+const RelationBoard = ({ userId }) => {
+  const { currentUser } = useContext(currentUserContext);
+  const { data, isLoading, isSuccess, isError, error } =
+    useFetchUserQuery(userId);
+  if (isLoading)
     return (
-        <HStack justify="space-evenly">
-              <RelationList category="Partenaires" userId={user._id} length={user.friends.length}/>
-              {user._id===currentUser._id && <RelationList category="Demandes" userId={user._id} length={user.friendRequest.length}/>}
-              {user.subscription ? (
-                <>
-                  <RelationList category="Abonnés" userId={user._id} length={user.subscribers.length}/>
-                  <RelationList
-                    category="Abonnements"
-                    userId={user._id} length={user.subscriptions.length}/>
-                </>
-              ) : (user._id===currentUser._id &&
-                <EnableSubscription />
-              )}
-            </HStack>
+      <Flex justify={"space-evenly"}>
+        <Skeleton boxSize={10} />
+        <Skeleton boxSize={10} />
+        <Skeleton boxSize={10} />
+        <Skeleton boxSize={10} />
+      </Flex>
+    );
+  if (isError) return <ErrorRender isError={isError} error={error} />;
+  if (isSuccess)
+    return (
+      <HStack justify="space-evenly">
+        <RelationList
+          category="Partenaires"
+          userId={userId}
+          length={data.friends.length}
+        />
+        {userId === currentUser._id && (
+          <RelationList
+            category="Demandes"
+            userId={userId}
+            length={data.friendRequest.length}
+          />
+        )}
+        <RelationList
+          category="Abonnés"
+          userId={userId}
+          length={data.subscribers.length}
+        />
+        <RelationList
+          category="Abonnements"
+          userId={userId}
+          length={data.subscriptions.length}
+        />
+      </HStack>
     );
 };
 

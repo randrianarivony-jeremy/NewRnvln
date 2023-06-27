@@ -26,7 +26,7 @@ const SingleMessage = ({ messageId }) => {
   });
 
   const bind = useLongPress(() => setDeleteFooter(true), {
-    threshold: 1000,
+    threshold: 800,
     captureEvent: true,
     cancelOnMovement: true,
   });
@@ -55,7 +55,7 @@ const SingleMessage = ({ messageId }) => {
             <IonIcon icon={close} />
           </Button>
           <Button
-            variant="outline"
+            variant="dissuasive"
             onClick={() =>
               deleteMessage({
                 userId,

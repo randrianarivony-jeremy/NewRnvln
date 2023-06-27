@@ -1,16 +1,21 @@
 import { Box, Flex, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
 import notification from "../../Assets/notification1.mp3";
 import { Loader } from "../../Component/Miscellanous";
 import { socket } from "../../Controler/App";
-import { useFetchMessagesQuery } from "../../Controler/Redux/Features/chatSlice";
+import {
+  chatSlice,
+  useFetchMessagesQuery,
+} from "../../Controler/Redux/Features/chatSlice";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {
   const { userId } = useParams();
+  const dispatch = useDispatch();
   const toast = useToast();
   let scrollRef = useRef();
   const ringtoneRef = useRef();
@@ -27,7 +32,7 @@ const ChatScroller = () => {
     socket.on("new message", () => ringtoneRef.current.play());
     if (
       messages !== null &&
-      messages?.ids.every(
+      messages.ids.every(
         (id) => messages.entities[id].contentType === "deleted"
       )
     ) {
@@ -38,6 +43,9 @@ const ChatScroller = () => {
         isClosable: true,
         duration: 5000,
       });
+      // dispatch(
+      //   chatSlice.util.invalidateTags([{ type: "Messages", id: userId }])
+      // );
       navigate("/message");
     }
   }, [messages]);

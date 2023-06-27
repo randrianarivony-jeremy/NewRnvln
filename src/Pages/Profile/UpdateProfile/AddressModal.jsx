@@ -1,6 +1,5 @@
 import {
   Button,
-  Flex,
   HStack,
   Input,
   Modal,
@@ -11,38 +10,23 @@ import {
   ModalOverlay,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useContext, useRef, useState } from "react";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import React, { useContext, useRef } from "react";
+import { currentUserContext } from "../../../Controler/App";
+import {
+  useChangeAddressMutation,
+  useFetchUserQuery,
+} from "../../../Controler/Redux/Features/userSlice";
 
 const AddressModal = ({ onOpen, isOpen, onClose }) => {
-  const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { currentUser } = useContext(currentUserContext);
+  const { address } = useFetchUserQuery(currentUser._id, {
+    selectFromResult: ({ data }) => ({
+      address: data?.address,
+    }),
+  });
+  const [changeAddress] = useChangeAddressMutation();
   const inputRef = useRef();
-  const [submitting, setSubmitting] = useState(false);
-  const bg = useColorModeValue('white','dark.50')
-  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
-
-  const changeAddress = async (address) => {
-    await apiCall
-      .put(
-         "user/address/" + currentUser._id,
-        {
-          address,
-        }
-      )
-      .then(
-        (res) => {
-          setSubmitting(false);
-          setDeleteSubmitting(false);
-          setCurrentUser({ ...currentUser, address: res.data.address });
-          onClose();
-        },
-        (err) => {
-          setSubmitting(false);
-          setDeleteSubmitting(false);
-          console.log(err);
-        }
-      );
-  };
+  const bg = useColorModeValue("white", "dark.50");
 
   return (
     <Modal isOpen={isOpen} onOpen={onOpen} onClose={onClose} isCentered>
@@ -51,17 +35,25 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
         <ModalHeader paddingX={3}>Changer votre lieu de travail</ModalHeader>
         <ModalBody paddingX={3}>
           <Input
-            placeholder={!currentUser.address && "Lieu de travail"}
-            type="text" defaultValue={currentUser.address?? null}
+            placeholder={!address ? "Lieu de travail" : null}
+            type="text"
+            defaultValue={address ?? null}
             ref={inputRef}
           />
         </ModalBody>
-        <ModalFooter justifyContent={currentUser.address ? "space-between" : 'flex-end'} paddingX={3}>
-          {currentUser.address && (
-            <Button isLoading={deleteSubmitting} variant='dissuasive'
+        <ModalFooter
+          justifyContent={address ? "space-between" : "flex-end"}
+          paddingX={3}
+        >
+          {address && (
+            <Button
+              variant="dissuasive"
               onClick={() => {
-                changeAddress("");
-                setDeleteSubmitting(true);
+                changeAddress({
+                  userId: currentUser._id,
+                  address: "",
+                });
+                onClose();
               }}
             >
               Supprimer
@@ -71,10 +63,12 @@ const AddressModal = ({ onOpen, isOpen, onClose }) => {
             <Button onClick={onClose}>Annuler</Button>
             <Button
               variant="outline"
-              isLoading={submitting}
               onClick={() => {
-                changeAddress(inputRef.current.value);
-                setSubmitting(true);
+                changeAddress({
+                  userId: currentUser._id,
+                  address: inputRef.current.value,
+                });
+                onClose();
               }}
             >
               Enregistrer

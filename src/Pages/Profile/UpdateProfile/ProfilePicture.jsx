@@ -15,33 +15,43 @@ import {
   MenuList,
   SkeletonCircle,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import Compressor from "compressorjs";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadString,
-} from "firebase/storage";
-import React, { useContext, useRef, useState } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TakePhoto from "../../../Component/TakePhoto";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
+import { useChangeProfilePicMutation } from "../../../Controler/Redux/Features/userSlice";
 
 const ProfilePicture = () => {
-  const profilePicInputRef = useRef();
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const [changeProfilePic, { isSuccess, data, isError, error }] =
+    useChangeProfilePicMutation();
+
+  const profilePicInputRef = useRef();
+  const picture = useRef();
   const [submitting, setSubmitting] = useState(false);
   const [imgLoading, setImgLoading] = useState(true);
-  const picture = useRef();
   const [selectedImage, setSelectedImage] = useState();
   const [camera, setCamera] = useState(false);
+  const navigate = useNavigate();
+  const toast = useToast();
+
   const { onOpen, onClose, isOpen } = useDisclosure();
   const {
     onOpen: openProfilePicView,
     onClose: closeProfilePicView,
     isOpen: profilePicView,
   } = useDisclosure();
+
+  const handleCamera = (imgSrc) => {
+    picture.current = { content: imgSrc, contentType: "image" };
+    setSelectedImage(imgSrc);
+    onOpen();
+  };
 
   const handleChange = ({ currentTarget }) => {
     try {
@@ -64,50 +74,54 @@ const ProfilePicture = () => {
     }
   };
 
-  const handleCamera = (imgSrc) => {
-    picture.current = { content: imgSrc, contentType: "image" };
-    setSelectedImage(imgSrc);
-    onOpen();
-  };
-
   const storePicture = () => {
     setSubmitting(true);
     const fileName = new Date().getTime() + currentUser._id;
     const storageRef = ref(storage, "profile/picture/" + fileName);
-    if (picture.current.contentType === "image_url")
-      uploadString(storageRef, picture.current.content, "data_url").then(
-        (snapshot) =>
-          getDownloadURL(snapshot.ref).then((url) => {
-            picture.current = url;
-            changeProfilePicture();
-          })
-      );
-    else
-      uploadBytes(storageRef, picture.current.content).then((snapshot) =>
-        getDownloadURL(snapshot.ref).then((url) => {
-          picture.current = url;
-          changeProfilePicture();
-        })
-      );
+    uploadBytes(storageRef, picture.current.content).then((snapshot) =>
+      getDownloadURL(snapshot.ref).then((url) => {
+        changeProfilePic({
+          userId: currentUser._id,
+          picture: url,
+        });
+      })
+    );
   };
 
-  const changeProfilePicture = async () => {
-    await apiCall
-      .put("user/profilepicture/" + currentUser._id, {
-        picture: picture.current,
-      })
-      .then(
-        (res) => {
-          setSubmitting(false);
-          setCurrentUser({ ...currentUser, picture: res.data.picture });
-          onClose();
-        },
-        (err) => {
-          setSubmitting(false);
-          console.log(err);
-        }
-      );
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      setCurrentUser({ ...currentUser, picture: data.picture });
+      setSubmitting(false);
+      onClose();
+    }
+    if (isError) {
+      if (error.status === 403) {
+        toast({
+          title: "Expiration",
+          description:
+            "Vous avez atteint un mois de connexion. Veillez vous reconnecter",
+          status: "info",
+          position: "bottom",
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate("/login");
+      } else {
+        setSubmitting(false);
+        onClose();
+        toast({
+          title: "Modification échouée",
+          description:
+            "La modification de votre photo de profil a malheureusement échoué. Veuillez réessayer ultérieurement",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+          status: "error",
+        });
+      }
+    }
+  }, [isSuccess, isError]);
+
   return (
     <>
       <Menu>
@@ -161,6 +175,7 @@ const ProfilePicture = () => {
         accept=".png,.jpg,.jpeg"
         onChange={handleChange}
       />
+
       <Drawer isOpen={isOpen} onOpen={onOpen} placement="bottom">
         <DrawerContent>
           <DrawerHeader>Changer votre photo de profil</DrawerHeader>
@@ -169,6 +184,9 @@ const ProfilePicture = () => {
               src={selectedImage}
               alt="profilepic"
               width="100%"
+              border={"solid 1px"}
+              borderColor="gray.400"
+              height={"75vh"}
               objectFit="contain"
             />
           </DrawerBody>
@@ -184,6 +202,8 @@ const ProfilePicture = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+
+      {/* P R O F I L E  V I E W  */}
       <Drawer
         size="full"
         isOpen={profilePicView}

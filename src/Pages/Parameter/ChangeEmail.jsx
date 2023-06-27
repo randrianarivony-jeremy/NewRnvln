@@ -17,10 +17,18 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUserContext } from "../../Controler/App";
-import { useChangeEmailMutation } from "../../Controler/Redux/Features/userSlice";
+import {
+  useChangeEmailMutation,
+  useFetchUserQuery,
+} from "../../Controler/Redux/Features/userSlice";
 
 const ChangeEmail = ({ onOpen, onClose, isOpen }) => {
-  const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { currentUser } = useContext(currentUserContext);
+  const { email } = useFetchUserQuery(currentUser._id, {
+    selectFromResult: ({ data }) => ({
+      email: data?.email,
+    }),
+  });
   const [passwordErr, setPasswordErr] = useState(false);
   const submitControl = useRef();
   const inputRef = useRef();
@@ -33,7 +41,6 @@ const ChangeEmail = ({ onOpen, onClose, isOpen }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setCurrentUser({ ...currentUser, name: data.name });
       onClose();
       navigate(-1);
       toast({
@@ -94,7 +101,7 @@ const ChangeEmail = ({ onOpen, onClose, isOpen }) => {
               <Input
                 type="text"
                 ref={inputRef}
-                defaultValue={currentUser.email}
+                defaultValue={email}
                 isRequired
               />
             </FormControl>

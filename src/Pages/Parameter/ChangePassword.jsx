@@ -37,7 +37,12 @@ const ChangePassword = ({ onOpen, onClose, isOpen }) => {
     e.preventDefault();
     if (password.current.value !== confirmPassword.current.value) {
       setSamePasswordErr(true);
-    } else
+    } else if (
+      oldPassword.current.value === password.current.value ||
+      oldPassword.current.value === confirmPassword.current.value
+    )
+      onClose();
+    else
       changePassword({
         userId: currentUser._id,
         password: oldPassword.current.value,

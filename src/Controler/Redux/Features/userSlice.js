@@ -42,12 +42,25 @@ export const userSlice = apiSlice.injectEndpoints({
         body,
       }),
     }),
+
+    // U P D A T E
     changeName: builder.mutation({
       query: ({ userId, ...body }) => ({
         url: "user/username/" + userId,
         method: "PUT",
         body,
       }),
+      onQueryStarted: async (
+        { userId, ...body },
+        { dispatch, queryFulfilled }
+      ) => {
+        await queryFulfilled;
+        dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.name = body.name;
+          })
+        );
+      },
     }),
     changeEmail: builder.mutation({
       query: ({ userId, ...body }) => ({
@@ -55,6 +68,92 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body,
       }),
+      onQueryStarted: async (
+        { userId, ...body },
+        { dispatch, queryFulfilled }
+      ) => {
+        await queryFulfilled;
+        dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.email = body.email;
+          })
+        );
+      },
+    }),
+    changeAddress: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/address/" + userId,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: ({ userId, ...body }, { dispatch, queryFulfilled }) => {
+        const addressPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.address = body.address;
+          })
+        );
+        queryFulfilled.catch(addressPatch.undo);
+      },
+    }),
+    changeJob: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/job/" + userId,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: ({ userId, ...body }, { dispatch, queryFulfilled }) => {
+        const jobPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.job = body.job;
+          })
+        );
+        queryFulfilled.catch(jobPatch.undo);
+      },
+    }),
+    changePhilo: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/philosophy/" + userId,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: ({ userId, ...body }, { dispatch, queryFulfilled }) => {
+        const philoPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.philosophy = body.philosophy;
+          })
+        );
+        queryFulfilled.catch(philoPatch.undo);
+      },
+    }),
+    changeProject: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/project/" + userId,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: ({ userId, ...body }, { dispatch, queryFulfilled }) => {
+        const projectPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.project = body.project;
+          })
+        );
+        queryFulfilled.catch(projectPatch.undo);
+      },
+    }),
+    changeProfilePic: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/profilepicture/" + userId,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: ({ userId, ...body }, { dispatch, queryFulfilled }) => {
+        const pdpPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.picture = body.picture;
+          })
+        );
+        queryFulfilled.catch(pdpPatch.undo);
+      },
     }),
     changePassword: builder.mutation({
       query: ({ userId, ...body }) => ({
@@ -76,5 +175,10 @@ export const {
   useCancelFriendInvitationMutation,
   useChangeNameMutation,
   useChangeEmailMutation,
+  useChangeAddressMutation,
+  useChangeJobMutation,
+  useChangePhiloMutation,
+  useChangeProjectMutation,
+  useChangeProfilePicMutation,
   useChangePasswordMutation,
 } = userSlice;

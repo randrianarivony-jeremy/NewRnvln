@@ -33,11 +33,17 @@ const ChangeUsername = ({ onOpen, onClose, isOpen }) => {
 
   const changeUsername = async (e) => {
     e.preventDefault();
-    changeName({
-      userId: currentUser._id,
-      name: inputRef.current.value,
-      password: passwordRef.current.value,
-    });
+    inputRef.current.value = inputRef.current.value.replace(
+      /\w\S*/g,
+      (m) => m.charAt(0).toUpperCase() + m.substr(1).toLowerCase()
+    );
+    if (inputRef.current.value !== currentUser.name)
+      changeName({
+        userId: currentUser._id,
+        name: inputRef.current.value,
+        password: passwordRef.current.value,
+      });
+    else onClose();
   };
 
   useEffect(() => {

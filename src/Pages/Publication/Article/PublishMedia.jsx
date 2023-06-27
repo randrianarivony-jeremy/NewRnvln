@@ -12,10 +12,10 @@ import {
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AudioDisplay from "../../../Component/AudioDisplay";
-import { apiCall, currentUserContext } from "../../../Controler/App";
-import { publicationContext } from "../../../Controler/Context";
 import { storage } from "../../../Controler/firebase.config";
+import AudioDisplay from "../../../Component/AudioDisplay";
+import { currentUserContext } from "../../../Controler/App";
+import { publicationContext } from "../../../Controler/Context";
 import { useCreatePostMutation } from "../../../Controler/Redux/Features/postSlice";
 
 const PublishMedia = () => {

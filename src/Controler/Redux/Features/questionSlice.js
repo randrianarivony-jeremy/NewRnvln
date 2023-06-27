@@ -15,18 +15,24 @@ export const questionSlice = apiSlice.injectEndpoints({
       providesTags: (response, err, arg) => [{ type: "Question", id: arg }],
     }),
     fetchQuestionInterviews: builder.query({
-      query: (questionId) => {
-        return {
-          url: "interview/question/" + questionId,
-          credentials: "include",
-        };
-      },
+      query: (questionId) => "interview/question/" + questionId,
       providesTags: (response, err, arg) => [{ type: "Question", id: arg }],
       transformResponse: (responseData) =>
         interviewsAdapter.setAll(initialState, responseData),
     }),
+    addQuestion: builder.mutation({
+      query: (body) => ({
+        url: "question",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "Post", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useFetchQuestionQuery, useFetchQuestionInterviewsQuery } =
-  questionSlice;
+export const {
+  useFetchQuestionQuery,
+  useFetchQuestionInterviewsQuery,
+  useAddQuestionMutation,
+} = questionSlice;

@@ -1,21 +1,16 @@
 import { Box, Flex, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
 import notification from "../../Assets/notification1.mp3";
-import { Loader } from "../../Component/Miscellanous";
+import { ErrorRender, Loader } from "../../Component/Miscellanous";
 import { socket } from "../../Controler/App";
-import {
-  chatSlice,
-  useFetchMessagesQuery,
-} from "../../Controler/Redux/Features/chatSlice";
+import { useFetchMessagesQuery } from "../../Controler/Redux/Features/chatSlice";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import SingleMessage from "./SingleMessage";
 
 const ChatScroller = () => {
   const { userId } = useParams();
-  const dispatch = useDispatch();
   const toast = useToast();
   let scrollRef = useRef();
   const ringtoneRef = useRef();
@@ -25,12 +20,13 @@ const ChatScroller = () => {
     isLoading,
     isSuccess,
     isError,
+    error,
     data: messages,
   } = useFetchMessagesQuery(userId);
 
   useEffect(() => {
-    socket.on("new message", () => ringtoneRef.current.play());
     if (
+      isSuccess &&
       messages !== null &&
       messages.ids.every(
         (id) => messages.entities[id].contentType === "deleted"
@@ -50,21 +46,12 @@ const ChatScroller = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    socket.on("new message", () => ringtoneRef.current.play());
+  });
+
   if (isLoading) return <Loader />;
-  if (isError)
-    return (
-      <Flex
-        align={"center"}
-        justify="center"
-        height={"100%"}
-        textAlign="center"
-      >
-        <p>
-          Une erreur est survenue lors du chargement. Veuillez réessayer plus
-          tard.
-        </p>
-      </Flex>
-    );
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess)
     return (
       <Box

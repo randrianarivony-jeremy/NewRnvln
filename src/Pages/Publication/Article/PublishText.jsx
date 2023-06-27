@@ -1,9 +1,17 @@
-import { Button, ButtonGroup, Flex, HStack, Select, Stack, Text, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  HStack,
+  Select,
+  Stack,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundOptions from "../../../Component/BackgroundOptions";
 import ResizableTextarea from "../../../Component/ResizableTextarea";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { currentUserContext } from "../../../Controler/App";
 import { useCreatePostMutation } from "../../../Controler/Redux/Features/postSlice";
 
 const PublishText = () => {

@@ -8,16 +8,27 @@ import {
   useAddFriendMutation,
   useCancelFriendInvitationMutation,
   useConfirmFriendRequestMutation,
+  useFetchUserQuery,
   usePullFriendMutation,
 } from "../../../Controler/Redux/Features/userSlice";
 import { userContext } from "../UserProfile";
 
 const FriendHandler = () => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { friendInvitation, friendRequest } = useFetchUserQuery(
+    currentUser._id,
+    {
+      selectFromResult: ({ data }) => ({
+        friendInvitation: data?.friendInvitation,
+        friendRequest: data?.friendRequest,
+      }),
+    }
+  );
   const { user, setUser } = useContext(userContext);
   const { userId } = useParams();
   const [friend, setFriend] = useState("none");
   const [subscribed, setSubscribed] = useState(false);
+
   const [addFriend, { isSuccess: AFIsSuccess, isLoading: AFIsLoading }] =
     useAddFriendMutation();
   const [pullFriend, { isSuccess: PFIsSuccess, isLoading: PFIsLoading }] =
@@ -36,10 +47,9 @@ const FriendHandler = () => {
 
     if (currentUser.friends.includes(userId)) setFriend("friend");
     else {
-      if (currentUser.friendRequest.includes(userId)) setFriend("request");
+      if (friendRequest.includes(userId)) setFriend("request");
       else {
-        if (currentUser.friendInvitation.includes(userId))
-          setFriend("invitation");
+        if (friendInvitation.includes(userId)) setFriend("invitation");
         else setFriend("none");
       }
     }
@@ -49,7 +59,7 @@ const FriendHandler = () => {
     if (AFIsSuccess) {
       setCurrentUser({
         ...currentUser,
-        friendInvitation: [...currentUser.friendInvitation, userId],
+        friendInvitation: [...friendInvitation, userId],
       });
     }
   }, [AFIsLoading]);
@@ -72,9 +82,7 @@ const FriendHandler = () => {
       console.log("success");
       setCurrentUser({
         ...currentUser,
-        friendInvitation: currentUser.friendInvitation.filter(
-          (elt) => elt !== userId
-        ),
+        friendInvitation: friendInvitation.filter((elt) => elt !== userId),
       });
     }
   }, [CFIIsLoading]);
@@ -83,9 +91,7 @@ const FriendHandler = () => {
     if (CFRIsSuccess) {
       setCurrentUser({
         ...currentUser,
-        friendRequest: currentUser.friendRequest.filter(
-          (elt) => elt !== userId
-        ),
+        friendRequest: friendRequest.filter((elt) => elt !== userId),
         friends: [...currentUser.friends, userId],
       });
       setUser({

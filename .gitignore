@@ -4,6 +4,7 @@
 /node_modules
 /firebase-data
 .env
+src/Controler/firebase.config.js
 .gitignore
 storage.rules
 /.pnp

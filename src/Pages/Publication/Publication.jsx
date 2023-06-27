@@ -20,7 +20,6 @@ const Publication = () => {
     setContent({ content: imgSrc, contentType: "image" });
     navigate("/publication/media");
   };
-  console.log(camera);
   return (
     <Stack height="100%">
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">

@@ -1,11 +1,30 @@
 // prettier-ignore
-import {Avatar,Box,Button,Checkbox,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,DrawerOverlay,Flex,FormControl,FormErrorMessage,FormLabel,Heading,HStack,Image,Input,Stack,Text,useDisclosure,useToast,} from "@chakra-ui/react";
+import { Avatar, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Image, Input, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { useNavigate } from "react-router-dom";
+import { currentUserContext } from "../../../Controler/App";
+import {
+  useFetchUserQuery,
+  useSubscribeMutation
+} from "../../../Controler/Redux/Features/userSlice";
 import { userContext } from "../UserProfile";
 import Unsubscribe from "./Unsubscribe";
 
 const Subscribe = () => {
+  const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { friendInvitation, friendRequest, wallet } = useFetchUserQuery(
+    currentUser._id,
+    {
+      selectFromResult: ({ data }) => ({
+        friendInvitation: data?.friendInvitation,
+        friendRequest: data?.friendRequest,
+        wallet: data?.wallet,
+      }),
+    }
+  );
+  const [subscribe, { isLoading, isSuccess, isError, error }] =
+    useSubscribeMutation();
+
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
     onOpen: openUnsubscribeModal,
@@ -15,13 +34,13 @@ const Subscribe = () => {
   let currentDate = new Date();
   const [passwordErr, setPasswordErr] = useState(false);
   const { user, setUser } = useContext(userContext);
-  const { currentUser, setCurrentUser } = useContext(currentUserContext);
-  const [submitting, setSubmitting] = useState(false);
   const passwordRef = useRef();
   const submitControl = useRef();
   const toast = useToast();
   const [subscribed, setSubscribed] = useState(false);
   const [friend, setFriend] = useState("none");
+
+  const navigate = useNavigate();
 
   const handleDateFormat = () => {
     return currentDate.toLocaleString("fr-FR", {
@@ -46,70 +65,81 @@ const Subscribe = () => {
     });
   };
 
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    await apiCall
-      .patch("user/subscribe/" + currentUser._id, {
-        id_user: user._id,
-        password: passwordRef.current.value,
-      })
-      .then(
-        (res) => {
-          setCurrentUser({
-            ...currentUser,
-            subscriptions: [...currentUser.subscriptions, user._id],
-          });
-          setUser({
-            ...user,
-            subscribers: [...user.subscribers, currentUser._id],
-          });
-          setSubmitting(false);
-          onClose();
-          toast({
-            title: "Abonnement réussi",
-            description: `Félicitation ! Votre abonnement à ${user.name} est réussi`,
-            duration: 5000,
-            isClosable: true,
-            position: "top",
-            status: "success",
-          });
-        },
-        (err) => {
-          console.log(err);
-          if (err.response.data === "Mot de passe incorrect")
-            setPasswordErr(true);
-          if (err.response.data === "insufficient") {
-            onClose();
-            toast({
-              title: "Abonnement échoué",
-              description: "Portefeuille insuffisante",
-              duration: 5000,
-              isClosable: true,
-              position: "bottom",
-              status: "error",
-            });
-          }
-
-          setSubmitting(false);
-        }
-      );
-  };
-
   useEffect(() => {
     if (currentUser.subscriptions.includes(user._id)) setSubscribed(true);
     else setSubscribed(false);
 
     if (currentUser.friends.includes(user._id)) setFriend("friend");
     else {
-      if (currentUser.friendRequest.includes(user._id)) setFriend("request");
+      if (friendRequest.includes(user._id)) setFriend("request");
       else {
-        if (currentUser.friendInvitation.includes(user._id))
-          setFriend("invitation");
+        if (friendInvitation.includes(user._id)) setFriend("invitation");
         else setFriend("none");
       }
     }
   }, [currentUser, user]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCurrentUser({
+        ...currentUser,
+        subscriptions: [...currentUser.subscriptions, user._id],
+      });
+      setUser({
+        ...user,
+        subscribers: [...user.subscribers, currentUser._id],
+      });
+      onClose();
+      toast({
+        title: "Abonnement réussi",
+        description: `Félicitation ! Votre abonnement à ${user.name} est réussi`,
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+        status: "success",
+      });
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      if (error.status === 403) {
+        toast({
+          title: "Expiration",
+          description:
+            "Vous avez atteint un mois de connexion. Veillez vous reconnecter",
+          status: "info",
+          position: "bottom",
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate("/login");
+      } else if (error.data.message === "Mot de passe incorrect")
+        setPasswordErr(true);
+      else if (error.data.message === "insufficient") {
+        onClose();
+        toast({
+          title: "Abonnement échoué",
+          description: "Portefeuille insuffisante",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+          status: "error",
+        });
+      } else {
+        onClose();
+        toast({
+          title: "Abonnement échoué",
+          description:
+            "Une erreur est survenue. Veuillez réessayer ultérieurement",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+          status: "error",
+        });
+      }
+    }
+  }, [isError]);
 
   return (
     <>
@@ -122,8 +152,8 @@ const Subscribe = () => {
         }
         onClick={() => (subscribed ? openUnsubscribeModal() : onOpen())}
       >
-        {subscribed ? "Abonné" : "S'abonner"}
-        {/* {subscribed ? "Abonné" : `S'abonner ${user.fees}kAr`} */}
+        {/* {subscribed ? "Abonné" : "S'abonner"} */}
+        {subscribed ? "Abonné" : `S'abonner ${user.fees}kA`}
       </Button>
 
       <Unsubscribe
@@ -174,7 +204,7 @@ const Subscribe = () => {
               <Text>
                 Votre portefeuille actuelle :{" "}
                 <span style={{ fontSize: "20px", fontWeight: "500" }}>
-                  {currentUser.wallet}
+                  {wallet}
                 </span>{" "}
                 kAr
               </Text>
@@ -202,7 +232,15 @@ const Subscribe = () => {
               <Checkbox colorScheme="green">
                 Se réabonner automatiquement
               </Checkbox>
-              <form onSubmit={handleSubscribe}>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  subscribe({
+                    id_user: user._id,
+                    password: passwordRef.current.value,
+                  });
+                }}
+              >
                 <FormControl isInvalid={passwordErr}>
                   <FormLabel>
                     Pour confirmer votre abonnement, entrez votre mot de passe :
@@ -227,7 +265,7 @@ const Subscribe = () => {
                 Annuler
               </Button>
               <Button
-                isLoading={submitting}
+                isLoading={isLoading}
                 variant="primary"
                 width="100%"
                 onClick={() => submitControl.current.click()}

@@ -11,15 +11,10 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  uploadString,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiCall, currentUserContext } from "../../../Controler/App";
+import { currentUserContext } from "../../../Controler/App";
 import { storage } from "../../../Controler/firebase.config";
 import { useCreatePostMutation } from "../../../Controler/Redux/Features/postSlice";
 import { interviewContext } from "./Interview";

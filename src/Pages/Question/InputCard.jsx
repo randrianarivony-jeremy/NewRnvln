@@ -44,6 +44,7 @@ const InputCard = ({ index }) => {
           width={"100%"}
           height="100%"
           onClick={() =>
+            !writing[index] &&
             setWriting((current) => {
               let mirror = [...current];
               mirror[index] = true;

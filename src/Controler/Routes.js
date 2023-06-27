@@ -8,7 +8,6 @@ import Login from "../Pages/Login/Login";
 import { currentUserContext } from "./App";
 
 const SinglePost = lazy(() => import("../Pages/StandalonePost/SinglePost"));
-const SubscriptionOnly = lazy(() => import("../Pages/Home/SubscriptionOnly"));
 const Notification = lazy(() => import("../Pages/Notification/Notification"));
 const Profile = lazy(() => import("../Pages/Profile/Profile"));
 const UserProfile = lazy(() => import("../Pages/Profile/UserProfile"));
@@ -40,18 +39,9 @@ const Routes = () => {
       <BrowserRouter>
         {/* prettier-ignore  */}
         <ROUTES>
-          <Route path="/" element={currentUser ? <Home /> : <Login />}>
-            <Route index element={<ForYouPage />} />
-            {/* <Route index element={<Suspense fallback={<Loader/>}>{currentUser ? <ForYouPage /> : <Login/>}</Suspense>} /> */}
-            <Route
-              path="/subscriptions_only"
-              element={<Suspense fallback={<Loader />}>{currentUser ? <SubscriptionOnly /> : <Login />}</Suspense>}
-            />
-            <Route
-              path="/questions_only"
-              element={<Suspense fallback={<Loader />}>{currentUser ? <SinglePost /> : <Login />}</Suspense>}
-            />
-          </Route>
+          <Route 
+            path="/" 
+            element={currentUser ? <Home /> : <Login />}/>
           <Route
             path="/post/:type/:id"
             element={<Suspense fallback={<Loader />}>{currentUser ? <SinglePost /> : <Login />}</Suspense>}

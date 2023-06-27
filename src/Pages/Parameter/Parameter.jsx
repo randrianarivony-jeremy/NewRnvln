@@ -1,22 +1,19 @@
-import {Button,Flex,Heading,Stack,Text, useDisclosure,} from "@chakra-ui/react";
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import ChangeUsername from "./ChangeUsername";
-import ChangePassword from "./ChangePassword";
-import ChangeEmail from "./ChangeEmail";
-import ChangeFees from "./ChangeFees";
-import { currentUserContext } from "../../Controler/App";
-import EnableSubscription from "../Profile/Relation/EnableSubscription";
-import DisableSubscription from "./DisableSubscription";
+import { Button, Flex, Heading, Stack, useDisclosure } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ClickableFlex,
   ErrorRender,
   Loader,
   Scroll,
 } from "../../Component/Miscellanous";
+import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
+import ChangeEmail from "./ChangeEmail";
+import ChangePassword from "./ChangePassword";
+import ChangeUsername from "./ChangeUsername";
 
 const Parameter = () => {
   const navigate = useNavigate();
@@ -38,16 +35,6 @@ const Parameter = () => {
     isOpen: emailDrawer,
     onOpen: openEmailDrawer,
     onClose: closeEmailDrawer,
-  } = useDisclosure();
-  const {
-    isOpen: feesDrawer,
-    onOpen: openFeesDrawer,
-    onClose: closeFeesDrawer,
-  } = useDisclosure();
-  const {
-    isOpen: cancelSubscriptionDrawer,
-    onOpen: openCancelSubscriptionDrawer,
-    onClose: closeCancelSubscriptionDrawer,
   } = useDisclosure();
 
   if (isLoading) return <Loader />;
@@ -95,57 +82,6 @@ const Parameter = () => {
 
                 <ClickableFlex>Supprimer votre compte</ClickableFlex>
               </Stack>
-            </Stack>
-
-            <Stack>
-              <Heading size="sm">Abonnement</Heading>
-              {currentUser.subscription ? (
-                <Stack>
-                  <ClickableFlex
-                    justify="space-between"
-                    align="flex-end"
-                    onClick={openFeesDrawer}
-                  >
-                    <Text>Montant</Text>
-                    <Text fontSize="lg" fontWeight="bold">
-                      {currentUser.fees}kAr
-                    </Text>
-                  </ClickableFlex>
-                  <ChangeFees
-                    onOpen={openFeesDrawer}
-                    onClose={closeFeesDrawer}
-                    isOpen={feesDrawer}
-                  />
-                  <ClickableFlex>
-                    Débloquer la messagerie privée pour les non-abonnés
-                  </ClickableFlex>
-                  <ClickableFlex onClick={openCancelSubscriptionDrawer}>
-                    Désactivez votre abonnement
-                  </ClickableFlex>
-                  <DisableSubscription
-                    onOpen={openCancelSubscriptionDrawer}
-                    onClose={closeCancelSubscriptionDrawer}
-                    isOpen={cancelSubscriptionDrawer}
-                  />
-                </Stack>
-              ) : (
-                <Stack>
-                  <Text
-                    fontSize="sm"
-                    paddingX={3}
-                    paddingY={2}
-                    bgColor="info"
-                    rounded="md"
-                  >
-                    Activer l'abonnement vous permettra de ne montrer certains
-                    contenus qu'à vos abonnés. Ces abonnés devront payer
-                    mensuellement, à vous, une somme dont vous fixerez
-                    vous-même, pour pouvoir voir et réagir à vos contenus
-                    payants, et vous envoyer des messages privés.
-                  </Text>
-                  <EnableSubscription />
-                </Stack>
-              )}
             </Stack>
           </Stack>
         </Scroll>

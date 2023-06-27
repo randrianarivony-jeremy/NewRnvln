@@ -24,44 +24,11 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
   const [unsubscribe, { isSuccess, isError, error, isLoading }] =
     useUnsubscribeMutation();
-  const [submitting, setSubmitting] = useState(false);
   const [passwordErr, setPasswordErr] = useState(false);
   const passwordRef = useRef();
   const submitControl = useRef();
   const toast = useToast();
   const navigate = useNavigate();
-
-  // const stopSubscription = async (e) => {
-  //   e.preventDefault();
-  //   setSubmitting(true);
-  //   await apiCall
-  //     .patch(
-  //         "user/unsubscribe/" +
-  //         currentUser._id,
-  //       { id_user: user._id, password: passwordRef.current.value }
-  //     )
-  //     .then(
-  //       () => {
-  //           setCurrentUser({...currentUser,subscriptions:currentUser.subscriptions.filter(elt=>elt!==user._id)});
-  //           setUser({...user,subscribers:user.subscribers.filter(elt=>elt!==currentUser._id)})
-  //         setSubmitting(false);
-  //         onClose();
-  //         toast({
-  //           title: "Désabonnement effectué",
-  //           description: `Vous n'êtes plus abonnés à ${user.name}`,
-  //           duration: 5000,
-  //           isClosable: true,
-  //           position: "top",
-  //           status: "info",
-  //         });
-  //       },
-  //       (err) => {
-  //         console.log(err);
-  //         if (err.response.data === "Mot de passe incorrect") setPasswordErr(true);
-  //         setSubmitting(false);
-  //       }
-  //     );
-  // };
 
   useEffect(() => {
     if (isSuccess) {
@@ -75,7 +42,6 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
         ...user,
         subscribers: user.subscribers.filter((elt) => elt !== currentUser._id),
       });
-      setSubmitting(false);
       onClose();
       toast({
         title: "Désabonnement effectué",

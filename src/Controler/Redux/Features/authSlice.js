@@ -20,6 +20,7 @@ export const authSlice = apiSlice.injectEndpoints({
             dispatch(setNewMainMessage(data.newMainMessage));
             dispatch(setNewSecondMessage(data.newSecondMessage));
             dispatch(setNewNotification(data.newNotification));
+            if (socket.disconnected) socket.connect()
             socket.emit("start", data.user._id);
           }
         } catch (error) {
@@ -62,7 +63,7 @@ export const authSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
+          if (data.id) socket.disconnect();
           dispatch(logOut());
           dispatch(apiSlice.util.resetApiState());
         } catch (err) {

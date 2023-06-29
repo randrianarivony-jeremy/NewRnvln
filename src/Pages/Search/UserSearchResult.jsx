@@ -22,7 +22,7 @@ const UserSearchResult = () => {
   if (isSuccess) {
     if (data.length > 0)
       return (
-        <Stack>
+        <Stack spacing={0}>
           {data.map((user) => (
             <Flex
               width="100%"

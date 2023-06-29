@@ -12,9 +12,15 @@ import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClickableFlex } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
+import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
 
-const ConversationCard = ({ conversation }) => {
+const ConversationCard = ({ conversationId, category }) => {
   const { currentUser } = useContext(currentUserContext);
+  const { conversation } = useFetchConversationsQuery(category, {
+    selectFromResult: ({ data }) => ({
+      conversation: data?.entities[conversationId],
+    }),
+  });
   const userB = useRef(
     conversation.members.filter((member) => member._id !== currentUser._id)[0]
   );

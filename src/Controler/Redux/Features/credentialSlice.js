@@ -13,6 +13,9 @@ const credentialSlice = createSlice({
       const { accessToken } = action.payload;
       state.token = accessToken;
     },
+    logOut: (state) => {
+      state.token = null;
+    },
     setNewMainMessage: (state, action) => {
       state.newMainMessage = action.payload;
     },
@@ -22,8 +25,11 @@ const credentialSlice = createSlice({
     setNewNotification: (state, action) => {
       state.newNotification = action.payload;
     },
-    logOut: (state) => {
-      state.token = null;
+    setNewFriendRequest: (state, action) => {
+      state.newFriendRequest = action.payload;
+    },
+    setNewFriendAccepted: (state, action) => {
+      state.newFriendAccepted = action.payload;
     },
   },
 });
@@ -34,6 +40,8 @@ export const {
   setNewMainMessage,
   setNewSecondMessage,
   setNewNotification,
+  setNewFriendRequest,
+  setNewFriendAccepted,
 } = credentialSlice.actions;
 
 export default credentialSlice.reducer;

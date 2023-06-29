@@ -1,10 +1,15 @@
-import { createEntityAdapter } from "@reduxjs/toolkit";
+import { createEntityAdapter, current } from "@reduxjs/toolkit";
 import { socket } from "../../App";
 import { apiSlice } from "../apiSlice";
 
 export const chatAdapter = createEntityAdapter({
-  selectId: (messages) => messages._id,
+  selectId: (message) => message._id,
   sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
+});
+
+export const conversationAdapter = createEntityAdapter({
+  selectId: (conversation) => conversation._id,
+  sortComparer: (a, b) => b.updatedAt.localeCompare(a.updatedAt),
 });
 
 const initialState = chatAdapter.getInitialState();
@@ -30,35 +35,67 @@ export const chatSlice = apiSlice.injectEndpoints({
           credentials: "include",
         };
       },
+      transformResponse: (responseData) => {
+        if (responseData.length !== 0)
+          return conversationAdapter.setAll(initialState, responseData);
+        else return initialState;
+      },
       providesTags: (response, err, category) => [
         { type: "Conversation", id: category },
       ],
       async onCacheEntryAdded(
         category,
-        { dispatch, cacheDataLoaded, cacheEntryRemoved }
+        { dispatch, cacheDataLoaded, getCacheEntry }
       ) {
         try {
           await cacheDataLoaded;
-          socket.on("new message", () => {
-            dispatch(
-              chatSlice.util.invalidateTags([
-                { type: "Conversation", id: category },
-              ])
-            );
-          });
-          socket.on("deleted message", () => {
-            dispatch(
-              chatSlice.util.invalidateTags([
-                { type: "Conversation", id: category },
-              ])
-            );
+
+          socket.on(
+            "new message",
+            ({ category: newMessageCategory, newMessage }) => {
+              if (category === newMessageCategory)
+                dispatch(
+                  chatSlice.util.updateQueryData(
+                    "fetchConversations",
+                    category,
+                    (draft) => {
+                      const thatConversationIndex = draft.ids.findIndex(
+                        (id) => id === newMessage.conversationId
+                      );
+                      //new conversation
+                      if (thatConversationIndex === -1)
+                        dispatch(
+                          chatSlice.util.invalidateTags([
+                            { type: "Conversation", id: category },
+                          ])
+                        );
+                      else {
+                        conversationAdapter.updateOne(draft, {
+                          id: newMessage.conversationId,
+                          changes: {
+                            messages: [newMessage],
+                            updatedAt: new Date().toISOString(),
+                          },
+                        });
+                      }
+                    }
+                  )
+                );
+              else return;
+            }
+          );
+          socket.on("deleted message", ({ conversationId, messageId }) => {
+            const { data } = getCacheEntry();
+            if (data.entities[conversationId].messages[0]._id === messageId)
+              dispatch(
+                chatSlice.util.invalidateTags([
+                  { type: "Conversation", id: category },
+                ])
+              );
           });
         } catch (error) {
           console.log(error);
         }
-        await cacheEntryRemoved;
-        socket.off("new message");
-        socket.off("deleted message");
       },
     }),
 
@@ -75,16 +112,18 @@ export const chatSlice = apiSlice.injectEndpoints({
       },
       async onCacheEntryAdded(
         userId,
-        { cacheDataLoaded, cacheEntryRemoved, updateCachedData, dispatch }
+        { cacheDataLoaded, updateCachedData, dispatch }
       ) {
         try {
           await cacheDataLoaded;
           socket.on("new message", ({ newMessage }) => {
             updateCachedData((draft) => {
+              if (draft === null)
+                return chatAdapter.setAll(initialState, [newMessage]);
               chatAdapter.addOne(draft, newMessage);
             });
           });
-          socket.on("deleted message", (messageId) => {
+          socket.on("deleted message", ({ messageId }) => {
             updateCachedData((draft) => {
               chatAdapter.updateOne(draft, {
                 id: messageId,
@@ -98,7 +137,8 @@ export const chatSlice = apiSlice.injectEndpoints({
               )
                 dispatch(
                   chatSlice.util.invalidateTags([
-                    { type: "Messages", id: userId },
+                    { type: "Conversation", id: userId },
+                    // { type: "Conversation", id: userId },
                   ])
                 );
             });
@@ -106,11 +146,9 @@ export const chatSlice = apiSlice.injectEndpoints({
         } catch (error) {
           console.log(error);
         }
-        await cacheEntryRemoved;
-        socket.off("new message");
-        socket.off("deleted message");
       },
     }),
+
     addMessage: builder.mutation({
       query: (body) => ({
         url: "message",
@@ -132,12 +170,6 @@ export const chatSlice = apiSlice.injectEndpoints({
         );
         try {
           const { data } = await queryFulfilled;
-          socket.emit("message sent", data, body.recipient);
-          dispatch(
-            chatSlice.util.invalidateTags([
-              { type: "Conversation", id: body.recipient },
-            ])
-          );
           dispatch(
             chatSlice.util.updateQueryData(
               "fetchMessages",
@@ -148,7 +180,56 @@ export const chatSlice = apiSlice.injectEndpoints({
               }
             )
           );
-        } catch {
+
+          socket.emit("message sent", data, body.recipient);
+
+          if (body.conversationId === null)
+            dispatch(
+              chatSlice.util.invalidateTags([
+                { type: "Conversation", id: body.recipient },
+              ])
+            );
+
+          //existing fetchConversations query cached data
+          if (body.category)
+            //existing conversation
+            dispatch(
+              chatSlice.util.updateQueryData(
+                "fetchConversations",
+                body.category,
+                (draft) => {
+                  const thatConversationIndex = draft.ids.findIndex(
+                    (id) => id === body.conversationId
+                  );
+                  const thatConversation =
+                    draft.entities[draft.ids[thatConversationIndex]];
+                  //new conversation in case of conversations lazy loaded
+                  if (thatConversationIndex === -1)
+                    dispatch(
+                      chatSlice.util.invalidateTags([
+                        { type: "Conversation", id: body.category },
+                      ])
+                    );
+                  else
+                    conversationAdapter.updateOne(draft, {
+                      id: body.conversationId,
+                      changes: {
+                        messages: [data.newMessage],
+                        updatedAt: data.newMessage.createdAt,
+                      },
+                    });
+                }
+              )
+            );
+          //new conversation
+          else
+            dispatch(
+              chatSlice.util.invalidateTags([
+                { type: "Conversation", id: data.category },
+              ])
+            );
+        } catch (error) {
+          console.log(error);
           patchResult.undo();
         }
       },
@@ -162,12 +243,11 @@ export const chatSlice = apiSlice.injectEndpoints({
         };
       },
       async onQueryStarted(
-        { userId, messageId },
+        { userId, messageId, conversationId },
         { dispatch, queryFulfilled }
       ) {
         const patchResult = dispatch(
           chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
-            // chatAdapter.removeOne(draft, messageId);
             chatAdapter.updateOne(draft, {
               id: messageId,
               changes: { contentType: "deleted" },
@@ -177,10 +257,23 @@ export const chatSlice = apiSlice.injectEndpoints({
 
         queryFulfilled.catch(patchResult.undo);
         await queryFulfilled;
+        socket.emit("delete message", { userId, messageId, conversationId });
         dispatch(
-          chatSlice.util.invalidateTags([{ type: "Conversation", id: userId }])
+          chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
+            if (
+              draft !== null &&
+              draft.ids.every(
+                (id) => draft.entities[id].contentType === "deleted"
+              )
+            )
+              dispatch(
+                chatSlice.util.invalidateTags([
+                  { type: "Messages", id: userId },
+                  { type: "Conversation", id: userId },
+                ])
+              );
+          })
         );
-        socket.emit("delete message", { userId, messageId });
       },
     }),
   }),

@@ -2,9 +2,7 @@ import { Box, Flex, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
-import notification from "../../Assets/notification1.mp3";
 import { ErrorRender, Loader } from "../../Component/Miscellanous";
-import { socket } from "../../Controler/App";
 import { useFetchMessagesQuery } from "../../Controler/Redux/Features/chatSlice";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import SingleMessage from "./SingleMessage";
@@ -13,7 +11,6 @@ const ChatScroller = () => {
   const { userId } = useParams();
   const toast = useToast();
   let scrollRef = useRef();
-  const ringtoneRef = useRef();
   const navigate = useNavigate();
   const { data: user } = useFetchUserQuery(userId);
   const {
@@ -39,16 +36,9 @@ const ChatScroller = () => {
         isClosable: true,
         duration: 5000,
       });
-      // dispatch(
-      //   chatSlice.util.invalidateTags([{ type: "Messages", id: userId }])
-      // );
-      navigate("/message");
+      // navigate("/message");
     }
   }, [messages]);
-
-  useEffect(() => {
-    socket.on("new message", () => ringtoneRef.current.play());
-  });
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;
@@ -73,11 +63,6 @@ const ChatScroller = () => {
             messages.ids.map((id) => <SingleMessage messageId={id} key={id} />)
           )}
         </ScrollableFeed>
-        <audio
-          src={notification}
-          ref={ringtoneRef}
-          style={{ display: "none" }}
-        ></audio>
       </Box>
     );
 };

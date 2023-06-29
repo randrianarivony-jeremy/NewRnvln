@@ -25,7 +25,7 @@ const Search = () => {
   const keyword = searchParams.get("keyword");
 
   return (
-    <Stack>
+    <Stack height={"100%"}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button boxSize={12} onClick={() => navigate(-1)}>
           <IonIcon icon={arrowBack} />
@@ -38,7 +38,7 @@ const Search = () => {
       <Text paddingX={3}>
         Résultats pour <b>"{keyword}"</b>
       </Text>
-      <Tabs isLazy={true} width="100%">
+      <Tabs isLazy={true} width="100%" height={"100%"}>
         <TabList width={"100%"} overflowX={"auto"} className="scrollablefeed">
           <Tab>Personnes</Tab>
           <Tab>Publications</Tab>

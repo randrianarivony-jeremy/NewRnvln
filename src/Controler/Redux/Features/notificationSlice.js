@@ -4,12 +4,7 @@ import { apiSlice } from "../apiSlice";
 export const notificationSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     fetchNotifications: builder.query({
-      query: (currentUser) => {
-        return {
-          url: "notification",
-          credentials: "include",
-        };
-      },
+      query: (currentUser) => "notification",
       providesTags: ["Notification"],
       transformResponse: (responseData, error, currentUser) => [
         ...responseData.map((elt) => {

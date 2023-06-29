@@ -18,6 +18,7 @@ import { useParams } from "react-router-dom";
 import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import {
+  chatSlice,
   useAddMessageMutation,
   useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
@@ -35,6 +36,12 @@ const ChatInputs = ({ sendResponse }) => {
   const [writing, setWriting] = useState(false);
   const mediaContent = useRef();
   const [addMessage, { isError, error }] = useAddMessageMutation();
+  const { category } = chatSlice.endpoints.fetchConversation.useQueryState(
+    userId,
+    {
+      selectFromResult: ({ data }) => ({ category: data?.category }),
+    }
+  );
 
   const sendText = async () => {
     setWriting(false);
@@ -46,6 +53,7 @@ const ChatInputs = ({ sendResponse }) => {
       content: responseRef.current.value,
       conversationId: conversation?._id ?? null,
       contentType: "string",
+      category,
       createdAt: new Date().toJSON(),
     });
   };

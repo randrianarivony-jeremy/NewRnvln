@@ -29,12 +29,7 @@ export const chatSlice = apiSlice.injectEndpoints({
     }),
 
     fetchConversations: builder.query({
-      query: (category) => {
-        return {
-          url: "conversation/" + category,
-          credentials: "include",
-        };
-      },
+      query: (category) => "conversation/" + category,
       transformResponse: (responseData) => {
         if (responseData.length !== 0)
           return conversationAdapter.setAll(initialState, responseData);
@@ -45,7 +40,7 @@ export const chatSlice = apiSlice.injectEndpoints({
       ],
       async onCacheEntryAdded(
         category,
-        { dispatch, cacheDataLoaded, getCacheEntry }
+        { dispatch, cacheDataLoaded, getCacheEntry, updateCachedData }
       ) {
         try {
           await cacheDataLoaded;
@@ -71,14 +66,25 @@ export const chatSlice = apiSlice.injectEndpoints({
                           ])
                         );
                       //fetched conversation
-                      else
+                      else {
+                        //unseenMessage update
+                        const thatConversation =
+                          draft.entities[newMessage.conversationId];
+                        thatConversation.unseenMessage =
+                          thatConversation.unseenMessage.map((elt) => {
+                            if (elt.user !== newMessage.sender)
+                              elt.new.push(newMessage._id);
+                            return elt;
+                          });
                         conversationAdapter.updateOne(draft, {
                           id: newMessage.conversationId,
                           changes: {
-                            messages: [newMessage],
+                            // unseenMessage:
+                            lastMessage: newMessage,
                             updatedAt: new Date().toISOString(),
                           },
                         });
+                      }
                     }
                   )
                 );
@@ -87,12 +93,21 @@ export const chatSlice = apiSlice.injectEndpoints({
           );
           socket.on("deleted message", ({ conversationId, messageId }) => {
             const { data } = getCacheEntry();
-            if (data.entities[conversationId].messages[0]._id === messageId)
+            if (data.entities[conversationId].lastMessage._id === messageId)
               dispatch(
                 chatSlice.util.invalidateTags([
                   { type: "Conversation", id: category },
                 ])
               );
+            else
+              updateCachedData((draft) => {
+                const thatConversation = draft.entities[conversationId];
+                thatConversation.unseenMessage =
+                  thatConversation.unseenMessage.map((elt) => {
+                    elt.new = elt.new.filter((msgId) => msgId !== messageId);
+                    return elt;
+                  });
+              });
           });
         } catch (error) {
           console.log(error);
@@ -109,7 +124,7 @@ export const chatSlice = apiSlice.injectEndpoints({
       transformResponse: (responseData) => {
         if (responseData !== null)
           return chatAdapter.setAll(initialState, responseData);
-        else return responseData;
+        else return initialState;
       },
       async onCacheEntryAdded(
         userId,
@@ -171,7 +186,6 @@ export const chatSlice = apiSlice.injectEndpoints({
         );
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(
             chatSlice.util.updateQueryData(
               "fetchMessages",
@@ -214,7 +228,7 @@ export const chatSlice = apiSlice.injectEndpoints({
                     conversationAdapter.updateOne(draft, {
                       id: body.conversationId,
                       changes: {
-                        messages: [data.newMessage],
+                        lastMessage: data.newMessage,
                         updatedAt: data.newMessage.createdAt,
                       },
                     });
@@ -238,6 +252,13 @@ export const chatSlice = apiSlice.injectEndpoints({
     updateNewMessage: builder.mutation({
       query: (category) => ({
         url: "conversation/new/" + category,
+        method: "PUT",
+      }),
+    }),
+
+    checkUnseenMessage: builder.mutation({
+      query: (conversationId) => ({
+        url: "conversation/check/" + conversationId,
         method: "PUT",
       }),
     }),
@@ -297,8 +318,7 @@ export const {
   useFetchMessagesQuery,
   useFetchMessagesQueryState,
   useUpdateNewMessageMutation,
+  useCheckUnseenMessageMutation,
   useAddMessageMutation,
   useDeleteMessageMutation,
 } = chatSlice;
-
-// export const {sele}=chatAdapter.getSelectors(state=>state)

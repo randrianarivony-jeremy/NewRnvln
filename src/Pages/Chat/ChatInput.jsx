@@ -20,7 +20,6 @@ import { currentUserContext } from "../../Controler/App";
 import {
   chatSlice,
   useAddMessageMutation,
-  useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
 import SendPicture from "./SendPicture";
 import TakePicture from "./TakePicture";
@@ -29,19 +28,20 @@ import VoiceRecording from "./VoiceRecording";
 const ChatInputs = ({ sendResponse }) => {
   const responseRef = useRef();
   const { userId } = useParams();
-  const { data: conversation } = useFetchConversationQuery(userId);
   const { currentUser } = useContext(currentUserContext);
   const [value, setValue] = useState("");
   const emojibg = useColorModeValue("light", "dark");
   const [writing, setWriting] = useState(false);
   const mediaContent = useRef();
   const [addMessage, { isError, error }] = useAddMessageMutation();
-  const { category } = chatSlice.endpoints.fetchConversation.useQueryState(
-    userId,
-    {
-      selectFromResult: ({ data }) => ({ category: data?.category }),
-    }
-  );
+  const { category, conversationId, isSuccess } =
+    chatSlice.endpoints.fetchConversation.useQueryState(userId, {
+      selectFromResult: ({ data, isSuccess }) => ({
+        category: data?.category,
+        conversationId: data?._id,
+        isSuccess,
+      }),
+    });
 
   const sendText = async () => {
     setWriting(false);
@@ -51,7 +51,7 @@ const ChatInputs = ({ sendResponse }) => {
       sender: currentUser._id,
       recipient: userId, //this conversationId from params would be the userId
       content: responseRef.current.value,
-      conversationId: conversation?._id ?? null,
+      conversationId: conversationId ?? null,
       contentType: "string",
       category,
       createdAt: new Date().toJSON(),
@@ -84,74 +84,76 @@ const ChatInputs = ({ sendResponse }) => {
   if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
-    <>
-      <HStack alignItems="flex-end" justify="flex-start">
-        {!writing && (
-          <>
-            <TakePicture output={mediaContent} />
-            <SendPicture sendResponse={sendResponse} />
-            <VoiceRecording sendResponse={sendResponse} />
-          </>
-        )}
-        <HStack pos="relative" width="100%" align="flex-end" spacing={0}>
-          {writing && (
-            <Button variant="float" onClick={() => setWriting(false)}>
-              <IonIcon icon={chevronForward} />
-            </Button>
-          )}
-
-          {/* <Emojis/> */}
-          <Popover isLazy={true} returnFocusOnClose={false}>
-            <PopoverTrigger>
-              <Button
-                variant={"float"}
-                pos="absolute"
-                zIndex={2}
-                left={writing ? 10 : 0}
-              >
-                <IonIcon icon={happyOutline} />
-              </Button>
-            </PopoverTrigger>
-            <Portal>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody style={{ padding: 0 }}>
-                  <EmojiPicker
-                    theme={emojibg}
-                    height="200px"
-                    lazyLoadEmojis={true}
-                    searchDisabled={true}
-                    width="100%"
-                    previewConfig={{ showPreview: false }}
-                    onEmojiClick={emojiClick}
-                  />
-                </PopoverBody>
-              </PopoverContent>
-            </Portal>
-          </Popover>
-          <Textarea
-            ref={responseRef}
-            rows={1}
-            placeholder="Ecrire"
-            value={value}
-            paddingLeft={10}
-            sx={{
-              "::-webkit-scrollbar": { display: "none" },
-              "::-webkit-resizer": { display: "none" },
-            }}
-            onChange={handleTextChange}
-          ></Textarea>
-          <Button
-            variant="float"
-            onClick={() =>
-              responseRef.current.value.length > 0 ? sendText() : {}
-            }
-          >
-            <IonIcon icon={send} />
+    <HStack
+      alignItems="flex-end"
+      justify="flex-start"
+      pointerEvents={isSuccess ? "auto" : "none"}
+    >
+      {!writing && (
+        <>
+          <TakePicture output={mediaContent} />
+          <SendPicture sendResponse={sendResponse} />
+          <VoiceRecording sendResponse={sendResponse} />
+        </>
+      )}
+      <HStack pos="relative" width="100%" align="flex-end" spacing={0}>
+        {writing && (
+          <Button variant="float" onClick={() => setWriting(false)}>
+            <IonIcon icon={chevronForward} />
           </Button>
-        </HStack>
+        )}
+
+        {/* <Emojis/> */}
+        <Popover isLazy={true} returnFocusOnClose={false}>
+          <PopoverTrigger>
+            <Button
+              variant={"float"}
+              pos="absolute"
+              zIndex={2}
+              left={writing ? 10 : 0}
+            >
+              <IonIcon icon={happyOutline} />
+            </Button>
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody style={{ padding: 0 }}>
+                <EmojiPicker
+                  theme={emojibg}
+                  height="200px"
+                  lazyLoadEmojis={true}
+                  searchDisabled={true}
+                  width="100%"
+                  previewConfig={{ showPreview: false }}
+                  onEmojiClick={emojiClick}
+                />
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+        <Textarea
+          ref={responseRef}
+          rows={1}
+          placeholder="Ecrire"
+          value={value}
+          paddingLeft={10}
+          sx={{
+            "::-webkit-scrollbar": { display: "none" },
+            "::-webkit-resizer": { display: "none" },
+          }}
+          onChange={handleTextChange}
+        ></Textarea>
+        <Button
+          variant="float"
+          onClick={() =>
+            responseRef.current.value.length > 0 ? sendText() : {}
+          }
+        >
+          <IonIcon icon={send} />
+        </Button>
       </HStack>
-    </>
+    </HStack>
   );
 };
 

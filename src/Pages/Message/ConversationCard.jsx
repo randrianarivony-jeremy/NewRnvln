@@ -12,15 +12,18 @@ import React, { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClickableFlex } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
-import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
+import { chatSlice } from "../../Controler/Redux/Features/chatSlice";
 
 const ConversationCard = ({ conversationId, category }) => {
   const { currentUser } = useContext(currentUserContext);
-  const { conversation } = useFetchConversationsQuery(category, {
-    selectFromResult: ({ data }) => ({
-      conversation: data?.entities[conversationId],
-    }),
-  });
+  const { conversation } = chatSlice.endpoints.fetchConversations.useQueryState(
+    category,
+    {
+      selectFromResult: ({ data }) => ({
+        conversation: data?.entities[conversationId],
+      }),
+    }
+  );
   const userB = useRef(
     conversation.members.filter((member) => member._id !== currentUser._id)[0]
   );
@@ -53,29 +56,29 @@ const ConversationCard = ({ conversationId, category }) => {
         )}
         <Stack spacing={1} marginLeft={2}>
           <Heading size="sm">{userB.current.name}</Heading>
-          {conversation.messages[0].contentType === "deleted" && (
-            <Text>a effacé le message</Text>
+          {conversation.lastMessage.contentType === "deleted" && (
+            <Text>Message effacé</Text>
           )}
-          {conversation.messages[0].contentType === "string" && (
-            <Text>{conversation.messages[0].content}</Text>
+          {conversation.lastMessage.contentType === "string" && (
+            <Text>{conversation.lastMessage.content}</Text>
           )}
-          {conversation.messages[0].contentType === "audio" && (
-            <Text>a envoyé un message vocal</Text>
+          {conversation.lastMessage.contentType === "audio" && (
+            <Text>Un message vocal</Text>
           )}
-          {conversation.messages[0].contentType === "image" && (
-            <Text>a envoyé une photo</Text>
+          {conversation.lastMessage.contentType === "image" && (
+            <Text>Une photo</Text>
           )}
         </Stack>
       </Flex>
       <Stack align="center" spacing={0}>
         {conversation.unseenMessage.filter(
           (elt) => elt.user == currentUser._id
-        )[0].new > 0 && (
+        )[0].new.length > 0 && (
           <Badge>
             {
               conversation.unseenMessage.filter(
                 (elt) => elt.user == currentUser._id
-              )[0].new
+              )[0].new.length
             }
           </Badge>
         )}

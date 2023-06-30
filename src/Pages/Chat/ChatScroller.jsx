@@ -3,7 +3,11 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
 import { ErrorRender, Loader } from "../../Component/Miscellanous";
-import { useFetchMessagesQuery } from "../../Controler/Redux/Features/chatSlice";
+import {
+  useCheckUnseenMessageMutation,
+  useFetchConversationQuery,
+  useFetchMessagesQuery,
+} from "../../Controler/Redux/Features/chatSlice";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import SingleMessage from "./SingleMessage";
 
@@ -12,6 +16,8 @@ const ChatScroller = () => {
   const toast = useToast();
   let scrollRef = useRef();
   const navigate = useNavigate();
+  const { data: conversation, isSuccess: conversationSuccess } =
+    useFetchConversationQuery(userId);
   const { data: user } = useFetchUserQuery(userId);
   const {
     isLoading,
@@ -20,25 +26,31 @@ const ChatScroller = () => {
     error,
     data: messages,
   } = useFetchMessagesQuery(userId);
+  const [checkUnseenMessage] = useCheckUnseenMessageMutation();
 
-  useEffect(() => {
-    if (
-      isSuccess &&
-      messages !== null &&
-      messages.ids.every(
-        (id) => messages.entities[id].contentType === "deleted"
-      )
-    ) {
-      toast({
-        title: "Conversation vide",
-        description: `Votre conversation avec ${user.name} a été vide.`,
-        status: "info",
-        isClosable: true,
-        duration: 5000,
-      });
-      // navigate("/message");
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   if (
+  //     isSuccess &&
+  //     messages !== null &&
+  //     messages.ids.every(
+  //       (id) => messages.entities[id].contentType === "deleted"
+  //     )
+  //   ) {
+  //     toast({
+  //       title: "Conversation vide",
+  //       description: `Votre conversation avec ${user.name} a été vide.`,
+  //       status: "info",
+  //       isClosable: true,
+  //       duration: 5000,
+  //     });
+  //     // navigate("/message");
+  //   }
+  // }, [messages]);
+
+  // useEffect(() => {
+  //   if (conversationSuccess && conversation !== null)
+  //     checkUnseenMessage(conversation._id);
+  // }, [conversationSuccess, messages]);
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;
@@ -55,7 +67,7 @@ const ChatScroller = () => {
           className="scrollablefeed"
           ref={scrollRef}
         >
-          {messages === null || messages?.ids.length === 0 ? (
+          {messages.ids.length === 0 ? (
             <Flex justify="center" alignItems="center" height="100%">
               <Text>Démarrez une nouvelle conversation</Text>
             </Flex>

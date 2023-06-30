@@ -3,15 +3,26 @@ import { IonIcon } from "@ionic/react";
 import { addCircleOutline } from "ionicons/icons";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { ErrorRender, Loader, Scroll } from "../../Component/Miscellanous";
-import { useFetchConversationsQuery } from "../../Controler/Redux/Features/chatSlice";
+import {
+  useFetchConversationsQuery,
+  useUpdateNewMessageMutation,
+} from "../../Controler/Redux/Features/chatSlice";
 import { setNewSecondMessage } from "../../Controler/Redux/Features/credentialSlice";
 import ConversationCard from "./ConversationCard";
 
 const SecondaryConversation = () => {
   const { data, isLoading, isSuccess, isError, error } =
     useFetchConversationsQuery("second");
+  const [updateNewMessage] = useUpdateNewMessageMutation();
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    updateNewMessage("second");
+    setSearchParams({ default_tabs: "second" });
+  }, []);
 
   useEffect(() => {
     dispatch(setNewSecondMessage(0));

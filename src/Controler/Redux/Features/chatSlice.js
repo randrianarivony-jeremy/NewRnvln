@@ -59,17 +59,19 @@ export const chatSlice = apiSlice.injectEndpoints({
                     "fetchConversations",
                     category,
                     (draft) => {
-                      const thatConversationIndex = draft.ids.findIndex(
-                        (id) => id === newMessage.conversationId
-                      );
                       //new conversation
-                      if (thatConversationIndex === -1)
+                      if (
+                        draft.ids.findIndex(
+                          (id) => id === newMessage.conversationId
+                        ) === -1
+                      )
                         dispatch(
                           chatSlice.util.invalidateTags([
                             { type: "Conversation", id: category },
                           ])
                         );
-                      else {
+                      //fetched conversation
+                      else
                         conversationAdapter.updateOne(draft, {
                           id: newMessage.conversationId,
                           changes: {
@@ -77,7 +79,6 @@ export const chatSlice = apiSlice.injectEndpoints({
                             updatedAt: new Date().toISOString(),
                           },
                         });
-                      }
                     }
                   )
                 );
@@ -170,6 +171,7 @@ export const chatSlice = apiSlice.injectEndpoints({
         );
         try {
           const { data } = await queryFulfilled;
+          console.log(data);
           dispatch(
             chatSlice.util.updateQueryData(
               "fetchMessages",
@@ -198,13 +200,11 @@ export const chatSlice = apiSlice.injectEndpoints({
                 "fetchConversations",
                 body.category,
                 (draft) => {
-                  const thatConversationIndex = draft.ids.findIndex(
-                    (id) => id === body.conversationId
-                  );
-                  const thatConversation =
-                    draft.entities[draft.ids[thatConversationIndex]];
                   //new conversation in case of conversations lazy loaded
-                  if (thatConversationIndex === -1)
+                  if (
+                    draft.ids.findIndex((id) => id === body.conversationId) ===
+                    -1
+                  )
                     dispatch(
                       chatSlice.util.invalidateTags([
                         { type: "Conversation", id: body.category },
@@ -234,6 +234,14 @@ export const chatSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    updateNewMessage: builder.mutation({
+      query: (category) => ({
+        url: "conversation/new/" + category,
+        method: "PUT",
+      }),
+    }),
+
     deleteMessage: builder.mutation({
       query: ({ messageId, userId, conversationId }) => {
         return {
@@ -288,6 +296,7 @@ export const {
   useLazyFetchSecondConversationQuery,
   useFetchMessagesQuery,
   useFetchMessagesQueryState,
+  useUpdateNewMessageMutation,
   useAddMessageMutation,
   useDeleteMessageMutation,
 } = chatSlice;

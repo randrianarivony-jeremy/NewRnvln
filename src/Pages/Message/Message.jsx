@@ -9,9 +9,9 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Navigation from "../../Component/Navigation";
 import MainConversation from "./MainConversation";
 import SecondaryConversation from "./SecondaryConversation";
@@ -20,6 +20,10 @@ const Message = () => {
   const { newMainMessage, newSecondMessage } = useSelector(
     (state) => state.token
   );
+  const [searchParams] = useSearchParams();
+  const defaultIndex = useRef(
+    searchParams.get("default_tabs") === "main" ? 0 : 1
+  );
   const navigate = useNavigate();
 
   return (
@@ -27,7 +31,12 @@ const Message = () => {
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button width="100%">Message</Button>
       </Flex>
-      <Tabs isFitted height="100%" isLazy={true}>
+      <Tabs
+        isFitted
+        height="100%"
+        isLazy={true}
+        defaultIndex={defaultIndex.current}
+      >
         <TabList>
           <Tab>
             Principal &nbsp;

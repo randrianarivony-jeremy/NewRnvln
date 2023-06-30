@@ -21,9 +21,7 @@ const Message = () => {
     (state) => state.token
   );
   const [searchParams] = useSearchParams();
-  const defaultIndex = useRef(
-    searchParams.get("default_tabs") === "main" ? 0 : 1
-  );
+  const defaultIndex = useRef(searchParams.get("category") === "main" ? 0 : 1);
   const navigate = useNavigate();
 
   return (

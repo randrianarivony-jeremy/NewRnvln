@@ -18,19 +18,20 @@ const MainConversation = () => {
     useFetchConversationsQuery("main");
   const [updateNewMessage] = useUpdateNewMessageMutation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category");
 
   useEffect(() => {
+    setSearchParams({ category: "main" });
     updateNewMessage("main");
-    setSearchParams({ default_tabs: "main" });
   }, []);
 
   useEffect(() => {
     dispatch(setNewMainMessage(0));
   });
 
-  if (isLoading) return <Loader />;
+  if (isLoading || category !== "main") return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;
-  if (isSuccess) {
+  if (isSuccess && category === "main") {
     if (data.ids.length === 0)
       return (
         <Flex height={"100%"} justify="center" align={"center"}>
@@ -50,7 +51,6 @@ const MainConversation = () => {
         {data.ids.map((conversationId) => (
           <ConversationCard
             conversationId={conversationId}
-            category={"main"}
             key={conversationId}
           />
         ))}

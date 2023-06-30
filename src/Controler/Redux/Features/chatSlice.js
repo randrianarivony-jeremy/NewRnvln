@@ -70,16 +70,10 @@ export const chatSlice = apiSlice.injectEndpoints({
                         //unseenMessage update
                         const thatConversation =
                           draft.entities[newMessage.conversationId];
-                        thatConversation.unseenMessage =
-                          thatConversation.unseenMessage.map((elt) => {
-                            if (elt.user !== newMessage.sender)
-                              elt.new.push(newMessage._id);
-                            return elt;
-                          });
+                        thatConversation.unseenMessage.push(newMessage._id);
                         conversationAdapter.updateOne(draft, {
                           id: newMessage.conversationId,
                           changes: {
-                            // unseenMessage:
                             lastMessage: newMessage,
                             updatedAt: new Date().toISOString(),
                           },
@@ -103,10 +97,9 @@ export const chatSlice = apiSlice.injectEndpoints({
               updateCachedData((draft) => {
                 const thatConversation = draft.entities[conversationId];
                 thatConversation.unseenMessage =
-                  thatConversation.unseenMessage.map((elt) => {
-                    elt.new = elt.new.filter((msgId) => msgId !== messageId);
-                    return elt;
-                  });
+                  thatConversation.unseenMessage.filter(
+                    (msgId) => msgId !== messageId
+                  );
               });
           });
         } catch (error) {
@@ -257,10 +250,26 @@ export const chatSlice = apiSlice.injectEndpoints({
     }),
 
     checkUnseenMessage: builder.mutation({
-      query: (conversationId) => ({
+      query: ({ conversationId, category }) => ({
         url: "conversation/check/" + conversationId,
         method: "PUT",
       }),
+      onQueryStarted: (
+        { conversationId, category },
+        { dispatch, queryFulfilled }
+      ) => {
+        const unseenMessagePatch = dispatch(
+          chatSlice.util.updateQueryData(
+            "fetchConversations",
+            category,
+            (draft) => {
+              const thatConversation = draft.entities[conversationId];
+              thatConversation.unseenMessage = [];
+            }
+          )
+        );
+        queryFulfilled.catch(unseenMessagePatch.undo);
+      },
     }),
 
     deleteMessage: builder.mutation({

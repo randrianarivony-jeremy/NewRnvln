@@ -9,13 +9,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ClickableFlex } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { chatSlice } from "../../Controler/Redux/Features/chatSlice";
 
-const ConversationCard = ({ conversationId, category }) => {
+const ConversationCard = ({ conversationId }) => {
   const { currentUser } = useContext(currentUserContext);
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
   const { conversation } = chatSlice.endpoints.fetchConversations.useQueryState(
     category,
     {
@@ -34,7 +36,7 @@ const ConversationCard = ({ conversationId, category }) => {
     <ClickableFlex
       justify="space-between"
       onClick={() => {
-        navigate("/chat/" + userB.current._id);
+        navigate("/chat/" + userB.current._id + "?category=" + category);
       }}
     >
       <Flex>
@@ -71,16 +73,8 @@ const ConversationCard = ({ conversationId, category }) => {
         </Stack>
       </Flex>
       <Stack align="center" spacing={0}>
-        {conversation.unseenMessage.filter(
-          (elt) => elt.user == currentUser._id
-        )[0].new.length > 0 && (
-          <Badge>
-            {
-              conversation.unseenMessage.filter(
-                (elt) => elt.user == currentUser._id
-              )[0].new.length
-            }
-          </Badge>
+        {conversation.unseenMessage.length > 0 && (
+          <Badge>{conversation.unseenMessage.length}</Badge>
         )}
       </Stack>
     </ClickableFlex>

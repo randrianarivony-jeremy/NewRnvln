@@ -14,7 +14,7 @@ import { IonIcon } from "@ionic/react";
 import EmojiPicker from "emoji-picker-react";
 import { chevronForward, happyOutline, send } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import {
@@ -27,6 +27,8 @@ import VoiceRecording from "./VoiceRecording";
 
 const ChatInputs = ({ sendResponse }) => {
   const responseRef = useRef();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
   const { userId } = useParams();
   const { currentUser } = useContext(currentUserContext);
   const [value, setValue] = useState("");
@@ -34,14 +36,8 @@ const ChatInputs = ({ sendResponse }) => {
   const [writing, setWriting] = useState(false);
   const mediaContent = useRef();
   const [addMessage, { isError, error }] = useAddMessageMutation();
-  const { category, conversationId, isSuccess } =
-    chatSlice.endpoints.fetchConversation.useQueryState(userId, {
-      selectFromResult: ({ data, isSuccess }) => ({
-        category: data?.category,
-        conversationId: data?._id,
-        isSuccess,
-      }),
-    });
+  const { data: conversation, isSuccess } =
+    chatSlice.endpoints.fetchConversation.useQueryState(userId);
 
   const sendText = async () => {
     setWriting(false);
@@ -51,7 +47,7 @@ const ChatInputs = ({ sendResponse }) => {
       sender: currentUser._id,
       recipient: userId, //this conversationId from params would be the userId
       content: responseRef.current.value,
-      conversationId: conversationId ?? null,
+      conversationId: conversation?._id ?? null,
       contentType: "string",
       category,
       createdAt: new Date().toJSON(),

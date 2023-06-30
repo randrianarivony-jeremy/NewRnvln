@@ -1,6 +1,6 @@
 import { Box, Flex, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import ScrollableFeed from "react-scrollable-feed";
 import { ErrorRender, Loader } from "../../Component/Miscellanous";
 import {
@@ -14,6 +14,8 @@ import SingleMessage from "./SingleMessage";
 const ChatScroller = () => {
   const { userId } = useParams();
   const toast = useToast();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
   let scrollRef = useRef();
   const navigate = useNavigate();
   const { data: conversation, isSuccess: conversationSuccess } =
@@ -47,10 +49,10 @@ const ChatScroller = () => {
   //   }
   // }, [messages]);
 
-  // useEffect(() => {
-  //   if (conversationSuccess && conversation !== null)
-  //     checkUnseenMessage(conversation._id);
-  // }, [conversationSuccess, messages]);
+  useEffect(() => {
+    if (conversationSuccess && conversation !== null)
+      checkUnseenMessage({ conversationId: conversation._id, category });
+  }, [conversationSuccess, messages]);
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;

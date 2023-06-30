@@ -18,19 +18,20 @@ const SecondaryConversation = () => {
   const [updateNewMessage] = useUpdateNewMessageMutation();
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category");
 
   useEffect(() => {
+    setSearchParams({ category: "second" });
     updateNewMessage("second");
-    setSearchParams({ default_tabs: "second" });
   }, []);
 
   useEffect(() => {
     dispatch(setNewSecondMessage(0));
   });
 
-  if (isLoading) return <Loader />;
+  if (isLoading || category !== "second") return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;
-  if (isSuccess) {
+  if (isSuccess && category === "second") {
     if (data.ids.length === 0)
       return (
         <Flex height={"100%"} justify="center" align={"center"}>
@@ -50,7 +51,6 @@ const SecondaryConversation = () => {
         {data.ids.map((conversationId) => (
           <ConversationCard
             conversationId={conversationId}
-            category="second"
             key={conversationId}
           />
         ))}

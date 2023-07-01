@@ -9,20 +9,24 @@ import {
   radioButtonOn,
 } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import WebCam from "react-webcam";
+import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
+  chatSlice,
   useAddMessageMutation,
-  useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
 
 const TakePicture = () => {
   const [camera, setCamera] = useState(false);
   const { userId } = useParams();
-  const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage] = useAddMessageMutation();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
+  const { data: conversation } =
+    chatSlice.endpoints.fetchConversation.useQueryState(userId);
+  const [addMessage, { isError, error }] = useAddMessageMutation();
   const { currentUser } = useContext(currentUserContext);
   const [cameraReady, setCameraReady] = useState(false);
   const [imagePreview, setImagePreview] = useState(false);
@@ -58,6 +62,7 @@ const TakePicture = () => {
                   content: urlRef.current,
                   conversationId: conversation?._id ?? null,
                   contentType: "image",
+                  category,
                   createdAt: new Date().toJSON(),
                 });
               })
@@ -69,6 +74,7 @@ const TakePicture = () => {
         });
       });
   };
+  if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
     <Flex>

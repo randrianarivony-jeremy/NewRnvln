@@ -4,20 +4,24 @@ import Compressor from "compressorjs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageOutline } from "ionicons/icons";
 import React, { useContext, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
+import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
+  chatSlice,
   useAddMessageMutation,
-  useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
 
 const SendPicture = () => {
   const fileInputRef = useRef();
   const urlRef = useRef();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
   const { userId } = useParams();
-  const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage] = useAddMessageMutation();
+  const { data: conversation } =
+    chatSlice.endpoints.fetchConversation.useQueryState(userId);
+  const [addMessage, { isError, error }] = useAddMessageMutation();
   const { currentUser } = useContext(currentUserContext);
 
   const storePicture = ({ currentTarget }) => {
@@ -32,12 +36,13 @@ const SendPicture = () => {
             urlRef.current = url;
             // handleSubmit();
             addMessage({
-              _id: 1,
+              _id: Date.now(),
               sender: currentUser._id,
-              recipient: userId, //this conversationId from params would be the userId
+              recipient: userId,
               content: urlRef.current,
               conversationId: conversation?._id ?? null,
               contentType: "image",
+              category,
               createdAt: new Date().toJSON(),
             });
           })
@@ -48,6 +53,8 @@ const SendPicture = () => {
       },
     });
   };
+  if (isError) return <ErrorRender isError={isError} error={error} />;
+
   return (
     <>
       <Button variant="float" onClick={() => fileInputRef.current.click()}>

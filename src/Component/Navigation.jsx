@@ -85,7 +85,7 @@ const Navigation = () => {
       </NavLink>
 
       <NavLink
-        to="/message"
+        to="/message?category=main"
         className={({ isActive }) =>
           isActive ? "nav-icons-active" : "nav-icons"
         }

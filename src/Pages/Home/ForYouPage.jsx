@@ -11,6 +11,7 @@ import PostContainer from "../StandalonePost/PostContainer";
 
 const ForYouPage = () => {
   const swiperRef = useRef();
+  const hasMore = useRef(true);
   const {
     data: postsList,
     isLoading,
@@ -18,8 +19,10 @@ const ForYouPage = () => {
     isError,
     error,
   } = useFetchContentsQuery();
-  const [fetchMoreContents, { isLoading: loading }] =
-    useFetchMoreContentsMutation();
+  const [
+    fetchMoreContents,
+    { isLoading: loading, data: more, isSuccess: moreSuccess },
+  ] = useFetchMoreContentsMutation();
 
   useLayoutEffect(() => {
     if (isSuccess)
@@ -27,6 +30,10 @@ const ForYouPage = () => {
         localStorage.getItem("home_slide_position")
       );
   }, []);
+
+  useEffect(() => {
+    if (moreSuccess && more === null) hasMore.current = false;
+  }, [moreSuccess]);
 
   useEffect(() => {
     if (isSuccess && postsList.ids.length < 5)
@@ -49,7 +56,7 @@ const ForYouPage = () => {
         mousewheel={{ enabled: true, forceToAxis: true }}
         onSlideChange={({ activeIndex }) => {
           localStorage.setItem("home_slide_position", activeIndex);
-          if (activeIndex === postsList.ids.length - 2)
+          if (activeIndex === postsList.ids.length - 2 && hasMore.current)
             fetchMoreContents(
               new Date(
                 postsList.entities[

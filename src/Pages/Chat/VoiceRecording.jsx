@@ -4,20 +4,24 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { checkmark, close, micOutline, refresh } from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
+import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
+  chatSlice,
   useAddMessageMutation,
-  useFetchConversationQuery,
 } from "../../Controler/Redux/Features/chatSlice";
 
 const SendVoice = () => {
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
   const { userId } = useParams();
-  const { data: conversation } = useFetchConversationQuery(userId);
-  const [addMessage] = useAddMessageMutation();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
+  const { data: conversation } =
+    chatSlice.endpoints.fetchConversation.useQueryState(userId);
+  const [addMessage, { isError, error }] = useAddMessageMutation();
   const {
     startRecording,
     stopRecording,
@@ -55,11 +59,14 @@ const SendVoice = () => {
           content: urlRef.current,
           conversationId: conversation?._id ?? null,
           contentType: "audio",
+          category,
           createdAt: new Date().toJSON(),
         });
       })
     );
   };
+
+  if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
     <>

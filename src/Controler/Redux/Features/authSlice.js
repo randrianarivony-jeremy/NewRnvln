@@ -38,8 +38,8 @@ export const authSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(setCredentials(data.accessToken));
-        } catch (error) {
-          console.log(error);
+        } catch {
+          console.log('login error');
         }
       },
     }),

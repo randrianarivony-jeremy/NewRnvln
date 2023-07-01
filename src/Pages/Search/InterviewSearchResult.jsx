@@ -1,17 +1,25 @@
 import { Flex, HStack, Skeleton } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { EmptyState, ErrorRender } from "../../Component/Miscellanous";
 import { useSearchQuery } from "../../Controler/Redux/Features/searchSlice";
 import Thumbs from "../Profile/Thumbs";
 
 const InterviewSearchResult = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
   const { data, isLoading, isSuccess, isError, error } = useSearchQuery({
     type: "interview",
     query: keyword,
   });
+
+  useEffect(() => {
+    setSearchParams((searchParams) => {
+      searchParams.set("default_index", "2");
+      return searchParams;
+    });
+  }, []);
+
   if (isLoading)
     return (
       <HStack justify="center" padding={"8px 12px"}>

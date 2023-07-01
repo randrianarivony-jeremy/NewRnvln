@@ -1,4 +1,12 @@
-import { Box, Button, Flex, HStack, Image, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import Compressor from "compressorjs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -24,6 +32,7 @@ const TakePicture = () => {
   const { userId } = useParams();
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
+  const bg = useColorModeValue("white", "dark.50");
   const { data: conversation } =
     chatSlice.endpoints.fetchConversation.useQueryState(userId);
   const [addMessage, { isError, error }] = useAddMessageMutation();
@@ -74,6 +83,7 @@ const TakePicture = () => {
         });
       });
   };
+
   if (isError) return <ErrorRender isError={isError} error={error} />;
 
   return (
@@ -87,16 +97,17 @@ const TakePicture = () => {
           position="absolute"
           zIndex={3}
           top={0}
+          bgColor={bg}
           left={0}
           spacing={0}
           height="100%"
         >
           {cameraReady && (
-            <Box minH={10} width="100%" bgColor="white">
+            <Box minH={10} width="100%" bgColor={bg}>
               {!imagePreview && (
                 <Flex justify="space-between" height={10} width="100%">
                   <Button
-                    fontSize="xl"
+                    fontSize="2xl"
                     onClick={() => {
                       setCamera(false);
                       setCameraReady(false);
@@ -105,7 +116,7 @@ const TakePicture = () => {
                     <IonIcon icon={close} />
                   </Button>
                   <Button
-                    fontSize="xl"
+                    fontSize="2xl"
                     onClick={() =>
                       facingMode === "user"
                         ? setFacingMode("environment")
@@ -120,7 +131,13 @@ const TakePicture = () => {
           )}
 
           {imagePreview && (
-            <Box position="absolute" top={10} left={0}>
+            <Box
+              position="absolute"
+              top={10}
+              left={0}
+              height="100%"
+              bgColor={bg}
+            >
               <Image src={imageRef.current} alt="image preview" />
             </Box>
           )}
@@ -128,26 +145,35 @@ const TakePicture = () => {
             ref={webcamRef}
             onUserMedia={() => setCameraReady(true)}
             mirrored={facingMode === "user" ? true : false}
-            videoConstraints={{ facingMode, height: "100vh", width: "100vw" }}
-            // videoConstraints={{ facingMode, aspectRatio: 1 / 1 }} ty ny tena izy
+            // videoConstraints={{ facingMode, height: "100vh", width: "100vw" }}
+            videoConstraints={{ facingMode, aspectRatio: 1 / 1 }} //ty ny tena izy
             onUserMediaError={() => setCamera(false)}
             screenshotFormat="image/jpeg"
             style={{
               width: "100vw",
-              height: "100vh",
-              // aspectRatio: 1 / 1,
+              // height: "100vh",
+              // position: "absolute",
+              // top: 0,
+              aspectRatio: 1 / 1,
               objectFit: "cover",
             }}
             audio={false}
           />
 
           {cameraReady && (
-            <Flex align="center" justify="center" height="100%" bgColor="white">
+            <Flex
+              align="center"
+              justify="center"
+              bottom={2}
+              width="100%"
+              height={100}
+              position="absolute"
+            >
               {!imagePreview ? (
                 <Button
-                  width={100}
+                  boxSize={100}
                   bgColor="transparent"
-                  fontSize={40}
+                  fontSize={"6xl"}
                   onClick={capture}
                 >
                   <IonIcon icon={radioButtonOn} />

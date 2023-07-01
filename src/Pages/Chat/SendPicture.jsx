@@ -28,13 +28,11 @@ const SendPicture = () => {
     new Compressor(currentTarget.files[0], {
       quality: 0.6,
       success(result) {
-        console.log({ result, original: currentTarget.files[0].size });
         const fileName = new Date().getTime() + `${currentUser._id}`;
         const storageRef = ref(storage, "conversation/image/" + fileName);
         uploadBytes(storageRef, result).then((snapshot) =>
           getDownloadURL(snapshot.ref).then((url) => {
             urlRef.current = url;
-            // handleSubmit();
             addMessage({
               _id: Date.now(),
               sender: currentUser._id,

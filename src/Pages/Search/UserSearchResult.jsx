@@ -1,5 +1,5 @@
 import { Flex, Stack } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
 import { EmptyState, ErrorRender } from "../../Component/Miscellanous";
@@ -9,13 +9,20 @@ import { useSearchQuery } from "../../Controler/Redux/Features/searchSlice";
 
 const UserSearchResult = () => {
   const { currentUser } = useContext(currentUserContext);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
   const { data, isLoading, isSuccess, isError, error } = useSearchQuery({
     type: "user",
     query: keyword,
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setSearchParams((searchParams) => {
+      searchParams.set("default_index", "0");
+      return searchParams;
+    });
+  }, []);
 
   if (isLoading) return <UserLoader length={3} />;
   if (isError) return <ErrorRender isError={isError} error={error} />;

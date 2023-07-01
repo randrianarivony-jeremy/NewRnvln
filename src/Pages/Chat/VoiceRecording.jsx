@@ -1,7 +1,24 @@
-import { Box, Button, Flex, HStack, Portal, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Portal,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { checkmark, close, micOutline, refresh } from "ionicons/icons";
+import {
+  checkmarkCircleOutline,
+  close,
+  ellipse,
+  micOutline,
+  pauseCircleOutline,
+  playCircleOutline,
+  refreshCircleOutline,
+} from "ionicons/icons";
 import React, { useContext, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -17,6 +34,7 @@ const SendVoice = () => {
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
   const { userId } = useParams();
+  const bg = useColorModeValue("white", "dark.50");
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const { data: conversation } =
@@ -85,12 +103,13 @@ const SendVoice = () => {
             zIndex={4}
             top={0}
             left={0}
+            leftIcon={<IonIcon icon={close} />}
             onClick={() => {
               handleReset();
               setRecording(false);
             }}
           >
-            <IonIcon icon={close} />
+            Fermer
           </Button>
           <Flex
             position="absolute"
@@ -99,7 +118,7 @@ const SendVoice = () => {
             left={0}
             height="100%"
             width="100%"
-            bgColor="dark.100"
+            bgColor={bg}
             justify="center"
             align="center"
           >
@@ -109,41 +128,30 @@ const SendVoice = () => {
                 {String(recordingTime % 60).padStart(2, 0)}
               </Text>
               <HStack>
-                <Button
-                  fontSize="2xl"
-                  border="1px solid"
-                  rounded="full"
-                  variant="float"
-                  onClick={handleReset}
-                >
-                  <IonIcon icon={refresh} />
+                <Button fontSize="4xl" variant="float" onClick={handleReset}>
+                  <IonIcon icon={refreshCircleOutline} />
                 </Button>
                 <Button
-                  fontSize="5xl"
-                  border="1px solid white"
-                  rounded="full"
+                  fontSize="6xl"
                   variant="float"
-                  color="red"
                   boxSize={14}
-                  className={
-                    !isRecording
-                      ? "bi-circle-fill"
-                      : isPaused
-                      ? "bi-play"
-                      : "bi-pause"
-                  }
                   onClick={() =>
                     !isRecording ? handleRecordingOn() : togglePauseResume()
                   }
-                ></Button>
-                <Button
-                  fontSize="2xl"
-                  border="1px solid"
-                  rounded="full"
-                  variant="float"
-                  onClick={stopRecording}
                 >
-                  <IonIcon icon={checkmark} />
+                  <IonIcon
+                    icon={
+                      !isRecording
+                        ? ellipse
+                        : isPaused
+                        ? playCircleOutline
+                        : pauseCircleOutline
+                    }
+                    style={{ color: "red" }}
+                  />
+                </Button>
+                <Button fontSize="4xl" variant="float" onClick={stopRecording}>
+                  <IonIcon icon={checkmarkCircleOutline} />
                 </Button>
               </HStack>
             </Stack>

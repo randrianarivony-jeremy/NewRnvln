@@ -7,12 +7,14 @@ import {
 import { IonIcon } from "@ionic/react";
 import { searchOutline } from "ionicons/icons";
 import React, { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { iconMd } from "../Styles/Theme";
 
 const SearchBtn = () => {
   const navigate = useNavigate();
   const searchSubmit = useRef(false);
+  const [searchParams] = useSearchParams();
+  const defaultIndex = searchParams.get("default_index") ?? 0;
   const inputRef = useRef();
   const bg = useColorModeValue("white", "dark.50");
   return (
@@ -45,7 +47,10 @@ const SearchBtn = () => {
             ? inputRef.current.focus()
             : inputRef.current.value.length > 0 &&
               navigate(
-                "/search?keyword=" + inputRef.current.value + "&default_index=0"
+                "/search?keyword=" +
+                  inputRef.current.value +
+                  "&default_index=" +
+                  defaultIndex
               )
         }
         cursor="pointer"

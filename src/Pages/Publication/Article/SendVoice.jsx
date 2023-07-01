@@ -11,6 +11,7 @@ import {
 import { IonIcon } from "@ionic/react";
 import {
   checkmarkCircleOutline,
+  close,
   ellipse,
   micOutline,
   pauseCircleOutline,
@@ -71,12 +72,14 @@ const SendVoice = () => {
             zIndex={4}
             top={0}
             left={0}
-            className="bi-x-lg"
+            leftIcon={<IonIcon icon={close} />}
             onClick={() => {
               handleReset();
               setRecording(false);
             }}
-          ></Button>
+          >
+            Fermer
+          </Button>
           <Flex
             position="absolute"
             zIndex={3}
@@ -100,7 +103,6 @@ const SendVoice = () => {
                 <Button
                   fontSize="6xl"
                   variant="float"
-                  // color="red"
                   boxSize={14}
                   onClick={() =>
                     !isRecording ? handleRecordingOn() : togglePauseResume()

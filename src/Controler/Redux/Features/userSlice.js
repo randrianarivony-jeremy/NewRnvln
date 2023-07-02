@@ -1,3 +1,4 @@
+import { socket } from "../../App";
 import { apiSlice } from "../apiSlice";
 
 export const userSlice = apiSlice.injectEndpoints({
@@ -5,12 +6,38 @@ export const userSlice = apiSlice.injectEndpoints({
     fetchUser: builder.query({
       query: (userId) => "user/" + userId,
       providesTags: (result) => [{ type: "User", id: result._id }],
+      onCacheEntryAdded: async (arg, { cacheDataLoaded, updateCachedData }) => {
+        await cacheDataLoaded;
+        socket.on("relation update", ({ category, from }) => {
+          updateCachedData((draft) => {
+            if (category === "friend invitation")
+              draft.friendRequest.push(from);
+            if (category === "request accepted") draft.friends.push(from);
+            if (category === "cancel invitation")
+              draft.friendRequest = draft.friendRequest.filter(
+                (id) => id !== from
+              );
+            if (category === "pull friend")
+              draft.friends = draft.friends.filter((id) => id !== from);
+          });
+        });
+      },
     }),
     fetchUserFriends: builder.query({
       query: ({ userId, category }) => "user/" + category + "/" + userId,
       providesTags: (res, err, { category, userId }) => [
         { type: category, id: userId },
+        { type: "Relation", id: userId },
       ],
+      onCacheEntryAdded: async ({ userId }, { cacheDataLoaded, dispatch }) => {
+        await cacheDataLoaded;
+        socket.on("relation update", ({ category }) => {
+          console.log(category);
+          dispatch(
+            userSlice.util.invalidateTags([{ type: "Relation", id: userId }])
+          );
+        });
+      },
     }),
 
     // F R I E N D S H I P
@@ -20,6 +47,13 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      onQueryStarted: async (body, { queryFulfilled }) => {
+        await queryFulfilled;
+        socket.emit("relation change", {
+          body,
+          category: "friend invitation",
+        });
+      },
     }),
     pullFriend: builder.mutation({
       query: (body) => ({
@@ -28,6 +62,13 @@ export const userSlice = apiSlice.injectEndpoints({
         body,
       }),
       invalidatesTags: (res, err, body) => [{ type: "friends", id: body.to }],
+      onQueryStarted: async (body, { queryFulfilled }) => {
+        await queryFulfilled;
+        socket.emit("relation change", {
+          body,
+          category: "pull friend",
+        });
+      },
     }),
     confirmFriendRequest: builder.mutation({
       query: (body) => ({
@@ -35,7 +76,17 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: (res, err, body) => [{ type: "friends", id: body.from }],
+      invalidatesTags: (res, err, body) => [
+        { type: "friends", id: body.from },
+        { type: "requests", id: body.from },
+      ],
+      onQueryStarted: async (body, { queryFulfilled }) => {
+        await queryFulfilled;
+        socket.emit("relation change", {
+          body,
+          category: "request accepted",
+        });
+      },
     }),
     cancelFriendInvitation: builder.mutation({
       query: (body) => ({
@@ -43,6 +94,13 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
+      onQueryStarted: async (body, { queryFulfilled }) => {
+        await queryFulfilled;
+        socket.emit("relation change", {
+          body,
+          category: "cancel invitation",
+        });
+      },
     }),
 
     // S U B S C R I P T I O N
@@ -175,6 +233,21 @@ export const userSlice = apiSlice.injectEndpoints({
         queryFulfilled.catch(pdpPatch.undo);
       },
     }),
+    changeFees: builder.mutation({
+      query: ({ userId, ...body }) => ({
+        url: "user/fees/" + userId,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: ({ userId, ...body }, { dispatch, queryFulfilled }) => {
+        const feesPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", userId, (draft) => {
+            draft.fees = body.fees;
+          })
+        );
+        queryFulfilled.catch(feesPatch.undo);
+      },
+    }),
     changePassword: builder.mutation({
       query: ({ userId, ...body }) => ({
         url: "user/password/" + userId,
@@ -203,6 +276,7 @@ export const {
   useChangeAddressMutation,
   useChangeJobMutation,
   useChangePhiloMutation,
+  useChangeFeesMutation,
   useChangeProjectMutation,
   useChangeProfilePicMutation,
   useChangePasswordMutation,

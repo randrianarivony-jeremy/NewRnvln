@@ -2,7 +2,6 @@ import { Box } from "@chakra-ui/react";
 import React, { lazy, Suspense, useContext } from "react";
 import { BrowserRouter, Route, Routes as ROUTES } from "react-router-dom";
 import { Loader } from "../Component/Miscellanous";
-import ForYouPage from "../Pages/Home/ForYouPage";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import { currentUserContext } from "./App";
@@ -31,6 +30,7 @@ const QuestionInterviews = lazy(() =>
 );
 const Parameter = lazy(() => import("../Pages/Parameter/Parameter"));
 const Search = lazy(() => import("../Pages/Search/Search"));
+const About = lazy(() => import("../Component/About"));
 
 const Routes = () => {
   const { currentUser } = useContext(currentUserContext);
@@ -41,7 +41,12 @@ const Routes = () => {
         <ROUTES>
           <Route 
             path="/" 
-            element={currentUser ? <Home /> : <Login />}/>
+            element={currentUser ? <Home /> : <Login />}
+          />
+          <Route 
+            path="/about" 
+            element={<Suspense fallback={<Loader />}>{<About />}</Suspense>}
+          />
           <Route
             path="/post/:type/:id"
             element={<Suspense fallback={<Loader />}>{currentUser ? <SinglePost /> : <Login />}</Suspense>}

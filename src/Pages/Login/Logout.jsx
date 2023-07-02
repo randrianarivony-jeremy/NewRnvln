@@ -23,7 +23,7 @@ const Logout = ({ onOpen, onClose, isOpen }) => {
       <ModalOverlay />
       <ModalContent bg={bg}>
         <ModalHeader>Déconnexion</ModalHeader>
-        <ModalBody>Tena hi-déconnecte marina ve ?</ModalBody>
+        <ModalBody>Voulez vous vraiment vous déconnecter ?</ModalBody>
         <ModalFooter d="flex">
           <ButtonGroup>
             <Button

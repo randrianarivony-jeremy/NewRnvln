@@ -1,23 +1,16 @@
-import { Box, Heading, Image, Spinner, Stack } from "@chakra-ui/react";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/App.css";
+import { Box, Heading, Image, Spinner, Stack } from "@chakra-ui/react";
+import axios from "axios";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { createContext, useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
 import "swiper/css";
 import "swiper/css/pagination";
-import Routes from "./Routes";
-import { createContext, useEffect, useRef, useState } from "react";
-import { publicationContext } from "./Context";
-import axios from "axios";
-import io from "socket.io-client";
 import logo from "../Assets/RANAVALONA.png";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setNewMainMessage,
-  setNewNotification,
-  setNewSecondMessage,
-} from "./Redux/Features/credentialSlice";
-import { notificationSlice } from "./Redux/Features/notificationSlice";
-import { useInitiateQuery } from "./Redux/Features/authSlice";
 import RealtimeNotification from "../Component/RealtimeNotification";
+import { publicationContext } from "./Context";
+import { useInitiateQuery } from "./Redux/Features/authSlice";
+import Routes from "./Routes";
 
 export const currentUserContext = createContext();
 export const apiCall = axios.create({
@@ -32,10 +25,6 @@ function App() {
   const [content, setContent] = useState();
   const [initializing, setInitializing] = useState(true);
   const minHeight = useRef(window.innerHeight);
-  const { newMainMessage, newSecondMessage, newNotification } = useSelector(
-    (state) => state.token
-  );
-  const dispatch = useDispatch();
   const { data, isSuccess, isLoading, isUninitialized } = useInitiateQuery(
     "app",
     { refetchOnReconnect: true }
@@ -52,17 +41,6 @@ function App() {
   useEffect(() => {
     if (!isUninitialized && !isLoading) setInitializing(false);
   }, [isLoading, isUninitialized]);
-
-  useEffect(() => {
-    socket.on("new message", ({ category }) => {
-      if (category == "main") dispatch(setNewMainMessage(newMainMessage + 1));
-      else dispatch(setNewSecondMessage(newSecondMessage + 1));
-    });
-    socket.on("new notification", () => {
-      dispatch(setNewNotification(newNotification + 1));
-      dispatch(notificationSlice.util.invalidateTags(["Notification"]));
-    });
-  });
 
   return (
     <Box

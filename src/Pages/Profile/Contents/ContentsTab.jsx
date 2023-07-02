@@ -7,11 +7,16 @@ import { IonIcon } from "@ionic/react";
 import { apps, bookmarkOutline, walletOutline } from "ionicons/icons";
 import React, { useContext } from "react";
 import { currentUserContext } from "../../../Controler/App";
+import { userSlice } from "../../../Controler/Redux/Features/userSlice";
 import UserArticles from "./UserArticles";
 import UserInterviews from "./UserInterviews";
 
 const ContentsTab = ({ userId }) => {
   const { currentUser } = useContext(currentUserContext);
+  const { wallet } = userSlice.endpoints.fetchUser.useQueryState(
+    currentUser._id,
+    { selectFromResult: ({ data }) => ({ wallet: data.wallet }) }
+  );
   return (
     <Tabs size="sm" isFitted height="100%" isLazy={true}>
       <TabList>
@@ -72,7 +77,7 @@ const ContentsTab = ({ userId }) => {
             </Flex>
             <Flex align="center" justify="center" height="100px">
               <Text fontWeight="bold" fontSize="3xl" textAlign="center">
-                {currentUser.wallet} kAr
+                {wallet} kA
               </Text>
             </Flex>
           </TabPanel>

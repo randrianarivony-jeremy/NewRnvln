@@ -1,4 +1,15 @@
-import { Button, Flex } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { people, personAdd } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
@@ -26,6 +37,8 @@ const FriendHandler = () => {
   );
   const { user, setUser } = useContext(userContext);
   const { userId } = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const bg = useColorModeValue("white", "dark.50");
   const [friend, setFriend] = useState("none");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -79,7 +92,6 @@ const FriendHandler = () => {
 
   useEffect(() => {
     if (CFIIsSuccess) {
-      console.log("success");
       setCurrentUser({
         ...currentUser,
         friendInvitation: friendInvitation.filter((elt) => elt !== userId),
@@ -116,7 +128,7 @@ const FriendHandler = () => {
         <Button isLoading={PFIsLoading} width="100%" variant="solid"
         rightIcon={
           <IonIcon icon={people} />}
-          onClick={() => (currentUser._id === userId ? null : pullFriend({ to: userId, from: currentUser._id }))}
+          onClick={() => (currentUser._id === userId ? null : onOpen())}
         >
           Amis
         </Button>
@@ -136,6 +148,25 @@ const FriendHandler = () => {
           Invitation envoyée
         </Button>
       )}
+      <Modal isCentered onOpen={onOpen} onClose={onClose} isOpen={isOpen}>
+      <ModalOverlay />
+      <ModalContent bg={bg}>
+        <ModalHeader>Retirer</ModalHeader>
+        <ModalBody>Voulez vous vraiment retirer {user.name} de vos partenaires ?</ModalBody>
+        <ModalFooter>
+            <Button
+              variant="dissuasive"
+              onClick={() => {
+                pullFriend({ to: userId, from: currentUser._id })
+                onClose();
+              }}
+            >
+              Retirer
+            </Button>
+            <Button onClick={onClose}>Annuler</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
     </>
   );
 };

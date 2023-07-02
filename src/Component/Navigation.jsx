@@ -122,21 +122,23 @@ const Navigation = () => {
       >
         {({ isActive }) => (
           <Button flexDir="column" size={"lg"}>
-            <IonIcon
-              icon={isActive ? person : personOutline}
-              style={{ fontSize: iconMd }}
-            />
-            {newFriendAccepted + newFriendRequest > 0 && (
-              <Badge
-                position="absolute"
-                bgColor="red"
-                right="-10px"
-                top={0}
-                lineHeight={5}
-              >
-                {newFriendAccepted + newFriendRequest}
-              </Badge>
-            )}
+            <Flex position="relative">
+              <IonIcon
+                icon={isActive ? person : personOutline}
+                style={{ fontSize: iconMd }}
+              />
+              {newFriendAccepted + newFriendRequest > 0 && (
+                <Badge
+                  position="absolute"
+                  bgColor="red"
+                  right="-10px"
+                  top={0}
+                  lineHeight={5}
+                >
+                  {newFriendAccepted + newFriendRequest}
+                </Badge>
+              )}
+            </Flex>
             <Text fontSize={12}>Profil</Text>
           </Button>
         )}

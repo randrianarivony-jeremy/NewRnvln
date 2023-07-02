@@ -59,15 +59,15 @@ const Profile = () => {
     return (
       <Stack position="relative" height="100%" spacing={0} maxWidth="100%">
         <Flex
-          justify="space-between"
           borderBottom="1px solid"
           borderBottomColor="whiteAlpha.500"
+          justify="space-between"
         >
-          <Button boxSize={12} onClick={() => navigate(-1)}>
+          <Button variant="float" onClick={() => navigate(-1)}>
             <IonIcon icon={arrowBack} />
           </Button>
-          <Button size="lg">Profil</Button>
-          <Button boxSize={12} onClick={() => navigate("/parameters")}>
+          <Button>Profil</Button>
+          <Button onClick={() => navigate("/parameters")}>
             <IonIcon icon={settingsOutline} />
           </Button>
         </Flex>

@@ -7,6 +7,8 @@ const credentialSlice = createSlice({
     newMainMessage: 0,
     newSecondMessage: 0,
     newNotification: 0,
+    newFriendAccepted: 0,
+    newFriendRequest: 0,
   },
   reducers: {
     setCredentials: (state, action) => {

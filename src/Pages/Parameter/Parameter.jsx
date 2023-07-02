@@ -12,6 +12,7 @@ import {
 import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import ChangeEmail from "./ChangeEmail";
+import ChangeFees from "./ChangeFees";
 import ChangePassword from "./ChangePassword";
 import ChangeUsername from "./ChangeUsername";
 
@@ -35,6 +36,11 @@ const Parameter = () => {
     isOpen: emailDrawer,
     onOpen: openEmailDrawer,
     onClose: closeEmailDrawer,
+  } = useDisclosure();
+  const {
+    isOpen: feesDrawer,
+    onOpen: openFeesDrawer,
+    onClose: closeFeesDrawer,
   } = useDisclosure();
 
   if (isLoading) return <Loader />;
@@ -81,6 +87,19 @@ const Parameter = () => {
                 />
 
                 <ClickableFlex>Supprimer votre compte</ClickableFlex>
+              </Stack>
+            </Stack>
+            <Stack>
+              <Heading size="sm">Abonnement</Heading>
+              <Stack spacing={0}>
+                <ClickableFlex onClick={openFeesDrawer}>
+                  Frais d'abonnement
+                </ClickableFlex>
+                <ChangeFees
+                  onOpen={openFeesDrawer}
+                  onClose={closeFeesDrawer}
+                  isOpen={feesDrawer}
+                />
               </Stack>
             </Stack>
           </Stack>

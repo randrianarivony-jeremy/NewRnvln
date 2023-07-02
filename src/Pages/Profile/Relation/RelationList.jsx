@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Button,
   Drawer,
   DrawerBody,
@@ -18,13 +19,23 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { ClickableFlex } from "../../../Component/Miscellanous";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { ClickableFlex, ErrorRender } from "../../../Component/Miscellanous";
+import {
+  setNewFriendAccepted,
+  setNewFriendRequest,
+} from "../../../Controler/Redux/Features/credentialSlice";
 import { useLazyFetchUserFriendsQuery } from "../../../Controler/Redux/Features/userSlice";
 
 const RelationList = ({ category, userId, length }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [fetchUserFriends, { isLoading, isSuccess, isError, data }] =
+  const [fetchUserFriends, { isLoading, isSuccess, isError, data, error }] =
     useLazyFetchUserFriendsQuery();
+  const navigate = useNavigate();
+  const { newFriendRequest, newFriendAccepted } = useSelector(
+    (state) => state.token
+  );
 
   useEffect(() => {
     if (isOpen)
@@ -42,6 +53,8 @@ const RelationList = ({ category, userId, length }) => {
         },
         { preferCacheValue: true }
       );
+    if (isOpen && category === "Demandes") setNewFriendRequest(0);
+    if (isOpen && category === "Partenaires") setNewFriendAccepted(0);
   }, [isOpen]);
 
   let display;
@@ -52,18 +65,16 @@ const RelationList = ({ category, userId, length }) => {
         <Skeleton height={5} width={200} />
       </HStack>
     );
-  if (isError)
-    display = (
-      <p>
-        Une erreur est survenue lors du chargement. Veuillez réessayer plus
-        tard.
-      </p>
-    );
+  if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isSuccess)
     display = (
       <Stack>
-        {data.map((elt, key) => (
-          <ClickableFlex key={key} justify="space-between">
+        {data.map((elt) => (
+          <ClickableFlex
+            key={elt._id}
+            justify="space-between"
+            onClick={() => navigate("/profile/" + elt._id)}
+          >
             <Flex>
               {elt.picture ? (
                 <Image
@@ -81,12 +92,12 @@ const RelationList = ({ category, userId, length }) => {
                 {elt.job && <Text fontStyle="italic">{elt.job}</Text>}
               </Stack>
             </Flex>
-            {category === "Demandes" && (
+            {/* {category === "Demandes" && (
               <Button variant="primary">Confirmer</Button>
             )}
             {category === "Partenaires" && (
               <Button variant="outline">Retirer</Button>
-            )}
+            )} */}
           </ClickableFlex>
         ))}
       </Stack>
@@ -97,6 +108,28 @@ const RelationList = ({ category, userId, length }) => {
       <Button flexDir="column" onClick={() => (length > 0 ? onOpen() : null)}>
         <Heading size="md">{length}</Heading>
         <Text fontSize="xs">{category}</Text>
+        {category === "Demandes" && newFriendRequest > 0 && (
+          <Badge
+            position="absolute"
+            bgColor="red"
+            right="-10px"
+            top={0}
+            lineHeight={5}
+          >
+            {newFriendRequest}
+          </Badge>
+        )}
+        {category === "Partenaires" && newFriendAccepted > 0 && (
+          <Badge
+            position="absolute"
+            bgColor="red"
+            right={0}
+            top={0}
+            lineHeight={5}
+          >
+            {newFriendAccepted}
+          </Badge>
+        )}
       </Button>
 
       <Drawer
@@ -111,43 +144,7 @@ const RelationList = ({ category, userId, length }) => {
           <DrawerHeader textAlign="center" fontSize="md" fontWeight="bold">
             {category}
           </DrawerHeader>
-          <DrawerBody paddingX={0}>
-            {/* <Stack>
-              {list.current.map((elt, key) => (
-                <Box key={key}>
-                  {loading ? (
-                    <HStack key={key}>
-                      <SkeletonCircle boxSize={10} />
-                      <Skeleton height={5} width={200} />
-                    </HStack>
-                  ) : (
-                    <ClickableFlex key={key} justify="space-between">
-                      <Flex>
-                        {elt.picture ? (
-                          <Image
-                            src={elt.picture}
-                            alt="profilepic"
-                            boxSize={12}
-                            rounded="full"
-                            objectFit="cover"
-                          />
-                        ) : (
-                          <Avatar size="md" />
-                        )}
-                        <Stack spacing={0} marginLeft={2} justify="center">
-                          <Heading size="sm">{elt.name}</Heading>
-                          {elt.job && <Text fontStyle="italic">{elt.job}</Text>}
-                        </Stack>
-                      </Flex>
-                      {category==='Demandes' && <Button variant='primary'>Confirmer</Button>}
-                {category==='Partenaires' && <Button variant='outline'>Retirer</Button>}
-                    </ClickableFlex>
-                  )}
-                </Box>
-              ))}
-            </Stack> */}
-            {display}
-          </DrawerBody>
+          <DrawerBody paddingX={0}>{display}</DrawerBody>
         </DrawerContent>
       </Drawer>
     </>

@@ -16,6 +16,9 @@ import { IonIcon } from "@ionic/react";
 import {
   help,
   homeOutline,
+  information,
+  informationCircle,
+  informationCircleOutline,
   logOutOutline,
   menuOutline,
   moonOutline,
@@ -66,47 +69,17 @@ const Menu = () => {
               <Button
                 justifyContent="flex-start"
                 onClick={() => {
-                  navigate("/");
+                  navigate("/about");
                   onClose();
                 }}
                 leftIcon={
                   <IonIcon
-                    icon={homeOutline}
+                    icon={informationCircleOutline}
                     style={{ fontSize: iconMd, width: "40px" }}
                   />
                 }
               >
-                Accueil
-              </Button>
-              <Button
-                justifyContent="flex-start"
-                onClick={() => {
-                  navigate("/subscriptions_only");
-                  onClose();
-                }}
-                leftIcon={
-                  <IonIcon
-                    icon={peopleOutline}
-                    style={{ fontSize: iconMd, width: "40px" }}
-                  />
-                }
-              >
-                Abonnements
-              </Button>
-              <Button
-                justifyContent="flex-start"
-                onClick={() => {
-                  navigate("/questions_only");
-                  onClose();
-                }}
-                leftIcon={
-                  <IonIcon
-                    icon={help}
-                    style={{ fontSize: iconMd, width: "40px" }}
-                  />
-                }
-              >
-                Questionnaires
+                A propos
               </Button>
               <Button
                 justifyContent="flex-start"

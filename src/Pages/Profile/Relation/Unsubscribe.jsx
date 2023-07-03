@@ -14,14 +14,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { currentUserContext } from "../../../Controler/App";
-import { useUnsubscribeMutation } from "../../../Controler/Redux/Features/userSlice";
-import { userContext } from "../UserProfile";
+import { useUnsubscribeMutation } from "../../../Controler/Redux/Features/subscriSlice";
+import { userSlice } from "../../../Controler/Redux/Features/userSlice";
 
 const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
-  const { user, setUser } = useContext(userContext);
-  const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { userId } = useParams();
+  const { data: user } = userSlice.endpoints.fetchUser.useQueryState(userId);
+  const { currentUser } = useContext(currentUserContext);
   const [unsubscribe, { isSuccess, isError, error, isLoading }] =
     useUnsubscribeMutation();
   const [passwordErr, setPasswordErr] = useState(false);
@@ -32,16 +33,6 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setCurrentUser({
-        ...currentUser,
-        subscriptions: currentUser.subscriptions.filter(
-          (elt) => elt !== user._id
-        ),
-      });
-      setUser({
-        ...user,
-        subscribers: user.subscribers.filter((elt) => elt !== currentUser._id),
-      });
       onClose();
       toast({
         title: "Désabonnement effectué",
@@ -103,6 +94,7 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
             onSubmit={(e) => {
               e.preventDefault();
               unsubscribe({
+                myUser: currentUser._id,
                 id_user: user._id,
                 password: passwordRef.current.value,
               });

@@ -1,65 +1,36 @@
 import { Box, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { arrowBack, chatbox } from "ionicons/icons";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { arrowBack } from "ionicons/icons";
+import React, { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ErrorRender, Loader, Scroll } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 import ContentsTab from "./Contents/ContentsTab";
-import FriendHandler from "./Relation/FriendHandler";
 import RelationBoard from "./Relation/RelationBoard";
-import Subscribe from "./Relation/Subscribe";
+import RelationPanel from "./Relation/RelationPanel";
 import UserProfilepic from "./UserProfilepic";
 
-export const userContext = createContext();
-
 const UserProfile = () => {
-  const navigate = useNavigate();
   const { currentUser } = useContext(currentUserContext);
+  const navigate = useNavigate();
   const { userId } = useParams();
-  const category = useRef("second");
-  const { data, isLoading, isSuccess, isError, error } =
-    useFetchUserQuery(userId);
   const {
-    data: myUser,
+    data: user,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useFetchUserQuery(userId);
+  const {
     isSuccess: myUserSuccess,
-    isLoading: myUserLoading,
+    myUserIsError,
+    myUserError,
   } = useFetchUserQuery(currentUser._id);
-  const [user, setUser] = useState(data);
-  const [friend, setFriend] = useState("none");
-  const [subscribed, setSubscribed] = useState(false);
 
-  useEffect(() => {
-    if (isSuccess) setUser(data);
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (currentUser.subscriptions.includes(userId)) {
-      setSubscribed(true);
-      category.current = "main";
-    }
-    if (myUserSuccess) {
-      if (myUser.subscribers.includes(userId)) category.current = "main";
-      if (currentUser.friends.includes(userId)) {
-        setFriend("friend");
-        category.current = "main";
-      } else if (myUser.friendRequest.includes(userId)) setFriend("request");
-      else if (myUser.friendInvitation.includes(userId))
-        setFriend("invitation");
-      else setFriend("none");
-    }
-  }, [currentUser, myUserSuccess]);
-
-  if (isLoading || myUserLoading) return <Loader />;
+  if (isLoading) return <Loader />;
   if (isError) return <ErrorRender isError={isError} error={error} />;
-  if (isSuccess && myUserSuccess && user) {
+  if (isSuccess) {
     return (
       <Stack height="100%" spacing={0}>
         <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
@@ -71,85 +42,64 @@ const UserProfile = () => {
           </Button>
         </Flex>
 
-        <userContext.Provider value={{ user, setUser }}>
-          <Scroll paddingX={2} paddingY={2} spacing={5} height="100%">
-            {/* A B O U T  */}
-            <HStack align="flex-start" spacing={3}>
-              <UserProfilepic picture={user.picture} />
-              <Box overflowX="hidden">
-                <Text
-                  maxWidth="calc(100vw - 100px)"
-                  fontWeight="bold"
-                  fontSize="lg"
-                >
-                  {user.name}
-                </Text>
-                <Box marginLeft={3} fontSize="sm">
-                  {user.job !== "" && (
-                    <HStack align="flex-start">
-                      <span className="bi-briefcase-fill"></span>
-                      <Text>{user.job} </Text>
-                    </HStack>
-                  )}
-                  {user.address !== "" && (
-                    <HStack align="flex-start">
-                      <span className="bi-geo-alt-fill"></span>
-                      <Text>{user.address} </Text>
-                    </HStack>
-                  )}
-                  {user.project !== "" && (
-                    <HStack align="flex-start">
-                      <span className="bi-flag-fill"></span>
-                      <Text>{user.project} </Text>
-                    </HStack>
-                  )}
-                </Box>
-              </Box>
-            </HStack>
-
-            {/* P H I L O  */}
-            {user.philosophy && (
-              <Text fontSize="sm" textAlign="center" fontStyle="italic">
-                <span className="bi-quote"></span>
-                {user.philosophy}
-                <span className="bi-quote"></span>
+        <Scroll paddingX={2} paddingY={2} spacing={5} height="100%">
+          {/* A B O U T  */}
+          <HStack align="flex-start" spacing={3}>
+            <UserProfilepic picture={user.picture} />
+            <Box overflowX="hidden">
+              <Text
+                maxWidth="calc(100vw - 100px)"
+                fontWeight="bold"
+                fontSize="lg"
+              >
+                {user.name}
               </Text>
-            )}
+              <Box marginLeft={3} fontSize="sm">
+                {user.job !== "" && (
+                  <HStack align="flex-start">
+                    <span className="bi-briefcase-fill"></span>
+                    <Text>{user.job} </Text>
+                  </HStack>
+                )}
+                {user.address !== "" && (
+                  <HStack align="flex-start">
+                    <span className="bi-geo-alt-fill"></span>
+                    <Text>{user.address} </Text>
+                  </HStack>
+                )}
+                {user.project !== "" && (
+                  <HStack align="flex-start">
+                    <span className="bi-flag-fill"></span>
+                    <Text>{user.project} </Text>
+                  </HStack>
+                )}
+              </Box>
+            </Box>
+          </HStack>
 
-            {/* R E L A T I O N  */}
-            <Stack>
-              <HStack>
-                {friend === "friend" && <FriendHandler />}
-                <Button
-                  width={"100%"}
-                  variant={
-                    (friend === "invitation" && subscribed) ||
-                    friend === "friend"
-                      ? "primary"
-                      : "solid"
-                  }
-                  leftIcon={<IonIcon icon={chatbox} />}
-                  onClick={() =>
-                    navigate(
-                      "/chat/" + user._id + "?category=" + category.current
-                    )
-                  }
-                >
-                  Envoyer un message
-                </Button>
-              </HStack>
-              {friend !== "friend" && (
-                <HStack justify="space-around" width="100%">
-                  <FriendHandler />
-                  <Subscribe />
-                </HStack>
-              )}
-              <RelationBoard userId={user._id} />
-            </Stack>
+          {/* P H I L O  */}
+          {user.philosophy && (
+            <Text fontSize="sm" textAlign="center" fontStyle="italic">
+              <span className="bi-quote"></span>
+              {user.philosophy}
+              <span className="bi-quote"></span>
+            </Text>
+          )}
 
+          {/* R E L A T I O N  */}
+          <Stack>
+            <RelationPanel />
+            <RelationBoard userId={user._id} />
+          </Stack>
+
+          {myUserSuccess ? (
             <ContentsTab userId={user._id} />
-          </Scroll>
-        </userContext.Provider>
+          ) : (
+            myUserIsError && (
+              <ErrorRender isError={myUserIsError} error={myUserError} />
+            )
+          )}
+        </Scroll>
       </Stack>
     );
   }

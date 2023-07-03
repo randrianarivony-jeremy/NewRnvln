@@ -103,24 +103,6 @@ export const userSlice = apiSlice.injectEndpoints({
       },
     }),
 
-    // S U B S C R I P T I O N
-    subscribe: builder.mutation({
-      query: (body) => ({
-        url: "user/subscribe",
-        method: "PATCH",
-        body,
-      }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
-    }),
-    unsubscribe: builder.mutation({
-      query: (body) => ({
-        url: "user/unsubscribe",
-        method: "PATCH",
-        body,
-      }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
-    }),
-
     // U P D A T E
     changeName: builder.mutation({
       query: ({ userId, ...body }) => ({
@@ -262,9 +244,6 @@ export const {
   useFetchUserQuery,
   useLazyFetchUserFriendsQuery,
   useFetchUserFriendsQuery,
-
-  useSubscribeMutation,
-  useUnsubscribeMutation,
 
   useAddFriendMutation,
   usePullFriendMutation,

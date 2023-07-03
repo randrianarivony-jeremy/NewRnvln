@@ -10,7 +10,7 @@ export const subscriSlice = apiSlice.injectEndpoints({
         if (response === null) return [];
         return response;
       },
-      providesTags: (result, err, userId) => [
+      providesTags: (result, err, { userId }) => [
         { type: "Subscriptions", id: userId },
       ],
       // onCacheEntryAdded: async (arg, { cacheDataLoaded, updateCachedData }) => {
@@ -53,20 +53,33 @@ export const subscriSlice = apiSlice.injectEndpoints({
 
     // S U B S C R I P T I O N
     subscribe: builder.mutation({
-      query: (body) => ({
+      query: ({ myUser, ...body }) => ({
         url: "subscri/subscribe",
         method: "POST",
         body,
       }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
+      invalidatesTags: (res, err, { myUser, ...body }) => [
+        { type: "Post", id: "LIST" },
+        { type: "Subscriptions", id: myUser },
+        { type: "Subscribers", id: myUser },
+        { type: "Subscriptions", id: body.id_user },
+        { type: "Subscribers", id: body.id_user },
+      ],
     }),
+
     unsubscribe: builder.mutation({
-      query: (body) => ({
+      query: ({ myUser, ...body }) => ({
         url: "subscri/unsubscribe",
         method: "PUT",
         body,
       }),
-      invalidatesTags: [{ type: "Post", id: "LIST" }],
+      invalidatesTags: (res, err, { myUser, ...body }) => [
+        { type: "Post", id: "LIST" },
+        { type: "Subscriptions", id: myUser },
+        { type: "Subscribers", id: myUser },
+        { type: "Subscriptions", id: body.id_user },
+        { type: "Subscribers", id: body.id_user },
+      ],
     }),
   }),
 });

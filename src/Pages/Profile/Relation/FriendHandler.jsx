@@ -15,28 +15,32 @@ import { people, personAdd } from "ionicons/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { currentUserContext } from "../../../Controler/App";
+import { useFetchSubscriptionsQuery } from "../../../Controler/Redux/Features/subscriSlice";
 import {
   useAddFriendMutation,
   useCancelFriendInvitationMutation,
   useConfirmFriendRequestMutation,
   useFetchUserQuery,
   usePullFriendMutation,
+  userSlice,
 } from "../../../Controler/Redux/Features/userSlice";
-import { userContext } from "../UserProfile";
 
 const FriendHandler = () => {
+  const { userId } = useParams();
+  const { data: user } = userSlice.endpoints.fetchUser.useQueryState(userId);
   const { currentUser, setCurrentUser } = useContext(currentUserContext);
-  const { friendInvitation, friendRequest } = useFetchUserQuery(
+  const { friendInvitation, friendRequest, friends } = useFetchUserQuery(
     currentUser._id,
     {
       selectFromResult: ({ data }) => ({
         friendInvitation: data?.friendInvitation,
         friendRequest: data?.friendRequest,
+        friends: data?.friends,
       }),
     }
   );
-  const { user, setUser } = useContext(userContext);
-  const { userId } = useParams();
+  const { isSuccess: subscriptionsSuccess, data: subscriptions } =
+    useFetchSubscriptionsQuery({ userId: currentUser._id, details: false });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("white", "dark.50");
   const [friend, setFriend] = useState("none");
@@ -56,9 +60,7 @@ const FriendHandler = () => {
   ] = useConfirmFriendRequestMutation();
 
   useEffect(() => {
-    if (currentUser.subscriptions.includes(userId)) setSubscribed(true);
-
-    if (currentUser.friends.includes(userId)) setFriend("friend");
+    if (friends.includes(userId)) setFriend("friend");
     else {
       if (friendRequest.includes(userId)) setFriend("request");
       else {
@@ -67,6 +69,12 @@ const FriendHandler = () => {
       }
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (subscriptionsSuccess && subscriptions.includes(userId))
+      setSubscribed(true);
+    else setSubscribed(false);
+  }, [subscriptions]);
 
   useEffect(() => {
     if (AFIsSuccess) {
@@ -83,10 +91,10 @@ const FriendHandler = () => {
         ...currentUser,
         friends: currentUser.friends.filter((elt) => elt !== userId),
       });
-      setUser({
-        ...user,
-        friends: user.friends.filter((elt) => elt !== currentUser._id),
-      });
+      // setUser({
+      //   ...user,
+      //   friends: user.friends.filter((elt) => elt !== currentUser._id),
+      // });
     }
   }, [PFIsLoading]);
 
@@ -106,10 +114,10 @@ const FriendHandler = () => {
         friendRequest: friendRequest.filter((elt) => elt !== userId),
         friends: [...currentUser.friends, userId],
       });
-      setUser({
-        ...user,
-        friends: [...user.friends, currentUser._id],
-      });
+      // setUser({
+      //   ...user,
+      //   friends: [...user.friends, currentUser._id],
+      // });
     }
   }, [CFRIsLoading]);
 

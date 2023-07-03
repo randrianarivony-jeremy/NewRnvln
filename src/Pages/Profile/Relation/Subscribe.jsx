@@ -1,17 +1,22 @@
 // prettier-ignore
 import { Avatar, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Image, Input, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { currentUserContext } from "../../../Controler/App";
 import {
+  useFetchSubscriptionsQuery,
+  useSubscribeMutation,
+} from "../../../Controler/Redux/Features/subscriSlice";
+import {
   useFetchUserQuery,
-  useSubscribeMutation
+  userSlice,
 } from "../../../Controler/Redux/Features/userSlice";
-import { userContext } from "../UserProfile";
 import Unsubscribe from "./Unsubscribe";
 
 const Subscribe = () => {
-  const { currentUser, setCurrentUser } = useContext(currentUserContext);
+  const { userId } = useParams();
+  const { data: user } = userSlice.endpoints.fetchUser.useQueryState(userId);
+  const { currentUser } = useContext(currentUserContext);
   const { friendInvitation, friendRequest, wallet } = useFetchUserQuery(
     currentUser._id,
     {
@@ -22,6 +27,14 @@ const Subscribe = () => {
       }),
     }
   );
+  const {
+    isLoading: subscriptionsLoading,
+    isError: subscriptionsIsError,
+    error: subscriptionsError,
+    isSuccess: subscriptionsSuccess,
+    data: subscriptions,
+  } = useFetchSubscriptionsQuery({ userId: currentUser._id, details: false });
+
   const [subscribe, { isLoading, isSuccess, isError, error }] =
     useSubscribeMutation();
 
@@ -33,7 +46,6 @@ const Subscribe = () => {
   } = useDisclosure();
   let currentDate = new Date();
   const [passwordErr, setPasswordErr] = useState(false);
-  const { user, setUser } = useContext(userContext);
   const passwordRef = useRef();
   const submitControl = useRef();
   const toast = useToast();
@@ -66,9 +78,6 @@ const Subscribe = () => {
   };
 
   useEffect(() => {
-    if (currentUser.subscriptions.includes(user._id)) setSubscribed(true);
-    else setSubscribed(false);
-
     if (currentUser.friends.includes(user._id)) setFriend("friend");
     else {
       if (friendRequest.includes(user._id)) setFriend("request");
@@ -80,15 +89,13 @@ const Subscribe = () => {
   }, [currentUser, user]);
 
   useEffect(() => {
+    if (subscriptionsSuccess && subscriptions.includes(userId))
+      setSubscribed(true);
+    else setSubscribed(false);
+  }, [subscriptions]);
+
+  useEffect(() => {
     if (isSuccess) {
-      setCurrentUser({
-        ...currentUser,
-        subscriptions: [...currentUser.subscriptions, user._id],
-      });
-      setUser({
-        ...user,
-        subscribers: [...user.subscribers, currentUser._id],
-      });
       onClose();
       toast({
         title: "Abonnement réussi",
@@ -236,6 +243,7 @@ const Subscribe = () => {
                 onSubmit={(e) => {
                   e.preventDefault();
                   subscribe({
+                    myUser: currentUser._id,
                     id_user: user._id,
                     password: passwordRef.current.value,
                   });

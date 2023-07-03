@@ -12,12 +12,9 @@ const Navigation = () => {
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   };
-  const {
-    newMainMessage,
-    newNotification,
-    newFriendRequest,
-    newFriendAccepted,
-  } = useSelector((state) => state.token);
+  const { newMainMessage, newNotification } = useSelector(
+    (state) => state.token
+  );
 
   return (
     <Flex width="100%">
@@ -127,17 +124,6 @@ const Navigation = () => {
                 icon={isActive ? person : personOutline}
                 style={{ fontSize: iconMd }}
               />
-              {newFriendAccepted + newFriendRequest > 0 && (
-                <Badge
-                  position="absolute"
-                  bgColor="red"
-                  right="-10px"
-                  top={0}
-                  lineHeight={5}
-                >
-                  {newFriendAccepted + newFriendRequest}
-                </Badge>
-              )}
             </Flex>
             <Text fontSize={12}>Profil</Text>
           </Button>

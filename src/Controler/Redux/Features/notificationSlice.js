@@ -17,6 +17,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 text: `a aimé votre ${elt.docModel}.`,
                 length: elt.on.likers.length,
                 url: "/post/" + elt.docModel + "/" + elt.on._id,
+                time:elt.updatedAt
               };
             case "comment":
               return {
@@ -26,6 +27,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 length: elt.on.comments.length,
                 text: `a commenté votre ${elt.docModel}.`,
                 url: "/post/" + elt.docModel + "/" + elt.on._id,
+                time:elt.updatedAt
               };
             case "subscribe":
               return {
@@ -34,6 +36,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 name: elt.from.name,
                 picture: elt.from.picture,
                 url: "/profile/" + elt.from._id,
+                time:elt.updatedAt
               };
             case "friendRequest":
               return {
@@ -42,6 +45,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 name: elt.from.name,
                 picture: elt.from.picture,
                 url: "/profile/" + elt.from._id,
+                time:elt.updatedAt
               };
             case "friendAccepted":
               return {
@@ -50,6 +54,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 name: elt.from.name,
                 picture: elt.from.picture,
                 url: "/profile/" + elt.from._id,
+                time:elt.updatedAt
               };
             case "interview":
               return {
@@ -59,6 +64,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 length: elt.on.question.interviews.length,
                 text: "a répondu à votre question.",
                 url: "/post/" + elt.on._id,
+                time:elt.updatedAt
               };
 
             default:

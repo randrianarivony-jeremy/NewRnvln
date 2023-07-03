@@ -12,7 +12,12 @@ export const userSlice = apiSlice.injectEndpoints({
           updateCachedData((draft) => {
             if (category === "friend invitation")
               draft.friendRequest.push(from);
-            if (category === "request accepted") draft.friends.push(from);
+            if (category === "request accepted") {
+              draft.friends.push(from);
+              draft.friendInvitation = draft.friendInvitation.filter(
+                (user) => user !== from
+              );
+            }
             if (category === "cancel invitation")
               draft.friendRequest = draft.friendRequest.filter(
                 (id) => id !== from
@@ -46,11 +51,21 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      onQueryStarted: async (body, { queryFulfilled }) => {
+      onQueryStarted: async (body, { queryFulfilled, dispatch }) => {
+        const invitationPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", body.from, (draft) => {
+            draft.friendInvitation.push(body.to);
+          })
+        );
+        queryFulfilled.catch(invitationPatch.undo);
         await queryFulfilled;
         socket.emit("relation change", {
           body,
           category: "friend invitation",
+        });
+        socket.emit("notification", {
+          to: body.to,
+          category: "relation",
         });
       },
     }),
@@ -61,7 +76,13 @@ export const userSlice = apiSlice.injectEndpoints({
         body,
       }),
       invalidatesTags: (res, err, body) => [{ type: "friends", id: body.to }],
-      onQueryStarted: async (body, { queryFulfilled }) => {
+      onQueryStarted: async (body, { queryFulfilled, dispatch }) => {
+        const friendPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", body.from, (draft) => {
+            draft.friends = draft.friends.filter((user) => user !== body.to);
+          })
+        );
+        queryFulfilled.catch(friendPatch.undo);
         await queryFulfilled;
         socket.emit("relation change", {
           body,
@@ -79,11 +100,24 @@ export const userSlice = apiSlice.injectEndpoints({
         { type: "friends", id: body.from },
         { type: "requests", id: body.from },
       ],
-      onQueryStarted: async (body, { queryFulfilled }) => {
+      onQueryStarted: async (body, { queryFulfilled, dispatch }) => {
+        const friendPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", body.from, (draft) => {
+            draft.friends.push(body.to);
+            draft.friendRequest = draft.friendRequest.filter(
+              (user) => user !== body.to
+            );
+          })
+        );
+        queryFulfilled.catch(friendPatch.undo);
         await queryFulfilled;
         socket.emit("relation change", {
           body,
           category: "request accepted",
+        });
+        socket.emit("notification", {
+          to: body.to,
+          category: "relation",
         });
       },
     }),
@@ -93,7 +127,15 @@ export const userSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      onQueryStarted: async (body, { queryFulfilled }) => {
+      onQueryStarted: async (body, { queryFulfilled, dispatch }) => {
+        const invitationPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", body.from, (draft) => {
+            draft.friendInvitation = draft.friendInvitation.filter(
+              (user) => user !== body.to
+            );
+          })
+        );
+        queryFulfilled.catch(invitationPatch.undo);
         await queryFulfilled;
         socket.emit("relation change", {
           body,

@@ -52,17 +52,18 @@ const RelationBoard = ({ userId }) => {
           />
         )
       )}
-      {userId === currentUser._id && isLoading ? (
-        <Skeleton boxSize={10} />
-      ) : (
-        isSuccess && (
-          <RelationList
-            category="Demandes"
-            userId={userId}
-            length={data.friendRequest.length}
-          />
-        )
-      )}
+      {userId === currentUser._id &&
+        (isLoading ? (
+          <Skeleton boxSize={10} />
+        ) : (
+          isSuccess && (
+            <RelationList
+              category="Demandes"
+              userId={userId}
+              length={data.friendRequest.length}
+            />
+          )
+        ))}
       {subscribersLoading ? (
         <Skeleton boxSize={10} />
       ) : (

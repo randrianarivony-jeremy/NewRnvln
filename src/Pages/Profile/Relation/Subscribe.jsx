@@ -1,5 +1,5 @@
 // prettier-ignore
-import { Avatar, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Image, Input, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
+import {Avatar,Box,Button,Drawer,DrawerBody,DrawerCloseButton,DrawerContent,DrawerFooter,DrawerHeader,DrawerOverlay,Flex,FormControl,FormErrorMessage,FormLabel,Heading,HStack,Image,Input,Stack,Text,useDisclosure,useToast,} from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { currentUserContext } from "../../../Controler/App";
@@ -17,23 +17,17 @@ const Subscribe = () => {
   const { userId } = useParams();
   const { data: user } = userSlice.endpoints.fetchUser.useQueryState(userId);
   const { currentUser } = useContext(currentUserContext);
-  const { friendInvitation, friendRequest, wallet } = useFetchUserQuery(
-    currentUser._id,
-    {
+  const { friendInvitation, friendRequest, wallet, friends } =
+    useFetchUserQuery(currentUser._id, {
       selectFromResult: ({ data }) => ({
         friendInvitation: data?.friendInvitation,
         friendRequest: data?.friendRequest,
+        friends: data?.friends,
         wallet: data?.wallet,
       }),
-    }
-  );
-  const {
-    isLoading: subscriptionsLoading,
-    isError: subscriptionsIsError,
-    error: subscriptionsError,
-    isSuccess: subscriptionsSuccess,
-    data: subscriptions,
-  } = useFetchSubscriptionsQuery({ userId: currentUser._id, details: false });
+    });
+  const { isSuccess: subscriptionsSuccess, data: subscriptions } =
+    useFetchSubscriptionsQuery({ userId: currentUser._id, details: false });
 
   const [subscribe, { isLoading, isSuccess, isError, error }] =
     useSubscribeMutation();
@@ -78,7 +72,7 @@ const Subscribe = () => {
   };
 
   useEffect(() => {
-    if (currentUser.friends.includes(user._id)) setFriend("friend");
+    if (friends.includes(user._id)) setFriend("friend");
     else {
       if (friendRequest.includes(user._id)) setFriend("request");
       else {
@@ -86,7 +80,7 @@ const Subscribe = () => {
         else setFriend("none");
       }
     }
-  }, [currentUser, user]);
+  }, [currentUser, user, friendRequest, friendInvitation, friends]);
 
   useEffect(() => {
     if (subscriptionsSuccess && subscriptions.includes(userId))

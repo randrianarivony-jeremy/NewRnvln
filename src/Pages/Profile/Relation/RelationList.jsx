@@ -1,28 +1,11 @@
-import {
-  Avatar,
-  Badge,
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  Heading,
-  HStack,
-  Image,
-  Skeleton,
-  SkeletonCircle,
-  Stack,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
-import React, { useEffect } from "react";
+// prettier-ignore
+import { Avatar, Badge, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, Heading, Image, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../../Component/Loaders/UserLoader";
 import { ClickableFlex, ErrorRender } from "../../../Component/Miscellanous";
+import { currentUserContext } from "../../../Controler/App";
 import {
   setNewFriendAccepted,
   setNewFriendRequest,
@@ -34,6 +17,7 @@ import {
 import { useLazyFetchUserFriendsQuery } from "../../../Controler/Redux/Features/userSlice";
 
 const RelationList = ({ category, userId, length }) => {
+  const { currentUser } = useContext(currentUserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [
     fetchUserFriends,
@@ -183,28 +167,32 @@ const RelationList = ({ category, userId, length }) => {
       <Button flexDir="column" onClick={() => (length > 0 ? onOpen() : null)}>
         <Heading size="md">{length}</Heading>
         <Text fontSize="xs">{category}</Text>
-        {category === "Demandes" && newFriendRequest > 0 && (
-          <Badge
-            position="absolute"
-            bgColor="red"
-            right="-10px"
-            top={0}
-            lineHeight={5}
-          >
-            {newFriendRequest}
-          </Badge>
-        )}
-        {category === "Partenaires" && newFriendAccepted > 0 && (
-          <Badge
-            position="absolute"
-            bgColor="red"
-            right={0}
-            top={0}
-            lineHeight={5}
-          >
-            {newFriendAccepted}
-          </Badge>
-        )}
+        {userId === currentUser._id &&
+          category === "Demandes" &&
+          newFriendRequest > 0 && (
+            <Badge
+              position="absolute"
+              bgColor="red"
+              right="-10px"
+              top={0}
+              lineHeight={5}
+            >
+              {newFriendRequest}
+            </Badge>
+          )}
+        {userId === currentUser._id &&
+          category === "Partenaires" &&
+          newFriendAccepted > 0 && (
+            <Badge
+              position="absolute"
+              bgColor="red"
+              right={0}
+              top={0}
+              lineHeight={5}
+            >
+              {newFriendAccepted}
+            </Badge>
+          )}
       </Button>
 
       <Drawer

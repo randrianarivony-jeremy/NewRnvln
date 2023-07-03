@@ -68,7 +68,7 @@ const FriendHandler = () => {
         else setFriend("none");
       }
     }
-  }, [currentUser]);
+  }, [friendInvitation, friendRequest, friends]);
 
   useEffect(() => {
     if (subscriptionsSuccess && subscriptions.includes(userId))

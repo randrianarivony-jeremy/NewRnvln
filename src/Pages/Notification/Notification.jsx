@@ -1,5 +1,16 @@
 // prettier-ignore
-import {Avatar,Box,Button,Flex,HStack,Image,Skeleton,SkeletonCircle,Stack,Text,} from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Skeleton,
+  SkeletonCircle,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import {
   chatbubble,
@@ -8,7 +19,9 @@ import {
   people,
   personAdd,
 } from "ionicons/icons";
+import "moment/locale/fr";
 import React, { useContext, useEffect, useState } from "react";
+import Moment from "react-moment";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import UserLoader from "../../Component/Loaders/UserLoader";
@@ -22,26 +35,25 @@ import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
 import { setNewNotification } from "../../Controler/Redux/Features/credentialSlice";
 import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notificationSlice";
-import { useFetchSubscribersQuery, useFetchSubscriptionsQuery } from "../../Controler/Redux/Features/subscriSlice";
+import { useFetchSubscribersQuery } from "../../Controler/Redux/Features/subscriSlice";
 import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 
 const Notification = () => {
   const { currentUser } = useContext(currentUserContext);
-  const {
-    friends,friendRequest,
-    myUserLoading,
-    myUserSuccess,
-  } = useFetchUserQuery(currentUser._id,{selectFromResult:({data,isLoading,isSuccess})=>({
-    friends:data?.friends,
-    friendRequest:data?.friendRequest,
-    myUserLoading:isLoading,
-    myUserSuccess:isSuccess,
-  })});
+  const { friends, friendRequest, myUserLoading, myUserSuccess } =
+    useFetchUserQuery(currentUser._id, {
+      selectFromResult: ({ data, isLoading, isSuccess }) => ({
+        friends: data?.friends,
+        friendRequest: data?.friendRequest,
+        myUserLoading: isLoading,
+        myUserSuccess: isSuccess,
+      }),
+    });
   const {
     isLoading: subscribersLoading,
     isSuccess: subscribersSuccess,
     data: subscribers,
-  } = useFetchSubscribersQuery({ userId:currentUser._id, details: false });
+  } = useFetchSubscribersQuery({ userId: currentUser._id, details: false });
   const { data, isLoading, isError, error } = useFetchNotificationsQuery();
   const navigate = useNavigate();
   const [imgLoading, setImgLoading] = useState(true);
@@ -97,9 +109,13 @@ const Notification = () => {
                   <Text>
                     {elt.name} {elt.text}
                   </Text>
-                  <Text fontSize="sm" fontStyle="italic">
-                    Il y a 20min
-                  </Text>
+                  <Moment
+                    locale="fr"
+                    fromNow
+                    style={{ fontSize: "sm", fontStyle: "italic" }}
+                  >
+                    {elt.time}
+                  </Moment>
                 </Box>
                 {elt.action === "like" ? (
                   <Button boxSize={12} flexDir="column">
@@ -120,21 +136,39 @@ const Notification = () => {
                     <Flex fontSize="xl">
                       <IonIcon icon={people} />
                     </Flex>
-                    {subscribersLoading ? <Skeleton height={1} width={2}/> : subscribersSuccess && <Text fontSize="xs">{subscribers.length}</Text>}
+                    {subscribersLoading ? (
+                      <Skeleton height={1} width={2} />
+                    ) : (
+                      subscribersSuccess && (
+                        <Text fontSize="xs">{subscribers.length}</Text>
+                      )
+                    )}
                   </Button>
                 ) : elt.action === "friendRequest" ? (
                   <Button boxSize={12} flexDir="column">
                     <Flex fontSize="xl">
                       <IonIcon icon={personAdd} />
                     </Flex>
-                    {myUserLoading ? <Skeleton height={1} width={2}/> : myUserSuccess && <Text fontSize="xs">{friendRequest.length}</Text>}
+                    {myUserLoading ? (
+                      <Skeleton height={1} width={2} />
+                    ) : (
+                      myUserSuccess && (
+                        <Text fontSize="xs">{friendRequest.length}</Text>
+                      )
+                    )}
                   </Button>
                 ) : elt.action === "friendAccepted" ? (
                   <Button boxSize={12} flexDir="column">
                     <Flex fontSize="xl">
                       <Flex className="bi-person-fill-check"></Flex>
                     </Flex>
-                    {myUserLoading ? <Skeleton height={1} width={2}/> : myUserSuccess && <Text fontSize="xs">{friends.length}</Text>}
+                    {myUserLoading ? (
+                      <Skeleton height={1} width={2} />
+                    ) : (
+                      myUserSuccess && (
+                        <Text fontSize="xs">{friends.length}</Text>
+                      )
+                    )}
                   </Button>
                 ) : (
                   <Button boxSize={12} flexDir="column">

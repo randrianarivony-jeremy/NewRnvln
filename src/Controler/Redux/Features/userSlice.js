@@ -32,7 +32,6 @@ export const userSlice = apiSlice.injectEndpoints({
       onCacheEntryAdded: async ({ userId }, { cacheDataLoaded, dispatch }) => {
         await cacheDataLoaded;
         socket.on("relation update", ({ category }) => {
-          console.log(category);
           dispatch(
             userSlice.util.invalidateTags([{ type: "Relation", id: userId }])
           );

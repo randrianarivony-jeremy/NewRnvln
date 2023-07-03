@@ -4,9 +4,9 @@ import { apiSlice } from "../apiSlice";
 export const notificationSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     fetchNotifications: builder.query({
-      query: (currentUser) => "notification",
+      query: () => "notification",
       providesTags: ["Notification"],
-      transformResponse: (responseData, error, currentUser) => [
+      transformResponse: (responseData, error) => [
         ...responseData.map((elt) => {
           switch (elt.action) {
             case "like":
@@ -33,7 +33,6 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 text: "vient de s'abonner à vous.",
                 name: elt.from.name,
                 picture: elt.from.picture,
-                length: currentUser.subscribers,
                 url: "/profile/" + elt.from._id,
               };
             case "friendRequest":
@@ -42,7 +41,6 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 text: "vous a envoyé une invitation.",
                 name: elt.from.name,
                 picture: elt.from.picture,
-                length: currentUser.friendRequest,
                 url: "/profile/" + elt.from._id,
               };
             case "friendAccepted":
@@ -51,7 +49,6 @@ export const notificationSlice = apiSlice.injectEndpoints({
                 text: "a accepté votre invitation.",
                 name: elt.from.name,
                 picture: elt.from.picture,
-                length: currentUser.friends,
                 url: "/profile/" + elt.from._id,
               };
             case "interview":
@@ -69,20 +66,21 @@ export const notificationSlice = apiSlice.injectEndpoints({
           }
         }),
       ],
-      async onCacheEntryAdded(
-        currentUser,
-        { dispatch, cacheDataLoaded, cacheEntryRemoved }
-      ) {
+      async onCacheEntryAdded(arg, { dispatch, cacheDataLoaded }) {
         try {
           await cacheDataLoaded;
-          socket.on("new notification", () => {
+          socket.on("new notification", ({ category, to }) => {
             dispatch(notificationSlice.util.invalidateTags(["Notification"]));
+            if (category === "relation")
+              dispatch(
+                notificationSlice.util.invalidateTags([
+                  { type: "Relation", id: to },
+                ])
+              );
           });
         } catch (error) {
           console.log(error);
         }
-        await cacheEntryRemoved;
-        socket.off("new notification");
       },
     }),
   }),

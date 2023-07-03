@@ -158,7 +158,7 @@ export const postSlice = apiSlice.injectEndpoints({
         try {
           await queryFulfilled;
           if (body.like && postCreator !== body.id_user)
-            socket.emit("notification", postCreator);
+            socket.emit("notification", {to:postCreator,category:'reaction'});
         } catch {
           patchResult.undo();
           singlePostPatch.undo();
@@ -260,7 +260,7 @@ export const postSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           if (postCreator !== commenterId._id)
-            socket.emit("notification", postCreator);
+            socket.emit("notification", {to:postCreator,category:"reaction"});
 
           dispatch(
             postSlice.util.updateQueryData(

@@ -45,6 +45,14 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   keepUnusedDataFor: 900, //15min
-  tagTypes: ["Post", "User", "Conversation", "Notification", "Question"],
+  tagTypes: [
+    "Post",
+    "User",
+    "Conversation",
+    "Notification",
+    "Question",
+    "Subscribers",
+    "Subscriptions",
+  ],
   endpoints: (builder) => ({}),
 });

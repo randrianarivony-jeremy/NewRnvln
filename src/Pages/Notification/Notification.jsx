@@ -1,14 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Image,
-  SkeletonCircle,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+// prettier-ignore
+import {Avatar,Box,Button,Flex,HStack,Image,Skeleton,SkeletonCircle,Stack,Text,} from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import {
   chatbubble,
@@ -31,14 +22,27 @@ import Navigation from "../../Component/Navigation";
 import { currentUserContext } from "../../Controler/App";
 import { setNewNotification } from "../../Controler/Redux/Features/credentialSlice";
 import { useFetchNotificationsQuery } from "../../Controler/Redux/Features/notificationSlice";
+import { useFetchSubscribersQuery, useFetchSubscriptionsQuery } from "../../Controler/Redux/Features/subscriSlice";
+import { useFetchUserQuery } from "../../Controler/Redux/Features/userSlice";
 
 const Notification = () => {
   const { currentUser } = useContext(currentUserContext);
-  const { data, isLoading, isError, error } = useFetchNotificationsQuery({
-    friendRequest: currentUser.friendRequest.length,
-    friends: currentUser.friends.length,
-    subscribers: currentUser.subscribers.length,
-  });
+  const {
+    friends,friendRequest,
+    myUserLoading,
+    myUserSuccess,
+  } = useFetchUserQuery(currentUser._id,{selectFromResult:({data,isLoading,isSuccess})=>({
+    friends:data?.friends,
+    friendRequest:data?.friendRequest,
+    myUserLoading:isLoading,
+    myUserSuccess:isSuccess,
+  })});
+  const {
+    isLoading: subscribersLoading,
+    isSuccess: subscribersSuccess,
+    data: subscribers,
+  } = useFetchSubscribersQuery({ userId:currentUser._id, details: false });
+  const { data, isLoading, isError, error } = useFetchNotificationsQuery();
   const navigate = useNavigate();
   const [imgLoading, setImgLoading] = useState(true);
   const dispatch = useDispatch();
@@ -97,24 +101,49 @@ const Notification = () => {
                     Il y a 20min
                   </Text>
                 </Box>
-                <Button boxSize={12} flexDir="column">
-                  <Flex fontSize="xl">
-                    {elt.action === "like" ? (
+                {elt.action === "like" ? (
+                  <Button boxSize={12} flexDir="column">
+                    <Flex fontSize="xl">
                       <IonIcon icon={heart} />
-                    ) : elt.action === "comment" ? (
+                    </Flex>
+                    <Text fontSize="xs">{elt.length}</Text>
+                  </Button>
+                ) : elt.action === "comment" ? (
+                  <Button boxSize={12} flexDir="column">
+                    <Flex fontSize="xl">
                       <IonIcon icon={chatbubble} />
-                    ) : elt.action === "subscribe" ? (
+                    </Flex>
+                    <Text fontSize="xs">{elt.length}</Text>
+                  </Button>
+                ) : elt.action === "subscribe" ? (
+                  <Button boxSize={12} flexDir="column">
+                    <Flex fontSize="xl">
                       <IonIcon icon={people} />
-                    ) : elt.action === "friendRequest" ? (
+                    </Flex>
+                    {subscribersLoading ? <Skeleton height={1} width={2}/> : subscribersSuccess && <Text fontSize="xs">{subscribers.length}</Text>}
+                  </Button>
+                ) : elt.action === "friendRequest" ? (
+                  <Button boxSize={12} flexDir="column">
+                    <Flex fontSize="xl">
                       <IonIcon icon={personAdd} />
-                    ) : elt.action === "friendAccepted" ? (
+                    </Flex>
+                    {myUserLoading ? <Skeleton height={1} width={2}/> : myUserSuccess && <Text fontSize="xs">{friendRequest.length}</Text>}
+                  </Button>
+                ) : elt.action === "friendAccepted" ? (
+                  <Button boxSize={12} flexDir="column">
+                    <Flex fontSize="xl">
                       <Flex className="bi-person-fill-check"></Flex>
-                    ) : (
+                    </Flex>
+                    {myUserLoading ? <Skeleton height={1} width={2}/> : myUserSuccess && <Text fontSize="xs">{friends.length}</Text>}
+                  </Button>
+                ) : (
+                  <Button boxSize={12} flexDir="column">
+                    <Flex fontSize="xl">
                       <IonIcon icon={chatbubbles} />
-                    )}
-                  </Flex>
-                  <Text fontSize="xs">{elt.length}</Text>
-                </Button>
+                    </Flex>
+                    <Text fontSize="xs">{elt.length}</Text>
+                  </Button>
+                )}
               </HStack>
             </ClickableFlex>
           ))}

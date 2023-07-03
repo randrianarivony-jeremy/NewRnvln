@@ -13,6 +13,7 @@ export const subscriSlice = apiSlice.injectEndpoints({
       },
       providesTags: (result, err, { userId }) => [
         { type: "Subscriptions", id: userId },
+        { type: "Relation", id: userId },
       ],
       // onCacheEntryAdded: async (arg, { cacheDataLoaded, updateCachedData }) => {
       //   await cacheDataLoaded;
@@ -40,6 +41,7 @@ export const subscriSlice = apiSlice.injectEndpoints({
       },
       providesTags: (res, err, { userId }) => [
         { type: "Subscribers", id: userId },
+        { type: "Relation", id: userId },
       ],
       // onCacheEntryAdded: async ({ userId }, { cacheDataLoaded, dispatch }) => {
       //   await cacheDataLoaded;
@@ -65,14 +67,21 @@ export const subscriSlice = apiSlice.injectEndpoints({
         { type: "Subscribers", id: myUser },
         { type: "Subscriptions", id: body.id_user },
         { type: "Subscribers", id: body.id_user },
+        { type: "Conversation", id: "main" },
+        { type: "Conversation", id: "second" },
       ],
-      onQueryStarted: ({ myUser, fees }, { queryFulfilled, dispatch }) => {
+      onQueryStarted: async (
+        { myUser, fees, id_user },
+        { queryFulfilled, dispatch }
+      ) => {
         const walletPatch = dispatch(
           userSlice.util.updateQueryData("fetchUser", myUser, (draft) => {
             draft.wallet -= fees;
           })
         );
         queryFulfilled.catch(walletPatch.undo);
+        await queryFulfilled;
+        socket.emit("notification", { to: id_user, category: "relation" });
       },
     }),
 
@@ -88,6 +97,8 @@ export const subscriSlice = apiSlice.injectEndpoints({
         { type: "Subscribers", id: myUser },
         { type: "Subscriptions", id: body.id_user },
         { type: "Subscribers", id: body.id_user },
+        { type: "Conversation", id: "main" },
+        { type: "Conversation", id: "second" },
       ],
     }),
   }),

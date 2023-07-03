@@ -21,52 +21,127 @@ import {
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import UserLoader from "../../../Component/Loaders/UserLoader";
 import { ClickableFlex, ErrorRender } from "../../../Component/Miscellanous";
 import {
   setNewFriendAccepted,
   setNewFriendRequest,
 } from "../../../Controler/Redux/Features/credentialSlice";
+import {
+  useLazyFetchSubscribersQuery,
+  useLazyFetchSubscriptionsQuery,
+} from "../../../Controler/Redux/Features/subscriSlice";
 import { useLazyFetchUserFriendsQuery } from "../../../Controler/Redux/Features/userSlice";
 
 const RelationList = ({ category, userId, length }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [fetchUserFriends, { isLoading, isSuccess, isError, data, error }] =
-    useLazyFetchUserFriendsQuery();
+  const [
+    fetchUserFriends,
+    { isLoading, isSuccess, isError, data: friendsOrRequests, error },
+  ] = useLazyFetchUserFriendsQuery();
+  const [
+    fetchUserSubscribers,
+    {
+      isLoading: subscribersLoading,
+      isError: subscribersIsError,
+      error: subscribersError,
+      isSuccess: subscribersSuccess,
+      data: subscribers,
+    },
+  ] = useLazyFetchSubscribersQuery();
+  const [
+    fetchUserSubscriptions,
+    {
+      isLoading: subscriptionsLoading,
+      isError: subscriptionsIsError,
+      error: subscriptionsError,
+      isSuccess: subscriptionsSuccess,
+      data: subscriptions,
+    },
+  ] = useLazyFetchSubscriptionsQuery();
   const navigate = useNavigate();
   const { newFriendRequest, newFriendAccepted } = useSelector(
     (state) => state.token
   );
 
   useEffect(() => {
-    if (isOpen)
-      fetchUserFriends(
-        {
-          userId,
-          category:
-            category === "Abonnés"
-              ? "subscribers"
-              : category === "Partenaires"
-              ? "friends"
-              : category === "Demandes"
-              ? "requests"
-              : "subscriptions",
-        },
-        { preferCacheValue: true }
-      );
-    if (isOpen && category === "Demandes") setNewFriendRequest(0);
-    if (isOpen && category === "Partenaires") setNewFriendAccepted(0);
+    if (isOpen) {
+      switch (category) {
+        case "Abonnés":
+          fetchUserSubscribers(
+            {
+              userId,
+              details: true,
+            },
+            { preferCacheValue: true }
+          );
+          break;
+
+        case "Abonnements":
+          fetchUserSubscriptions(
+            {
+              userId,
+              details: true,
+            },
+            { preferCacheValue: true }
+          );
+          break;
+
+        case "Partenaires":
+          fetchUserFriends(
+            {
+              userId,
+              category: "friends",
+            },
+            { preferCacheValue: true }
+          );
+          setNewFriendAccepted(0);
+          break;
+
+        case "Demandes":
+          fetchUserFriends(
+            {
+              userId,
+              category: "requests",
+            },
+            { preferCacheValue: true }
+          );
+          setNewFriendRequest(0);
+          break;
+
+        default:
+          break;
+      }
+    }
+    // if (isOpen && category === "Demandes") setNewFriendRequest(0);
+    // if (isOpen && category === "Partenaires") setNewFriendAccepted(0);
   }, [isOpen]);
 
   let display;
-  if (isLoading)
+  if (isLoading || subscribersLoading || subscriptionsLoading)
     display = (
-      <HStack>
-        <SkeletonCircle boxSize={10} />
-        <Skeleton height={5} width={200} />
-      </HStack>
+      // <HStack>
+      //   <SkeletonCircle boxSize={10} />
+      //   <Skeleton height={5} width={200} />
+      // </HStack>
+      <UserLoader length={3} />
     );
   if (isError) return <ErrorRender isError={isError} error={error} />;
-  if (isSuccess)
+  if (subscriptionsIsError)
+    return (
+      <ErrorRender isError={subscriptionsIsError} error={subscriptionsError} />
+    );
+  if (subscribersIsError)
+    return (
+      <ErrorRender isError={subscribersIsError} error={subscribersError} />
+    );
+
+  if (isSuccess || subscribersSuccess || subscriptionsSuccess) {
+    let data = isSuccess
+      ? friendsOrRequests
+      : subscribersSuccess
+      ? subscribers
+      : subscriptions;
     display = (
       <Stack>
         {data.map((elt) => (
@@ -102,7 +177,7 @@ const RelationList = ({ category, userId, length }) => {
         ))}
       </Stack>
     );
-
+  }
   return (
     <>
       <Button flexDir="column" onClick={() => (length > 0 ? onOpen() : null)}>

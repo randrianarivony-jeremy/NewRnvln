@@ -1,5 +1,6 @@
 import { socket } from "../../App";
 import { apiSlice } from "../apiSlice";
+import { userSlice } from "./userSlice";
 
 export const subscriSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -53,18 +54,26 @@ export const subscriSlice = apiSlice.injectEndpoints({
 
     // S U B S C R I P T I O N
     subscribe: builder.mutation({
-      query: ({ myUser, ...body }) => ({
+      query: ({ myUser, fees, ...body }) => ({
         url: "subscri/subscribe",
         method: "POST",
         body,
       }),
-      invalidatesTags: (res, err, { myUser, ...body }) => [
+      invalidatesTags: (res, err, { myUser, fees, ...body }) => [
         { type: "Post", id: "LIST" },
         { type: "Subscriptions", id: myUser },
         { type: "Subscribers", id: myUser },
         { type: "Subscriptions", id: body.id_user },
         { type: "Subscribers", id: body.id_user },
       ],
+      onQueryStarted: ({ myUser, fees }, { queryFulfilled, dispatch }) => {
+        const walletPatch = dispatch(
+          userSlice.util.updateQueryData("fetchUser", myUser, (draft) => {
+            draft.wallet -= fees;
+          })
+        );
+        queryFulfilled.catch(walletPatch.undo);
+      },
     }),
 
     unsubscribe: builder.mutation({

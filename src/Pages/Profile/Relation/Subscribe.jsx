@@ -236,14 +236,15 @@ const Subscribe = () => {
                 </Text>
               </Box>
               <Text>Fin de l'abonnement: {thirtyDaysFromNow()}</Text>
-              <Checkbox colorScheme="green">
+              {/* <Checkbox colorScheme="green">
                 Se réabonner automatiquement
-              </Checkbox>
+              </Checkbox> */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   subscribe({
                     myUser: currentUser._id,
+                    fees: user.fees,
                     id_user: user._id,
                     password: passwordRef.current.value,
                   });

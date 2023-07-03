@@ -58,15 +58,17 @@ const RelationPanel = () => {
   useEffect(() => {
     if (subscribersSuccess && subscribers.includes(userId)) {
       category.current = "main";
-    }
+    } else category.current = "second";
   }, [currentUser, subscribers]);
 
   useEffect(() => {
     if (subscriptionsSuccess && subscriptions.includes(userId)) {
       setSubscribed(true);
       category.current = "main";
+    } else {
+      category.current = "second";
+      setSubscribed(false);
     }
-    console.log("change");
   }, [currentUser, subscriptions]);
 
   if (myUserLoading || subscribersLoading || subscriptionsLoading)

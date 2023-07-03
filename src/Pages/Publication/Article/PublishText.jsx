@@ -81,7 +81,7 @@ const PublishText = () => {
             <Select
               onChange={(e) => (publicConfidentiality.current = e.target.value)}
             >
-              <option value={false}>Entre amis</option>
+              <option value={false}>Amis et abonnés</option>
               <option value={true}>Public</option>
             </Select>
           </HStack>

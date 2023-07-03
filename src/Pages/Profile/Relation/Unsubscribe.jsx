@@ -88,7 +88,7 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
             paddingY={2}
             border="1px solid"
           >
-            Vous ne verrez plus les contenus payants que {user.name} publie
+            Vous ne verrez plus les contenus privés que {user.name} publie
           </Text>
           <form
             onSubmit={(e) => {
@@ -120,7 +120,7 @@ const Unsubscribe = ({ onOpen, isOpen, onClose }) => {
         <ModalFooter paddingX={3}>
           <Button onClick={onClose}>Annuler</Button>
           <Button
-            variant="outline"
+            variant="dissuasive"
             isLoading={isLoading}
             onClick={() => submitControl.current.click()}
           >

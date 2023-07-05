@@ -28,25 +28,26 @@ const Publication = () => {
       <Stack height="100%" paddingX={3} justify="space-around">
         <Stack>
           <HStack alignItems="center" justify="center">
-            <Button
-              variant="outline"
-              flexDir="column"
-              height="30vw"
-              maxH={120}
-              width="30vw"
-              maxW={120}
-              onClick={() => setCamera(true)}
-            >
-              <IonIcon icon={cameraOutline} style={{ fontSize: "40px" }} />
-              <Text fontSize="xs">Camera</Text>
-              {camera && (
-                <TakePhoto
-                  setCamera={setCamera}
-                  camera={camera}
-                  output={handlePhoto}
-                />
-              )}
-            </Button>
+            {camera ? (
+              <TakePhoto
+                setCamera={setCamera}
+                camera={camera}
+                output={handlePhoto}
+              />
+            ) : (
+              <Button
+                variant="outline"
+                flexDir="column"
+                height="30vw"
+                maxH={120}
+                width="30vw"
+                maxW={120}
+                onClick={() => setCamera(true)}
+              >
+                <IonIcon icon={cameraOutline} style={{ fontSize: "40px" }} />
+                <Text fontSize="xs">Camera</Text>
+              </Button>
+            )}
             <Button
               variant="outline"
               flexDir="column"

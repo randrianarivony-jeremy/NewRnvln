@@ -49,7 +49,7 @@ const ProfilePicture = () => {
 
   const handleCamera = (imgSrc) => {
     picture.current = { content: imgSrc, contentType: "image" };
-    setSelectedImage(imgSrc);
+    setSelectedImage(URL.createObjectURL(imgSrc));
     onOpen();
   };
 
@@ -186,7 +186,7 @@ const ProfilePicture = () => {
               width="100%"
               border={"solid 1px"}
               borderColor="gray.400"
-              height={"75vh"}
+              height={"50vh"}
               objectFit="contain"
             />
           </DrawerBody>

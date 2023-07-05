@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../Assets/logo.svg";
+import logo from "../Assets/RANAVALONA.png";
 
 const About = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const About = () => {
         <Image src={logo} alt="logo" height={75} />
         <Heading size={"lg"}>Plusvaloo</Heading>
       </Flex>
-      <Stack spacing={10} paddingBottom={5}>
+      <Stack spacing={10} paddingBottom={5} paddingX={3}>
         <Stack spacing={5}>
           <Heading size={"md"}>Ce que nous faisons :</Heading>
           <Text>

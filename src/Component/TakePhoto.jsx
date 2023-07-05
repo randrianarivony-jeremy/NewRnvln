@@ -33,6 +33,7 @@ const TakePhoto = ({ output, camera, setCamera }) => {
         });
       });
   };
+
   if (camera)
     return (
       <Portal>
@@ -75,8 +76,8 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                 position="absolute"
                 fontSize="2xl"
                 zIndex={3}
-                top={2}
-                left={3}
+                top={0}
+                left={0}
                 onClick={() => {
                   setCamera(false);
                   setCameraReady(false);
@@ -89,8 +90,8 @@ const TakePhoto = ({ output, camera, setCamera }) => {
                 fontSize="2xl"
                 position="absolute"
                 zIndex={3}
-                top={2}
-                right={3}
+                top={0}
+                right={0}
                 onClick={() =>
                   facingMode === "user"
                     ? setFacingMode("environment")

@@ -159,24 +159,13 @@ export const chatSlice = apiSlice.injectEndpoints({
     }),
 
     addMessage: builder.mutation({
-      query: (body) => ({
+      query: ({ _id, ...body }) => ({
         url: "message",
         method: "POST",
         credentials: "include",
         body,
       }),
-      async onQueryStarted(body, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          chatSlice.util.updateQueryData(
-            "fetchMessages",
-            body.recipient,
-            (draft) => {
-              if (draft === null)
-                return chatAdapter.setAll(initialState, [body]);
-              chatAdapter.addOne(draft, body);
-            }
-          )
-        );
+      async onQueryStarted({ _id, ...body }, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           dispatch(
@@ -184,8 +173,10 @@ export const chatSlice = apiSlice.injectEndpoints({
               "fetchMessages",
               body.recipient,
               (draft) => {
-                chatAdapter.removeOne(draft, body._id);
-                chatAdapter.addOne(draft, data.newMessage);
+                chatAdapter.updateOne(draft, {
+                  id: _id,
+                  changes: data.newMessage,
+                });
               }
             )
           );
@@ -235,9 +226,8 @@ export const chatSlice = apiSlice.injectEndpoints({
                 { type: "Conversation", id: data.category },
               ])
             );
-        } catch (error) {
-          console.log(error);
-          patchResult.undo();
+        } catch {
+          console.log({ error: "please try again later" });
         }
       },
     }),

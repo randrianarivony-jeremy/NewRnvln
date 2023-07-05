@@ -19,18 +19,20 @@ import {
   playCircleOutline,
   refreshCircleOutline,
 } from "ionicons/icons";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import { useDispatch } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
-import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
+  chatAdapter,
   chatSlice,
   useAddMessageMutation,
 } from "../../Controler/Redux/Features/chatSlice";
 
 const SendVoice = () => {
+  const { currentUser } = useContext(currentUserContext);
   const [recording, setRecording] = useState(false);
   const recorderControls = useAudioRecorder();
   const { userId } = useParams();
@@ -50,7 +52,8 @@ const SendVoice = () => {
   } = recorderControls;
   let newBlob = useRef(true);
   const urlRef = useRef();
-  const { currentUser } = useContext(currentUserContext);
+  const patchResult = useRef();
+  const dispatch = useDispatch();
 
   const handleRecordingOn = () => {
     startRecording();
@@ -64,27 +67,42 @@ const SendVoice = () => {
 
   const storeToStorage = (blob) => {
     setRecording(false);
+    const now = Date.now();
+    patchResult.current = dispatch(
+      chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
+        chatAdapter.addOne(draft, {
+          _id: now,
+          createdAt: new Date().toJSON(),
+          sender: currentUser._id,
+          recipient: userId,
+          content: URL.createObjectURL(blob),
+          conversationId: conversation?._id ?? null,
+          contentType: "audio",
+          category,
+        });
+      })
+    );
     const fileName = new Date().getTime() + `${currentUser._id}`;
     const storageRef = ref(storage, "conversation/audio/" + fileName);
     uploadBytes(storageRef, blob).then((snapshot) =>
       getDownloadURL(snapshot.ref).then((url) => {
         urlRef.current = url;
-        // handleSubmit();
         addMessage({
-          _id: Date.now(),
+          _id: now,
           sender: currentUser._id,
-          recipient: userId, //this conversationId from params would be the userId
+          recipient: userId,
           content: urlRef.current,
           conversationId: conversation?._id ?? null,
           contentType: "audio",
           category,
-          createdAt: new Date().toJSON(),
         });
       })
     );
   };
 
-  if (isError) return <ErrorRender isError={isError} error={error} />;
+  useEffect(() => {
+    if (isError) patchResult.current.undo();
+  }, [error, isError]);
 
   return (
     <>

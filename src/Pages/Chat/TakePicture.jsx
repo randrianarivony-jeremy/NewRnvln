@@ -16,13 +16,15 @@ import {
   close,
   radioButtonOn,
 } from "ionicons/icons";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
 import WebCam from "react-webcam";
 import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
+  chatAdapter,
   chatSlice,
   useAddMessageMutation,
 } from "../../Controler/Redux/Features/chatSlice";
@@ -43,6 +45,8 @@ const TakePicture = () => {
   const webcamRef = useRef();
   const imageRef = useRef();
   const urlRef = useRef();
+  const patchResult = useRef();
+  const dispatch = useDispatch();
 
   const capture = () => {
     imageRef.current = webcamRef.current.getScreenshot();
@@ -52,6 +56,21 @@ const TakePicture = () => {
   const storePicture = () => {
     setCamera(false);
     setCameraReady(false);
+    const now = Date.now();
+    patchResult.current = dispatch(
+      chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
+        chatAdapter.addOne(draft, {
+          _id: now,
+          createdAt: new Date().toJSON(),
+          sender: currentUser._id,
+          recipient: userId,
+          content: imageRef.current,
+          conversationId: conversation?._id ?? null,
+          contentType: "image",
+          category,
+        });
+      })
+    );
     fetch(imageRef.current)
       .then((response) => response.blob())
       .then((blob) => {
@@ -65,14 +84,13 @@ const TakePicture = () => {
               getDownloadURL(snapshot.ref).then((url) => {
                 urlRef.current = url;
                 addMessage({
-                  _id: Date.now(),
+                  _id: now,
                   sender: currentUser._id,
-                  recipient: userId, //this conversationId from params would be the userId
+                  recipient: userId,
                   content: urlRef.current,
                   conversationId: conversation?._id ?? null,
                   contentType: "image",
                   category,
-                  createdAt: new Date().toJSON(),
                 });
               })
             );
@@ -84,7 +102,9 @@ const TakePicture = () => {
       });
   };
 
-  if (isError) return <ErrorRender isError={isError} error={error} />;
+  useEffect(() => {
+    if (isError) patchResult.current.undo();
+  }, [error, isError]);
 
   return (
     <Flex>

@@ -45,6 +45,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   keepUnusedDataFor: 900, //15min
+  refetchOnReconnect: true,
   tagTypes: [
     "Post",
     "User",

@@ -14,10 +14,11 @@ import { IonIcon } from "@ionic/react";
 import EmojiPicker from "emoji-picker-react";
 import { chevronForward, happyOutline, send } from "ionicons/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
-import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import {
+  chatAdapter,
   chatSlice,
   useAddMessageMutation,
 } from "../../Controler/Redux/Features/chatSlice";
@@ -38,19 +39,35 @@ const ChatInputs = ({ sendResponse }) => {
   const [addMessage, { isError, error }] = useAddMessageMutation();
   const { data: conversation, isSuccess } =
     chatSlice.endpoints.fetchConversation.useQueryState(userId);
+  const patchResult = useRef();
+  const dispatch = useDispatch();
 
   const sendText = async () => {
+    const now = Date.now();
+    patchResult.current = dispatch(
+      chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
+        chatAdapter.addOne(draft, {
+          _id: now,
+          createdAt: new Date().toJSON(),
+          sender: currentUser._id,
+          recipient: userId,
+          content: responseRef.current.value,
+          conversationId: conversation?._id ?? null,
+          contentType: "string",
+          category,
+        });
+      })
+    );
     setWriting(false);
     setValue("");
     addMessage({
-      _id: Date.now(),
+      _id: now,
       sender: currentUser._id,
       recipient: userId, //this conversationId from params would be the userId
       content: responseRef.current.value,
       conversationId: conversation?._id ?? null,
       contentType: "string",
       category,
-      createdAt: new Date().toJSON(),
     });
   };
 
@@ -77,7 +94,9 @@ const ChatInputs = ({ sendResponse }) => {
     }
   }, [responseRef, value]);
 
-  if (isError) return <ErrorRender isError={isError} error={error} />;
+  useEffect(() => {
+    if (isError) patchResult.current.undo();
+  }, [error, isError]);
 
   return (
     <HStack

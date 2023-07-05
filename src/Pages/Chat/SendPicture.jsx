@@ -3,12 +3,13 @@ import { IonIcon } from "@ionic/react";
 import Compressor from "compressorjs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageOutline } from "ionicons/icons";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
-import { ErrorRender } from "../../Component/Miscellanous";
 import { currentUserContext } from "../../Controler/App";
 import { storage } from "../../Controler/firebase.config";
 import {
+  chatAdapter,
   chatSlice,
   useAddMessageMutation,
 } from "../../Controler/Redux/Features/chatSlice";
@@ -23,8 +24,25 @@ const SendPicture = () => {
     chatSlice.endpoints.fetchConversation.useQueryState(userId);
   const [addMessage, { isError, error }] = useAddMessageMutation();
   const { currentUser } = useContext(currentUserContext);
+  const patchResult = useRef();
+  const dispatch = useDispatch();
 
   const storePicture = ({ currentTarget }) => {
+    const now = Date.now();
+    patchResult.current = dispatch(
+      chatSlice.util.updateQueryData("fetchMessages", userId, (draft) => {
+        chatAdapter.addOne(draft, {
+          _id: now,
+          createdAt: new Date().toJSON(),
+          sender: currentUser._id,
+          recipient: userId,
+          content: URL.createObjectURL(currentTarget.files[0]),
+          conversationId: conversation?._id ?? null,
+          contentType: "image",
+          category,
+        });
+      })
+    );
     new Compressor(currentTarget.files[0], {
       quality: 0.6,
       success(result) {
@@ -34,14 +52,13 @@ const SendPicture = () => {
           getDownloadURL(snapshot.ref).then((url) => {
             urlRef.current = url;
             addMessage({
-              _id: Date.now(),
+              _id: now,
               sender: currentUser._id,
               recipient: userId,
               content: urlRef.current,
               conversationId: conversation?._id ?? null,
               contentType: "image",
               category,
-              createdAt: new Date().toJSON(),
             });
           })
         );
@@ -51,7 +68,10 @@ const SendPicture = () => {
       },
     });
   };
-  if (isError) return <ErrorRender isError={isError} error={error} />;
+
+  useEffect(() => {
+    if (isError) patchResult.current.undo();
+  }, [error, isError]);
 
   return (
     <>

@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 import React from "react";
@@ -36,7 +28,8 @@ const About = () => {
             hampiodinana azy.
           </Text>
           <Text>
-            Ohatra hoe hitanao tsy ampy mpivaro-kena eo amin'ny quartier anao.
+            Hitanareo ohatra hoe hitanao tsy ampy mpivaro-kena eo amin'ny
+            quartier anao.
           </Text>
           <ul style={{ marginLeft: 40 }}>
             <li>Ahoana ny atao raha hanangana fivarotan-kena ?</li>
@@ -61,15 +54,13 @@ const About = () => {
             <li>...</li>
           </ul>
           <Text>
-            Hifampizara information hoatrin'izany ny hatao ato amin'ny Plusvaloo
+            Hifampizara information hoatrin'izany ny hatao ato amin'ny
+            Plusvaloo.
           </Text>
         </Stack>
         <Stack>
           <Heading size={"md"}>Notre vision :</Heading>
-          <Text>
-            Hanana activités mahavelona azy ny rehetra fa vadin'asa ho azy ny
-            miasa aman'olona
-          </Text>
+          <Text>Hanana activités mahavelona azy ny rehetra.</Text>
         </Stack>
       </Stack>
     </>

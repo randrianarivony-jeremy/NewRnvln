@@ -2,9 +2,9 @@
 
 # dependencies
 /node_modules
-/firebase-data
+firebase*/
 .env
-/src/Controler/firebase.config.js
+firebase.config.js
 .gitignore
 storage.rules
 /.pnp

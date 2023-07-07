@@ -72,43 +72,40 @@ const CommentPost = () => {
             Commentaires
           </DrawerHeader>
           <ScrollableFeed forceScroll={true} className="scrollablefeed">
-            {post.comments.map((comment, key) => (
-              <Box key={key}>
+            {post.comments.map((comment) => (
+              <Box key={comment._id}>
                 {isLoading ? (
-                  <Stack marginLeft={3} marginBottom={2}>
-                    <UserLoader length={post.comments.length} />
-                  </Stack>
+                  <UserLoader length={post.comments.length} />
                 ) : (
                   <Comment comment={comment} postId={post._id} />
                 )}
               </Box>
             ))}
           </ScrollableFeed>
-          {/* <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}> */}
           <HStack paddingX={3} paddingTop={0} paddingBottom={2}>
             <Input ref={inputRef} placeholder="Ajouter un commentaire" />
             <Button
               variant="float"
               onClick={() => {
-                commentPost({
-                  postId: post._id,
-                  type: post.type,
-                  question: post.question?._id,
-                  text: inputRef.current.value,
-                  commenterId: {
-                    _id: currentUser._id,
-                    name: currentUser.name,
-                    picture: currentUser.picture,
-                  },
-                  postCreator: post.id_user._id,
-                });
+                if (inputRef.current.value.length > 0)
+                  commentPost({
+                    postId: post._id,
+                    type: post.type,
+                    question: post.question?._id,
+                    text: inputRef.current.value,
+                    commenterId: {
+                      _id: currentUser._id,
+                      name: currentUser.name,
+                      picture: currentUser.picture,
+                    },
+                    postCreator: post.id_user._id,
+                  });
                 inputRef.current.value = "";
               }}
             >
               <IonIcon icon={send} />
             </Button>
           </HStack>
-          {/* </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
     </>

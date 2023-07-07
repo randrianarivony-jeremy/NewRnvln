@@ -35,10 +35,6 @@ const SignIn = ({ setSignin }) => {
   };
 
   useEffect(() => {
-    setCurrentUser();
-  }, []);
-
-  useEffect(() => {
     if (isError) {
       if (error.status === 404) setMailError("Utilisateur inconnu");
       else if (error.status === 406) setPasswordError("Mot de passe incorrect");

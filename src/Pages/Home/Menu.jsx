@@ -104,7 +104,7 @@ const Menu = () => {
                 }
               >
                 <Text>
-                  {colorMode === "light" ? "Dark mode" : "Light mode"}
+                  {colorMode === "light" ? "Mode sombre" : "Mode clair"}
                 </Text>
               </Button>
               {currentUser && (

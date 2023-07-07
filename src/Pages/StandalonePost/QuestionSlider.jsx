@@ -31,7 +31,7 @@ const QuestionSlider = ({ question, index }) => {
   return (
     <HStack
       width={"100%"}
-      bgColor={colorMode === "light" ? "whiteAlpha.500" : "blackAlpha.500"}
+      bgColor={colorMode === "light" ? "blackAlpha.200" : "blackAlpha.500"}
       height={12}
       paddingX={3}
     >

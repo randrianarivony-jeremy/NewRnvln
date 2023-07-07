@@ -4,16 +4,16 @@ import {
   Drawer,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  HStack,
   Input,
   Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { IonIcon } from "@ionic/react";
-import { chatbubbleOutline } from "ionicons/icons";
+import { chatbubbleOutline, send } from "ionicons/icons";
 import React, { useContext, useEffect, useRef } from "react";
 import ScrollableFeed from "react-scrollable-feed";
 import UserLoader from "../../../Component/Loaders/UserLoader";
@@ -84,11 +84,11 @@ const CommentPost = () => {
               </Box>
             ))}
           </ScrollableFeed>
-          <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}>
+          {/* <DrawerFooter paddingX={3} paddingTop={0} paddingBottom={2}> */}
+          <HStack paddingX={3} paddingTop={0} paddingBottom={2}>
             <Input ref={inputRef} placeholder="Ajouter un commentaire" />
             <Button
               variant="float"
-              className="bi-send"
               onClick={() => {
                 commentPost({
                   postId: post._id,
@@ -104,8 +104,11 @@ const CommentPost = () => {
                 });
                 inputRef.current.value = "";
               }}
-            ></Button>
-          </DrawerFooter>
+            >
+              <IonIcon icon={send} />
+            </Button>
+          </HStack>
+          {/* </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
     </>

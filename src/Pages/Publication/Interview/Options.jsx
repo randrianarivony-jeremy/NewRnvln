@@ -19,10 +19,10 @@ const Options = () => {
         <Button
           variant="outline"
           flexDir="column"
-          height="30vw"
-          maxH={120}
-          width="30vw"
-          maxW={120}
+          height="20vw"
+          maxH={100}
+          width="20vw"
+          maxW={100}
           onClick={() => {
             setShowOptions((current) => {
               current[swiperRef.current.swiper.activeIndex] = false;

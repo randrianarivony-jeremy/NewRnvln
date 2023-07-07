@@ -26,7 +26,9 @@ const Reaction = () => {
               flexDir="column"
               size={"lg"}
               onClick={() =>
-                navigate("/question/interviews/" + post.question._id)
+                post.question.interviews.length > 0
+                  ? navigate("/question/interviews/" + post.question._id)
+                  : null
               }
             >
               <IonIcon icon={chatbubblesOutline} style={{ fontSize: iconMd }} />

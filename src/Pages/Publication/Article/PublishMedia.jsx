@@ -79,7 +79,7 @@ const PublishMedia = () => {
   }, [isSuccess, isError]);
 
   return (
-    <Stack position="relative" minHeight="100vh" spacing={0}>
+    <Stack position="relative" spacing={0}>
       <Flex borderBottom="1px solid" borderBottomColor="whiteAlpha.500">
         <Button
           variant="float"
@@ -88,7 +88,7 @@ const PublishMedia = () => {
         ></Button>
         <Button>Créer une publication</Button>
       </Flex>
-      <Stack paddingX={3} height="100%" minH="calc(100vh - 50px)" paddingY={2}>
+      <Stack paddingX={3} height="100%" paddingY={2}>
         {content.contentType === "image" ? (
           <Image
             src={URL.createObjectURL(content.content)}

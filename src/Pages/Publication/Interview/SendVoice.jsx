@@ -119,17 +119,20 @@ const SendVoice = () => {
             </Stack>
           </Flex>
           <Flex position="absolute" top={12} left={0} zIndex={3} width="100%">
-            <QuestionSlider question={questions} index={swiperRef.current.swiper.activeIndex}/>
+            <QuestionSlider
+              question={questions}
+              index={swiperRef.current.swiper.activeIndex}
+            />
           </Flex>
         </>
       ) : (
         <Button
           variant="outline"
           flexDir="column"
-          height="30vw"
-              maxH={120}
-              width="30vw"
-              maxW={120}
+          height="20vw"
+          maxH={100}
+          width="20vw"
+          maxW={100}
           onClick={handleRecordingOn}
         >
           <Flex fontSize={40} className="bi-mic"></Flex>

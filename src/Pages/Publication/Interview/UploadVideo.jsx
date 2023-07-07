@@ -37,10 +37,10 @@ const UploadVideo = () => {
       <Button
         variant="outline"
         flexDir="column"
-        height="30vw"
-        maxH={120}
-        width="30vw"
-        maxW={120}
+        height="20vw"
+        maxH={100}
+        width="20vw"
+        maxW={100}
         onClick={() => inputRef.current.click()}
       >
         <Flex fontSize={40} className="bi-film"></Flex>

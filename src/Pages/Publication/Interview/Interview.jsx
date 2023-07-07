@@ -76,7 +76,7 @@ const Interview = () => {
         ) : isError ? (
           <ErrorRender isError={isError} error={error} />
         ) : (
-          <Stack spacing={5} paddingBottom={2}>
+          <Stack spacing={10} paddingBottom={2}>
             <InterviewSwiper />
             <Stack paddingX={3}>
               <HStack>

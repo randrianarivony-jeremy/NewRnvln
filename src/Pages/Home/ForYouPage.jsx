@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { Keyboard, Mousewheel } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ErrorRender, Loader } from "../../Component/Miscellanous";
+import { EmptyState, ErrorRender, Loader } from "../../Component/Miscellanous";
 import {
   useFetchContentsQuery,
   useFetchMoreContentsMutation,
@@ -36,7 +36,7 @@ const ForYouPage = () => {
   }, [moreSuccess]);
 
   useEffect(() => {
-    if (isSuccess && postsList.ids.length < 5)
+    if (isSuccess && postsList.ids.length >0 && postsList.ids.length < 5)
       fetchMoreContents(
         new Date(
           postsList.entities[postsList.ids[postsList.ids.length - 1]].createdAt
@@ -46,7 +46,7 @@ const ForYouPage = () => {
 
   if (isError) return <ErrorRender isError={isError} error={error} />;
   if (isLoading) return <Loader />;
-  if (isSuccess)
+  if (isSuccess && postsList.ids.length>0)
     return (
       <Swiper
         ref={swiperRef}
@@ -82,6 +82,7 @@ const ForYouPage = () => {
         )}
       </Swiper>
     );
+    if (isSuccess && postsList.ids.length===0) return <EmptyState/>
 };
 
 export default ForYouPage;

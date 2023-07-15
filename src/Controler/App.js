@@ -27,7 +27,6 @@ function App() {
   const minHeight = useRef(window.innerHeight);
   const { data, isSuccess, isLoading, isUninitialized } = useInitiateQuery(
     "app"
-    // { refetchOnReconnect: true }
   );
 
   useEffect(() => {

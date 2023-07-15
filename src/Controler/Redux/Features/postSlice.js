@@ -25,12 +25,14 @@ export const postSlice = apiSlice.injectEndpoints({
     fetchContents: builder.query({
       query: () => "feeds",
       transformResponse: (responseData) => {
-        responseData = responseData.map((elt) => {
-          if (elt.type === "publication" || elt.type === "interview")
+        if (responseData.length>0){
+          responseData = responseData.map((elt) => {
+            if (elt.type === "publication" || elt.type === "interview")
             return elt;
-          else return { ...elt, type: "question" };
-        });
-        return postsAdapter.setAll(initialState, responseData);
+            else return { ...elt, type: "question" };
+          });
+          return postsAdapter.setAll(initialState, responseData);
+        } else return initialState
       },
       providesTags: (result) => [
         { type: "Post", id: "LIST" },
